@@ -21,37 +21,55 @@ bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 @bp.route("/", methods=["GET", "POST"])
 def query_events():
     """
-    Show initial panel.
+    Query events.
     """
     if request.method == "POST":
         current_app.logger.info("form inputs: {}".format(request.form))
         current_app.logger.info("start: {}".format(request.form.getlist("start")))
         query = Query()
         kwargs = {}
+        if request.form["source_like"] != "":
+            kwargs["source_like"] = {"str": request.form["source_like"], "op": "like"}
+        # end if
+        if request.form["er_like"] != "":
+            kwargs["explicit_ref_like_like"] = {"str": request.form["er_like"], "op": "like"}
+        # end if
         if request.form["gauge_name_like"] != "":
             kwargs["gauge_name_like"] = {"str": request.form["gauge_name_like"], "op": "like"}
         # end if
         if request.form["gauge_system_like"] != "":
             kwargs["gauge_system_like"] = {"str": request.form["gauge_system_like"], "op": "like"}
         # end if
-        if request.form["source_like"] != "":
-            kwargs["source_like"] = {"str": request.form["source_like"], "op": "like"}
+        if request.form["start"] != "":
+            kwargs["start_filters"] = []
+            i = 0
+            operators = request.form.getlist("start_operator")
+            for start in request.form.getlist("start"):
+                kwargs["start_filters"].append({"date": start, "op": operators[i]})
+                i+=1
+            # end for
         # end if
-        if request.form["explicit_ref_like_like"] != "":
-            kwargs["explicit_ref_like_like"] = {"str": request.form["explicit_ref_like_like"], "op": "like"}
+        if request.form["stop"] != "":
+            kwargs["stop_filters"] = []
+            i = 0
+            operators = request.form.getlist("stop_operator")
+            for stop in request.form.getlist("stop"):
+                kwargs["stop_filters"].append({"date": stop, "op": operators[i]})
+                i+=1
+            # end for
         # end if
-        current_app.logger.info("starts: {}".format(request.form.getlist("start")))
-        # if request.form["start"] != "":
-        #     kwargs["start_filters"] = []
-        #     for start in request.form.getlist("start"):
-        #     kwargs["start_filters"].append({"date": request.form["start"], "op": request.form["start_operator"]})
-        # # end if
-        # current_app.logger.info("kwargs: {}".format(kwargs)))
-        # events = query.get_events_join(gauge_name_like = ,
-        #                                gauge_name_like = {"str": request.form["gauge_name_like"], "op": "like"},
-        #                                start_filters = [{"date": request.form["start"], "op": request.form["start_operator"]}],
-        #                                stop_filters = [{"date": request.form["stop"], "op": request.form["stop_operator"]}],
-        #                                stop_filters = [{"date": request.form["stop"], "op": request.form["stop_operator"]}])
+        if request.form["ingestion_time"] != "":
+            kwargs["ingestion_time_filters"] = []
+            i = 0
+            operators = request.form.getlist("ingestion_time_operator")
+            for ingestion_time in request.form.getlist("ingestion_time"):
+                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+                i+=1
+            # end for
+        # end if
+        current_app.logger.info("kwargs: {}".format(kwargs))
+        events = query.get_events_join(**kwargs)
+        current_app.logger.info("events: {}".format(events))
     # end if
     return render_template("eboa_nav/eboa_nav.html")
 
