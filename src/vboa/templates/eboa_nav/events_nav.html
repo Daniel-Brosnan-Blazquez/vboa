@@ -1,3 +1,54 @@
 {% extends "eboa_nav/eboa_nav.html" %}
 {% block li_active_events %}class="active"{% endblock %}
 {% block div_active_events %}active{% endblock %}
+{% block events_nav_content %}
+<div>
+  <a href="query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
+</div>
+<table width="100%" class="table table-striped table-bordered table-hover" id="events">
+  <thead>
+    <tr>
+      <th>Gauge name</th>
+      <th>Gauge system</th>
+      <th>Start</th>
+      <th>Stop</th>
+      <th>Ingestion Time</th>
+      <th>Source</th>
+      <th>Explicit Reference</th>
+      <th>Event UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for event in events %}
+    <tr>
+      <td>{{ event.gauge.name }}</td>
+      <td>{{ event.gauge.system }}</td>
+      <td>{{ event.start }}</td>
+      <td>{{ event.stop }}</td>
+      <td>{{ event.ingestion_time }}</td>
+      <td>{{ event.source.name }}</td>
+      <td>
+        {% set er = "" %}
+        {% if event.explicitRef %}
+        {% set er = event.explicitRef.explicit_ref %}
+        {% endif %}
+        {{ er }}
+      </td>
+      <td>{{ event.event_uuid }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Gauge name</th>
+      <th>Gauge system</th>
+      <th>Start</th>
+      <th>Stop</th>
+      <th>Ingestion Time</th>
+      <th>Source</th>
+      <th>Explicit Reference</th>
+      <th>Event UUID</th>
+    </tr>
+  </tfoot>
+</table>
+{% endblock %}

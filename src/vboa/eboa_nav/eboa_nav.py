@@ -23,7 +23,7 @@ def navigate():
     """
     Initial panel for the EBOA navigation functionality.
     """
-    return render_template("eboa_nav/events_nav.html")
+    return render_template("eboa_nav/query_events.html")
 
 @bp.route("/query-events", methods=["GET", "POST"])
 def query_events():
@@ -74,7 +74,8 @@ def query_events():
             # end for
         # end if
         events = query.get_events_join(**kwargs)
+        return render_template("eboa_nav/events_nav.html", events=events)
     # end if
-    return render_template("eboa_nav/events_nav.html")
+    return render_template("eboa_nav/query_events.html")
 
 

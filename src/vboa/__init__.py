@@ -13,7 +13,8 @@ from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 
 # Import contents
-from vboa import panel, eboa_nav
+from vboa import panel
+from vboa.eboa_nav import eboa_nav
 
 def create_app():
     """
