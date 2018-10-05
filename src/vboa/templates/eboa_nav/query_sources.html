@@ -1,0 +1,9 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+{% block li_active_sources %}class="active"{% endblock %}
+{% block div_active_sources %}active{% endblock %}
+{% block sources_nav_content %}
+{% include "eboa_nav/query_sources_content.html" %}
+{% endblock %}
+{% block events_nav_content %}
+{% include "eboa_nav/query_events_content.html" %}
+{% endblock %}

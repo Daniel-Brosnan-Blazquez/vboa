@@ -79,3 +79,71 @@ def query_events():
     return render_template("eboa_nav/query_events.html")
 
 
+@bp.route("/query-sources", methods=["GET", "POST"])
+def query_sources():
+    """
+    Query sources.
+    """
+    current_app.logger.debug("Query sources")
+    if request.method == "POST":
+        query = Query()
+        kwargs = {}
+        if request.form["source_like"] != "":
+            kwargs["name_like"] = {"str": request.form["source_like"], "op": "like"}
+        # end if
+        if request.form["dim_signature_like"] != "":
+            kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": "like"}
+        # end if
+        if request.form["validity_start"] != "":
+            kwargs["validity_start_filters"] = []
+            i = 0
+            operators = request.form.getlist("validity_start_operator")
+            for start in request.form.getlist("validity_start"):
+                kwargs["validity_start_filters"].append({"date": start, "op": operators[i]})
+                i+=1
+            # end for
+        # end if
+        if request.form["validity_stop"] != "":
+            kwargs["validity_stop_filters"] = []
+            i = 0
+            operators = request.form.getlist("validity_stop_operator")
+            for stop in request.form.getlist("validity_stop"):
+                kwargs["validity_stop_filters"].append({"date": stop, "op": operators[i]})
+                i+=1
+            # end for
+        # end if
+        if request.form["ingestion_time"] != "":
+            kwargs["ingestion_time_filters"] = []
+            i = 0
+            operators = request.form.getlist("ingestion_time_operator")
+            for ingestion_time in request.form.getlist("ingestion_time"):
+                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+                i+=1
+            # end for
+        # end if
+        if request.form["generation_time"] != "":
+            kwargs["generation_time_filters"] = []
+            i = 0
+            operators = request.form.getlist("generation_time_operator")
+            for generation_time in request.form.getlist("generation_time"):
+                kwargs["generation_time_filters"].append({"date": generation_time, "op": operators[i]})
+                i+=1
+            # end for
+        # end if
+        sources = query.get_sources_join(**kwargs)
+        return render_template("eboa_nav/sources_nav.html", sources=sources)
+    # end if
+    return render_template("eboa_nav/query_sources.html")
+
+
+@bp.route("/query-source/<uuid:source_uuid>")
+def query_source(source_uuid):
+    """
+    Query source corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query source")
+    query = Query()
+    source = query.get_sources(processing_uuids={"list": [source_uuid], "op": "in"})
+    return render_template("eboa_nav/sources_nav.html", sources=source)
+
+

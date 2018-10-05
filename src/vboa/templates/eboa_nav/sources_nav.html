@@ -1,0 +1,53 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+{% block li_active_sources %}class="active"{% endblock %}
+{% block div_active_sources %}active{% endblock %}
+{% block events_nav_content %}
+{% include "eboa_nav/query_events_content.html" %}
+{% endblock %}
+{% block sources_nav_content %}
+<div>
+  <a href="/eboa_nav/query-sources"><p class="fa fa-chevron-left"> Back to query sources</p></a>
+</div>
+<table width="100%" class="table table-striped table-bordered table-hover" id="sources">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Validity start</th>
+      <th>Validity stop</th>
+      <th>Generation time</th>
+      <th>Ingestion Time</th>
+      <th>DIM signature</th>
+      <th>Processor</th>
+      <th>Version</th>
+      <th>UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for source in sources %}
+    <tr>
+      <td>{{ source.name }}</td>
+      <td>{{ source.validity_start }}</td>
+      <td>{{ source.validity_stop }}</td>
+      <td>{{ source.generation_time }}</td>
+      <td>{{ source.ingestion_time }}</td>
+      <td>{{ source.dimSignature.dim_signature }}</td>
+      <td>{{ source.dimSignature.dim_exec_name }}</td>
+      <td>{{ source.dim_exec_version }}</td>
+      <td>{{ source.processing_uuid }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Name</th>
+      <th>DIM signature</th>
+      <th>Processor</th>
+      <th>Validity start</th>
+      <th>Validity stop</th>
+      <th>Generation time</th>
+      <th>Ingestion Time</th>
+      <th>UUID</th>
+    </tr>
+  </tfoot>
+</table>
+{% endblock %}
