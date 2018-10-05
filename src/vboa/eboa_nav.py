@@ -18,14 +18,20 @@ from eboa.engine.query import Query
 
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 
-@bp.route("/", methods=["GET", "POST"])
+@bp.route("/", methods=["GET"])
+def navigate():
+    """
+    Initial panel for the EBOA navigation functionality.
+    """
+    return render_template("eboa_nav/events_nav.html")
+
+@bp.route("/query-events", methods=["GET", "POST"])
 def query_events():
     """
     Query events.
     """
+    current_app.logger.debug("Query events")
     if request.method == "POST":
-        current_app.logger.info("form inputs: {}".format(request.form))
-        current_app.logger.info("start: {}".format(request.form.getlist("start")))
         query = Query()
         kwargs = {}
         if request.form["source_like"] != "":
@@ -67,10 +73,8 @@ def query_events():
                 i+=1
             # end for
         # end if
-        current_app.logger.info("kwargs: {}".format(kwargs))
         events = query.get_events_join(**kwargs)
-        current_app.logger.info("events: {}".format(events))
     # end if
-    return render_template("eboa_nav/eboa_nav.html")
+    return render_template("eboa_nav/events_nav.html")
 
 
