@@ -1,9 +1,11 @@
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js";
+import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.js";
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-social/bootstrap-social.css";
 import "font-awesome/css/font-awesome.min.css";
+import "bootstrap-responsive-tabs/dist/css/bootstrap-responsive-tabs.css";
 
 /* Function to add more start and stop selectors when commanded */
 jQuery(function (){
@@ -80,3 +82,7 @@ function activate_datetimepicker(){
         todayBtn: "linked"
     });
 }
+
+jQuery(".responsive-tabs").responsiveTabs({
+  accordionOn: ['xs', 'sm'] // xs, sm, md, lg
+});
