@@ -16,8 +16,7 @@ setup(name="vboa",
       packages=["vboa"],
       python_requires='>=3',
       install_requires=[
-          "Flask",
-          "WTForms"
+          "Flask"
       ],
       tests_require=[
           "nose",
