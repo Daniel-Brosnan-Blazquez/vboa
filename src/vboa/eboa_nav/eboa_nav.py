@@ -10,9 +10,6 @@ import sys
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 
-# Import forms
-from vboa.forms.query_events import QueryEvents
-
 # Import eboa utilities
 from eboa.engine.query import Query
 
