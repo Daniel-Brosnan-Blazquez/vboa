@@ -5,54 +5,89 @@
 <div>
   <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
 </div>
-<table width="100%" class="table table-striped table-bordered table-hover" id="events">
-  <thead>
-    <tr>
-      <th>Gauge name</th>
-      <th>Gauge system</th>
-      <th>Start</th>
-      <th>Stop</th>
-      <th>Ingestion Time</th>
-      <th>Source</th>
-      <th>Explicit Reference</th>
-      <th>Event UUID</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for event in events %}
-    <tr>
-      <td>{{ event.gauge.name }}</td>
-      <td>{{ event.gauge.system }}</td>
-      <td>{{ event.start }}</td>
-      <td>{{ event.stop }}</td>
-      <td>{{ event.ingestion_time }}</td>
-      {% set source_uuid = event.source.processing_uuid %}
-      <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
-      <td>
-        {% set er = "" %}
-        {% if event.explicitRef %}
-        {% set er = event.explicitRef.explicit_ref %}
-        {% endif %}
-        {{ er }}
-      </td>
-      <td>{{ event.event_uuid }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-  <tfoot>
-    <tr>
-      <th>Gauge name</th>
-      <th>Gauge system</th>
-      <th>Start</th>
-      <th>Stop</th>
-      <th>Ingestion Time</th>
-      <th>Source</th>
-      <th>Explicit Reference</th>
-      <th>UUID</th>
-    </tr>
-  </tfoot>
-</table>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="events">
+      <thead>
+        <tr>
+          <th>Gauge name</th>
+          <th>Gauge system</th>
+          <th>Start</th>
+          <th>Stop</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Linked events</th>
+          <th>Event UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        <tr>
+          <td>{{ event.gauge.name }}</td>
+          <td>{{ event.gauge.system }}</td>
+          <td>{{ event.start }}</td>
+          <td>{{ event.stop }}</td>
+          <td>{{ event.ingestion_time }}</td>
+          {% set source_uuid = event.source.processing_uuid %}
+          <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
+          <td>
+            {% set er = "" %}
+            {% if event.explicitRef %}
+            {% set er = event.explicitRef.explicit_ref %}
+            {% endif %}
+            {{ er }}
+          </td>
+          <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td>{{ event.event_uuid }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Gauge name</th>
+          <th>Gauge system</th>
+          <th>Start</th>
+          <th>Stop</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Linked events</th>
+          <th>Event UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Timeline of events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="events_nav_timeline">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
 {% endblock %}
-{% block sources_nav_content %}
-{% include "eboa_nav/query_sources_content.html" %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='node_modules/vis/dist/vis.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/vis/dist/vis-timeline-graph2d.min.js') }}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="module">
+      import * as graph from "{{ url_for('static', filename='js/graph.js') }}";
+      {% with events=events %}
+      {% include "graphs/events_to_json_for_timeline.js" %}
+      {% endwith %}
+      graph.display_timeline("events_nav_timeline", items, groups);
+    </script>
+    {{ super() }}
 {% endblock %}

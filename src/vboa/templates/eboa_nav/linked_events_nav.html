@@ -1,0 +1,74 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+{% block li_active_events %}class="active"{% endblock %}
+{% block div_active_events %}active{% endblock %}
+{% block events_nav_content %}
+<div>
+  <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
+</div>
+<table width="100%" class="table table-striped table-bordered table-hover" id="events">
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Gauge name</th>
+      <th>Gauge system</th>
+      <th>Start</th>
+      <th>Stop</th>
+      <th>Ingestion Time</th>
+      <th>Source</th>
+      <th>Explicit Reference</th>
+      <th>Linked events</th>
+      <th>Event UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key in events %}
+    {% for event in events[key] %}
+    <tr>
+      <td>
+        {% set description = "PRIME" %}
+        {% if key == "linked_events" %}
+        {% set description = "LINK FROM" %}
+        {% elif key == "events_linking" %}
+        {% set description = "LINK TO" %}
+        {% endif %}
+        {{ description }}
+      </td>
+      <td>{{ event.gauge.name }}</td>
+      <td>{{ event.gauge.system }}</td>
+      <td>{{ event.start }}</td>
+      <td>{{ event.stop }}</td>
+      <td>{{ event.ingestion_time }}</td>
+      {% set source_uuid = event.source.processing_uuid %}
+      <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
+      <td>
+        {% set er = "" %}
+        {% if event.explicitRef %}
+        {% set er = event.explicitRef.explicit_ref %}
+        {% endif %}
+        {{ er }}
+      </td>
+      <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
+      <td>{{ event.event_uuid }}</td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Description</th>
+      <th>Gauge name</th>
+      <th>Gauge system</th>
+      <th>Start</th>
+      <th>Stop</th>
+      <th>Ingestion Time</th>
+      <th>Source</th>
+      <th>Explicit Reference</th>
+      <th>Linked events</th>
+      <th>Event UUID</th>
+    </tr>
+  </tfoot>
+</table>
+{% endblock %}
+{% block sources_nav_content %}
+{% include "eboa_nav/query_sources_content.html" %}
+{% endblock %}

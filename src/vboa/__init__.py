@@ -31,8 +31,8 @@ def create_app():
 
     # the toolbar is only enabled in debug mode:
     app.debug = True
-
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+#    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
     toolbar = DebugToolbarExtension(app)
 

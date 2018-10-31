@@ -15,14 +15,18 @@
   </ul>
   <div class="tab-content">
     <div class="tab-pane {% block div_active_events %} {% endblock %}" id="nav-events">
-      {% block events_nav_content %} {% endblock %}
+      {% block events_nav_content %}
+      {% include "eboa_nav/query_events_content.html" %}
+      {% endblock %}
     </div>
     <!-- /.col-lg-12 -->
     <div class="tab-pane {% block div_active_explicit_references %} {% endblock %}" id="nav-explicit-references">
       {% block explicit_references_nav_content %} {% endblock %}
     </div>
     <div class="tab-pane {% block div_active_sources %} {% endblock %}" id="nav-sources">
-      {% block sources_nav_content %} {% endblock %}
+      {% block sources_nav_content %}
+      {% include "eboa_nav/query_sources_content.html" %}
+      {% endblock %}
     </div>
     <!-- /.col-lg-12 -->
   </div>

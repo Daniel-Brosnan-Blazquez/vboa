@@ -3,6 +3,7 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js";
 import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.js";
 import "datatables/media/js/jquery.dataTables.min.js";
+import vis from "vis/dist/vis.js"
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";

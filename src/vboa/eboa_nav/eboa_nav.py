@@ -75,6 +75,17 @@ def query_events():
     # end if
     return render_template("eboa_nav/query_events.html")
 
+@bp.route("/query-event-links/<uuid:event_uuid>")
+def query_event_links(event_uuid):
+    """
+    Query events linked to the event corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query event links")
+    query = Query()
+    events = query.get_linked_events(event_uuids=[event_uuid], back_ref = True)
+    current_app.logger.info(events)
+    return render_template("eboa_nav/linked_events_nav.html", events=events)
+
 
 @bp.route("/query-sources", methods=["GET", "POST"])
 def query_sources():
