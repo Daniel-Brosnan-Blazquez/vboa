@@ -37,7 +37,10 @@ for (const gauge_system of gauge_systems){
     }
 }
 
-for (const event of events["events"]){
+var unique_event_uuids = new Set(events["events"].map(event => event["id"]));
+
+for (const event_uuid of unique_event_uuids){
+    var event = events["events"].filter(event => event["id"] == event_uuid)[0]
     items.add([
         {
             id: event["id"],

@@ -1,7 +1,14 @@
 var events = {
     "events": [
-        {% for key in events %}
-        {% for event in events[key] %}
+        {% for key in links %}
+        {% for link in links[key] %}
+        {% if key == "prime_events" %}
+        {% set event = link %}
+        {% set link_name = "" %}
+        {% else %}
+        {% set event = link["event"] %}
+        {% set link_name = link["link_name"] %}
+        {% endif %}
         {
             "id": "{{ event.event_uuid }}",
             "gauge":{
@@ -10,7 +17,8 @@ var events = {
             },
             "start": "{{ event.start }}",
             "stop": "{{ event.stop }}",
-            "label": "{{ key }}"
+            "label": "{{ key }}",
+            "link_name": "{{ link_name }}"
         },
         {% endfor %}
         {% endfor %}
@@ -18,39 +26,42 @@ var events = {
 }
 
 var unique_event_uuids = new Set(events["events"].map(event => event["id"]));
-var prime_event_id = events["events"].filter(event => event["id"] == "{{events['prime_events'][0].event_uuid}}").map(event => event["id"])[0];
+var prime_event_id = events["events"].filter(event => event["id"] == "{{links['prime_events'][0].event_uuid}}").map(event => event["id"])[0];
 
 var nodes = []
 var edges = []
 for (const id of unique_event_uuids){
-    var filtered_events = events["events"].filter(event => event["id"] == id)
-    
-    var event = filtered_events[0]
-    var shape = "box";
-    var background_color = "lightblue";
-    if (event["label"] == "prime_events"){
-        shape = "elipse";
-        background_color = "lightgreen";
-    }
-    else{
-        var labels = filtered_events.map(event => event["label"])
-        var arrows = "to"
-        if (labels.length == 2){
-            arrows = "to, from";
-        }else if (labels[0] == "events_linking"){
-            arrows = "from";
+    var associated_events = events["events"].filter(event => event["id"] == id)
+
+    for (const event of associated_events){
+        var shape = "box";
+        var background_color = "lightblue";
+        if (event["label"] == "prime_events"){
+            shape = "elipse";
+            background_color = "lightgreen";
         }
-        edges.push({
-            "from": prime_event_id,
-            "to": event["id"],
-            "arrows": arrows
-        })
+        else if (event["label"] == "events_linking"){
+            edges.push({
+                "from": event["id"],
+                "to": prime_event_id,
+                "arrows": "to",
+                "label": event["link_name"]
+            })
+        }
+        else{
+            edges.push({
+                "from": prime_event_id,
+                "to": event["id"],
+                "arrows": "to",
+                "label": event["link_name"]
+            })
+        }
     }
     nodes.push({
-        "id": event["id"],
+        "id": associated_events[0]["id"],
         "color": background_color,
         "shape": shape,
-        "label":"Gauge name: " + event['gauge']['name'] + "\nGauge system: " + event['gauge']['system'] + "\nStart: " + event['start'] + "\nStop: " + event['stop'],
+        "label":"Gauge name: " + associated_events[0]['gauge']['name'] + "\nGauge system: " + associated_events[0]['gauge']['system'] + "\nStart: " + associated_events[0]['start'] + "\nStop: " + associated_events[0]['stop'],
         "font": {"align": "left"}
     });
 }

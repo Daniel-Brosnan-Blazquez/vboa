@@ -82,9 +82,9 @@ def query_event_links(event_uuid):
     """
     current_app.logger.debug("Query event links")
     query = Query()
-    events = query.get_linked_events(event_uuids=[event_uuid], back_ref = True)
-    current_app.logger.info(events)
-    return render_template("eboa_nav/linked_events_nav.html", events=events)
+    links = query.get_linked_events_details(event_uuid=event_uuid, back_ref = True)
+    events = links["prime_events"] + [link["event"] for link in links["events_linking"]] + [link["event"] for link in links["linked_events"]]
+    return render_template("eboa_nav/linked_events_nav.html", links=links, events=events)
 
 
 @bp.route("/query-sources", methods=["GET", "POST"])
