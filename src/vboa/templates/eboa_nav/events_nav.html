@@ -79,9 +79,8 @@
 <!-- /.panel -->
 {% endblock %}
 {% block scripts %}
-    <script src="{{ url_for('static', filename='node_modules/vis/dist/vis.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/vis/dist/vis.min.js') }}"></script>
     <script src="{{ url_for('static', filename='node_modules/vis/dist/vis-timeline-graph2d.min.js') }}"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
     <script type="module">
       import * as graph from "{{ url_for('static', filename='js/graph.js') }}";
       {% with events=events %}

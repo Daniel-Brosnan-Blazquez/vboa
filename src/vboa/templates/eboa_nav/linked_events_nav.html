@@ -5,70 +5,103 @@
 <div>
   <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
 </div>
-<table width="100%" class="table table-striped table-bordered table-hover" id="events">
-  <thead>
-    <tr>
-      <th>Description</th>
-      <th>Gauge name</th>
-      <th>Gauge system</th>
-      <th>Start</th>
-      <th>Stop</th>
-      <th>Ingestion Time</th>
-      <th>Source</th>
-      <th>Explicit Reference</th>
-      <th>Linked events</th>
-      <th>Event UUID</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for key in events %}
-    {% for event in events[key] %}
-    <tr>
-      <td>
-        {% set description = "PRIME" %}
-        {% if key == "linked_events" %}
-        {% set description = "LINK FROM" %}
-        {% elif key == "events_linking" %}
-        {% set description = "LINK TO" %}
-        {% endif %}
-        {{ description }}
-      </td>
-      <td>{{ event.gauge.name }}</td>
-      <td>{{ event.gauge.system }}</td>
-      <td>{{ event.start }}</td>
-      <td>{{ event.stop }}</td>
-      <td>{{ event.ingestion_time }}</td>
-      {% set source_uuid = event.source.processing_uuid %}
-      <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
-      <td>
-        {% set er = "" %}
-        {% if event.explicitRef %}
-        {% set er = event.explicitRef.explicit_ref %}
-        {% endif %}
-        {{ er }}
-      </td>
-      <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
-      <td>{{ event.event_uuid }}</td>
-    </tr>
-    {% endfor %}
-    {% endfor %}
-  </tbody>
-  <tfoot>
-    <tr>
-      <th>Description</th>
-      <th>Gauge name</th>
-      <th>Gauge system</th>
-      <th>Start</th>
-      <th>Stop</th>
-      <th>Ingestion Time</th>
-      <th>Source</th>
-      <th>Explicit Reference</th>
-      <th>Linked events</th>
-      <th>Event UUID</th>
-    </tr>
-  </tfoot>
-</table>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of linked events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="events">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Gauge name</th>
+          <th>Gauge system</th>
+          <th>Start</th>
+          <th>Stop</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Linked events</th>
+          <th>Event UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key in events %}
+        {% for event in events[key] %}
+        <tr>
+          <td>
+            {% set description = "PRIME" %}
+            {% if key == "linked_events" %}
+            {% set description = "LINK FROM" %}
+            {% elif key == "events_linking" %}
+            {% set description = "LINK TO" %}
+            {% endif %}
+            {{ description }}
+          </td>
+          <td>{{ event.gauge.name }}</td>
+          <td>{{ event.gauge.system }}</td>
+          <td>{{ event.start }}</td>
+          <td>{{ event.stop }}</td>
+          <td>{{ event.ingestion_time }}</td>
+          {% set source_uuid = event.source.processing_uuid %}
+          <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
+          <td>
+            {% set er = "" %}
+            {% if event.explicitRef %}
+            {% set er = event.explicitRef.explicit_ref %}
+            {% endif %}
+            {{ er }}
+          </td>
+          <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td>{{ event.event_uuid }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Description</th>
+          <th>Gauge name</th>
+          <th>Gauge system</th>
+          <th>Start</th>
+          <th>Stop</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Linked events</th>
+          <th>Event UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Network of events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div class="network" id="events_nav_network">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
 {% endblock %}
-{% block sources_nav_content %}
-{% include "eboa_nav/query_sources_content.html" %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='node_modules/vis/dist/vis.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/vis/dist/vis-network.min.js') }}"></script>
+    <script type="module">
+      import * as graph from "{{ url_for('static', filename='js/graph.js') }}";
+      {% with events=events %}
+      {% include "graphs/events_to_json_for_network.js" %}
+      {% endwith %}
+      console.log(edges)
+      console.log(nodes)
+      graph.display_network("events_nav_network", nodes, edges);
+    </script>
+    {{ super() }}
 {% endblock %}
