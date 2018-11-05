@@ -70,8 +70,12 @@ def query_events():
                 i+=1
             # end for
         # end if
+        show_timeline=True
+        if not "show_timeline" in request.form:
+            show_timeline = False
+        # end if
         events = query.get_events_join(**kwargs)
-        return render_template("eboa_nav/events_nav.html", events=events)
+        return render_template("eboa_nav/events_nav.html", events=events, show_timeline=show_timeline)
     # end if
     return render_template("eboa_nav/query_events.html")
 

@@ -65,6 +65,7 @@
   <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
+{% if show_timeline %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Timeline of events
@@ -77,15 +78,18 @@
   <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
+{% endif %}
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='node_modules/vis/dist/vis.min.js') }}"></script>
     <script type="module">
       import * as graph from "{{ url_for('static', filename='js/graph.js') }}";
+      {% if show_timeline %}
       {% with events=events %}
       {% include "graphs/events_to_json_for_timeline.js" %}
       {% endwith %}
       graph.display_timeline("events_nav_timeline", items, groups);
+      {% endif %}
     </script>
     {{ super() }}
 {% endblock %}
