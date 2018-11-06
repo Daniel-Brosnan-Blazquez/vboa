@@ -55,8 +55,8 @@ function show_network_node_information(params, items, dom_id){
         const header_content = "Detailed information for the network element: " + element_id;
         const node = nodes.filter(node => node["id"] == element_id)[0]
         const body_content = node["tooltip"];
-        const x = params["pointer"]["DOM"]["x"] + pageXOffset;
-        const y = params["pointer"]["DOM"]["y"] + pageYOffset;
+        const x = params["event"]["center"]["x"] + pageXOffset;
+        const y = params["event"]["center"]["y"] + pageYOffset;
 
         const div = create_div(dom_id, element_id, header_content, body_content, x, y);
         drag_element(div);
