@@ -3,6 +3,8 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js";
 import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.js";
 import "datatables/media/js/jquery.dataTables.min.js";
+import * as vis from "vis/dist/vis.js";
+import * as graph from "./graph.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -11,6 +13,9 @@ import "bootstrap-social/bootstrap-social.css";
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap-responsive-tabs/dist/css/bootstrap-responsive-tabs.css";
 import "datatables/media/css/jquery.dataTables.min.css";
+import "vis/dist/vis.css";
+import "vis/dist/vis-timeline-graph2d.min.css";
+import "vis/dist/vis-network.min.css";
 
 /* Function to add more start and stop selectors when commanded */
 jQuery(function (){
@@ -122,3 +127,19 @@ jQuery(function() {
         } );
     } );
 } );
+
+/* Function to display a timeline given the id of the DOM where to
+ * attach it and the items to show with corresponding groups */
+export function display_timeline(dom_id, items, groups){
+
+    graph.display_timeline(dom_id, items, groups)
+
+};
+
+/* Function to display a network given the id of the DOM where to
+ * attach it and the nodes to show with the corresponding relations */
+export function display_network(dom_id, nodes, edges){
+
+    graph.display_network(dom_id, nodes, edges)
+
+};

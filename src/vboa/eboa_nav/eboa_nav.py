@@ -142,8 +142,17 @@ def query_sources():
                 i+=1
             # end for
         # end if
+        show_validity_timeline=True
+        if not "show_validity_timeline" in request.form:
+            show_validity_timeline = False
+        # end if
+        show_generation_to_ingestion_timeline=True
+        if not "show_generation_to_ingestion_timeline" in request.form:
+            show_generation_to_ingestion_timeline = False
+        # end if
+        current_app.logger.debug(show_validity_timeline)
         sources = query.get_sources_join(**kwargs)
-        return render_template("eboa_nav/sources_nav.html", sources=sources)
+        return render_template("eboa_nav/sources_nav.html", sources=sources, show_validity_timeline=show_validity_timeline, show_generation_to_ingestion_timeline=show_generation_to_ingestion_timeline)
     # end if
     return render_template("eboa_nav/query_sources.html")
 

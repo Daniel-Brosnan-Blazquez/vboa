@@ -6,6 +6,8 @@ const config = {
     output: {
         path: __dirname + '/dist',
         filename: 'bundle.js',
+        libraryTarget: 'var',
+        library: 'vboa'
     },
     resolve: {
         extensions: [".js", ".css"]

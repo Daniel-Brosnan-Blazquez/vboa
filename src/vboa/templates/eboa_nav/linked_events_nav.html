@@ -109,19 +109,15 @@
 <!-- /.panel -->
 {% endblock %}
 {% block scripts %}
-    <script src="{{ url_for('static', filename='node_modules/vis/dist/vis.min.js') }}"></script>
-    <script type="module">
-      import * as graph from "{{ url_for('static', filename='js/graph.js') }}";
+    {{ super() }}
+    <script type="text/javascript">
       {% with links=links %}
       {% include "graphs/events_to_json_for_network.js" %}
       {% endwith %}
-      console.log(edges)
-      console.log(nodes)
-      graph.display_network("events_nav_network", nodes, edges);
+      vboa.display_network("events_nav_network", nodes, edges);
       {% with events=events %}
       {% include "graphs/events_to_json_for_timeline.js" %}
       {% endwith %}
-      graph.display_timeline("events_nav_timeline", items, groups);
+      vboa.display_timeline("events_nav_timeline", items, groups);
     </script>
-    {{ super() }}
 {% endblock %}

@@ -1,16 +1,21 @@
+import * as vis from "vis/dist/vis.js";
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
 export function display_timeline(dom_id, items, groups){
 
     /* create timeline */
-    var container = document.getElementById(dom_id);
+    const container = document.getElementById(dom_id);
 
-    var options = {
+    const options = {
         groupOrder: 'content'
     };
     
-    var timeline = new vis.Timeline(container, items, groups, options);
+    const timeline = new vis.Timeline(container, new vis.DataSet(items), new vis.DataSet(groups), options);
+
+    timeline.on("click", function (params) {
+        show_timeline_item_information(params, items, dom_id)
+    });
 
 };
 
@@ -19,23 +24,139 @@ export function display_timeline(dom_id, items, groups){
 export function display_network(dom_id, nodes, edges){
 
     /* create timeline */
-    var container = document.getElementById(dom_id);
+    const container = document.getElementById(dom_id);
 
-    var data = {
+    const data = {
         nodes: new vis.DataSet(nodes),
         edges: new vis.DataSet(edges)
     };
     
-    var options = {
+    const options = {
         physics: {
             enabled: true,
             barnesHut: {
                 gravitationalConstant: -250000
             }
-        }
+        },
+        interaction:{hover:true}
     };
-    console.log(data);
-    console.log(container);
-    var network = new vis.Network(container, data, options);
+    const network = new vis.Network(container, data, options);
+
+    network.on("click", function (params) {
+        show_network_node_information(params, nodes, dom_id)
+    });
 
 };
+
+function show_network_node_information(params, items, dom_id){
+
+    const element_id = params["nodes"][0];
+    if (element_id !== null){
+        const header_content = "Detailed information for the network element: " + element_id;
+        const node = nodes.filter(node => node["id"] == element_id)[0]
+        const body_content = node["tooltip"];
+        const x = params["pointer"]["DOM"]["x"] + pageXOffset;
+        const y = params["pointer"]["DOM"]["y"] + pageYOffset;
+
+        const div = create_div(dom_id, element_id, header_content, body_content, x, y);
+        drag_element(div);
+    }
+}
+
+function show_timeline_item_information(params, items, dom_id){
+
+    const element_id = params["item"]
+    if (element_id !== null){
+        const header_content = "Detailed information for the timeline element: " + element_id;
+        const item = items.filter(item => item["id"] == element_id)[0]
+        const body_content = item["tooltip"];
+        const x = params["pageX"];
+        const y = params["pageY"];
+
+        const div = create_div(dom_id, element_id, header_content, body_content, x, y)
+        drag_element(div)
+    }
+}
+
+function create_div(dom_id, element_id, header_content, body_content, x, y){
+
+    const container = document.getElementById(dom_id);
+
+    // Create div
+    const div = document.createElement("div");
+    div.id = dom_id + "_" + element_id
+    container.appendChild(div);
+    // Add class to the div
+    div.classList.add("draggable-div");
+    div.style.top = y + "px";
+    div.style.left = x + "px";
+
+    // Create header for the div
+    const div_header = document.createElement("div");
+    const div_header_text = document.createElement("div");
+    div_header_text.innerHTML = header_content;
+    div_header.id = "header"
+    div.appendChild(div_header);
+    div_header.appendChild(div_header_text);
+    // Add class to the div
+    div_header_text.classList.add("draggable-div-header-text");
+
+    // Add close icon
+    const div_header_close = document.createElement("div");
+    div_header.appendChild(div_header_close);
+    const span_close = document.createElement("span");
+    div_header_close.appendChild(span_close);
+    span_close.classList.add("fa");
+    span_close.classList.add("fa-times");
+    div_header_close.classList.add("draggable-div-close");
+    div_header_close.onclick = function(){
+        div.parentNode.removeChild(div);
+    };
+
+    // Create body for the div
+    const div_body = document.createElement("div");
+    div.appendChild(div_body);
+    div_body.innerHTML = body_content;
+    div_body.id = "body"
+    div_body.classList.add("draggable-div-body");
+
+    return div;
+
+}
+
+function drag_element(element) {
+
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    // The element is draggable only using the header
+    element.querySelector("#header").onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+}

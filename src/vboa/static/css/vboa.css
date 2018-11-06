@@ -4,6 +4,33 @@
   height: 600px;
 }
 
+/* Draaggable div */
+.draggable-div {
+    position: absolute;
+    z-index: 9;
+    text-align: center;
+}
+.draggable-div-header-text {
+    width: 97%;
+    background-color: #2196F3;
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+    color: #fff;
+    float: left;
+}
+.draggable-div-close {
+    width: 3%;
+    float: right;
+    display:inline-block;
+    cursor: pointer;
+}
+.draggable-div-body {
+    width: 97%;
+    background-color: #f1f1f1;
+    float: left;
+}
+
 /*Check box*/
 
 input[type="checkbox"], input[type="radio"]{
