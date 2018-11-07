@@ -12,6 +12,7 @@ var sources = {
             "ingestion_time": "{{ source.ingestion_time }}",
             "ingestion_duration": "{{ source.ingestion_duration }}",
             "generation_time": "{{ source.generation_time }}",
+            "number_of_events": "{{ source.events|list|length }}"
         },
         {% endfor %}
     ]

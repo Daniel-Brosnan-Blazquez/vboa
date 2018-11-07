@@ -70,12 +70,13 @@ def query_events():
                 i+=1
             # end for
         # end if
-        show_timeline=True
+        show = {}
+        show["timeline"]=True
         if not "show_timeline" in request.form:
-            show_timeline = False
+            show["timeline"] = False
         # end if
         events = query.get_events_join(**kwargs)
-        return render_template("eboa_nav/events_nav.html", events=events, show_timeline=show_timeline)
+        return render_template("eboa_nav/events_nav.html", events=events, show=show)
     # end if
     return render_template("eboa_nav/query_events.html")
 
@@ -142,17 +143,21 @@ def query_sources():
                 i+=1
             # end for
         # end if
-        show_validity_timeline=True
+        show = {}
+        show["validity_timeline"]=True
         if not "show_validity_timeline" in request.form:
-            show_validity_timeline = False
+            show["validity_timeline"] = False
         # end if
-        show_generation_to_ingestion_timeline=True
+        show["generation_to_ingestion_timeline"]=True
         if not "show_generation_to_ingestion_timeline" in request.form:
-            show_generation_to_ingestion_timeline = False
+            show["generation_to_ingestion_timeline"] = False
         # end if
-        current_app.logger.debug(show_validity_timeline)
+        show["number_events_xy"]=True
+        if not "show_number_events_xy" in request.form:
+            show["number_events_xy"] = False
+        # end if
         sources = query.get_sources_join(**kwargs)
-        return render_template("eboa_nav/sources_nav.html", sources=sources, show_validity_timeline=show_validity_timeline, show_generation_to_ingestion_timeline=show_generation_to_ingestion_timeline)
+        return render_template("eboa_nav/sources_nav.html", sources=sources, show=show)
     # end if
     return render_template("eboa_nav/query_sources.html")
 

@@ -1,4 +1,4 @@
-import * as vis from "vis/dist/vis.js";
+import * as vis from "vis/dist/vis.min.js";
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
@@ -18,6 +18,21 @@ export function display_timeline(dom_id, items, groups){
     });
 
 };
+
+function show_timeline_item_information(params, items, dom_id){
+
+    const element_id = params["item"]
+    if (element_id !== null){
+        const header_content = "Detailed information for the timeline element: " + element_id;
+        const item = items.filter(item => item["id"] == element_id)[0]
+        const body_content = item["tooltip"];
+        const x = params["pageX"];
+        const y = params["pageY"];
+
+        const div = create_div(dom_id, element_id, header_content, body_content, x, y)
+        drag_element(div)
+    }
+}
 
 /* Function to display a network given the id of the DOM where to
  * attach it and the nodes to show with the corresponding relations */
@@ -63,11 +78,38 @@ function show_network_node_information(params, items, dom_id){
     }
 }
 
-function show_timeline_item_information(params, items, dom_id){
+/* Function to display an X-Time graph given the id of the DOM where to
+ * attach it and the items to show with the corresponding groups */
+export function display_x_time(dom_id, items, groups){
 
-    const element_id = params["item"]
-    if (element_id !== null){
-        const header_content = "Detailed information for the timeline element: " + element_id;
+    /* create timeline */
+    const container = document.getElementById(dom_id);
+    
+    const options = {
+        legend: true
+    };
+    
+    const x_time = new vis.Graph2d(container, new vis.DataSet(items), new vis.DataSet(groups), options);
+
+    x_time.on("click", function (params) {
+        show_x_time_item_information(params, items, dom_id)
+    });
+
+};
+
+function show_x_time_item_information(params, items, dom_id){
+
+    const time_margin = 5;
+
+    var left_time = new Date(params["time"]);
+    left_time.setSeconds(left_time.getSeconds() - time_margin);
+    var right_time = new Date(params["time"])
+    right_time.setSeconds(right_time.getSeconds() + time_margin);
+    const y = params["value"][0]
+    const matched_items = items.filter(item => new Date(item["x"]) >= left_time && new Date(item["x"]) <= right_time)
+    for (const matched_item of matched_items){
+        const element_id = matched_item["id"]
+        const header_content = "Detailed information for the X-Time element: " + element_id;
         const item = items.filter(item => item["id"] == element_id)[0]
         const body_content = item["tooltip"];
         const x = params["pageX"];
