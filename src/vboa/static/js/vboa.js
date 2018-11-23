@@ -5,6 +5,7 @@ import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.j
 import "datatables/media/js/jquery.dataTables.min.js";
 import * as vis from "vis/dist/vis.js";
 import * as graph from "./graph.js";
+import * as sourceFunctions from "./sources.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -146,8 +147,44 @@ export function display_network(dom_id, nodes, edges){
 
 /* Function to display an X-Time graph given the id of the DOM where to
  * attach it and the items to show with the corresponding groups */
-export function display_x_time(dom_id, items, groups){
+export function display_x_time(dom_id, items, groups, options){
 
-    graph.display_x_time(dom_id, items, groups);
+    graph.display_x_time(dom_id, items, groups, options);
+
+};
+
+/* Function to show a timeline of validities for the sources */
+export function create_source_validity_timeline(sources, dom_id){
+
+    sourceFunctions.create_source_validity_timeline(sources, dom_id);
+
+};
+
+/* Function to show a timeline of validities for the sources */
+export function create_source_generation_to_ingestion_timeline(sources, dom_id){
+
+    sourceFunctions.create_source_generation_to_ingestion_timeline(sources, dom_id);
+
+};
+
+/* Function to show an X-time graph with the number of events per source */
+export function create_source_number_events_xy(sources, dom_id){
+
+    sourceFunctions.create_source_number_events_xy(sources, dom_id);
+
+};
+
+/* Function to show an X-time graph with the ingestion duration per source */
+export function create_source_ingestion_duration_xy(sources, dom_id){
+
+    sourceFunctions.create_source_ingestion_duration_xy(sources, dom_id);
+
+};
+
+/* Function to show an X-time graph with the difference between the
+ * ingestion time and the generation time per source */
+export function create_source_generation_time_to_ingestion_time_xy(sources, dom_id){
+
+    sourceFunctions.create_source_generation_time_to_ingestion_time_xy(sources, dom_id);
 
 };

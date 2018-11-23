@@ -114,7 +114,7 @@
   <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
-{% if show["validity_timeline"] %}
+{% if not show or show["validity_timeline"] %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Validity timeline of sources
@@ -128,7 +128,7 @@
 </div>
 <!-- /.panel -->
 {% endif %}
-{% if show["generation_to_ingestion_timeline"] %}
+{% if not show or show["generation_to_ingestion_timeline"] %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Generation to ingestion timeline of sources
@@ -142,7 +142,7 @@
 </div>
 <!-- /.panel -->
 {% endif %}
-{% if show["number_events_xy"] %}
+{% if not show or show["number_events_xy"] %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Number of events over time per source
@@ -156,6 +156,34 @@
 </div>
 <!-- /.panel -->
 {% endif %}
+{% if not show or show["ingestion_duration_xy"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Ingestion duration over time per source
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="sources_nav_ingestion_duration_xy">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% if not show or show["generation_time_to_ingestion_time_xy"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Difference between the ingestion time and the generation time over time per source
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="sources_nav_generation_time_to_ingestion_time_xy">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
 {% endblock %}
 {% block scripts %}
     {{ super() }}
@@ -163,17 +191,20 @@
       {% with sources=sources %}
       {% include "graphs/sources_to_json.js" %}
       {% endwith %}
-      {% if show["validity_timeline"] %}
-      {% include "graphs/sources_validity_timeline.js" %}
-      vboa.display_timeline("sources_nav_validity_timeline", items, groups);
+      {% if not show or show["validity_timeline"] %}
+      vboa.create_source_validity_timeline(sources, "sources_nav_validity_timeline");
       {% endif %}
-      {% if show["generation_to_ingestion_timeline"] %}
-      {% include "graphs/sources_generation_to_ingestion_timeline.js" %}
-      vboa.display_timeline("sources_nav_generation_to_ingestion_timeline", items, groups);
+      {% if not show or show["generation_to_ingestion_timeline"] %}
+      vboa.create_source_generation_to_ingestion_timeline(sources, "sources_nav_generation_to_ingestion_timeline");
       {% endif %}
-      {% if show["number_events_xy"] %}
-      {% include "graphs/sources_number_of_events.js" %}
-      vboa.display_x_time("sources_nav_number_events_xy", items, groups);
+      {% if not show or show["number_events_xy"] %}
+      vboa.create_source_number_events_xy(sources, "sources_nav_number_events_xy");
+      {% endif %}
+      {% if not show or show["ingestion_duration_xy"] %}
+      vboa.create_source_ingestion_duration_xy(sources, "sources_nav_ingestion_duration_xy");
+      {% endif %}
+      {% if not show or show["generation_time_to_ingestion_time_xy"] %}
+      vboa.create_source_generation_time_to_ingestion_time_xy(sources, "sources_nav_generation_time_to_ingestion_time_xy");
       {% endif %}
     </script>
 {% endblock %}

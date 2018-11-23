@@ -80,14 +80,16 @@ function show_network_node_information(params, items, dom_id){
 
 /* Function to display an X-Time graph given the id of the DOM where to
  * attach it and the items to show with the corresponding groups */
-export function display_x_time(dom_id, items, groups){
+export function display_x_time(dom_id, items, groups, options){
 
     /* create timeline */
     const container = document.getElementById(dom_id);
     
-    const options = {
-        legend: true
-    };
+    if (options == undefined){
+        const options = {
+            legend: true
+        };
+    }
     
     const x_time = new vis.Graph2d(container, new vis.DataSet(items), new vis.DataSet(groups), options);
 

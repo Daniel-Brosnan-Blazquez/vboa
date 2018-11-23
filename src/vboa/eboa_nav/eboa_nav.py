@@ -156,6 +156,14 @@ def query_sources():
         if not "show_number_events_xy" in request.form:
             show["number_events_xy"] = False
         # end if
+        show["ingestion_duration_xy"]=True
+        if not "show_ingestion_duration_xy" in request.form:
+            show["ingestion_duration_xy"] = False
+        # end if
+        show["generation_time_to_ingestion_time_xy"]=True
+        if not "show_generation_time_to_ingestion_time_xy" in request.form:
+            show["generation_time_to_ingestion_time_xy"] = False
+        # end if
         sources = query.get_sources_join(**kwargs)
         return render_template("eboa_nav/sources_nav.html", sources=sources, show=show)
     # end if
