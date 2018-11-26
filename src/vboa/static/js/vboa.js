@@ -6,6 +6,7 @@ import "datatables/media/js/jquery.dataTables.min.js";
 import * as vis from "vis/dist/vis.js";
 import * as graph from "./graph.js";
 import * as sourceFunctions from "./sources.js";
+import * as eventFunctions from "./events.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -152,6 +153,28 @@ export function display_x_time(dom_id, items, groups, options){
     graph.display_x_time(dom_id, items, groups, options);
 
 };
+
+/*
+* EVENTS *
+*/
+
+/* Function to show a timeline of events */
+export function create_event_timeline(events, dom_id){
+
+    eventFunctions.create_event_timeline(events, dom_id);
+
+};
+
+/* Function to show a network of events */
+export function create_event_network(events, dom_id){
+
+    eventFunctions.create_event_network(events, dom_id);
+
+};
+
+/*
+* SOURCES *
+*/
 
 /* Function to show a timeline of validities for the sources */
 export function create_source_validity_timeline(sources, dom_id){

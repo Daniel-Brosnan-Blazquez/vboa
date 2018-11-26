@@ -63,7 +63,7 @@ export function display_network(dom_id, nodes, edges){
 
 };
 
-function show_network_node_information(params, items, dom_id){
+function show_network_node_information(params, nodes, dom_id){
 
     const element_id = params["nodes"][0];
     if (element_id !== null){

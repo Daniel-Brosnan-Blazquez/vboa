@@ -114,10 +114,13 @@
       {% with links=links %}
       {% include "graphs/events_to_json_for_network.js" %}
       {% endwith %}
-      vboa.display_network("events_nav_network", nodes, edges);
+      const events_for_network = events;
       {% with events=events %}
       {% include "graphs/events_to_json_for_timeline.js" %}
       {% endwith %}
-      vboa.display_timeline("events_nav_timeline", items, groups);
+      const events_for_timeline = events;
+
+      vboa.create_event_network(events_for_network, "events_nav_network");
+      vboa.create_event_timeline(events_for_timeline, "events_nav_timeline");
     </script>
 {% endblock %}
