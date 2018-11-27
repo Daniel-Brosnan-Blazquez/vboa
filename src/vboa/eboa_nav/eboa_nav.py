@@ -9,6 +9,7 @@ import sys
 # Import flask utilities
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
 from flask_debugtoolbar import DebugToolbarExtension
+from flask import jsonify
 
 # Import eboa utilities
 from eboa.engine.query import Query
@@ -180,4 +181,13 @@ def query_source(source_uuid):
     source = query.get_sources(processing_uuids={"list": [source_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=source)
 
-
+@bp.route("/query-gauge-names")
+def query_gauge_names():
+    """
+    Query all the gauge names.
+    """
+    current_app.logger.debug("Query gauge names")
+    query = Query()
+    gauges = query.get_gauges()
+    jsonified_gauges = [gauge.jsonify() for gauge in gauges]
+    return jsonify(jsonified_gauges)

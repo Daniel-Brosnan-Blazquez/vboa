@@ -15,13 +15,17 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-2">
+              <div class="col-xs-2" id="div-gauge-name">
                 <label>Gauge name like</label>
-                <input class="form-control" name="gauge_name_like"/>
+                <input class="form-control" list="gauge_names" name="gauge_name_like" onfocus="vboa.fill_gauges()"/>
+                <datalist id="gauge_names">
+                </datalist>
               </div>
-              <div class="col-xs-2">
+              <div class="col-xs-2" id="div-gauge-system">
                 <label>Gauge system like</label>
-                <input class="form-control" name="gauge_system_like"/>
+                <input class="form-control" list="gauge_systems" name="gauge_system_like" onfocus="vboa.fill_gauges()"/>
+                <datalist id="gauge_systems">
+                </datalist>
               </div>
             </div>
             <div class="row" id="start-stop">

@@ -130,6 +130,53 @@ jQuery(function() {
     } );
 } );
 
+/* Functions to fill lists of inputs */
+export function fill_gauges(){
+    const div_gauge_name = document.querySelector("#div-gauge-name");
+    const datalist_gauge_name = div_gauge_name.getElementsByTagName("datalist")[0];
+    const options = datalist_gauge_name.getElementsByTagName("option");
+    if (options.length == 0){
+        const div_gauge_system = document.querySelector("#div-gauge-system");
+        const datalist_gauge_system = div_gauge_system.getElementsByTagName("datalist")[0];
+
+        const parameters = {
+            "datalist_gauge_name": datalist_gauge_name,
+            "datalist_gauge_system": datalist_gauge_system
+        }
+        /* Fill the list only if it was not filled previously */
+        const gauge_names_json = request_info("/eboa_nav/query-gauge-names", fill_gauges_into_datalists, parameters);
+    }
+}
+
+function fill_gauges_into_datalists(parameters, gauges){
+
+    var gauge_names = new Set(gauges.map(gauge => gauge["name"]))
+    var gauge_systems = new Set(gauges.map(gauge => gauge["system"]))
+    for (const gauge_name of gauge_names){
+        add_option(parameters["datalist_gauge_name"], gauge_name);
+    }
+    for (const gauge_system of gauge_systems){
+        add_option(parameters["datalist_gauge_system"], gauge_system);
+    }
+}
+
+function add_option(dom_id, value){
+    var option = document.createElement("option");
+    option.setAttribute("value", value);
+    dom_id.appendChild(option);
+}
+
+function request_info(url, callback, parameters){
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            return callback(parameters, JSON.parse(this.responseText));
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
 export function display_timeline(dom_id, items, groups){
