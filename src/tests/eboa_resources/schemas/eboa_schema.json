@@ -1,0 +1,195 @@
+{
+    "type": "object",
+    "required": ["operations"],
+    "properties": {
+        "operations": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    { "$ref": "#/definitions/insert" },
+                    { "$ref": "#/definitions/update" }
+                ]
+            },
+            "additionalItems": false
+        }
+    },
+    "additionalProperties": false,
+    "definitions": {
+        "insert": {
+            "required": ["dim_signature", "source"],
+            "properties": {
+                "mode": {"enum": ["insert"]},
+                "source": {
+                    "type": "object",
+                    "required": ["name", "generation_time", "validity_start", "validity_stop"],
+                    "properties": {
+                        "name" : {"type": "string"},
+                        "generation_time" : {"type": "string",
+                                             "format": "date-time"},
+                        "validity_start" : {"type": "string",
+                                            "format": "date-time"},
+                        "validity_stop" : {"type": "string",
+                                           "format": "date-time"}
+                    },
+                    "additionalProperties": false
+                },
+                "dim_signature": {
+                    "type": "object",
+                    "required": ["exec", "name", "version"],
+                    "properties": {
+                        "exec" : {"type": "string"},
+                        "name" : {"type": "string"},
+                        "version" : {"type": "string"}
+                    },
+                    "additionalProperties": false
+                },
+                "explicit_references": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/explicit_reference"
+                    },
+                    "additionalItems": false
+                },
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/event"
+                    },
+                    "additionalItems": false
+                },
+                "annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/annotation"
+                    },
+                    "additionalItems": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "explicit_reference": {
+            "type": "object",
+            "required": ["name", "links"],
+            "properties": {
+                "name" : {"type": "string"},
+                "group": {"type": "string"},
+                "links": {"type": "array",
+                          "items": {
+                              "$ref": "#/definitions/explicit_reference_link"
+                          },
+                          "additionalItems": false
+                         }
+            },
+            "additionalProperties": false
+        },
+        "explicit_reference_link": {
+            "type": "object",
+            "required": ["name", "link"],
+            "properties": {
+                "name": {"type": "string"},
+                "link": {"type": "string"},
+                "back_ref": {"enum": ["true", "false"]}
+            },
+            "additionalProperties": false
+        },
+        "event": {
+            "type": "object",
+            "required": ["gauge", "start", "stop"],
+            "properties": {
+                "explicit_reference" : {"type": "string"},
+                "gauge": {"type": "object",
+                          "required": ["insertion_type", "name"],
+                          "properties": {
+                              "insertion_type": {"enum": ["SIMPLE_UPDATE", "EVENT_KEYS", "ERASE_and_REPLACE"]},
+                              "name": {"type": "string"},
+                              "system": {"type": "string"}
+                          },
+                          "additionalItems": false
+                         },
+                "key": {"type": "string"},
+                "links": {"type": "array",
+                          "items": {
+                              "$ref": "#/definitions/event_link"
+                          },
+                          "additionalItems": false
+                         },
+                "start": {"type": "string",
+                          "format": "date-time"},
+                "stop": {"type": "string",
+                         "format": "date-time"},
+                "values": {
+                    "$ref": "#/definitions/values_array"
+                }
+            },
+            "additionalProperties": false
+        },
+        "event_link": {
+            "type": "object",
+            "required": ["name", "link", "link_mode"],
+            "properties": {
+                "name": {"type": "string"},
+                "link": {"type": "string"},
+                "link_mode": {"enum": ["by_ref", "by_uuid", null]},
+                "back_ref": {"enum": ["true", "false", null]}
+            },
+            "additionalProperties": false
+        },
+        "annotation": {
+            "type": "object",
+            "required": ["annotation_cnf", "explicit_reference"],
+            "properties": {
+                "explicit_reference" : {"type": "string"},
+                "annotation_cnf": {"type": "object",
+                                   "required": ["name"],
+                                   "properties": {
+                                       "name": {"type": "string"},
+                                       "system": {"type": "string"}
+                                   },
+                                   "additionalItems": false
+                                  },
+                "values": {
+                    "$ref": "#/definitions/values_array"
+                }
+            },
+            "additionalProperties": false
+        },
+        "values_array": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    { "$ref": "#/definitions/value" },
+                    { "$ref": "#/definitions/values" }
+                ]
+            },
+            "additionalItems": false
+        },
+        "value": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+                "name": {"type": "string"},
+                "type": {"enum": ["text", "timestamp", "boolean", "double", "geometry"]},
+                "value": {"type": "string"}
+            },
+            "additionalProperties": false
+        },
+        "values": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+                "name": {"type": "string"},
+                "type": {"enum": ["object"]},
+                "values": {
+                    "$ref": "#/definitions/values_array"
+                }
+            },
+            "additionalProperties": false
+        },
+        "update": {
+            "properties": {
+                "mode": {"enum": ["update"]}
+            },
+            "additionalProperties": false
+        }
+    }
+}

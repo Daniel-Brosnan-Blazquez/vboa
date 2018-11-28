@@ -5,7 +5,9 @@ Written by DEIMOS Space S.L. (dibb)
 
 module vboa
 """
+# Import python utilities
 import sys
+import json
 # Import flask utilities
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
 from flask_debugtoolbar import DebugToolbarExtension
@@ -13,6 +15,7 @@ from flask import jsonify
 
 # Import eboa utilities
 from eboa.engine.query import Query
+from eboa.engine.engine import Engine
 
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 
@@ -24,64 +27,85 @@ def navigate():
     return render_template("eboa_nav/query_events.html")
 
 @bp.route("/query-events", methods=["GET", "POST"])
-def query_events():
+def query_events_and_render():
     """
-    Query events.
+    Query events and render.
     """
-    current_app.logger.debug("Query events")
+    current_app.logger.debug("Query events and render")
     if request.method == "POST":
-        query = Query()
-        kwargs = {}
-        if request.form["source_like"] != "":
-            kwargs["source_like"] = {"str": request.form["source_like"], "op": "like"}
-        # end if
-        if request.form["er_like"] != "":
-            kwargs["explicit_ref_like_like"] = {"str": request.form["er_like"], "op": "like"}
-        # end if
-        if request.form["gauge_name_like"] != "":
-            kwargs["gauge_name_like"] = {"str": request.form["gauge_name_like"], "op": "like"}
-        # end if
-        if request.form["gauge_system_like"] != "":
-            kwargs["gauge_system_like"] = {"str": request.form["gauge_system_like"], "op": "like"}
-        # end if
-        if request.form["start"] != "":
-            kwargs["start_filters"] = []
-            i = 0
-            operators = request.form.getlist("start_operator")
-            for start in request.form.getlist("start"):
-                kwargs["start_filters"].append({"date": start, "op": operators[i]})
-                i+=1
-            # end for
-        # end if
-        if request.form["stop"] != "":
-            kwargs["stop_filters"] = []
-            i = 0
-            operators = request.form.getlist("stop_operator")
-            for stop in request.form.getlist("stop"):
-                kwargs["stop_filters"].append({"date": stop, "op": operators[i]})
-                i+=1
-            # end for
-        # end if
-        if request.form["ingestion_time"] != "":
-            kwargs["ingestion_time_filters"] = []
-            i = 0
-            operators = request.form.getlist("ingestion_time_operator")
-            for ingestion_time in request.form.getlist("ingestion_time"):
-                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
-                i+=1
-            # end for
-        # end if
+        events = query_events()
         show = {}
         show["timeline"]=True
         if not "show_timeline" in request.form:
             show["timeline"] = False
         # end if
-        events = query.get_events_join(**kwargs)
+
         return render_template("eboa_nav/events_nav.html", events=events, show=show)
     # end if
     return render_template("eboa_nav/query_events.html")
 
+def query_events():
+    """
+    Query events.
+    """
+    current_app.logger.debug("Query events")
+
+    query = Query()
+    kwargs = {}
+    if request.form["source_like"] != "":
+        kwargs["source_like"] = {"str": request.form["source_like"], "op": "like"}
+    # end if
+    if request.form["er_like"] != "":
+        kwargs["explicit_ref_like"] = {"str": request.form["er_like"], "op": "like"}
+    # end if
+    if request.form["gauge_name_like"] != "":
+        kwargs["gauge_name_like"] = {"str": request.form["gauge_name_like"], "op": "like"}
+    # end if
+    if request.form["gauge_system_like"] != "":
+        kwargs["gauge_system_like"] = {"str": request.form["gauge_system_like"], "op": "like"}
+    # end if
+    if request.form["start"] != "":
+        kwargs["start_filters"] = []
+        i = 0
+        operators = request.form.getlist("start_operator")
+        for start in request.form.getlist("start"):
+            kwargs["start_filters"].append({"date": start, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if request.form["stop"] != "":
+        kwargs["stop_filters"] = []
+        i = 0
+        operators = request.form.getlist("stop_operator")
+        for stop in request.form.getlist("stop"):
+            kwargs["stop_filters"].append({"date": stop, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if request.form["ingestion_time"] != "":
+        kwargs["ingestion_time_filters"] = []
+        i = 0
+        operators = request.form.getlist("ingestion_time_operator")
+        for ingestion_time in request.form.getlist("ingestion_time"):
+            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    events = query.get_events_join(**kwargs)
+
+    return events
+
 @bp.route("/query-event-links/<uuid:event_uuid>")
+def query_event_links_and_render(event_uuid):
+    """
+    Query events linked to the event corresponding to the UUID received and render.
+    """
+    current_app.logger.debug("Query event links and render")
+    links = query_event_links(event_uuid)
+    events = links["prime_events"] + [link["event"] for link in links["events_linking"]] + [link["event"] for link in links["linked_events"]]
+
+    return render_template("eboa_nav/linked_events_nav.html", links=links, events=events)
+
 def query_event_links(event_uuid):
     """
     Query events linked to the event corresponding to the UUID received.
@@ -89,61 +113,17 @@ def query_event_links(event_uuid):
     current_app.logger.debug("Query event links")
     query = Query()
     links = query.get_linked_events_details(event_uuid=event_uuid, back_ref = True)
-    events = links["prime_events"] + [link["event"] for link in links["events_linking"]] + [link["event"] for link in links["linked_events"]]
-    return render_template("eboa_nav/linked_events_nav.html", links=links, events=events)
-
+    
+    return links
 
 @bp.route("/query-sources", methods=["GET", "POST"])
-def query_sources():
+def query_sources_and_render():
     """
-    Query sources.
+    Query sources amd render.
     """
-    current_app.logger.debug("Query sources")
+    current_app.logger.debug("Query sources and render")
     if request.method == "POST":
-        query = Query()
-        kwargs = {}
-        if request.form["source_like"] != "":
-            kwargs["name_like"] = {"str": request.form["source_like"], "op": "like"}
-        # end if
-        if request.form["dim_signature_like"] != "":
-            kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": "like"}
-        # end if
-        if request.form["validity_start"] != "":
-            kwargs["validity_start_filters"] = []
-            i = 0
-            operators = request.form.getlist("validity_start_operator")
-            for start in request.form.getlist("validity_start"):
-                kwargs["validity_start_filters"].append({"date": start, "op": operators[i]})
-                i+=1
-            # end for
-        # end if
-        if request.form["validity_stop"] != "":
-            kwargs["validity_stop_filters"] = []
-            i = 0
-            operators = request.form.getlist("validity_stop_operator")
-            for stop in request.form.getlist("validity_stop"):
-                kwargs["validity_stop_filters"].append({"date": stop, "op": operators[i]})
-                i+=1
-            # end for
-        # end if
-        if request.form["ingestion_time"] != "":
-            kwargs["ingestion_time_filters"] = []
-            i = 0
-            operators = request.form.getlist("ingestion_time_operator")
-            for ingestion_time in request.form.getlist("ingestion_time"):
-                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
-                i+=1
-            # end for
-        # end if
-        if request.form["generation_time"] != "":
-            kwargs["generation_time_filters"] = []
-            i = 0
-            operators = request.form.getlist("generation_time_operator")
-            for generation_time in request.form.getlist("generation_time"):
-                kwargs["generation_time_filters"].append({"date": generation_time, "op": operators[i]})
-                i+=1
-            # end for
-        # end if
+        sources = query_sources()
         show = {}
         show["validity_timeline"]=True
         if not "show_validity_timeline" in request.form:
@@ -165,11 +145,64 @@ def query_sources():
         if not "show_generation_time_to_ingestion_time_xy" in request.form:
             show["generation_time_to_ingestion_time_xy"] = False
         # end if
-        sources = query.get_sources_join(**kwargs)
+
         return render_template("eboa_nav/sources_nav.html", sources=sources, show=show)
     # end if
+
     return render_template("eboa_nav/query_sources.html")
 
+def query_sources():
+    """
+    Query sources.
+    """
+    current_app.logger.debug("Query sources")
+    query = Query()
+    kwargs = {}
+    if request.form["source_like"] != "":
+        kwargs["name_like"] = {"str": request.form["source_like"], "op": "like"}
+    # end if
+    if request.form["dim_signature_like"] != "":
+        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": "like"}
+    # end if
+    if request.form["validity_start"] != "":
+        kwargs["validity_start_filters"] = []
+        i = 0
+        operators = request.form.getlist("validity_start_operator")
+        for start in request.form.getlist("validity_start"):
+            kwargs["validity_start_filters"].append({"date": start, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if request.form["validity_stop"] != "":
+        kwargs["validity_stop_filters"] = []
+        i = 0
+        operators = request.form.getlist("validity_stop_operator")
+        for stop in request.form.getlist("validity_stop"):
+            kwargs["validity_stop_filters"].append({"date": stop, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if request.form["ingestion_time"] != "":
+        kwargs["ingestion_time_filters"] = []
+        i = 0
+        operators = request.form.getlist("ingestion_time_operator")
+        for ingestion_time in request.form.getlist("ingestion_time"):
+            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if request.form["generation_time"] != "":
+        kwargs["generation_time_filters"] = []
+        i = 0
+        operators = request.form.getlist("generation_time_operator")
+        for generation_time in request.form.getlist("generation_time"):
+            kwargs["generation_time_filters"].append({"date": generation_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    sources = query.get_sources_join(**kwargs)
+
+    return sources
 
 @bp.route("/query-source/<uuid:source_uuid>")
 def query_source(source_uuid):
@@ -181,13 +214,31 @@ def query_source(source_uuid):
     source = query.get_sources(processing_uuids={"list": [source_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=source)
 
-@bp.route("/query-gauge-names")
-def query_gauge_names():
+@bp.route("/query-gauges")
+def query_gauges():
     """
-    Query all the gauge names.
+    Query all the gauges.
     """
-    current_app.logger.debug("Query gauge names")
+    current_app.logger.debug("Query gauge")
     query = Query()
     gauges = query.get_gauges()
     jsonified_gauges = [gauge.jsonify() for gauge in gauges]
     return jsonify(jsonified_gauges)
+
+@bp.route("/treat-data", methods = ["POST"])
+def treat_data():
+    """
+    Send data to the EBOA to be treated
+    """
+    current_app.logger.debug("Treat data")
+    if request.headers['Content-Type'] != 'application/json':
+        raise
+    # end if
+
+    data = request.get_json()
+    engine = Engine()
+    exit_status = engine.treat_data(data)
+    exit_information = {
+        "exit_status": str(exit_status)
+    }
+    return jsonify(exit_information)

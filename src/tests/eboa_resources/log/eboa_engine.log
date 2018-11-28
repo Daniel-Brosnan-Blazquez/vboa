@@ -1,0 +1,651 @@
+INFO	; (2018-11-27T16:27:13.800) ; eboa.logging(53) [12996] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T16:27:16.161) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:16.234) ; eboa.logging(561) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 contains more than one event which defines the same link reference identifier EVENT_LINK1
+INFO	; (2018-11-27T16:27:16.455) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:16.543) ; eboa.logging(571) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 defines links between events which lead to clashing unique values into the DDBB. The exception raised has been the following: (psycopg2.IntegrityError) llave duplicada viola restricción de unicidad «unique_event_links»
+DETAIL:  Ya existe la llave (event_uuid_link, name, event_uuid)=(ebf91978-f258-11e8-a5b6-0000000032c4, EVENT_LINK_NAME, ebf84c98-f258-11e8-bb1d-0000000032c4).
+ [SQL: 'INSERT INTO event_link_tb (event_uuid_link, name, event_uuid) VALUES (%(event_uuid_link)s, %(name)s, %(event_uuid)s)'] [parameters: ({'event_uuid_link': UUID('ebf84c98-f258-11e8-bb1d-0000000032c4'), 'name': 'EVENT_LINK_NAME', 'event_uuid': UUID('ebf91978-f258-11e8-a5b6-0000000032c4')}, {'event_uuid_link': UUID('ebf91978-f258-11e8-a5b6-0000000032c4'), 'name': 'EVENT_LINK_NAME', 'event_uuid': UUID('ebf84c98-f258-11e8-bb1d-0000000032c4')}, {'event_uuid_link': UUID('ebf91978-f258-11e8-a5b6-0000000032c4'), 'name': 'EVENT_LINK_NAME', 'event_uuid': UUID('ebf84c98-f258-11e8-bb1d-0000000032c4')})] (Background on this error at: http://sqlalche.me/e/gkpj)
+INFO	; (2018-11-27T16:27:18.039) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:18.115) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:18.229) ; eboa.logging(513) [12996] -> The source file source2.xml associated to the DIM signature dim_signature2 and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:18.297) ; eboa.logging(663) [12996] -> The source file source2.xml associated to the DIM signature dim_signature2 and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-27T16:27:19.227) ; eboa.logging(31) [12996] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-27T16:27:19.243) ; eboa.logging(38) [12996] -> Method _insert_dim_signature lasted 0.015973 seconds.
+DEBUG	; (2018-11-27T16:27:19.244) ; eboa.logging(31) [12996] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-27T16:27:19.268) ; eboa.logging(38) [12996] -> Method _insert_source lasted 0.023984 seconds.
+DEBUG	; (2018-11-27T16:27:19.268) ; eboa.logging(31) [12996] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-27T16:27:19.284) ; eboa.logging(38) [12996] -> Method _insert_gauges lasted 0.011164 seconds.
+DEBUG	; (2018-11-27T16:27:19.301) ; eboa.logging(31) [12996] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-27T16:27:19.310) ; eboa.logging(38) [12996] -> Method _insert_explicit_refs lasted 0.008262 seconds.
+DEBUG	; (2018-11-27T16:27:19.338) ; eboa.logging(31) [12996] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-27T16:27:19.360) ; eboa.logging(38) [12996] -> Method _insert_events lasted 0.021648 seconds.
+INFO	; (2018-11-27T16:27:22.621) ; eboa.logging(513) [12996] -> The source file test_simple_update.json associated to the DIM signature test_dim_signature1 and DIM processing test_exec1 with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:22.785) ; eboa.logging(663) [12996] -> The source file test_simple_update.json associated to the DIM signature test_dim_signature1 and DIM processing test_exec1 with version 1.0 has ingested correctly 2 event/s and 1 annotation/s
+ERROR	; (2018-11-27T16:27:25.119) ; eboa.logging(174) [12996] -> The source file with name test_not_json.json does not pass the schema verification
+ERROR	; (2018-11-27T16:27:25.260) ; eboa.logging(227) [12996] -> The source file with name test_not_xml.xml does not pass the schema verification
+INFO	; (2018-11-27T16:27:28.763) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:28.859) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 4 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:28.914) ; eboa.logging(513) [12996] -> The source file source2.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:29.057) ; eboa.logging(663) [12996] -> The source file source2.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:29.901) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:29.997) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:30.064) ; eboa.logging(513) [12996] -> The source file source2.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:30.149) ; eboa.logging(663) [12996] -> The source file source2.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:32.358) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:32.451) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 1 annotation/s
+INFO	; (2018-11-27T16:27:32.697) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:32.762) ; eboa.logging(636) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 contains an event/annotation which defines the geometry value 29.012974905944 with an odd number of coordinates
+INFO	; (2018-11-27T16:27:32.947) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:33.012) ; eboa.logging(611) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 contains an event/annotation which defines the geometry value 29.012974905944 with an odd number of coordinates
+INFO	; (2018-11-27T16:27:33.180) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:33.211) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 0 annotation/s
+ERROR	; (2018-11-27T16:27:33.245) ; eboa.logging(518) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has been already ingested
+INFO	; (2018-11-27T16:27:33.397) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:33.462) ; eboa.logging(581) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 contains an event which links to an undefined reference identifier EVENT_LINK
+INFO	; (2018-11-27T16:27:33.615) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:33.687) ; eboa.logging(626) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 contains an event/annotation which defines the value NOT_A_DOUBLE that cannot be converted to the specified type double
+INFO	; (2018-11-27T16:27:33.831) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:33.912) ; eboa.logging(591) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 contains an event with a stop value 2018-06-05 01:07:36 lower than its start value 2018-06-05 02:07:03
+INFO	; (2018-11-27T16:27:34.097) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+ERROR	; (2018-11-27T16:27:34.171) ; eboa.logging(601) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 contains an event/annotation which defines the value NOT_A_DOUBLE that cannot be converted to the specified type double
+ERROR	; (2018-11-27T16:27:34.328) ; eboa.logging(526) [12996] -> The source file with name source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has a validity period which its stop (2018-06-05T08:07:36) is lower than its start (2018-06-07T02:07:03)
+ERROR	; (2018-11-27T16:27:34.487) ; eboa.logging(191) [12996] -> The tag generation_time is mandatory inside source structure
+ERROR	; (2018-11-27T16:27:34.487) ; eboa.logging(192) [12996] -> The source file with name test_wrong_structure.json does not pass the schema verification
+ERROR	; (2018-11-27T16:27:34.629) ; eboa.logging(434) [12996] -> The tag generation_time is mandatory inside source structure
+ERROR	; (2018-11-27T16:27:34.629) ; eboa.logging(459) [12996] -> The source file with name test_wrong_structure.json does not pass the schema verification
+INFO	; (2018-11-27T16:27:35.130) ; eboa.logging(41) [12996] -> Stream Log handler created
+INFO	; (2018-11-27T16:27:35.130) ; eboa.logging(43) [12996] -> Stream Log handler is going to be removed
+INFO	; (2018-11-27T16:27:35.541) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:35.618) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 1 annotation/s
+INFO	; (2018-11-27T16:27:35.948) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:36.027) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 1 annotation/s
+INFO	; (2018-11-27T16:27:36.282) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:36.368) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 1 annotation/s
+INFO	; (2018-11-27T16:27:36.657) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:36.742) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 1 annotation/s
+INFO	; (2018-11-27T16:27:37.128) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:37.210) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 1 annotation/s
+INFO	; (2018-11-27T16:27:37.591) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:37.635) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:37.907) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:37.975) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:38.365) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:38.419) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:38.665) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:38.718) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:38.981) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:39.062) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:39.323) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:39.385) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:39.674) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:39.720) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 0 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:39.948) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:40.045) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 1 annotation/s
+INFO	; (2018-11-27T16:27:40.408) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:40.476) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:40.731) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:40.785) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:41.015) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:41.061) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:41.298) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:41.351) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:41.692) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:41.744) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:42.082) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:42.163) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-27T16:27:42.457) ; eboa.logging(513) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-27T16:27:42.568) ; eboa.logging(663) [12996] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 1 annotation/s
+INFO	; (2018-11-27T17:24:50.286) ; eboa.logging(53) [14763] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:25:16.359) ; eboa.logging(53) [14792] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:36:06.895) ; eboa.logging(53) [15152] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:40:31.968) ; eboa.logging(53) [15392] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:45:44.147) ; eboa.logging(53) [15596] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:50:13.140) ; eboa.logging(53) [15765] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:50:18.066) ; eboa.logging(53) [15775] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:50:41.201) ; eboa.logging(53) [15793] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:53:00.021) ; eboa.logging(53) [15896] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:53:19.368) ; eboa.logging(53) [15910] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:53:42.944) ; eboa.logging(53) [15934] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-27T17:55:33.645) ; eboa.logging(53) [16013] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T09:37:23.868) ; eboa.logging(53) [7524] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T09:52:44.482) ; eboa.logging(53) [8090] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T09:53:37.637) ; eboa.logging(53) [8136] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T10:00:39.243) ; eboa.logging(53) [8402] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T10:01:00.802) ; eboa.logging(53) [8417] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T10:02:42.737) ; eboa.logging(53) [8469] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T10:04:25.327) ; eboa.logging(53) [8524] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T10:12:42.706) ; eboa.logging(53) [8839] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T10:13:06.079) ; eboa.logging(53) [8868] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T10:13:14.515) ; eboa.logging(53) [8883] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T12:15:54.823) ; eboa.logging(53) [13197] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T12:16:57.192) ; eboa.logging(53) [13233] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T12:17:09.854) ; eboa.logging(53) [13256] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:42:57.083) ; eboa.logging(53) [16346] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:43:12.938) ; eboa.logging(53) [16360] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:43:20.058) ; eboa.logging(53) [16375] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:43:53.664) ; eboa.logging(53) [16413] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:44:04.899) ; eboa.logging(53) [16441] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:45:29.325) ; eboa.logging(53) [16485] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:45:46.989) ; eboa.logging(53) [16506] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:46:19.871) ; eboa.logging(53) [16525] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:52:19.545) ; eboa.logging(53) [16719] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:54:23.723) ; eboa.logging(53) [16787] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:57:12.001) ; eboa.logging(53) [16870] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:57:32.396) ; eboa.logging(53) [16887] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T13:58:10.772) ; eboa.logging(53) [16918] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:01:38.961) ; eboa.logging(53) [17094] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:02:06.565) ; eboa.logging(53) [17116] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:02:32.487) ; eboa.logging(53) [17159] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:03:04.086) ; eboa.logging(53) [17198] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:03:29.466) ; eboa.logging(53) [17236] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:50:59.946) ; eboa.logging(53) [19125] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:51:23.171) ; eboa.logging(53) [19144] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:54:11.186) ; eboa.logging(53) [19215] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:54:18.196) ; eboa.logging(53) [19226] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:55:26.203) ; eboa.logging(53) [19281] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:55:27.112) ; eboa.logging(513) [19281] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T14:55:27.189) ; eboa.logging(663) [19281] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T14:55:39.263) ; eboa.logging(53) [19295] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:55:40.239) ; eboa.logging(513) [19295] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T14:55:40.327) ; eboa.logging(663) [19295] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T14:55:52.283) ; eboa.logging(53) [19310] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:55:53.262) ; eboa.logging(513) [19310] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T14:55:53.333) ; eboa.logging(663) [19310] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T14:59:09.261) ; eboa.logging(53) [19412] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:59:10.286) ; eboa.logging(513) [19412] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T14:59:10.374) ; eboa.logging(663) [19412] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T14:59:21.975) ; eboa.logging(53) [19429] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:59:22.887) ; eboa.logging(513) [19429] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T14:59:22.973) ; eboa.logging(663) [19429] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T14:59:33.530) ; eboa.logging(53) [19439] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:59:34.444) ; eboa.logging(513) [19439] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T14:59:34.524) ; eboa.logging(663) [19439] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T14:59:58.616) ; eboa.logging(53) [19455] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T14:59:59.571) ; eboa.logging(513) [19455] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T14:59:59.659) ; eboa.logging(663) [19455] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:00:43.830) ; eboa.logging(53) [19483] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:00:44.756) ; eboa.logging(513) [19483] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:00:44.833) ; eboa.logging(663) [19483] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:00:52.860) ; eboa.logging(53) [19497] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:00:53.813) ; eboa.logging(513) [19497] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:00:53.895) ; eboa.logging(663) [19497] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:05:07.075) ; eboa.logging(53) [19597] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:05:08.107) ; eboa.logging(513) [19597] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:05:08.190) ; eboa.logging(663) [19597] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:05:31.363) ; eboa.logging(53) [19615] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:05:32.297) ; eboa.logging(513) [19615] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:05:32.367) ; eboa.logging(663) [19615] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:06:15.919) ; eboa.logging(53) [19652] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+DEBUG	; (2018-11-28T15:06:16.624) ; eboa.logging(31) [19652] -> Method _insert_data is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.624) ; eboa.logging(31) [19652] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.822) ; eboa.logging(38) [19652] -> Method _insert_dim_signature lasted 0.197506 seconds.
+DEBUG	; (2018-11-28T15:06:16.822) ; eboa.logging(31) [19652] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.847) ; eboa.logging(38) [19652] -> Method _insert_source lasted 0.024472 seconds.
+DEBUG	; (2018-11-28T15:06:16.847) ; eboa.logging(31) [19652] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.872) ; eboa.logging(38) [19652] -> Method _insert_proc_status lasted 0.024257 seconds.
+INFO	; (2018-11-28T15:06:16.875) ; eboa.logging(513) [19652] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+DEBUG	; (2018-11-28T15:06:16.875) ; eboa.logging(31) [19652] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.885) ; eboa.logging(38) [19652] -> Method _insert_gauges lasted 0.009332 seconds.
+DEBUG	; (2018-11-28T15:06:16.885) ; eboa.logging(31) [19652] -> Method _insert_annotation_cnfs is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.885) ; eboa.logging(38) [19652] -> Method _insert_annotation_cnfs lasted 2.1e-05 seconds.
+DEBUG	; (2018-11-28T15:06:16.886) ; eboa.logging(31) [19652] -> Method _insert_expl_groups is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.886) ; eboa.logging(38) [19652] -> Method _insert_expl_groups lasted 1e-05 seconds.
+DEBUG	; (2018-11-28T15:06:16.886) ; eboa.logging(31) [19652] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.894) ; eboa.logging(38) [19652] -> Method _insert_explicit_refs lasted 0.007345 seconds.
+DEBUG	; (2018-11-28T15:06:16.894) ; eboa.logging(31) [19652] -> Method _insert_links_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.894) ; eboa.logging(38) [19652] -> Method _insert_links_explicit_refs lasted 1e-05 seconds.
+DEBUG	; (2018-11-28T15:06:16.895) ; eboa.logging(31) [19652] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.905) ; eboa.logging(38) [19652] -> Method _insert_events lasted 0.010207 seconds.
+DEBUG	; (2018-11-28T15:06:16.905) ; eboa.logging(31) [19652] -> Method _insert_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.906) ; eboa.logging(38) [19652] -> Method _insert_annotations lasted 0.000365 seconds.
+DEBUG	; (2018-11-28T15:06:16.906) ; eboa.logging(31) [19652] -> Method _remove_deprecated_data is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.907) ; eboa.logging(31) [19652] -> Method _remove_deprecated_events_by_erase_and_replace is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.909) ; eboa.logging(38) [19652] -> Method _remove_deprecated_events_by_erase_and_replace lasted 0.001603 seconds.
+DEBUG	; (2018-11-28T15:06:16.909) ; eboa.logging(31) [19652] -> Method _remove_deprecated_events_event_keys is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.933) ; eboa.logging(38) [19652] -> Method _remove_deprecated_events_event_keys lasted 0.023641 seconds.
+DEBUG	; (2018-11-28T15:06:16.933) ; eboa.logging(31) [19652] -> Method _remove_deprecated_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.934) ; eboa.logging(38) [19652] -> Method _remove_deprecated_annotations lasted 1.2e-05 seconds.
+DEBUG	; (2018-11-28T15:06:16.934) ; eboa.logging(38) [19652] -> Method _remove_deprecated_data lasted 0.02736 seconds.
+DEBUG	; (2018-11-28T15:06:16.934) ; eboa.logging(31) [19652] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:06:16.956) ; eboa.logging(38) [19652] -> Method _insert_proc_status lasted 0.021056 seconds.
+INFO	; (2018-11-28T15:06:16.963) ; eboa.logging(663) [19652] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-28T15:06:16.966) ; eboa.logging(38) [19652] -> Method _insert_data lasted 0.341772 seconds.
+DEBUG	; (2018-11-28T15:06:16.981) ; eboa.logging(46) [19652] -> The following query is going to be executed: SELECT event_tb.event_uuid, event_tb.start, event_tb.stop, event_tb.ingestion_time, event_tb.visible, event_tb.gauge_id, event_tb.explicit_ref_id, event_tb.processing_uuid 
+FROM event_tb JOIN dim_processing_tb ON dim_processing_tb.processing_uuid = event_tb.processing_uuid JOIN explicit_ref_tb ON explicit_ref_tb.explicit_ref_id = event_tb.explicit_ref_id JOIN gauge_cnf_tb ON gauge_cnf_tb.gauge_id = event_tb.gauge_id 
+WHERE event_tb.visible = 1 AND dim_processing_tb.name LIKE source.json AND explicit_ref_tb.explicit_ref LIKE EXPLICIT_REFERENCE_EVENT AND gauge_cnf_tb.name LIKE GAUGE_NAME AND gauge_cnf_tb.system LIKE GAUGE_SYSTEM AND event_tb.start = 2018-06-05T02:07:03 AND event_tb.stop = 2018-06-05T02:07:36 AND event_tb.ingestion_time > 1900-06-05T02:07:36
+INFO	; (2018-11-28T15:06:52.906) ; eboa.logging(53) [19673] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+DEBUG	; (2018-11-28T15:06:53.423) ; eboa.logging(31) [19673] -> Method _insert_data is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.423) ; eboa.logging(31) [19673] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.673) ; eboa.logging(38) [19673] -> Method _insert_dim_signature lasted 0.249703 seconds.
+DEBUG	; (2018-11-28T15:06:53.674) ; eboa.logging(31) [19673] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.765) ; eboa.logging(38) [19673] -> Method _insert_source lasted 0.091218 seconds.
+DEBUG	; (2018-11-28T15:06:53.766) ; eboa.logging(31) [19673] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.857) ; eboa.logging(38) [19673] -> Method _insert_proc_status lasted 0.090111 seconds.
+INFO	; (2018-11-28T15:06:53.862) ; eboa.logging(513) [19673] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+DEBUG	; (2018-11-28T15:06:53.863) ; eboa.logging(31) [19673] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.873) ; eboa.logging(38) [19673] -> Method _insert_gauges lasted 0.009667 seconds.
+DEBUG	; (2018-11-28T15:06:53.873) ; eboa.logging(31) [19673] -> Method _insert_annotation_cnfs is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.874) ; eboa.logging(38) [19673] -> Method _insert_annotation_cnfs lasted 1.7e-05 seconds.
+DEBUG	; (2018-11-28T15:06:53.874) ; eboa.logging(31) [19673] -> Method _insert_expl_groups is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.874) ; eboa.logging(38) [19673] -> Method _insert_expl_groups lasted 1e-05 seconds.
+DEBUG	; (2018-11-28T15:06:53.874) ; eboa.logging(31) [19673] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.882) ; eboa.logging(38) [19673] -> Method _insert_explicit_refs lasted 0.006899 seconds.
+DEBUG	; (2018-11-28T15:06:53.882) ; eboa.logging(31) [19673] -> Method _insert_links_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.882) ; eboa.logging(38) [19673] -> Method _insert_links_explicit_refs lasted 1.1e-05 seconds.
+DEBUG	; (2018-11-28T15:06:53.882) ; eboa.logging(31) [19673] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.894) ; eboa.logging(38) [19673] -> Method _insert_events lasted 0.010877 seconds.
+DEBUG	; (2018-11-28T15:06:53.894) ; eboa.logging(31) [19673] -> Method _insert_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.894) ; eboa.logging(38) [19673] -> Method _insert_annotations lasted 0.000323 seconds.
+DEBUG	; (2018-11-28T15:06:53.895) ; eboa.logging(31) [19673] -> Method _remove_deprecated_data is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.895) ; eboa.logging(31) [19673] -> Method _remove_deprecated_events_by_erase_and_replace is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.897) ; eboa.logging(38) [19673] -> Method _remove_deprecated_events_by_erase_and_replace lasted 0.001914 seconds.
+DEBUG	; (2018-11-28T15:06:53.898) ; eboa.logging(31) [19673] -> Method _remove_deprecated_events_event_keys is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.921) ; eboa.logging(38) [19673] -> Method _remove_deprecated_events_event_keys lasted 0.022442 seconds.
+DEBUG	; (2018-11-28T15:06:53.921) ; eboa.logging(31) [19673] -> Method _remove_deprecated_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.922) ; eboa.logging(38) [19673] -> Method _remove_deprecated_annotations lasted 1.4e-05 seconds.
+DEBUG	; (2018-11-28T15:06:53.922) ; eboa.logging(38) [19673] -> Method _remove_deprecated_data lasted 0.026877 seconds.
+DEBUG	; (2018-11-28T15:06:53.922) ; eboa.logging(31) [19673] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:06:53.957) ; eboa.logging(38) [19673] -> Method _insert_proc_status lasted 0.034514 seconds.
+INFO	; (2018-11-28T15:06:53.965) ; eboa.logging(663) [19673] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-28T15:06:53.967) ; eboa.logging(38) [19673] -> Method _insert_data lasted 0.543847 seconds.
+DEBUG	; (2018-11-28T15:06:53.979) ; eboa.logging(46) [19673] -> The following query is going to be executed: SELECT event_tb.event_uuid, event_tb.start, event_tb.stop, event_tb.ingestion_time, event_tb.visible, event_tb.gauge_id, event_tb.explicit_ref_id, event_tb.processing_uuid 
+FROM event_tb JOIN dim_processing_tb ON dim_processing_tb.processing_uuid = event_tb.processing_uuid JOIN explicit_ref_tb ON explicit_ref_tb.explicit_ref_id = event_tb.explicit_ref_id JOIN gauge_cnf_tb ON gauge_cnf_tb.gauge_id = event_tb.gauge_id 
+WHERE event_tb.visible = 1 AND dim_processing_tb.name LIKE source.json AND explicit_ref_tb.explicit_ref LIKE EXPLICIT_REFERENCE_EVENT AND gauge_cnf_tb.name LIKE GAUGE_NAME AND gauge_cnf_tb.system LIKE GAUGE_SYSTEM AND event_tb.start = 2018-06-05T02:07:03 AND event_tb.stop = 2018-06-05T02:07:36 AND event_tb.ingestion_time > 1900-06-05T02:07:36
+INFO	; (2018-11-28T15:07:58.771) ; eboa.logging(53) [19706] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+DEBUG	; (2018-11-28T15:07:59.523) ; eboa.logging(31) [19706] -> Method _insert_data is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.523) ; eboa.logging(31) [19706] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.692) ; eboa.logging(38) [19706] -> Method _insert_dim_signature lasted 0.168772 seconds.
+DEBUG	; (2018-11-28T15:07:59.693) ; eboa.logging(31) [19706] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.725) ; eboa.logging(38) [19706] -> Method _insert_source lasted 0.03176 seconds.
+DEBUG	; (2018-11-28T15:07:59.726) ; eboa.logging(31) [19706] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.751) ; eboa.logging(38) [19706] -> Method _insert_proc_status lasted 0.0244 seconds.
+INFO	; (2018-11-28T15:07:59.758) ; eboa.logging(513) [19706] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+DEBUG	; (2018-11-28T15:07:59.759) ; eboa.logging(31) [19706] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.769) ; eboa.logging(38) [19706] -> Method _insert_gauges lasted 0.010319 seconds.
+DEBUG	; (2018-11-28T15:07:59.770) ; eboa.logging(31) [19706] -> Method _insert_annotation_cnfs is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.770) ; eboa.logging(38) [19706] -> Method _insert_annotation_cnfs lasted 1.4e-05 seconds.
+DEBUG	; (2018-11-28T15:07:59.770) ; eboa.logging(31) [19706] -> Method _insert_expl_groups is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.770) ; eboa.logging(38) [19706] -> Method _insert_expl_groups lasted 7e-06 seconds.
+DEBUG	; (2018-11-28T15:07:59.771) ; eboa.logging(31) [19706] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.779) ; eboa.logging(38) [19706] -> Method _insert_explicit_refs lasted 0.007852 seconds.
+DEBUG	; (2018-11-28T15:07:59.779) ; eboa.logging(31) [19706] -> Method _insert_links_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.779) ; eboa.logging(38) [19706] -> Method _insert_links_explicit_refs lasted 1.3e-05 seconds.
+DEBUG	; (2018-11-28T15:07:59.779) ; eboa.logging(31) [19706] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.791) ; eboa.logging(38) [19706] -> Method _insert_events lasted 0.011499 seconds.
+DEBUG	; (2018-11-28T15:07:59.792) ; eboa.logging(31) [19706] -> Method _insert_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.792) ; eboa.logging(38) [19706] -> Method _insert_annotations lasted 0.000243 seconds.
+DEBUG	; (2018-11-28T15:07:59.792) ; eboa.logging(31) [19706] -> Method _remove_deprecated_data is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.792) ; eboa.logging(31) [19706] -> Method _remove_deprecated_events_by_erase_and_replace is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.794) ; eboa.logging(38) [19706] -> Method _remove_deprecated_events_by_erase_and_replace lasted 0.001407 seconds.
+DEBUG	; (2018-11-28T15:07:59.795) ; eboa.logging(31) [19706] -> Method _remove_deprecated_events_event_keys is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.828) ; eboa.logging(38) [19706] -> Method _remove_deprecated_events_event_keys lasted 0.032359 seconds.
+DEBUG	; (2018-11-28T15:07:59.828) ; eboa.logging(31) [19706] -> Method _remove_deprecated_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.828) ; eboa.logging(38) [19706] -> Method _remove_deprecated_annotations lasted 7e-06 seconds.
+DEBUG	; (2018-11-28T15:07:59.829) ; eboa.logging(38) [19706] -> Method _remove_deprecated_data lasted 0.036132 seconds.
+DEBUG	; (2018-11-28T15:07:59.829) ; eboa.logging(31) [19706] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:07:59.851) ; eboa.logging(38) [19706] -> Method _insert_proc_status lasted 0.021649 seconds.
+INFO	; (2018-11-28T15:07:59.868) ; eboa.logging(663) [19706] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-28T15:07:59.870) ; eboa.logging(38) [19706] -> Method _insert_data lasted 0.346585 seconds.
+DEBUG	; (2018-11-28T15:07:59.881) ; eboa.logging(46) [19706] -> The following query is going to be executed: SELECT event_tb.event_uuid, event_tb.start, event_tb.stop, event_tb.ingestion_time, event_tb.visible, event_tb.gauge_id, event_tb.explicit_ref_id, event_tb.processing_uuid 
+FROM event_tb JOIN gauge_cnf_tb ON gauge_cnf_tb.gauge_id = event_tb.gauge_id JOIN explicit_ref_tb ON explicit_ref_tb.explicit_ref_id = event_tb.explicit_ref_id JOIN dim_processing_tb ON dim_processing_tb.processing_uuid = event_tb.processing_uuid 
+WHERE event_tb.visible = 1 AND dim_processing_tb.name LIKE source.json AND explicit_ref_tb.explicit_ref LIKE EXPLICIT_REFERENCE_EVENT AND gauge_cnf_tb.name LIKE GAUGE_NAME AND gauge_cnf_tb.system LIKE GAUGE_SYSTEM AND event_tb.start = 2018-06-05T02:07:03 AND event_tb.stop = 2018-06-05T08:07:36 AND event_tb.ingestion_time > 1900-06-05T02:07:36
+INFO	; (2018-11-28T15:08:36.677) ; eboa.logging(53) [19726] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+DEBUG	; (2018-11-28T15:08:37.460) ; eboa.logging(31) [19726] -> Method _insert_data is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.461) ; eboa.logging(31) [19726] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.668) ; eboa.logging(38) [19726] -> Method _insert_dim_signature lasted 0.206892 seconds.
+DEBUG	; (2018-11-28T15:08:37.669) ; eboa.logging(31) [19726] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.693) ; eboa.logging(38) [19726] -> Method _insert_source lasted 0.02442 seconds.
+DEBUG	; (2018-11-28T15:08:37.694) ; eboa.logging(31) [19726] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.718) ; eboa.logging(38) [19726] -> Method _insert_proc_status lasted 0.024026 seconds.
+INFO	; (2018-11-28T15:08:37.721) ; eboa.logging(513) [19726] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+DEBUG	; (2018-11-28T15:08:37.722) ; eboa.logging(31) [19726] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.733) ; eboa.logging(38) [19726] -> Method _insert_gauges lasted 0.011191 seconds.
+DEBUG	; (2018-11-28T15:08:37.734) ; eboa.logging(31) [19726] -> Method _insert_annotation_cnfs is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.734) ; eboa.logging(38) [19726] -> Method _insert_annotation_cnfs lasted 2.1e-05 seconds.
+DEBUG	; (2018-11-28T15:08:37.734) ; eboa.logging(31) [19726] -> Method _insert_expl_groups is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.735) ; eboa.logging(38) [19726] -> Method _insert_expl_groups lasted 8e-06 seconds.
+DEBUG	; (2018-11-28T15:08:37.735) ; eboa.logging(31) [19726] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.745) ; eboa.logging(38) [19726] -> Method _insert_explicit_refs lasted 0.009436 seconds.
+DEBUG	; (2018-11-28T15:08:37.745) ; eboa.logging(31) [19726] -> Method _insert_links_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.745) ; eboa.logging(38) [19726] -> Method _insert_links_explicit_refs lasted 1.2e-05 seconds.
+DEBUG	; (2018-11-28T15:08:37.745) ; eboa.logging(31) [19726] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.756) ; eboa.logging(38) [19726] -> Method _insert_events lasted 0.010103 seconds.
+DEBUG	; (2018-11-28T15:08:37.756) ; eboa.logging(31) [19726] -> Method _insert_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.757) ; eboa.logging(38) [19726] -> Method _insert_annotations lasted 0.000272 seconds.
+DEBUG	; (2018-11-28T15:08:37.757) ; eboa.logging(31) [19726] -> Method _remove_deprecated_data is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.757) ; eboa.logging(31) [19726] -> Method _remove_deprecated_events_by_erase_and_replace is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.759) ; eboa.logging(38) [19726] -> Method _remove_deprecated_events_by_erase_and_replace lasted 0.001427 seconds.
+DEBUG	; (2018-11-28T15:08:37.759) ; eboa.logging(31) [19726] -> Method _remove_deprecated_events_event_keys is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.791) ; eboa.logging(38) [19726] -> Method _remove_deprecated_events_event_keys lasted 0.031067 seconds.
+DEBUG	; (2018-11-28T15:08:37.791) ; eboa.logging(31) [19726] -> Method _remove_deprecated_annotations is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.791) ; eboa.logging(38) [19726] -> Method _remove_deprecated_annotations lasted 1.1e-05 seconds.
+DEBUG	; (2018-11-28T15:08:37.792) ; eboa.logging(38) [19726] -> Method _remove_deprecated_data lasted 0.034462 seconds.
+DEBUG	; (2018-11-28T15:08:37.792) ; eboa.logging(31) [19726] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T15:08:37.810) ; eboa.logging(38) [19726] -> Method _insert_proc_status lasted 0.018296 seconds.
+INFO	; (2018-11-28T15:08:37.817) ; eboa.logging(663) [19726] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-28T15:08:37.819) ; eboa.logging(38) [19726] -> Method _insert_data lasted 0.357914 seconds.
+DEBUG	; (2018-11-28T15:08:37.829) ; eboa.logging(46) [19726] -> The following query is going to be executed: SELECT event_tb.event_uuid, event_tb.start, event_tb.stop, event_tb.ingestion_time, event_tb.visible, event_tb.gauge_id, event_tb.explicit_ref_id, event_tb.processing_uuid 
+FROM event_tb JOIN dim_processing_tb ON dim_processing_tb.processing_uuid = event_tb.processing_uuid JOIN explicit_ref_tb ON explicit_ref_tb.explicit_ref_id = event_tb.explicit_ref_id JOIN gauge_cnf_tb ON gauge_cnf_tb.gauge_id = event_tb.gauge_id 
+WHERE event_tb.visible = 1 AND dim_processing_tb.name LIKE source.json AND explicit_ref_tb.explicit_ref LIKE EXPLICIT_REFERENCE_EVENT AND gauge_cnf_tb.name LIKE GAUGE_NAME AND gauge_cnf_tb.system LIKE GAUGE_SYSTEM AND event_tb.start = 2018-06-05T02:07:03 AND event_tb.stop = 2018-06-05T08:07:36 AND event_tb.ingestion_time > 1900-06-05T02:07:36
+INFO	; (2018-11-28T15:08:49.754) ; eboa.logging(53) [19740] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:08:50.613) ; eboa.logging(513) [19740] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:08:50.701) ; eboa.logging(663) [19740] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:09:10.146) ; eboa.logging(53) [19749] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:09:11.172) ; eboa.logging(513) [19749] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:09:11.262) ; eboa.logging(663) [19749] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:09:45.199) ; eboa.logging(53) [19776] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:09:46.208) ; eboa.logging(513) [19776] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:09:46.285) ; eboa.logging(663) [19776] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:09:59.553) ; eboa.logging(53) [19793] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:10:00.608) ; eboa.logging(513) [19793] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:10:00.690) ; eboa.logging(663) [19793] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:10:46.357) ; eboa.logging(53) [19842] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:10:47.701) ; eboa.logging(513) [19842] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:10:47.791) ; eboa.logging(663) [19842] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:11:01.672) ; eboa.logging(53) [19856] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:11:02.611) ; eboa.logging(513) [19856] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:11:02.694) ; eboa.logging(663) [19856] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:12:15.634) ; eboa.logging(53) [19890] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:12:16.607) ; eboa.logging(513) [19890] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:12:16.956) ; eboa.logging(663) [19890] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:13:24.081) ; eboa.logging(53) [19939] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:13:25.056) ; eboa.logging(513) [19939] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:13:25.136) ; eboa.logging(663) [19939] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:15:03.718) ; eboa.logging(53) [19997] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:15:04.717) ; eboa.logging(513) [19997] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:15:04.796) ; eboa.logging(663) [19997] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:15:13.280) ; eboa.logging(53) [20012] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:15:14.259) ; eboa.logging(513) [20012] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:15:14.357) ; eboa.logging(663) [20012] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:15:22.623) ; eboa.logging(53) [20030] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:15:23.625) ; eboa.logging(513) [20030] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:15:23.705) ; eboa.logging(663) [20030] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:16:23.767) ; eboa.logging(53) [20063] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:16:24.770) ; eboa.logging(513) [20063] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:16:24.858) ; eboa.logging(663) [20063] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:18:05.795) ; eboa.logging(53) [20117] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:18:06.816) ; eboa.logging(513) [20117] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:18:06.905) ; eboa.logging(663) [20117] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:21:23.325) ; eboa.logging(53) [20205] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:21:24.305) ; eboa.logging(513) [20205] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:21:24.384) ; eboa.logging(663) [20205] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:21:37.324) ; eboa.logging(53) [20213] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:21:38.406) ; eboa.logging(513) [20213] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:21:38.495) ; eboa.logging(663) [20213] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:22:12.668) ; eboa.logging(53) [20234] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:22:13.714) ; eboa.logging(513) [20234] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:22:13.786) ; eboa.logging(663) [20234] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:22:27.138) ; eboa.logging(53) [20246] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:22:28.049) ; eboa.logging(513) [20246] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:22:28.171) ; eboa.logging(663) [20246] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:24:13.823) ; eboa.logging(53) [20340] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:24:15.046) ; eboa.logging(513) [20340] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:24:15.139) ; eboa.logging(663) [20340] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:25:56.760) ; eboa.logging(53) [20387] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:25:58.363) ; eboa.logging(513) [20387] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:25:58.450) ; eboa.logging(663) [20387] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:27:09.119) ; eboa.logging(53) [20417] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:27:10.226) ; eboa.logging(513) [20417] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:27:10.303) ; eboa.logging(663) [20417] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:29:57.453) ; eboa.logging(53) [20504] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:29:58.571) ; eboa.logging(513) [20504] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:29:58.649) ; eboa.logging(663) [20504] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:49:57.737) ; eboa.logging(53) [21011] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:49:58.725) ; eboa.logging(513) [21011] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:49:58.811) ; eboa.logging(663) [21011] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:50:51.113) ; eboa.logging(53) [21045] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:50:52.328) ; eboa.logging(513) [21045] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:50:52.398) ; eboa.logging(663) [21045] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:52:17.372) ; eboa.logging(53) [21116] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:52:18.559) ; eboa.logging(513) [21116] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:52:18.646) ; eboa.logging(663) [21116] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:52:27.025) ; eboa.logging(53) [21132] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:52:28.357) ; eboa.logging(513) [21132] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:52:28.444) ; eboa.logging(663) [21132] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:58:53.596) ; eboa.logging(53) [21313] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:58:55.500) ; eboa.logging(513) [21313] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:58:55.572) ; eboa.logging(663) [21313] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:59:30.870) ; eboa.logging(53) [21337] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:59:33.270) ; eboa.logging(513) [21337] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:59:33.355) ; eboa.logging(663) [21337] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T15:59:46.227) ; eboa.logging(53) [21352] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T15:59:47.853) ; eboa.logging(513) [21352] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T15:59:47.939) ; eboa.logging(663) [21352] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:04:24.554) ; eboa.logging(53) [21475] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:04:25.949) ; eboa.logging(513) [21475] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:04:26.027) ; eboa.logging(663) [21475] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:04:26.570) ; eboa.logging(513) [21475] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:04:26.642) ; eboa.logging(663) [21475] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:04:38.827) ; eboa.logging(53) [21486] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:04:40.223) ; eboa.logging(513) [21486] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:04:40.309) ; eboa.logging(663) [21486] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:04:40.823) ; eboa.logging(513) [21486] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:04:40.902) ; eboa.logging(663) [21486] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:05:00.610) ; eboa.logging(53) [21500] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+DEBUG	; (2018-11-28T16:05:01.491) ; eboa.logging(46) [21500] -> The following query is going to be executed: SELECT event_tb.event_uuid, event_tb.start, event_tb.stop, event_tb.ingestion_time, event_tb.visible, event_tb.gauge_id, event_tb.explicit_ref_id, event_tb.processing_uuid 
+FROM event_tb 
+WHERE event_tb.visible = 1
+DEBUG	; (2018-11-28T16:05:01.583) ; eboa.logging(31) [21500] -> Method _insert_data is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.583) ; eboa.logging(31) [21500] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.603) ; eboa.logging(38) [21500] -> Method _insert_dim_signature lasted 0.020085 seconds.
+DEBUG	; (2018-11-28T16:05:01.604) ; eboa.logging(31) [21500] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.637) ; eboa.logging(38) [21500] -> Method _insert_source lasted 0.032716 seconds.
+DEBUG	; (2018-11-28T16:05:01.637) ; eboa.logging(31) [21500] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.664) ; eboa.logging(38) [21500] -> Method _insert_proc_status lasted 0.026301 seconds.
+INFO	; (2018-11-28T16:05:01.667) ; eboa.logging(513) [21500] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+DEBUG	; (2018-11-28T16:05:01.668) ; eboa.logging(31) [21500] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.680) ; eboa.logging(38) [21500] -> Method _insert_gauges lasted 0.011517 seconds.
+DEBUG	; (2018-11-28T16:05:01.680) ; eboa.logging(31) [21500] -> Method _insert_annotation_cnfs is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.681) ; eboa.logging(38) [21500] -> Method _insert_annotation_cnfs lasted 1.7e-05 seconds.
+DEBUG	; (2018-11-28T16:05:01.681) ; eboa.logging(31) [21500] -> Method _insert_expl_groups is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.681) ; eboa.logging(38) [21500] -> Method _insert_expl_groups lasted 1.1e-05 seconds.
+DEBUG	; (2018-11-28T16:05:01.681) ; eboa.logging(31) [21500] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.692) ; eboa.logging(38) [21500] -> Method _insert_explicit_refs lasted 0.010041 seconds.
+DEBUG	; (2018-11-28T16:05:01.692) ; eboa.logging(31) [21500] -> Method _insert_links_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.692) ; eboa.logging(38) [21500] -> Method _insert_links_explicit_refs lasted 1.1e-05 seconds.
+DEBUG	; (2018-11-28T16:05:01.693) ; eboa.logging(31) [21500] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.703) ; eboa.logging(38) [21500] -> Method _insert_events lasted 0.009981 seconds.
+DEBUG	; (2018-11-28T16:05:01.703) ; eboa.logging(31) [21500] -> Method _insert_annotations is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.704) ; eboa.logging(38) [21500] -> Method _insert_annotations lasted 0.000324 seconds.
+DEBUG	; (2018-11-28T16:05:01.704) ; eboa.logging(31) [21500] -> Method _remove_deprecated_data is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.705) ; eboa.logging(31) [21500] -> Method _remove_deprecated_events_by_erase_and_replace is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.707) ; eboa.logging(38) [21500] -> Method _remove_deprecated_events_by_erase_and_replace lasted 0.001781 seconds.
+DEBUG	; (2018-11-28T16:05:01.707) ; eboa.logging(31) [21500] -> Method _remove_deprecated_events_event_keys is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.731) ; eboa.logging(38) [21500] -> Method _remove_deprecated_events_event_keys lasted 0.023239 seconds.
+DEBUG	; (2018-11-28T16:05:01.731) ; eboa.logging(31) [21500] -> Method _remove_deprecated_annotations is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.732) ; eboa.logging(38) [21500] -> Method _remove_deprecated_annotations lasted 1.1e-05 seconds.
+DEBUG	; (2018-11-28T16:05:01.732) ; eboa.logging(38) [21500] -> Method _remove_deprecated_data lasted 0.027173 seconds.
+DEBUG	; (2018-11-28T16:05:01.732) ; eboa.logging(31) [21500] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T16:05:01.754) ; eboa.logging(38) [21500] -> Method _insert_proc_status lasted 0.021264 seconds.
+INFO	; (2018-11-28T16:05:01.761) ; eboa.logging(663) [21500] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-28T16:05:01.764) ; eboa.logging(38) [21500] -> Method _insert_data lasted 0.181137 seconds.
+DEBUG	; (2018-11-28T16:05:01.774) ; eboa.logging(46) [21500] -> The following query is going to be executed: SELECT event_tb.event_uuid, event_tb.start, event_tb.stop, event_tb.ingestion_time, event_tb.visible, event_tb.gauge_id, event_tb.explicit_ref_id, event_tb.processing_uuid 
+FROM event_tb JOIN dim_processing_tb ON dim_processing_tb.processing_uuid = event_tb.processing_uuid JOIN explicit_ref_tb ON explicit_ref_tb.explicit_ref_id = event_tb.explicit_ref_id JOIN gauge_cnf_tb ON gauge_cnf_tb.gauge_id = event_tb.gauge_id 
+WHERE event_tb.visible = 1 AND dim_processing_tb.name LIKE source.json AND explicit_ref_tb.explicit_ref LIKE EXPLICIT_REFERENCE_EVENT AND gauge_cnf_tb.name LIKE GAUGE_NAME AND gauge_cnf_tb.system LIKE GAUGE_SYSTEM AND event_tb.start = 2018-06-05T02:07:03 AND event_tb.stop = 2018-06-05T08:07:36 AND event_tb.ingestion_time > 1900-06-05T02:07:36
+INFO	; (2018-11-28T16:05:09.546) ; eboa.logging(53) [21521] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+DEBUG	; (2018-11-28T16:05:10.000) ; eboa.logging(31) [21521] -> Method _insert_data is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.000) ; eboa.logging(31) [21521] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.190) ; eboa.logging(38) [21521] -> Method _insert_dim_signature lasted 0.190135 seconds.
+DEBUG	; (2018-11-28T16:05:10.191) ; eboa.logging(31) [21521] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.220) ; eboa.logging(38) [21521] -> Method _insert_source lasted 0.028967 seconds.
+DEBUG	; (2018-11-28T16:05:10.221) ; eboa.logging(31) [21521] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.245) ; eboa.logging(38) [21521] -> Method _insert_proc_status lasted 0.023823 seconds.
+INFO	; (2018-11-28T16:05:10.248) ; eboa.logging(513) [21521] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+DEBUG	; (2018-11-28T16:05:10.249) ; eboa.logging(31) [21521] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.260) ; eboa.logging(38) [21521] -> Method _insert_gauges lasted 0.01046 seconds.
+DEBUG	; (2018-11-28T16:05:10.260) ; eboa.logging(31) [21521] -> Method _insert_annotation_cnfs is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.260) ; eboa.logging(38) [21521] -> Method _insert_annotation_cnfs lasted 1.6e-05 seconds.
+DEBUG	; (2018-11-28T16:05:10.261) ; eboa.logging(31) [21521] -> Method _insert_expl_groups is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.261) ; eboa.logging(38) [21521] -> Method _insert_expl_groups lasted 9e-06 seconds.
+DEBUG	; (2018-11-28T16:05:10.261) ; eboa.logging(31) [21521] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.272) ; eboa.logging(38) [21521] -> Method _insert_explicit_refs lasted 0.01056 seconds.
+DEBUG	; (2018-11-28T16:05:10.272) ; eboa.logging(31) [21521] -> Method _insert_links_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.272) ; eboa.logging(38) [21521] -> Method _insert_links_explicit_refs lasted 1.1e-05 seconds.
+DEBUG	; (2018-11-28T16:05:10.273) ; eboa.logging(31) [21521] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.283) ; eboa.logging(38) [21521] -> Method _insert_events lasted 0.010232 seconds.
+DEBUG	; (2018-11-28T16:05:10.283) ; eboa.logging(31) [21521] -> Method _insert_annotations is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.284) ; eboa.logging(38) [21521] -> Method _insert_annotations lasted 0.000269 seconds.
+DEBUG	; (2018-11-28T16:05:10.284) ; eboa.logging(31) [21521] -> Method _remove_deprecated_data is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.284) ; eboa.logging(31) [21521] -> Method _remove_deprecated_events_by_erase_and_replace is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.286) ; eboa.logging(38) [21521] -> Method _remove_deprecated_events_by_erase_and_replace lasted 0.001485 seconds.
+DEBUG	; (2018-11-28T16:05:10.286) ; eboa.logging(31) [21521] -> Method _remove_deprecated_events_event_keys is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.310) ; eboa.logging(38) [21521] -> Method _remove_deprecated_events_event_keys lasted 0.023651 seconds.
+DEBUG	; (2018-11-28T16:05:10.311) ; eboa.logging(31) [21521] -> Method _remove_deprecated_annotations is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.311) ; eboa.logging(38) [21521] -> Method _remove_deprecated_annotations lasted 9e-06 seconds.
+DEBUG	; (2018-11-28T16:05:10.311) ; eboa.logging(38) [21521] -> Method _remove_deprecated_data lasted 0.0269 seconds.
+DEBUG	; (2018-11-28T16:05:10.311) ; eboa.logging(31) [21521] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T16:05:10.329) ; eboa.logging(38) [21521] -> Method _insert_proc_status lasted 0.017263 seconds.
+INFO	; (2018-11-28T16:05:10.336) ; eboa.logging(663) [21521] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-28T16:05:10.339) ; eboa.logging(38) [21521] -> Method _insert_data lasted 0.338563 seconds.
+DEBUG	; (2018-11-28T16:05:10.354) ; eboa.logging(46) [21521] -> The following query is going to be executed: SELECT dim_processing_tb.processing_uuid, dim_processing_tb.name, dim_processing_tb.validity_start, dim_processing_tb.validity_stop, dim_processing_tb.generation_time, dim_processing_tb.ingestion_time, dim_processing_tb.ingestion_duration, dim_processing_tb.dim_exec_version, dim_processing_tb.content_json, dim_processing_tb.content_text, dim_processing_tb.parse_error, dim_processing_tb.dim_signature_id 
+FROM dim_processing_tb JOIN dim_signature_tb ON dim_signature_tb.dim_signature_id = dim_processing_tb.dim_signature_id 
+WHERE dim_signature_tb.dim_signature LIKE dim_signature AND dim_processing_tb.name LIKE source.json AND dim_processing_tb.validity_start = 2018-06-05T02:07:03 AND dim_processing_tb.validity_stop = 2018-06-05T08:07:36 AND dim_processing_tb.generation_time = 2018-07-05T02:07:05 AND dim_processing_tb.ingestion_time > 1900-06-05T02:07:36
+INFO	; (2018-11-28T16:06:25.824) ; eboa.logging(53) [21552] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+DEBUG	; (2018-11-28T16:06:26.416) ; eboa.logging(31) [21552] -> Method _insert_data is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.417) ; eboa.logging(31) [21552] -> Method _insert_dim_signature is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.589) ; eboa.logging(38) [21552] -> Method _insert_dim_signature lasted 0.172598 seconds.
+DEBUG	; (2018-11-28T16:06:26.590) ; eboa.logging(31) [21552] -> Method _insert_source is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.623) ; eboa.logging(38) [21552] -> Method _insert_source lasted 0.032435 seconds.
+DEBUG	; (2018-11-28T16:06:26.623) ; eboa.logging(31) [21552] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.648) ; eboa.logging(38) [21552] -> Method _insert_proc_status lasted 0.023875 seconds.
+INFO	; (2018-11-28T16:06:26.650) ; eboa.logging(513) [21552] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+DEBUG	; (2018-11-28T16:06:26.650) ; eboa.logging(31) [21552] -> Method _insert_gauges is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.661) ; eboa.logging(38) [21552] -> Method _insert_gauges lasted 0.01 seconds.
+DEBUG	; (2018-11-28T16:06:26.661) ; eboa.logging(31) [21552] -> Method _insert_annotation_cnfs is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.661) ; eboa.logging(38) [21552] -> Method _insert_annotation_cnfs lasted 1.7e-05 seconds.
+DEBUG	; (2018-11-28T16:06:26.662) ; eboa.logging(31) [21552] -> Method _insert_expl_groups is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.662) ; eboa.logging(38) [21552] -> Method _insert_expl_groups lasted 1e-05 seconds.
+DEBUG	; (2018-11-28T16:06:26.662) ; eboa.logging(31) [21552] -> Method _insert_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.670) ; eboa.logging(38) [21552] -> Method _insert_explicit_refs lasted 0.008084 seconds.
+DEBUG	; (2018-11-28T16:06:26.671) ; eboa.logging(31) [21552] -> Method _insert_links_explicit_refs is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.671) ; eboa.logging(38) [21552] -> Method _insert_links_explicit_refs lasted 1.4e-05 seconds.
+DEBUG	; (2018-11-28T16:06:26.671) ; eboa.logging(31) [21552] -> Method _insert_events is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.684) ; eboa.logging(38) [21552] -> Method _insert_events lasted 0.011981 seconds.
+DEBUG	; (2018-11-28T16:06:26.684) ; eboa.logging(31) [21552] -> Method _insert_annotations is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.685) ; eboa.logging(38) [21552] -> Method _insert_annotations lasted 0.000354 seconds.
+DEBUG	; (2018-11-28T16:06:26.685) ; eboa.logging(31) [21552] -> Method _remove_deprecated_data is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.685) ; eboa.logging(31) [21552] -> Method _remove_deprecated_events_by_erase_and_replace is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.687) ; eboa.logging(38) [21552] -> Method _remove_deprecated_events_by_erase_and_replace lasted 0.001525 seconds.
+DEBUG	; (2018-11-28T16:06:26.688) ; eboa.logging(31) [21552] -> Method _remove_deprecated_events_event_keys is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.714) ; eboa.logging(38) [21552] -> Method _remove_deprecated_events_event_keys lasted 0.025445 seconds.
+DEBUG	; (2018-11-28T16:06:26.714) ; eboa.logging(31) [21552] -> Method _remove_deprecated_annotations is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.714) ; eboa.logging(38) [21552] -> Method _remove_deprecated_annotations lasted 1e-05 seconds.
+DEBUG	; (2018-11-28T16:06:26.715) ; eboa.logging(38) [21552] -> Method _remove_deprecated_data lasted 0.029278 seconds.
+DEBUG	; (2018-11-28T16:06:26.715) ; eboa.logging(31) [21552] -> Method _insert_proc_status is going to be executed.
+DEBUG	; (2018-11-28T16:06:26.731) ; eboa.logging(38) [21552] -> Method _insert_proc_status lasted 0.016116 seconds.
+INFO	; (2018-11-28T16:06:26.738) ; eboa.logging(663) [21552] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+DEBUG	; (2018-11-28T16:06:26.740) ; eboa.logging(38) [21552] -> Method _insert_data lasted 0.323476 seconds.
+DEBUG	; (2018-11-28T16:06:26.757) ; eboa.logging(46) [21552] -> The following query is going to be executed: SELECT dim_processing_tb.processing_uuid, dim_processing_tb.name, dim_processing_tb.validity_start, dim_processing_tb.validity_stop, dim_processing_tb.generation_time, dim_processing_tb.ingestion_time, dim_processing_tb.ingestion_duration, dim_processing_tb.dim_exec_version, dim_processing_tb.content_json, dim_processing_tb.content_text, dim_processing_tb.parse_error, dim_processing_tb.dim_signature_id 
+FROM dim_processing_tb JOIN dim_signature_tb ON dim_signature_tb.dim_signature_id = dim_processing_tb.dim_signature_id 
+WHERE dim_signature_tb.dim_signature LIKE dim_signature AND dim_processing_tb.name LIKE source.json AND dim_processing_tb.validity_start = 2018-06-05T02:07:03 AND dim_processing_tb.validity_stop = 2018-06-05T08:07:36 AND dim_processing_tb.generation_time = 2018-07-05T02:07:03 AND dim_processing_tb.ingestion_time > 1900-06-05T02:07:36
+INFO	; (2018-11-28T16:06:30.324) ; eboa.logging(53) [21560] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:06:31.641) ; eboa.logging(513) [21560] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:06:31.731) ; eboa.logging(663) [21560] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:06:32.335) ; eboa.logging(513) [21560] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:06:32.415) ; eboa.logging(663) [21560] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:14:31.391) ; eboa.logging(53) [21763] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:14:32.792) ; eboa.logging(513) [21763] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:14:32.871) ; eboa.logging(663) [21763] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:14:33.351) ; eboa.logging(513) [21763] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:14:33.428) ; eboa.logging(663) [21763] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:14:33.660) ; eboa.logging(513) [21763] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:14:33.740) ; eboa.logging(663) [21763] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:36:17.895) ; eboa.logging(53) [22306] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:37:52.824) ; eboa.logging(53) [22349] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:38:12.006) ; eboa.logging(53) [22359] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:38:13.878) ; eboa.logging(513) [22359] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:38:13.957) ; eboa.logging(663) [22359] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:38:14.540) ; eboa.logging(513) [22359] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:38:14.623) ; eboa.logging(663) [22359] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:38:14.879) ; eboa.logging(513) [22359] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:38:14.960) ; eboa.logging(663) [22359] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+ERROR	; (2018-11-28T16:38:15.115) ; eboa.logging(434) [22359] -> Operations key does not exist or there are other defined keys in the dictionary
+ERROR	; (2018-11-28T16:38:15.115) ; eboa.logging(459) [22359] -> The source file with name None does not pass the schema verification
+INFO	; (2018-11-28T16:40:59.515) ; eboa.logging(53) [22430] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:41:00.928) ; eboa.logging(513) [22430] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:01.020) ; eboa.logging(663) [22430] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:41:01.601) ; eboa.logging(513) [22430] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:01.697) ; eboa.logging(663) [22430] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:41:01.938) ; eboa.logging(513) [22430] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:02.004) ; eboa.logging(663) [22430] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:41:02.242) ; eboa.logging(513) [22430] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:02.301) ; eboa.logging(663) [22430] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:41:33.263) ; eboa.logging(53) [22454] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:41:34.875) ; eboa.logging(513) [22454] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:34.955) ; eboa.logging(663) [22454] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:41:35.535) ; eboa.logging(513) [22454] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:35.612) ; eboa.logging(663) [22454] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:41:35.851) ; eboa.logging(513) [22454] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:35.921) ; eboa.logging(663) [22454] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:41:36.170) ; eboa.logging(513) [22454] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:41:36.229) ; eboa.logging(663) [22454] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:42:28.588) ; eboa.logging(53) [22480] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:42:29.331) ; eboa.logging(513) [22480] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:42:29.390) ; eboa.logging(663) [22480] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:43:57.307) ; eboa.logging(53) [22531] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:43:58.285) ; eboa.logging(513) [22531] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:43:58.361) ; eboa.logging(663) [22531] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:47:59.528) ; eboa.logging(53) [22664] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:48:00.430) ; eboa.logging(513) [22664] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:48:00.492) ; eboa.logging(663) [22664] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:49:36.763) ; eboa.logging(53) [22708] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:49:37.676) ; eboa.logging(513) [22708] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:49:37.742) ; eboa.logging(663) [22708] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:50:24.880) ; eboa.logging(53) [22733] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:50:25.710) ; eboa.logging(513) [22733] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:50:25.775) ; eboa.logging(663) [22733] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:50:39.226) ; eboa.logging(53) [22745] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:50:40.888) ; eboa.logging(513) [22745] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:50:40.982) ; eboa.logging(663) [22745] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:50:41.585) ; eboa.logging(513) [22745] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:50:41.656) ; eboa.logging(663) [22745] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:50:41.923) ; eboa.logging(513) [22745] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:50:41.990) ; eboa.logging(663) [22745] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:50:42.219) ; eboa.logging(513) [22745] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:50:42.273) ; eboa.logging(663) [22745] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:17.206) ; eboa.logging(53) [22896] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:56:18.705) ; eboa.logging(513) [22896] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:18.794) ; eboa.logging(663) [22896] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:19.362) ; eboa.logging(513) [22896] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:19.475) ; eboa.logging(663) [22896] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:19.765) ; eboa.logging(513) [22896] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:19.856) ; eboa.logging(663) [22896] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:20.130) ; eboa.logging(513) [22896] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:20.208) ; eboa.logging(663) [22896] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:20.568) ; eboa.logging(513) [22896] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:20.626) ; eboa.logging(663) [22896] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:49.479) ; eboa.logging(53) [22919] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:56:51.015) ; eboa.logging(513) [22919] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:51.101) ; eboa.logging(663) [22919] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:51.619) ; eboa.logging(513) [22919] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:51.694) ; eboa.logging(663) [22919] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:52.134) ; eboa.logging(513) [22919] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:52.210) ; eboa.logging(663) [22919] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:52.441) ; eboa.logging(513) [22919] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:52.510) ; eboa.logging(663) [22919] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:56:52.798) ; eboa.logging(513) [22919] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:56:52.853) ; eboa.logging(663) [22919] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:57:07.365) ; eboa.logging(53) [22933] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T16:57:08.934) ; eboa.logging(513) [22933] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:57:09.018) ; eboa.logging(663) [22933] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:57:09.557) ; eboa.logging(513) [22933] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:57:09.634) ; eboa.logging(663) [22933] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:57:09.892) ; eboa.logging(513) [22933] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:57:09.970) ; eboa.logging(663) [22933] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:57:10.203) ; eboa.logging(513) [22933] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:57:10.260) ; eboa.logging(663) [22933] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T16:57:10.760) ; eboa.logging(513) [22933] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T16:57:10.819) ; eboa.logging(663) [22933] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T17:02:50.736) ; eboa.logging(53) [23091] -> File log handler created using file stored in path /home/dani/workspace/VBOA/vboa/src/tests/eboa_resources/log/eboa_engine.log
+INFO	; (2018-11-28T17:02:52.293) ; eboa.logging(513) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T17:02:52.380) ; eboa.logging(663) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T17:02:52.690) ; eboa.logging(513) [23091] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T17:02:52.765) ; eboa.logging(663) [23091] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T17:02:53.251) ; eboa.logging(513) [23091] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T17:02:53.304) ; eboa.logging(663) [23091] -> The source file source.xml associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 2 event/s and 0 annotation/s
+INFO	; (2018-11-28T17:02:53.878) ; eboa.logging(513) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T17:02:53.962) ; eboa.logging(663) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T17:02:54.248) ; eboa.logging(513) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T17:02:54.312) ; eboa.logging(663) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
+INFO	; (2018-11-28T17:02:54.876) ; eboa.logging(513) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 is going to be ingested
+INFO	; (2018-11-28T17:02:54.957) ; eboa.logging(663) [23091] -> The source file source.json associated to the DIM signature dim_signature and DIM processing exec with version 1.0 has ingested correctly 1 event/s and 0 annotation/s
