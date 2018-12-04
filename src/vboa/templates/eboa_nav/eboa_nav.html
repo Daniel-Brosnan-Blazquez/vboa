@@ -10,8 +10,12 @@
 <div class="row">
   <ul class="nav nav-tabs responsive-tabs">
     <li {% block li_active_events %} {% endblock %}><a href="#nav-events">Events</a></li>
-    <li {% block li_active_explicit_references %} {% endblock %}><a href="#nav-explicit-references">Explicit references</a></li>
+    <li {% block li_active_annotations %} {% endblock %}><a href="#nav-annotations">Annotations</a></li>
     <li {% block li_active_sources %} {% endblock %}><a href="#nav-sources">Sources</a></li>
+    <li {% block li_active_explicit_references %} {% endblock %}><a href="#nav-explicit-references">Explicit references</a></li>
+    <li {% block li_active_gauges %} {% endblock %}><a href="#nav-gauges">Gauges</a></li>
+    <li {% block li_active_annotation_cnfs %} {% endblock %}><a href="#nav-annotation-cnfs">Annotation Cnfs</a></li>
+    <li {% block li_active_dim_signatures %} {% endblock %}><a href="#nav-dim-signatures">DIM Signatures</a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane {% block div_active_events %} {% endblock %}" id="nav-events">
@@ -19,16 +23,34 @@
       {% include "eboa_nav/query_events_content.html" %}
       {% endblock %}
     </div>
-    <!-- /.col-lg-12 -->
-    <div class="tab-pane {% block div_active_explicit_references %} {% endblock %}" id="nav-explicit-references">
-      {% block explicit_references_nav_content %} {% endblock %}
+    <div class="tab-pane {% block div_active_annotations %} {% endblock %}" id="nav-annotations">
+      {% block annotations_nav_content %}
+      {% include "eboa_nav/query_annotations_content.html" %}
+      {% endblock %}
     </div>
     <div class="tab-pane {% block div_active_sources %} {% endblock %}" id="nav-sources">
       {% block sources_nav_content %}
       {% include "eboa_nav/query_sources_content.html" %}
       {% endblock %}
     </div>
-    <!-- /.col-lg-12 -->
+    <div class="tab-pane {% block div_active_explicit_references %} {% endblock %}" id="nav-explicit-references">
+      {% block explicit_references_nav_content %} {% endblock %}
+    </div>
+    <div class="tab-pane {% block div_active_gauges %} {% endblock %}" id="nav-gauges">
+      {% block gauges_nav_content %}
+      {% include "eboa_nav/query_gauges_content.html" %}
+      {% endblock %}
+    </div>
+    <div class="tab-pane {% block div_active_annotation_cnfs %} {% endblock %}" id="nav-annotation-cnfs">
+      {% block annotation_cnfs_nav_content %}
+      {% include "eboa_nav/query_annotation_cnfs_content.html" %}
+      {% endblock %}
+    </div>
+    <div class="tab-pane {% block div_active_dim_signatures %} {% endblock %}" id="nav-dim-signatures">
+      {% block dim_signatures_nav_content %}
+      {% include "eboa_nav/query_dim_signatures_content.html" %}
+      {% endblock %}
+    </div>
   </div>
   <!-- /.tab-content -->
 </div>

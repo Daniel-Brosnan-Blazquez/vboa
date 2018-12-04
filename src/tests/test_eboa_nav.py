@@ -362,7 +362,7 @@ def test_query_gauges(app, client):
     assert response.status_code == 200
     assert int(exit_information["exit_status"]) == 0
 
-    response = client.get('/eboa_nav/query-gauges')
+    response = client.get('/eboa_nav/query-jsonify-gauges')
     gauges = json.loads(response.get_data().decode('utf8').replace("'", '"'))
     assert response.status_code == 200
     assert len(gauges) == 1

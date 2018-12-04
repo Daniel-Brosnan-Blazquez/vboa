@@ -55,14 +55,46 @@ def query_events():
     if request.form["source_like"] != "":
         kwargs["source_like"] = {"str": request.form["source_like"], "op": "like"}
     # end if
+    if "sources" in request.form and request.form["sources"] != "":
+        kwargs["sources"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("sources"):
+            kwargs["sources"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
     if request.form["er_like"] != "":
         kwargs["explicit_ref_like"] = {"str": request.form["er_like"], "op": "like"}
+    # end if
+    if "ers" in request.form and request.form["ers"] != "":
+        kwargs["ers"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("ers"):
+            kwargs["ers"]["list"].append(source)
+            i+=1
+        # end for
     # end if
     if request.form["gauge_name_like"] != "":
         kwargs["gauge_name_like"] = {"str": request.form["gauge_name_like"], "op": "like"}
     # end if
+    if "gauge_names" in request.form and request.form["gauge_names"] != "":
+        kwargs["gauge_names"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("gauge_names"):
+            kwargs["gauge_names"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
     if request.form["gauge_system_like"] != "":
         kwargs["gauge_system_like"] = {"str": request.form["gauge_system_like"], "op": "like"}
+    # end if
+    if "gauge_systems" in request.form and request.form["gauge_systems"] != "":
+        kwargs["gauge_systems"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("gauge_systems"):
+            kwargs["gauge_systems"]["list"].append(source)
+            i+=1
+        # end for
     # end if
     if request.form["start"] != "":
         kwargs["start_filters"] = []
@@ -204,6 +236,17 @@ def query_sources():
 
     return sources
 
+@bp.route("/query-jsonify-sources")
+def query_jsonify_sources():
+    """
+    Query all the sources.
+    """
+    current_app.logger.debug("Query source")
+    query = Query()
+    sources = query.get_sources()
+    jsonified_sources = [source.jsonify() for source in sources]
+    return jsonify(jsonified_sources)
+
 @bp.route("/query-source/<uuid:source_uuid>")
 def query_source(source_uuid):
     """
@@ -214,8 +257,8 @@ def query_source(source_uuid):
     source = query.get_sources(processing_uuids={"list": [source_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=source)
 
-@bp.route("/query-gauges")
-def query_gauges():
+@bp.route("/query-jsonify-gauges")
+def query_jsonify_gauges():
     """
     Query all the gauges.
     """
@@ -224,6 +267,28 @@ def query_gauges():
     gauges = query.get_gauges()
     jsonified_gauges = [gauge.jsonify() for gauge in gauges]
     return jsonify(jsonified_gauges)
+
+@bp.route("/query-jsonify-keys")
+def query_jsonify_keys():
+    """
+    Query all the keys.
+    """
+    current_app.logger.debug("Query event keys")
+    query = Query()
+    keys = query.get_event_keys()
+    jsonified_keys = [key.jsonify() for key in keys]
+    return jsonify(jsonified_keys)
+
+@bp.route("/query-jsonify-ers")
+def query_jsonify_ers():
+    """
+    Query all the ers.
+    """
+    current_app.logger.debug("Query explicit references")
+    query = Query()
+    ers = query.get_event_ers()
+    jsonified_ers = [er.jsonify() for er in ers]
+    return jsonify(jsonified_ers)
 
 @bp.route("/treat-data", methods = ["POST"])
 def treat_data():

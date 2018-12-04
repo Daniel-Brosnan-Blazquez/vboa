@@ -3,10 +3,16 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js";
 import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.js";
 import "datatables/media/js/jquery.dataTables.min.js";
+import "chosen-js/chosen.jquery.min.js";
 import * as vis from "vis/dist/vis.js";
 import * as graph from "./graph.js";
 import * as sourceFunctions from "./sources.js";
+import * as gaugeFunctions from "./gauges.js";
 import * as eventFunctions from "./events.js";
+import * as eventKeyFunctions from "./event_keys.js";
+import * as erFunctions from "./explicit_references.js";
+import * as dates from "./dates.js";
+import * as datatableFunctions from "./datatables.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -18,8 +24,15 @@ import "datatables/media/css/jquery.dataTables.min.css";
 import "vis/dist/vis.css";
 import "vis/dist/vis-timeline-graph2d.min.css";
 import "vis/dist/vis-network.min.css";
+import "chosen-js/chosen.min.css";
 
-/* Function to add more start and stop selectors when commanded */
+/* Activate chosen for the multiple input selection */
+jQuery(".chosen-select").chosen({
+    no_results_text: "Nothing found for the following criteria: ",
+    width: "100%"
+});
+
+/* Activate function to add more start and stop selectors when commanded */
 jQuery(function (){
     jQuery("#add-start-stop").click(function () {
         jQuery.get("/static/html/more_start_stop.html", function (data){
@@ -28,50 +41,11 @@ jQuery(function (){
     });
 });
 
-/* Function to add more start and stop selectors when commanded */
-function observe_more_start_stop(){
-    
-    var more_start_stop_target = document.querySelector("#more-start-stop");
-    if (more_start_stop_target != null){
-        var observer = new MutationObserver(
-            function(mutations) {      
-                react_new_date_fields(mutations);
-            });
-        /* Observe changes on the childs */
-        var config = {childList: true};
-        
-        /* Attach the observer to the target */
-        observer.observe(more_start_stop_target, config);
-    }
-};
+/* Activate observers to the requests of adding more date inputs */
+dates.observe_more_start_stop();
+dates.observe_more_ingestion_time();
 
-observe_more_start_stop();
-
-/* Function to add more ingestion time selectors when commanded */
-function observe_more_ingestion_time(){
-    
-    var more_ingestion_time_target = document.querySelector("#more-ingestion-time");
-    if (more_ingestion_time_target != null){
-        var observer = new MutationObserver(
-            function(mutations) {      
-                react_new_date_fields(mutations);
-            });
-        /* Observe changes on the childs */
-        var config = {childList: true};
-        
-        /* Attach the observer to the target */
-        observer.observe(more_ingestion_time_target, config);
-    }
-};
-
-observe_more_ingestion_time();
-
-/* Function to activate the datetimepicker of the new added alements */
-function react_new_date_fields(mutations){
-    activate_datetimepicker();
-};
-
-/* Function to add more ingestion time selectors when commanded */
+/* Activate function to add more ingestion time selectors when commanded */
 jQuery(function () {
     jQuery("#add-ingestion-time").click(function () {
         jQuery.get("/static/html/more_ingestion_time.html", function (data){
@@ -80,103 +54,44 @@ jQuery(function () {
     });
 });
 
-/* Assciate datetimepicker functionality */
+/* Associate datetimepicker functionality */
 jQuery(function () {
-    activate_datetimepicker();
+    dates.activate_datetimepicker();
 });
-
-function activate_datetimepicker(){
-    jQuery(".date").datetimepicker({
-        initialDate: new Date(),
-        todayHighlight: true,
-        format: "yyyy-mm-ddThh:ii:ss",
-        sideBySide: true,
-        todayBtn: "linked"
-    });
-}
 
 jQuery(".responsive-tabs").responsiveTabs({
   accordionOn: ['xs', 'sm'] // xs, sm, md, lg
 });
 
-/* Activate search on every column */
+/* 
+* Datatables
+*/
+/* Activate search on every column for datatables */
 jQuery(function() {
-    // Setup - add a text input to each footer cell
-    jQuery(".table tfoot th").each( function () {
-        var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-    } );
- 
-    // DataTable
-    var table = jQuery(".table").DataTable({
-        responsive: true,
-        aLengthMenu: [
-            [10, 25, 50, 100, 200, -1],
-            [10, 25, 50, 100, 200, "All"]
-        ],
-        iDisplayLength: 10,
-        scrollX: true,
-        scrollY: "500px"
-    });
-    
-    // Apply the search
-    table.columns().every( function () {
-        var that = this;
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-            if ( that.search() !== this.value ) {
-                that.search( this.value ).draw();
-            }
-        } );
-    } );
-} );
+    datatableFunctions.activate_search_on_columns();
+});
 
 /* Functions to fill lists of inputs */
-export function fill_gauges(){
-    const div_gauge_name = document.querySelector("#div-gauge-name");
-    const datalist_gauge_name = div_gauge_name.getElementsByTagName("datalist")[0];
-    const options = datalist_gauge_name.getElementsByTagName("option");
-    if (options.length == 0){
-        const div_gauge_system = document.querySelector("#div-gauge-system");
-        const datalist_gauge_system = div_gauge_system.getElementsByTagName("datalist")[0];
 
-        const parameters = {
-            "datalist_gauge_name": datalist_gauge_name,
-            "datalist_gauge_system": datalist_gauge_system
-        }
-        /* Fill the list only if it was not filled previously */
-        const gauge_names_json = request_info("/eboa_nav/query-gauge-names", fill_gauges_into_datalists, parameters);
-    }
-}
+/* Fill sources */
+/* Function to call just once to fill the options with values from the database */
+jQuery("#div-sources").one("focusin", sourceFunctions.fill_sources);
 
-function fill_gauges_into_datalists(parameters, gauges){
+/* Fill gauges */
+/* Function to call just once to fill the options with values from the database */
+jQuery("#div-gauges").one("focusin", gaugeFunctions.fill_gauges);
 
-    var gauge_names = new Set(gauges.map(gauge => gauge["name"]))
-    var gauge_systems = new Set(gauges.map(gauge => gauge["system"]))
-    for (const gauge_name of gauge_names){
-        add_option(parameters["datalist_gauge_name"], gauge_name);
-    }
-    for (const gauge_system of gauge_systems){
-        add_option(parameters["datalist_gauge_system"], gauge_system);
-    }
-}
+/* Fill explicit references */
+/* Function to call just once to fill the options with values from the database */
+jQuery("#div-ers").one("focusin", erFunctions.fill_ers);
 
-function add_option(dom_id, value){
-    var option = document.createElement("option");
-    option.setAttribute("value", value);
-    dom_id.appendChild(option);
-}
+/* Fill event keys */
+/* Function to call just once to fill the options with values from the database */
+jQuery("#div-keys").one("focusin", eventKeyFunctions.fill_keys);
 
-function request_info(url, callback, parameters){
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            return callback(parameters, JSON.parse(this.responseText));
-        }
-    };
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-}
-
+/*
+* Graph functions
+*/
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
 export function display_timeline(dom_id, items, groups){
