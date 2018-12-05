@@ -10,6 +10,7 @@ import * as sourceFunctions from "./sources.js";
 import * as gaugeFunctions from "./gauges.js";
 import * as eventFunctions from "./events.js";
 import * as eventKeyFunctions from "./event_keys.js";
+import * as dimSignatureFunctions from "./dim_signatures.js";
 import * as erFunctions from "./explicit_references.js";
 import * as dates from "./dates.js";
 import * as datatableFunctions from "./datatables.js";
@@ -32,27 +33,22 @@ jQuery(".chosen-select").chosen({
     width: "100%"
 });
 
-/* Activate function to add more start and stop selectors when commanded */
-jQuery(function (){
-    jQuery("#add-start-stop").click(function () {
-        jQuery.get("/static/html/more_start_stop.html", function (data){
-            jQuery("#more-start-stop").append(data);
-        });
-    });
-});
+/* Functions to add more time filters (start-stop, validity start-validity stop, ingestion time, generation time) */
+export function add_start_stop(dom_id){
+    dates.add_start_stop(dom_id);
+}
 
-/* Activate observers to the requests of adding more date inputs */
-dates.observe_more_start_stop();
-dates.observe_more_ingestion_time();
+export function add_validity_start_validity_stop(dom_id){
+    dates.add_validity_start_validity_stop(dom_id);
+}
 
-/* Activate function to add more ingestion time selectors when commanded */
-jQuery(function () {
-    jQuery("#add-ingestion-time").click(function () {
-        jQuery.get("/static/html/more_ingestion_time.html", function (data){
-            jQuery("#more-ingestion-time").append(data);
-        });
-    });
-});
+export function add_ingestion_time(dom_id){
+    dates.add_ingestion_time(dom_id);
+}
+
+export function add_generation_time(dom_id){
+    dates.add_generation_time(dom_id);
+}
 
 /* Associate datetimepicker functionality */
 jQuery(function () {
@@ -75,19 +71,23 @@ jQuery(function() {
 
 /* Fill sources */
 /* Function to call just once to fill the options with values from the database */
-jQuery("#div-sources").one("focusin", sourceFunctions.fill_sources);
+jQuery(".query-sources").one("focusin", sourceFunctions.fill_sources);
 
 /* Fill gauges */
 /* Function to call just once to fill the options with values from the database */
-jQuery("#div-gauges").one("focusin", gaugeFunctions.fill_gauges);
+jQuery(".query-gauges").one("focusin", gaugeFunctions.fill_gauges);
 
 /* Fill explicit references */
 /* Function to call just once to fill the options with values from the database */
-jQuery("#div-ers").one("focusin", erFunctions.fill_ers);
+jQuery(".query-ers").one("focusin", erFunctions.fill_ers);
 
 /* Fill event keys */
 /* Function to call just once to fill the options with values from the database */
-jQuery("#div-keys").one("focusin", eventKeyFunctions.fill_keys);
+jQuery(".query-keys").one("focusin", eventKeyFunctions.fill_keys);
+
+/* Fill DIM signatures */
+/* Function to call just once to fill the options with values from the database */
+jQuery(".query-dim-signatures").one("focusin", dimSignatureFunctions.fill_dim_signatures);
 
 /*
 * Graph functions

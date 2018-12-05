@@ -290,6 +290,17 @@ def query_jsonify_ers():
     jsonified_ers = [er.jsonify() for er in ers]
     return jsonify(jsonified_ers)
 
+@bp.route("/query-jsonify-dim-signatures")
+def query_jsonify_dim_signatures():
+    """
+    Query all the DIM signatures.
+    """
+    current_app.logger.debug("Query DIM signatures")
+    query = Query()
+    dim_signatures = query.get_dim_signatures()
+    jsonified_dim_signatures = [dim_signature.jsonify() for dim_signature in dim_signatures]
+    return jsonify(jsonified_dim_signatures)
+
 @bp.route("/treat-data", methods = ["POST"])
 def treat_data():
     """

@@ -5,38 +5,42 @@
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-events">
             <!-- Sources -->
-            <div class="row" id="div-sources">
-              <div class="col-xs-3" id="div-source-like">
+            <div class="row">
+              <div class="col-xs-3  query-sources">
                 <label>Source like</label>
-                <input class="form-control" list="source_like" name="source_like"/>
-                <datalist id="source_like">
+                <input class="form-control" list="source_like_events" name="source_like"/>
+                <datalist id="source_like_events">
                 </datalist>
               </div>
-              <div class="col-xs-3" id="div-sources">
+              <div class="col-xs-3  query-sources">
                 <label>Sources</label>
                 <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>
             <!-- Exlicit references -->
-            <div class="row" id="div-ers">
-              <div class="col-xs-3" id="div-er-like">
+            <div class="row">
+              <div class="col-xs-3 query-ers">
                 <label>Explicit reference like</label>
-                <input class="form-control" name="er_like"/>
+                <input class="form-control" list="er_like_events" name="er_like"/>
+                <datalist id="er_like_events">
+                </datalist>
               </div>
-              <div class="col-xs-3" id="div-ers">
+              <div class="col-xs-3 query-ers">
                 <label>Explicit references</label>
                 <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>
             <!-- Event keys -->
-            <div class="row" id="div-keys">
-              <div class="col-xs-3" id="div-key-like">
+            <div class="row">
+              <div class="col-xs-3 query-keys">
                 <label>Key like</label>
-                <input class="form-control" name="key_like"/>
+                <input class="form-control" list="key_like_events" name="key_like"/>
+                <datalist id="key_like_events">
+                </datalist>
               </div>
-              <div class="col-xs-3" id="div-keys">
+              <div class="col-xs-3 query-keys">
                 <label>Keys</label>
                 <select name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
@@ -44,56 +48,56 @@
             </div>
             <!-- Gauges -->
             <div>
-              <div class="row" id="div-gauges">
-                <div class="col-xs-2" id="div-gauge-name-like">
+              <div class="row  query-gauges">
+                <div class="col-xs-3 query-gauge-names">
                   <label>Gauge name like</label>
-                  <input class="form-control" list="gauge_names" name="gauge_name_like"/>
-                  <datalist id="gauge_names">
+                  <input class="form-control" list="gauge_name_like_events" name="gauge_name_like"/>
+                  <datalist id="gauge_name_like_events">
                   </datalist>
                 </div>
-                <div class="col-xs-2" id="div-gauge-system-like">
+                <div class="col-xs-3 query-gauge-systems">
                   <label>Gauge system like</label>
                   <input class="form-control" list="gauge_systems" name="gauge_system_like"/>
                   <datalist id="gauge_systems">
                   </datalist>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-xs-2" id="div-gauge-names">
+              <div class="row query-gauges">
+                <div class="col-xs-3 query-gauge-names">
                   <label>Gauge names</label>
                   <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                   </select>
                 </div>
-                <div class="col-xs-2" id="div-gauge-systems">
+                <div class="col-xs-3 query-gauge-systems">
                   <label>Gauge systems</label>
                   <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                   </select>
                 </div>
               </div>
             </div>
-            <div class="row" id="start-stop">
+            <div class="row">
               {% include "eboa_nav/start_stop.html" %}
               <div>
-                <span id="add-start-stop">
+                <span onclick="vboa.add_start_stop('more-start-stop-query-events')">
                   <span class="glyphicon glyphicon-plus"></span>
                 </span>
               </div>
             </div>
-            <div id="more-start-stop">
+            <div id="more-start-stop-query-events">
             </div>
             <div class="row">
               {% include "eboa_nav/ingestion_time.html" %}
               <div>
-                <span id="add-ingestion-time">
+                <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-events')">
                   <span class="glyphicon glyphicon-plus"></span>
                 </span>
               </div>
             </div>
-            <div id="more-ingestion-time">
+            <div id="more-ingestion-time-query-events">
             </div>
             <div>
               <label>
-                <input type="checkbox" id="show-timeline" name="show_timeline" checked><span class="label-text"><b>Show timeline</b></span>
+                <input type="checkbox" name="show_timeline" checked><span class="label-text"><b>Show timeline</b></span>
               </label>
             </div>
             <div>

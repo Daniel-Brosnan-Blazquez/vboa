@@ -17,43 +17,66 @@ export function interval_to_seconds(interval){
 }
 
 /* Function to add more start and stop selectors when commanded */
-export function observe_more_start_stop(){
+export function add_start_stop(dom_id){
     
-    var more_start_stop_target = document.querySelector("#more-start-stop");
-    if (more_start_stop_target != null){
-        var observer = new MutationObserver(
-            function(mutations) {      
-                react_new_date_fields(mutations);
-            });
-        /* Observe changes on the childs */
-        var config = {childList: true};
-        
-        /* Attach the observer to the target */
-        observer.observe(more_start_stop_target, config);
-    }
+    jQuery.get("/static/html/more_start_stop.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+
+    react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to add more validity start and validity stop selectors when commanded */
+export function add_validity_start_validity_stop(dom_id){
+
+    jQuery.get("/static/html/more_validity_start_validity_stop.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+
+    react_activate_datetimepicker(dom_id);
+
 };
 
 /* Function to add more ingestion time selectors when commanded */
-export function observe_more_ingestion_time(){
+export function add_ingestion_time(dom_id){
     
-    var more_ingestion_time_target = document.querySelector("#more-ingestion-time");
-    if (more_ingestion_time_target != null){
+    jQuery.get("/static/html/more_ingestion_time.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+    
+    react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to add more ingestion time selectors when commanded */
+export function add_generation_time(dom_id){
+    
+    jQuery.get("/static/html/more_generation_time.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+    
+    react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to react on mutations and call to activate the datetime picker */
+function react_activate_datetimepicker(dom_id){
+
+    var target = document.querySelector("#" + dom_id);
+    if (target != null){
         var observer = new MutationObserver(
             function(mutations) {      
-                react_new_date_fields(mutations);
+                activate_datetimepicker();
             });
         /* Observe changes on the childs */
         var config = {childList: true};
         
         /* Attach the observer to the target */
-        observer.observe(more_ingestion_time_target, config);
+        observer.observe(target, config);
     }
-};
 
-/* Function to activate the datetimepicker of the new added alements */
-function react_new_date_fields(mutations){
-    activate_datetimepicker();
-};
+}
 
 /* Associate a datetime picker to the elements */
 export function activate_datetimepicker(){

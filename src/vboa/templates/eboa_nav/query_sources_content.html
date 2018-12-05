@@ -5,34 +5,60 @@
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-sources">
             <div class="row">
-              <div class="col-xs-3">
+              <div class="col-xs-3 query-sources">
                 <label>Name like</label>
-                <input class="form-control" name="source_like"/>
+                <input class="form-control" list="source_like_sources" name="source_like"/>
+                <datalist id="source_like_sources">
+                </datalist>
               </div>
-              <div class="col-xs-3">
-                <label>DIM Signature like</label>
-                <input class="form-control" name="dim_signature_like"/>
+              <div class="col-xs-3 query-sources">
+                <label>Names</label>
+                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
               </div>
-            </div>
-            <div class="row" id="validity-start-stop">
-              {% include "eboa_nav/validity_start_validity_stop.html" %}
-              <div>
-                <span id="add-validity-start-stop">
-                  <span class="glyphicon glyphicon-plus"></span>
-                </span>
-              </div>
-            </div>
-            <div id="more-validity-start-stop">
             </div>
             <div class="row">
-              {% include "eboa_nav/ingestion_generation_times.html" %}
+              <div class="col-xs-3 query-dim-signatures">
+                <label>DIM signature like</label>
+                <input class="form-control" list="dim_signature_like_sources" name="dim_signature_like"/>
+                <datalist id="dim_signature_like_sources">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-dim-signatures">
+                <label>DIM signatures</label>
+                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              {% include "eboa_nav/validity_start_validity_stop.html" %}
               <div>
-                <span id="add-ingestion-generation-time">
+                <span onclick="vboa.add_validity_start_validity_stop('more-validity-start-validity-stop-query-sources')">
                   <span class="glyphicon glyphicon-plus"></span>
                 </span>
               </div>
             </div>
-            <div id="more-ingestion-generation-time">
+            <div id="more-validity-start-validity-stop-query-sources">
+            </div>
+            <div class="row">
+              {% include "eboa_nav/ingestion_time.html" %}
+              <div>
+                <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-sources')">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-ingestion-time-query-sources">
+            </div>
+            <div class="row">
+              {% include "eboa_nav/generation_time.html" %}
+              <div>
+                <span onclick="vboa.add_generation_time('more-generation-time-query-sources')">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-generation-time-query-sources">
             </div>
             <div>
               <label>

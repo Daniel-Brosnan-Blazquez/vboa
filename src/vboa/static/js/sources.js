@@ -1,30 +1,36 @@
 import * as dates from "./dates.js";
 import * as graph from "./graph.js";
 import * as query from "./query.js";
-import * as selectors from "./selectors.js";
+import * as selectorFunctions from "./selectors.js";
 
 /* Functions for the query interface */
 export function fill_sources(){
     console.log("fill_sources")
-    const div_source_like = document.querySelector("#div-source-like");
-    const datalist_source_like = div_source_like.getElementsByTagName("datalist")[0];
-    const div_sources = document.querySelector("#div-sources");
-    const select_sources = div_sources.getElementsByTagName("select")[0];
-    
-    const parameters = {
-        "datalist_source_like": datalist_source_like,
-        "select_sources": select_sources
+    const divs = document.getElementsByClassName("query-sources");
+    var selectors = []
+    for (const div of divs){
+        var selector = div.getElementsByTagName("datalist")[0];
+        if (selector == null){
+           selector = div.getElementsByTagName("select")[0];
+        }
+        /* If the options were already filled exit */
+        if (selector.getElementsByTagName("option").length != 0){
+            return false
+        }
+        selectors.push(selector);
     }
-    query.request_info("/eboa_nav/query-jsonify-sources", fill_sources_into_selectors, parameters);
+    query.request_info("/eboa_nav/query-jsonify-sources", fill_sources_into_selectors, selectors);
+    return true
 }
 
-function fill_sources_into_selectors(parameters, sources){
+function fill_sources_into_selectors(selectors, sources){
 
     const source_names = new Set(sources.map(source => source["name"]))
 
     for (const source_name of source_names){
-        selectors.add_option(parameters["datalist_source_like"], source_name);
-        selectors.add_option(parameters["select_sources"], source_name);
+        for (const selector of selectors){
+            selectorFunctions.add_option(selector, source_name);
+        }
     }
     /* Update chosen for the multiple input selection */
     jQuery(".chosen-select").trigger("chosen:updated");
