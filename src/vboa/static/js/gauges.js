@@ -3,7 +3,6 @@ import * as selectorFunctions from "./selectors.js";
 
 /* Functions for the query interface */
 export function fill_gauges(){
-    console.log("fill_gauges")
     const divs = document.getElementsByClassName("query-gauges");
     var gauge_name_selectors = []
     var gauge_system_selectors = []

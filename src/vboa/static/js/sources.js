@@ -5,7 +5,6 @@ import * as selectorFunctions from "./selectors.js";
 
 /* Functions for the query interface */
 export function fill_sources(){
-    console.log("fill_sources")
     const divs = document.getElementsByClassName("query-sources");
     var selectors = []
     for (const div of divs){

@@ -3,7 +3,6 @@ import * as selectorFunctions from "./selectors.js";
 
 /* Functions for the query interface */
 export function fill_dim_signatures(){
-    console.log("fill_dim_signatures")
     const divs = document.getElementsByClassName("query-dim-signatures");
     var selectors = []
     for (const div of divs){

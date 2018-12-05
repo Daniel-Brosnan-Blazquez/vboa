@@ -1,28 +1,33 @@
 import * as query from "./query.js";
-import * as selectors from "./selectors.js";
+import * as selectorFunctions from "./selectors.js";
 
 /* Functions for the query interface */
 export function fill_keys(){
-    console.log("fill_keys")
-    const div_key_like = document.querySelector("#div-key-like");
-    const datalist_key_like = div_key_like.getElementsByTagName("datalist")[0];
-    const div_keys = document.querySelector("#div-keys");
-    const select_keys = div_keys.getElementsByTagName("select")[0];
-    
-    const parameters = {
-        "datalist_key_like": datalist_key_like,
-        "select_keys": select_keys
+    const divs = document.getElementsByClassName("query-keys");
+    var selectors = []
+    for (const div of divs){
+        var selector = div.getElementsByTagName("datalist")[0];
+        if (selector == null){
+           selector = div.getElementsByTagName("select")[0];
+        }
+        /* If the options were already filled exit */
+        if (selector.getElementsByTagName("option").length != 0){
+            return false
+        }
+        selectors.push(selector);
     }
-    query.request_info("/eboa_nav/query-jsonify-keys", fill_keys_into_selectors, parameters);
+    query.request_info("/eboa_nav/query-jsonify-keys", fill_keys_into_selectors, selectors);
+    return true
 }
 
-function fill_keys_into_selectors(parameters, keys){
+function fill_keys_into_selectors(selectors, keys){
 
-    const key_names = new Set(keys.map(key => key["name"]))
+    const key_names = new Set(keys.map(key => key["event_key"]))
 
     for (const key_name of key_names){
-        selectors.add_option(parameters["datalist_key_like"], key_name);
-        selectors.add_option(parameters["select_keys"], key_name);
+        for (const selector of selectors){
+            selectorFunctions.add_option(selector, key_name);
+        }
     }
     /* Update chosen for the multiple input selection */
     jQuery(".chosen-select").trigger("chosen:updated");

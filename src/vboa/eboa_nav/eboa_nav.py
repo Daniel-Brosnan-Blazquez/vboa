@@ -125,6 +125,27 @@ def query_events():
     # end if
     events = query.get_events_join(**kwargs)
 
+    kwargs = {}
+    if request.form["key_like"] != "":
+        kwargs["key_like"] = {"str": request.form["key_like"], "op": "like"}
+    # end if
+    if "keys" in request.form and request.form["keys"] != "":
+        kwargs["keys"] = {"list": [], "op": "in"}
+        i = 0
+        for key in request.form.getlist("keys"):
+            kwargs["keys"]["list"].append(key)
+            i+=1
+        # end for
+    # end if
+
+    if request.form["key_like"] != "" or ("keys" in request.form and request.form["keys"] != ""):
+        event_uuids = {"list": [event.event_uuid for event in events], "op": "in"}
+        kwargs["event_uuids"] = event_uuids
+        event_keys = query.get_event_keys(**kwargs)
+        event_uuids_from_keys = {"list": [event_key.event_uuid for event_key in event_keys], "op": "in"}
+        events = query.get_events(event_uuids = event_uuids_from_keys)
+    # end if
+
     return events
 
 @bp.route("/query-event-links/<uuid:event_uuid>")
@@ -286,7 +307,7 @@ def query_jsonify_ers():
     """
     current_app.logger.debug("Query explicit references")
     query = Query()
-    ers = query.get_event_ers()
+    ers = query.get_explicit_refs()
     jsonified_ers = [er.jsonify() for er in ers]
     return jsonify(jsonified_ers)
 
