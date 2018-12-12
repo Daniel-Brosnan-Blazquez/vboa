@@ -15,6 +15,7 @@ from flask import jsonify
 
 # Import eboa utilities
 from eboa.engine.query import Query
+import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
 
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
@@ -244,6 +245,15 @@ def query_sources():
             i+=1
         # end for
     # end if
+    if request.form["ingestion_duration"] != "":
+        kwargs["ingestion_duration_filters"] = []
+        i = 0
+        operators = request.form.getlist("ingestion_duration_operator")
+        for ingestion_duration in request.form.getlist("ingestion_duration"):
+            kwargs["ingestion_duration_filters"].append({"float": float(ingestion_duration), "op": operators[i]})
+            i+=1
+        # end for
+    # end if
     if request.form["generation_time"] != "":
         kwargs["generation_time_filters"] = []
         i = 0
@@ -278,6 +288,14 @@ def query_source(source_uuid):
     source = query.get_sources(processing_uuids={"list": [source_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=source)
 
+@bp.route("/get-proc-status")
+def get_proc_status():
+    """
+    Get the processing statuses defined in the EBOA component.
+    """
+    current_app.logger.debug("Get processing statuses")
+    return jsonify(eboa_engine.exit_codes)
+
 @bp.route("/query-jsonify-gauges")
 def query_jsonify_gauges():
     """
@@ -288,6 +306,18 @@ def query_jsonify_gauges():
     gauges = query.get_gauges()
     jsonified_gauges = [gauge.jsonify() for gauge in gauges]
     return jsonify(jsonified_gauges)
+
+
+@bp.route("/query-jsonify-annotation-cnfs")
+def query_jsonify_annotation_cnfs():
+    """
+    Query all the annotation configurations.
+    """
+    current_app.logger.debug("Query annotation configurations")
+    query = Query()
+    annotation_cnfs = query.get_annotation_cnfs()
+    jsonified_annotation_cnfs = [annotation_cnf.jsonify() for annotation_cnf in annotation_cnfs]
+    return jsonify(jsonified_annotation_cnfs)
 
 @bp.route("/query-jsonify-keys")
 def query_jsonify_keys():

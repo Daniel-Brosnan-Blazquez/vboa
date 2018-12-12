@@ -48,7 +48,15 @@
                 </span>
               </div>
             </div>
-            <div id="more-ingestion-time-query-sources">
+            <div class="row">
+              {% include "eboa_nav/ingestion_duration.html" %}
+              <div>
+                <span onclick="vboa.add_ingestion_duration('more-ingestion-duration-query-sources')">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-ingestion-duration-query-sources">
             </div>
             <div class="row">
               {% include "eboa_nav/generation_time.html" %}
@@ -59,6 +67,13 @@
               </div>
             </div>
             <div id="more-generation-time-query-sources">
+            </div>
+            <div class="row">
+              <div class="col-xs-3 query-proc-statuses">
+                <label>Processing statuses</label>
+                <select name="proc_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
             </div>
             <div>
               <label>

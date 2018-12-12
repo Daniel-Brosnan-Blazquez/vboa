@@ -36,6 +36,39 @@ function fill_sources_into_selectors(selectors, sources){
 }
 
 
+/* Functions for the query interface */
+export function fill_proc_statuses(){
+    const divs = document.getElementsByClassName("query-proc-statuses");
+    var selectors = []
+    for (const div of divs){
+        var selector = div.getElementsByTagName("datalist")[0];
+        if (selector == null){
+           selector = div.getElementsByTagName("select")[0];
+        }
+        /* If the options were already filled exit */
+        if (selector.getElementsByTagName("option").length != 0){
+            return false
+        }
+        selectors.push(selector);
+    }
+    query.request_info("/eboa_nav/get-proc-status", fill_proc_statuses_into_selectors, selectors);
+    return true
+}
+
+function fill_proc_statuses_into_selectors(selectors, proc_statuses){
+
+    for (const proc_status of Object.keys(proc_statuses)){
+        for (const selector of selectors){
+            selectorFunctions.add_option_tooltip(selector, proc_status, proc_statuses[proc_status]["message"]);
+        }
+    }
+    /* Update chosen for the multiple input selection */
+    jQuery(".chosen-select").trigger("chosen:updated");
+
+    /* Activate tooltips */
+    jQuery("[data-toggle='tooltip']").tooltip();
+}
+
 /* Function to establish the groups of sources using the DIM signatures */
 function create_sources_groups_by_dim_signature(sources){
     var groups = [];

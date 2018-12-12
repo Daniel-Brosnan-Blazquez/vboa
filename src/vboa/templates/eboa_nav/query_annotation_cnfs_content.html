@@ -1,33 +1,48 @@
-<div class="col-lg-12" id="nav-events">
+<div class="col-lg-12" id="nav-annotation-cnfs">
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method=post action="/eboa_nav/query-events">
+          <form role="form" method=post action="/eboa_nav/query-annotation-cnfs">
+            <div>
+              <div class="row  query-annotation-cnfs">
+                <div class="col-xs-3 query-annotation-names">
+                  <label>Annotation name like</label>
+                  <input class="form-control" list="annotation_name_like_annotation_cnfs" name="annotation_name_like"/>
+                  <datalist id="annotation_name_like_annotation_cnfs">
+                  </datalist>
+                </div>
+                <div class="col-xs-3 query-annotation-systems">
+                  <label>Annotation system like</label>
+                  <input class="form-control" list="annotation_system_like_annotation_cnfs" name="annotation_system_like"/>
+                  <datalist id="annotation_system_like_annotation_cnfs">
+                  </datalist>
+                </div>
+              </div>
+              <div class="row query-annotation-cnfs">
+                <div class="col-xs-3 query-annotation-names">
+                  <label>Annotation names</label>
+                  <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                  </select>
+                </div>
+                <div class="col-xs-3 query-annotation-systems">
+                  <label>Annotation systems</label>
+                  <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                  </select>
+                </div>
+              </div>
+            </div>
             <div class="row">
-              <div class="col-xs-2" id="div-annotation-cnf-name">
-                <label>Annotation cnf name like</label>
-                <input class="form-control" list="annotation_cnf_names" name="annotation_cnf_name_like" onfocus="vboa.fill_gauges()"/>
-                <datalist id="annotation_cnf_names">
-                </datalist>
-              </div>
-              <div class="col-xs-2" id="div-annotation-cnf-system">
-                <label>Annotation cnf system like</label>
-                <input class="form-control" list="annotation_cnf_systems" name="annotation_cnf_system_like" onfocus="vboa.fill_gauges()"/>
-                <datalist id="annotation_cnf_systems">
-                </datalist>
-              </div>
-              <div class="col-xs-2" id="div-dim-signature">
+              <div class="col-xs-3 query-dim-signatures">
                 <label>DIM signature like</label>
-                <input class="form-control" list="dim_signatures" name="dim_signature_like" onfocus="vboa.fill_dim_signatures()"/>
-                <datalist id="dim_dignatures">
+                <input class="form-control" list="dim_signature_like_sources" name="dim_signature_like"/>
+                <datalist id="dim_signature_like_sources">
                 </datalist>
               </div>
-              <div class="col-xs-2" id="div-dim-exec-name">
-                <label>DIM signature like</label>
-                <input class="form-control" list="dim_exec_names" name="dim_exec_name_like" onfocus="vboa.fill_dim_signatures()"/>
-                <datalist id="dim_exec_names">
-                </datalist>
+              <div class="col-xs-3 query-dim-signatures">
+                <label>DIM signatures</label>
+                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
               </div>
             </div>
             <div>

@@ -46,6 +46,10 @@ export function add_ingestion_time(dom_id){
     dates.add_ingestion_time(dom_id);
 }
 
+export function add_ingestion_duration(dom_id){
+    dates.add_ingestion_duration(dom_id);
+}
+
 export function add_generation_time(dom_id){
     dates.add_generation_time(dom_id);
 }
@@ -73,6 +77,10 @@ jQuery(function() {
 /* Function to call just once to fill the options with values from the database */
 jQuery(".query-sources").one("focusin", sourceFunctions.fill_sources);
 
+/* Fill processing statuses */
+/* Function to call just once to fill the options with values from the database */
+jQuery(".query-proc-statuses").one("focusin", sourceFunctions.fill_proc_statuses);
+
 /* Fill gauges */
 /* Function to call just once to fill the options with values from the database */
 jQuery(".query-gauges").one("focusin", gaugeFunctions.fill_gauges);
@@ -87,7 +95,7 @@ jQuery(".query-keys").one("focusin", eventKeyFunctions.fill_keys);
 
 /* Fill DIM signatures */
 /* Function to call just once to fill the options with values from the database */
-jQuery(".query-dim-signatures").one("focusin", dimSignatureFunctions.fill_dim_signatures);
+jQuery(".query-dims").one("focusin", dimSignatureFunctions.fill_dim_signatures);
 
 /*
 * Graph functions

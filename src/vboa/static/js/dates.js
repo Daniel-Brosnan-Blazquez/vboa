@@ -49,6 +49,15 @@ export function add_ingestion_time(dom_id){
 
 };
 
+/* Function to add more ingestion duration selectors when commanded */
+export function add_ingestion_duration(dom_id){
+    
+    jQuery.get("/static/html/more_ingestion_duration.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+
+};
+
 /* Function to add more ingestion time selectors when commanded */
 export function add_generation_time(dom_id){
     
