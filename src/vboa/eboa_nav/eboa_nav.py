@@ -341,6 +341,54 @@ def query_jsonify_ers():
     jsonified_ers = [er.jsonify() for er in ers]
     return jsonify(jsonified_ers)
 
+@bp.route("/query-dim-signatures", methods=["GET", "POST"])
+def query_dim_signatures_and_render():
+    """
+    Query DIM signatures amd render.
+    """
+    current_app.logger.debug("Query DIM signatures and render")
+    if request.method == "POST":
+        dim_signatures = query_dim_signatures()
+
+        return render_template("eboa_nav/dim_signatures_nav.html", dim_signatures=dim_signatures)
+    # end if
+
+    return render_template("eboa_nav/query_dim_signatures.html")
+
+def query_dim_signatures():
+    """
+    Query DIM signatures.
+    """
+    current_app.logger.debug("Query DIM signatures")
+    query = Query()
+    kwargs = {}
+    if request.form["dim_signature_like"] != "":
+        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": "like"}
+    # end if
+    if "dim_signatures" in request.form and request.form["dim_signatures"] != "":
+        kwargs["dim_signatures"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["dim_exec_name_like"] != "":
+        kwargs["dim_exec_name_like"] = {"str": request.form["dim_exec_name_like"], "op": "like"}
+    # end if
+    if "dim_exec_names" in request.form and request.form["dim_exec_names"] != "":
+        kwargs["dim_exec_names"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("dim_exec_names"):
+            kwargs["dim_exec_names"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+
+    dim_signatures = query.get_dim_signatures(**kwargs)
+
+    return dim_signatures
+
 @bp.route("/query-jsonify-dim-signatures")
 def query_jsonify_dim_signatures():
     """

@@ -1,0 +1,53 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+{% block li_active_dim_signatures %}class="active"{% endblock %}
+{% block div_active_dim_signatures %}active{% endblock %}
+{% block dim_signatures_nav_content %}
+<div>
+  <a href="/eboa_nav/query-dim-signatures"><p class="fa
+  fa-chevron-left"> Back to query DIM signatures</p></a>
+</div>
+<div class="panel panel-green">
+  <div class="panel-heading">
+    Table of DIM signatures
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="sources">
+      <thead>
+        <tr>
+          <th>DIM signature</th>
+          <th>Processor</th>
+          <th>Sources</th>
+          <th>Gauges</th>
+          <th>Annotation configurations</th>
+          <th>DIM signature UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dim_signature in dim_signatures %}
+        <tr>
+          <td>{{ dim_signature.dim_signature }}</td>
+          <td>{{ dim_signature.dim_exec_name }}</td>
+          <td><a href="/eboa_nav/query-sources-by-dim/{{ dim_signature.dim_signature_id }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="/eboa_nav/query-gauges-by-dim/{{ dim_signature.dim_signature_id }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="/eboa_nav/query-annotation-cnfs-by-dim/{{ dim_signature.dim_signature_id }}"><i class="fa fa-link"></i></a></td>
+          <td>{{ dim_signature.dim_signature_id }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>DIM signature</th>
+          <th>Processor</th>
+          <th>Sources</th>
+          <th>Gauges</th>
+          <th>Annotation configurations</th>
+          <th>DIM signature UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endblock %}
