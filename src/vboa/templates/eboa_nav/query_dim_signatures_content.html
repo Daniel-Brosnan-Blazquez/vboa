@@ -4,29 +4,16 @@
       <div class="row">
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-dim-signatures">
-            <div class="row query-dims">
+            <div class="row">
               <div class="col-xs-3 query-dim-signatures">
                 <label>DIM signature like</label>
-                <input class="form-control" list="dim_signature_likes_dims" name="dim_signature_like"/>
+                <input class="form-control" list="dim_signature_like_dims" name="dim_signature_like"/>
                 <datalist id="dim_signature_like_dims">
                 </datalist>
               </div>
-              <div class="col-xs-3 query-processors">
-                <label>Processor like</label>
-                <input class="form-control" list="processor_like_dims" name="dim_exec_name_like"/>
-                <datalist id="processor_like_dims">
-                </datalist>
-              </div>
-            </div>
-            <div class="row query-dims">
               <div class="col-xs-3 query-dim-signatures">
                 <label>DIM signatures</label>
                 <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
-                </select>
-              </div>
-              <div class="col-xs-3 query-processors">
-                <label>Processors</label>
-                <select name="dim_exec_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>

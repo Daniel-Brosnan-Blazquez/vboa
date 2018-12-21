@@ -34,8 +34,8 @@
           <td>{{ source.validity_stop }}</td>
           <td>{{ source.generation_time }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
-          <td>{{ source.dimSignature.dim_exec_name }}</td>
-          <td>{{ source.dim_exec_version }}</td>
+          <td>{{ source.processor }}</td>
+          <td>{{ source.processor_version }}</td>
           <td>{{ source.processing_uuid }}</td>
         </tr>
         {% endfor %}
@@ -89,9 +89,9 @@
           <td>{{ source.ingestion_time }}</td>
           <td>{{ source.ingestion_duration }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
-          <td>{{ source.dimSignature.dim_exec_name }}</td>
-          <td>{{ source.dim_exec_version }}</td>
-          <td>{{ source.processing_uuid }}</td>
+          <td>{{ source.processor }}</td>
+          <td>{{ source.processor_version }}</td>
+          <td>{{ source.source_uuid }}</td>
         </tr>
         {% endfor %}
       </tbody>

@@ -1,0 +1,47 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+{% block li_active_annotation_cnfs %}class="active"{% endblock %}
+{% block div_active_annotation_cnfs %}active{% endblock %}
+{% block annotation_cnfs_nav_content %}
+<div>
+  <a href="/eboa_nav/query-annotation-cnfs"><p class="fa
+  fa-chevron-left"> Back to query annotation configurations</p></a>
+</div>
+<div class="panel panel-green">
+  <div class="panel-heading">
+    Table of annotation configurations
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="sources">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>System</th>
+          <th>DIM signature</th>
+          <th>Annotation configuration UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for annotation_cnf in annotation_cnfs %}
+        <tr>
+          <td>{{ annotation_cnf.name }}</td>
+          <td>{{ annotation_cnf.system }}</td>
+          <td>{{ annotation_cnf.dim_signature.dim_signature }}</td>
+          <td>{{ annotation_cnf.annotation_cnf_uuid }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Name</th>
+          <th>System</th>
+          <th>DIM signature</th>
+          <th>Annotation configuration UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endblock %}

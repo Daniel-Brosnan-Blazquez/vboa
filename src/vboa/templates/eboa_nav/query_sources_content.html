@@ -4,16 +4,29 @@
       <div class="row">
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-sources">
-            <div class="row">
-              <div class="col-xs-3 query-sources">
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-names">
                 <label>Name like</label>
                 <input class="form-control" list="source_like_sources" name="source_like"/>
                 <datalist id="source_like_sources">
                 </datalist>
               </div>
-              <div class="col-xs-3 query-sources">
+              <div class="col-xs-3 query-source-names">
                 <label>Names</label>
                 <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-processors">
+                <label>Processor like</label>
+                <input class="form-control" list="processor_like_sources" name="processor_like"/>
+                <datalist id="processor_like_sources">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-source-processors">
+                <label>Processors</label>
+                <select name="processors" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>
@@ -69,9 +82,9 @@
             <div id="more-generation-time-query-sources">
             </div>
             <div class="row">
-              <div class="col-xs-3 query-proc-statuses">
-                <label>Processing statuses</label>
-                <select name="proc_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+              <div class="col-xs-3 query-source-statuses">
+                <label>Statuses</label>
+                <select name="source_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>

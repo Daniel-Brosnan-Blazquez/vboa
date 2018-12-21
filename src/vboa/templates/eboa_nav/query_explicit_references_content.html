@@ -1,0 +1,150 @@
+<div class="col-lg-12" id="nav-explicit_references">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/eboa_nav/query-ers">
+            <!-- Exlicit references -->
+            <div class="row">
+              <div class="col-xs-3 query-ers">
+                <label>Explicit reference like</label>
+                <input class="form-control" list="er_like_ers" name="er_like"/>
+                <datalist id="er_like_ers">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-ers">
+                <label>Explicit references</label>
+                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <!-- Configuration -->
+            <div class="row">
+              <div class="col-xs-3 query-er-groups">
+                <label>Group like</label>
+                <input class="form-control" list="group_like_explicit_reference" name="group_like"/>
+                <datalist id="group_like_explicit_reference">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-er-groups">
+                <label>Groups</label>
+                <select name="groups" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <!-- Sources -->
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-names">
+                <label>Source like</label>
+                <input class="form-control" list="source_like_events" name="source_like"/>
+                <datalist id="source_like_events">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-source-names">
+                <label>Sources</label>
+                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <!-- Event filters -->
+            <div class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">Specify search by using event filters</div>
+                <!-- Gauges -->
+                <div>
+                  <div class="row  query-gauges">
+                    <div class="col-xs-3 query-gauge-names">
+                      <label>Gauge name like</label>
+                      <input class="form-control" list="gauge_name_like_events" name="gauge_name_like"/>
+                      <datalist id="gauge_name_like_events">
+                      </datalist>
+                    </div>
+                    <div class="col-xs-3 query-gauge-systems">
+                      <label>Gauge system like</label>
+                      <input class="form-control" list="gauge_system_like_events" name="gauge_system_like"/>
+                      <datalist id="gauge_system_like_events">
+                      </datalist>
+                    </div>
+                  </div>
+                  <div class="row query-gauges">
+                    <div class="col-xs-3 query-gauge-names">
+                      <label>Gauge names</label>
+                      <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      </select>
+                    </div>
+                    <div class="col-xs-3 query-gauge-systems">
+                      <label>Gauge systems</label>
+                      <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  {% include "eboa_nav/start_stop.html" %}
+                  <div>
+                    <span onclick="vboa.add_start_stop('more-start-stop-query-ers')">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </span>
+                  </div>
+                </div>
+                <div id="more-start-stop-query-ers">
+                </div>
+              </div>
+            <!-- Annotation configurations -->
+              <div class="panel panel-default">
+                <div class="panel-heading">Specify search by using annotation filters</div>
+                <div>
+                  <div class="row  query-annotation-cnfs">
+                    <div class="col-xs-3 query-annotation-names">
+                      <label>Annotation name like</label>
+                      <input class="form-control" list="annotation_name_like_annotations" name="annotation_name_like"/>
+                      <datalist id="annotation_name_like_annotations">
+                      </datalist>
+                    </div>
+                    <div class="col-xs-3 query-annotation-systems">
+                      <label>Annotation system like</label>
+                      <input class="form-control" list="annotation_system_like_annotations" name="annotation_system_like"/>
+                      <datalist id="annotation_system_like_annotations">
+                      </datalist>
+                    </div>
+                  </div>
+                  <div class="row query-annotation-cnfs">
+                    <div class="col-xs-3 query-annotation-names">
+                      <label>Annotation names</label>
+                      <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      </select>
+                    </div>
+                    <div class="col-xs-3 query-annotation-systems">
+                      <label>Annotation systems</label>
+                      <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              {% include "eboa_nav/ingestion_time.html" %}
+              <div>
+                <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-ers')">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-ingestion-time-query-ers">
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
+

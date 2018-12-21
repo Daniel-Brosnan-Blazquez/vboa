@@ -8,6 +8,7 @@ import * as vis from "vis/dist/vis.js";
 import * as graph from "./graph.js";
 import * as sourceFunctions from "./sources.js";
 import * as gaugeFunctions from "./gauges.js";
+import * as annotationCnfsFunctions from "./annotation_confs.js";
 import * as eventFunctions from "./events.js";
 import * as eventKeyFunctions from "./event_keys.js";
 import * as dimSignatureFunctions from "./dim_signatures.js";
@@ -72,30 +73,32 @@ jQuery(function() {
 });
 
 /* Functions to fill lists of inputs */
+/* Functions to be called just once to fill the options with values from the database */
 
 /* Fill sources */
-/* Function to call just once to fill the options with values from the database */
+
 jQuery(".query-sources").one("focusin", sourceFunctions.fill_sources);
 
 /* Fill processing statuses */
-/* Function to call just once to fill the options with values from the database */
-jQuery(".query-proc-statuses").one("focusin", sourceFunctions.fill_proc_statuses);
+jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
 
 /* Fill gauges */
-/* Function to call just once to fill the options with values from the database */
 jQuery(".query-gauges").one("focusin", gaugeFunctions.fill_gauges);
 
+/* Fill annotation configurations */
+jQuery(".query-annotation-cnfs").one("focusin", annotationCnfsFunctions.fill_annotation_cnfs);
+
 /* Fill explicit references */
-/* Function to call just once to fill the options with values from the database */
 jQuery(".query-ers").one("focusin", erFunctions.fill_ers);
 
+/* Fill explicit reference groups */
+jQuery(".query-er-groups").one("focusin", erFunctions.fill_er_groups);
+
 /* Fill event keys */
-/* Function to call just once to fill the options with values from the database */
 jQuery(".query-keys").one("focusin", eventKeyFunctions.fill_keys);
 
 /* Fill DIM signatures */
-/* Function to call just once to fill the options with values from the database */
-jQuery(".query-dims").one("focusin", dimSignatureFunctions.fill_dim_signatures);
+jQuery(".query-dim-signatures").one("focusin", dimSignatureFunctions.fill_dim_signatures);
 
 /*
 * Graph functions

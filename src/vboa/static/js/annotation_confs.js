@@ -1,4 +1,4 @@
-2import * as query from "./query.js";
+import * as query from "./query.js";
 import * as selectorFunctions from "./selectors.js";
 
 /* Functions for the query interface */

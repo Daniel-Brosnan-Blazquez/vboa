@@ -33,7 +33,7 @@
           <td>{{ event.start }}</td>
           <td>{{ event.stop }}</td>
           <td>{{ event.ingestion_time }}</td>
-          {% set source_uuid = event.source.processing_uuid %}
+          {% set source_uuid = event.source.source_uuid %}
           <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
           <td>
             {% set er = "" %}

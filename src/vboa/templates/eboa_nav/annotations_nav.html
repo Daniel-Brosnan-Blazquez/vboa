@@ -1,0 +1,53 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+{% block li_active_annotations %}class="active"{% endblock %}
+{% block div_active_annotations %}active{% endblock %}
+{% block annotations_nav_content %}
+<div>
+  <a href="/eboa_nav/query-annotations"><p class="fa fa-chevron-left"> Back to query annotations</p></a>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of annotations
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="annotations">
+      <thead>
+        <tr>
+          <th>Annotation name</th>
+          <th>Annotation system</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Annotation UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for annotation in annotations %}
+        <tr>
+          <td>{{ annotation.annotationCnf.name }}</td>
+          <td>{{ annotation.annotationCnf.system }}</td>
+          <td>{{ annotation.ingestion_time }}</td>
+          {% set source_uuid = annotation.source.source_uuid %}
+          <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ annotation.source.name }}</a></td>
+          <td>{{ annotation.explicitRef.explicit_ref }}</td>
+          <td>{{ annotation.annotation_uuid }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Annotation name</th>
+          <th>Annotation system</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Annotation UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endblock %}

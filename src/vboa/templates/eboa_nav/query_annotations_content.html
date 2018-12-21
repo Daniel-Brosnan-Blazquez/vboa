@@ -1,47 +1,75 @@
-<div class="col-lg-12" id="nav-events">
+<div class="col-lg-12" id="nav-annotations">
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method=post action="/eboa_nav/query-events">
-            <div class="row">
-              <div class="col-xs-3">
+          <form role="form" method=post action="/eboa_nav/query-annotations">
+            <!-- Sources -->
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-names">
                 <label>Source like</label>
-                <input class="form-control" name="source_like"/>
+                <input class="form-control" list="source_like_annotations" name="source_like"/>
+                <datalist id="source_like_annotations">
+                </datalist>
               </div>
-              <div class="col-xs-3">
-                <label>Explicit reference like</label>
-                <input class="form-control" name="er_like"/>
+              <div class="col-xs-3 query-source-names">
+                <label>Sources</label>
+                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
               </div>
             </div>
+            <!-- Exlicit references -->
             <div class="row">
-              <div class="col-xs-2" id="div-gauge-name">
-                <label>Annotation cnf name like</label>
-                <input class="form-control" list="annotation_cnf_names" name="annotation_cnf_name_like" onfocus="vboa.fill_annotations()"/>
-                <datalist id="annotation_cnf_names">
+              <div class="col-xs-3 query-ers">
+                <label>Explicit reference like</label>
+                <input class="form-control" list="er_like_annotations" name="er_like"/>
+                <datalist id="er_like_annotations">
                 </datalist>
               </div>
-              <div class="col-xs-2" id="div-gauge-system">
-                <label>Annotation cnf system like</label>
-                <input class="form-control" list="annotation_cnf_systems" name="annotation_cnf_system_like" onfocus="vboa.fill_annotations()"/>
-                <datalist id="annotation_cnf_systems">
-                </datalist>
+              <div class="col-xs-3 query-ers">
+                <label>Explicit references</label>
+                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <!-- Annotation configurations -->
+            <div>
+              <div class="row  query-annotation-cnfs">
+                <div class="col-xs-3 query-annotation-names">
+                  <label>Annotation name like</label>
+                  <input class="form-control" list="annotation_name_like_annotations" name="annotation_name_like"/>
+                  <datalist id="annotation_name_like_annotations">
+                  </datalist>
+                </div>
+                <div class="col-xs-3 query-annotation-systems">
+                  <label>Annotation system like</label>
+                  <input class="form-control" list="annotation_system_like_annotations" name="annotation_system_like"/>
+                  <datalist id="annotation_system_like_annotations">
+                  </datalist>
+                </div>
+              </div>
+              <div class="row query-annotation-cnfs">
+                <div class="col-xs-3 query-annotation-names">
+                  <label>Annotation names</label>
+                  <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                  </select>
+                </div>
+                <div class="col-xs-3 query-annotation-systems">
+                  <label>Annotation systems</label>
+                  <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                  </select>
+                </div>
               </div>
             </div>
             <div class="row">
               {% include "eboa_nav/ingestion_time.html" %}
               <div>
-                <span id="add-ingestion-time">
+                <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-events')">
                   <span class="glyphicon glyphicon-plus"></span>
                 </span>
               </div>
             </div>
-            <div id="more-ingestion-time">
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" id="show-timeline" name="show_timeline" checked><span class="label-text"><b>Show timeline</b></span>
-              </label>
+            <div id="more-ingestion-time-query-events">
             </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px">Query</button>

@@ -16,7 +16,6 @@
       <thead>
         <tr>
           <th>DIM signature</th>
-          <th>Processor</th>
           <th>Sources</th>
           <th>Gauges</th>
           <th>Annotation configurations</th>
@@ -27,18 +26,16 @@
         {% for dim_signature in dim_signatures %}
         <tr>
           <td>{{ dim_signature.dim_signature }}</td>
-          <td>{{ dim_signature.dim_exec_name }}</td>
           <td><a href="/eboa_nav/query-sources-by-dim/{{ dim_signature.dim_signature_id }}"><i class="fa fa-link"></i></a></td>
           <td><a href="/eboa_nav/query-gauges-by-dim/{{ dim_signature.dim_signature_id }}"><i class="fa fa-link"></i></a></td>
           <td><a href="/eboa_nav/query-annotation-cnfs-by-dim/{{ dim_signature.dim_signature_id }}"><i class="fa fa-link"></i></a></td>
-          <td>{{ dim_signature.dim_signature_id }}</td>
+          <td>{{ dim_signature.dim_signature_uuid }}</td>
         </tr>
         {% endfor %}
       </tbody>
       <tfoot>
         <tr>
           <th>DIM signature</th>
-          <th>Processor</th>
           <th>Sources</th>
           <th>Gauges</th>
           <th>Annotation configurations</th>

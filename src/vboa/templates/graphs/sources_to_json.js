@@ -2,11 +2,11 @@ var sources = {
     "sources": [
         {% for source in sources %}
         {
-            "id": "{{ source.processing_uuid }}",
+            "id": "{{ source.source_uuid }}",
             "name": "{{ source.name }}",
             "dim_signature": "{{ source.dimSignature.dim_signature }}",
-            "processor": "{{ source.dimSignature.dim_exec_name }}",
-            "version": "{{ source.dim_exec_version }}",
+            "processor": "{{ source.processor }}",
+            "version": "{{ source.processor_version }}",
             "validity_start": "{{ source.validity_start }}",
             "validity_stop": "{{ source.validity_stop }}",
             "ingestion_time": "{{ source.ingestion_time }}",

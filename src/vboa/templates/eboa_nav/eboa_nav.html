@@ -34,7 +34,9 @@
       {% endblock %}
     </div>
     <div class="tab-pane {% block div_active_explicit_references %} {% endblock %}" id="nav-explicit-references">
-      {% block explicit_references_nav_content %} {% endblock %}
+      {% block explicit_references_nav_content %}
+      {% include "eboa_nav/query_explicit_references_content.html" %}
+      {% endblock %}
     </div>
     <div class="tab-pane {% block div_active_gauges %} {% endblock %}" id="nav-gauges">
       {% block gauges_nav_content %}

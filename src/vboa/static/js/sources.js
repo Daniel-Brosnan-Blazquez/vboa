@@ -6,17 +6,41 @@ import * as selectorFunctions from "./selectors.js";
 /* Functions for the query interface */
 export function fill_sources(){
     const divs = document.getElementsByClassName("query-sources");
-    var selectors = []
+    var source_selectors = []
+    var processor_selectors = []
     for (const div of divs){
-        var selector = div.getElementsByTagName("datalist")[0];
-        if (selector == null){
-           selector = div.getElementsByTagName("select")[0];
+        const source_divs = div.getElementsByClassName("query-source-names");
+        const processor_divs = div.getElementsByClassName("query-source-processors");
+
+        /* Source */
+        for (const source_div of source_divs){
+            var source_selector = source_div.getElementsByTagName("datalist")[0];
+            if (source_selector == null){
+                source_selector = source_div.getElementsByTagName("select")[0];
+            }
+            /* If the options were already filled exit */
+            if (source_div.getElementsByTagName("option").length != 0){
+                return false
+            }
+            source_selectors.push(source_selector);
         }
-        /* If the options were already filled exit */
-        if (selector.getElementsByTagName("option").length != 0){
-            return false
+
+        /* Processor */
+        for (const processor_div of processor_divs){
+            var processor_selector = processor_div.getElementsByTagName("datalist")[0];
+            if (processor_selector == null){
+                processor_selector = processor_div.getElementsByTagName("select")[0];
+            }
+            /* If the options were already filled exit */
+            if (processor_div.getElementsByTagName("option").length != 0){
+                return false
+            }
+            processor_selectors.push(processor_selector);
         }
-        selectors.push(selector);
+    }
+    var selectors = {
+        "source_selectors": source_selectors,
+        "processor_selectors": processor_selectors
     }
     query.request_info("/eboa_nav/query-jsonify-sources", fill_sources_into_selectors, selectors);
     return true
@@ -24,21 +48,24 @@ export function fill_sources(){
 
 function fill_sources_into_selectors(selectors, sources){
 
-    const source_names = new Set(sources.map(source => source["name"]))
-
-    for (const source_name of source_names){
-        for (const selector of selectors){
-            selectorFunctions.add_option(selector, source_name);
+    var source_names = new Set(sources.map(source => source["name"]))
+    var processors = new Set(sources.map(source => source["processor"]))
+    for (const source of source_names){
+        for (const selector of selectors["source_selectors"]){
+            selectorFunctions.add_option(selector, source);
+        }
+    }
+    for (const processor of processors){
+        for (const selector of selectors["processor_selectors"]){
+            selectorFunctions.add_option(selector, processor);
         }
     }
     /* Update chosen for the multiple input selection */
     jQuery(".chosen-select").trigger("chosen:updated");
 }
 
-
-/* Functions for the query interface */
-export function fill_proc_statuses(){
-    const divs = document.getElementsByClassName("query-proc-statuses");
+export function fill_statuses(){
+    const divs = document.getElementsByClassName("query-source-statuses");
     var selectors = []
     for (const div of divs){
         var selector = div.getElementsByTagName("datalist")[0];
@@ -51,15 +78,15 @@ export function fill_proc_statuses(){
         }
         selectors.push(selector);
     }
-    query.request_info("/eboa_nav/get-proc-status", fill_proc_statuses_into_selectors, selectors);
+    query.request_info("/eboa_nav/get-source-status", fill_statuses_into_selectors, selectors);
     return true
 }
 
-function fill_proc_statuses_into_selectors(selectors, proc_statuses){
+function fill_statuses_into_selectors(selectors, statuses){
 
-    for (const proc_status of Object.keys(proc_statuses)){
+    for (const status of Object.keys(statuses)){
         for (const selector of selectors){
-            selectorFunctions.add_option_tooltip(selector, proc_status, proc_statuses[proc_status]["message"]);
+            selectorFunctions.add_option_tooltip(selector, status, statuses[status]["message"]);
         }
     }
     /* Update chosen for the multiple input selection */

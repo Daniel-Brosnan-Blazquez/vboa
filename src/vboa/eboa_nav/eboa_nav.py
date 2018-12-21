@@ -170,6 +170,89 @@ def query_event_links(event_uuid):
     
     return links
 
+@bp.route("/query-annotations", methods=["GET", "POST"])
+def query_annotations_and_render():
+    """
+    Query annotations and render.
+    """
+    current_app.logger.debug("Query annotations and render")
+    if request.method == "POST":
+        annotations = query_annotations()
+        show = {}
+        show["timeline"]=True
+        if not "show_timeline" in request.form:
+            show["timeline"] = False
+        # end if
+
+        return render_template("eboa_nav/annotations_nav.html", annotations=annotations, show=show)
+    # end if
+    return render_template("eboa_nav/query_annotations.html")
+
+def query_annotations():
+    """
+    Query annotations.
+    """
+    current_app.logger.debug("Query annotations")
+
+    query = Query()
+    kwargs = {}
+    if request.form["source_like"] != "":
+        kwargs["source_like"] = {"str": request.form["source_like"], "op": "like"}
+    # end if
+    if "sources" in request.form and request.form["sources"] != "":
+        kwargs["sources"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("sources"):
+            kwargs["sources"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["er_like"] != "":
+        kwargs["explicit_ref_like"] = {"str": request.form["er_like"], "op": "like"}
+    # end if
+    if "ers" in request.form and request.form["ers"] != "":
+        kwargs["ers"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("ers"):
+            kwargs["ers"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["annotation_name_like"] != "":
+        kwargs["name_like"] = {"str": request.form["annotation_name_like"], "op": "like"}
+    # end if
+    if "annotation_names" in request.form and request.form["annotation_names"] != "":
+        kwargs["names"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("annotation_names"):
+            kwargs["names"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["annotation_system_like"] != "":
+        kwargs["system_like"] = {"str": request.form["annotation_system_like"], "op": "like"}
+    # end if
+    if "annotation_systems" in request.form and request.form["annotation_systems"] != "":
+        kwargs["systems"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("annotation_systems"):
+            kwargs["systems"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["ingestion_time"] != "":
+        kwargs["ingestion_time_filters"] = []
+        i = 0
+        operators = request.form.getlist("ingestion_time_operator")
+        for ingestion_time in request.form.getlist("ingestion_time"):
+            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    annotations = query.get_annotations_join(**kwargs)
+
+    return annotations
+
 @bp.route("/query-sources", methods=["GET", "POST"])
 def query_sources_and_render():
     """
@@ -263,9 +346,41 @@ def query_sources():
             i+=1
         # end for
     # end if
+    if request.form["processor_like"] != "":
+        kwargs["processor_like"] = {"str": request.form["processor_like"], "op": "like"}
+    # end if
+    if "processors" in request.form and request.form["processors"] != "":
+        kwargs["processors"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("processors"):
+            kwargs["processors"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+
     sources = query.get_sources_join(**kwargs)
 
     return sources
+
+@bp.route("/query-source/<uuid:source_uuid>")
+def query_source(source_uuid):
+    """
+    Query source corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query source")
+    query = Query()
+    source = query.get_sources(source_uuids={"list": [source_uuid], "op": "in"})
+    return render_template("eboa_nav/sources_nav.html", sources=source)
+
+@bp.route("/query-sources-by-dim/<uuid:dim_signature_uuid>")
+def query_sources_by_dim(dim_signature_uuid):
+    """
+    Query sources associated to the DIM signature corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query sources by DIM signature")
+    query = Query()
+    sources = query.get_sources(dim_signature_uuids={"list": [dim_signature_uuid], "op": "in"})
+    return render_template("eboa_nav/sources_nav.html", sources=sources)
 
 @bp.route("/query-jsonify-sources")
 def query_jsonify_sources():
@@ -278,23 +393,72 @@ def query_jsonify_sources():
     jsonified_sources = [source.jsonify() for source in sources]
     return jsonify(jsonified_sources)
 
-@bp.route("/query-source/<uuid:source_uuid>")
-def query_source(source_uuid):
+@bp.route("/get-source-status")
+def get_source_status():
     """
-    Query source corresponding to the UUID received.
+    Get the source statuses defined in the EBOA component.
     """
-    current_app.logger.debug("Query source")
-    query = Query()
-    source = query.get_sources(processing_uuids={"list": [source_uuid], "op": "in"})
-    return render_template("eboa_nav/sources_nav.html", sources=source)
-
-@bp.route("/get-proc-status")
-def get_proc_status():
-    """
-    Get the processing statuses defined in the EBOA component.
-    """
-    current_app.logger.debug("Get processing statuses")
+    current_app.logger.debug("Get source statuses")
     return jsonify(eboa_engine.exit_codes)
+
+@bp.route("/query-gauges", methods=["GET", "POST"])
+def query_gauges_and_render():
+    """
+    Query gauges amd render.
+    """
+    current_app.logger.debug("Query gauges and render")
+    if request.method == "POST":
+        gauges = query_gauges()
+
+        return render_template("eboa_nav/gauges_nav.html", gauges=gauges)
+    # end if
+
+    return render_template("eboa_nav/query_gauges.html")
+
+def query_gauges():
+    """
+    Query gauges.
+    """
+    current_app.logger.debug("Query gauges")
+    query = Query()
+    kwargs = {}
+    if request.form["gauge_name_like"] != "":
+        kwargs["name_like"] = {"str": request.form["gauge_name_like"], "op": "like"}
+    # end if
+    if "gauge_names" in request.form and request.form["gauge_names"] != "":
+        kwargs["names"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("gauge_names"):
+            kwargs["names"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["gauge_system_like"] != "":
+        kwargs["system_like"] = {"str": request.form["gauge_system_like"], "op": "like"}
+    # end if
+    if "gauge_systems" in request.form and request.form["gauge_systems"] != "":
+        kwargs["systems"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("gauge_systems"):
+            kwargs["systems"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["dim_signature_like"] != "":
+        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": "like"}
+    # end if
+    if "dim_signatures" in request.form and request.form["dim_signatures"] != "":
+        kwargs["dim_signatures"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+
+    gauges = query.get_gauges_join(**kwargs)
+
+    return gauges
 
 @bp.route("/query-jsonify-gauges")
 def query_jsonify_gauges():
@@ -307,6 +471,64 @@ def query_jsonify_gauges():
     jsonified_gauges = [gauge.jsonify() for gauge in gauges]
     return jsonify(jsonified_gauges)
 
+@bp.route("/query-annotation-cnfs", methods=["GET", "POST"])
+def query_annotation_cnfs_and_render():
+    """
+    Query annotation configurations amd render.
+    """
+    current_app.logger.debug("Query annotation configurations and render")
+    if request.method == "POST":
+        annotation_cnfs = query_annotation_cnfs()
+
+        return render_template("eboa_nav/annotation_cnfs_nav.html", annotation_cnfs=annotation_cnfs)
+    # end if
+
+    return render_template("eboa_nav/query_annotation_cnfs.html")
+
+def query_annotation_cnfs():
+    """
+    Query annotation configurations.
+    """
+    current_app.logger.debug("Query annotation configurations")
+    query = Query()
+    kwargs = {}
+    if request.form["annotation_name_like"] != "":
+        kwargs["name_like"] = {"str": request.form["annotation_name_like"], "op": "like"}
+    # end if
+    if "annotation_names" in request.form and request.form["annotation_names"] != "":
+        kwargs["names"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("annotation_names"):
+            kwargs["names"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["annotation_system_like"] != "":
+        kwargs["system_like"] = {"str": request.form["annotation_system_like"], "op": "like"}
+    # end if
+    if "annotation_systems" in request.form and request.form["annotation_systems"] != "":
+        kwargs["systems"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("annotation_systems"):
+            kwargs["systems"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["dim_signature_like"] != "":
+        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": "like"}
+    # end if
+    if "dim_signatures" in request.form and request.form["dim_signatures"] != "":
+        kwargs["dim_signatures"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+
+    annotation_cnfs = query.get_annotation_cnfs_join(**kwargs)
+
+    return annotation_cnfs
 
 @bp.route("/query-jsonify-annotation-cnfs")
 def query_jsonify_annotation_cnfs():
@@ -330,6 +552,62 @@ def query_jsonify_keys():
     jsonified_keys = [key.jsonify() for key in keys]
     return jsonify(jsonified_keys)
 
+@bp.route("/query-ers", methods=["GET", "POST"])
+def query_ers_and_render():
+    """
+    Query explicit references and render.
+    """
+    current_app.logger.debug("Query explicit references and render")
+    if request.method == "POST":
+        ers = query_ers()
+
+        return render_template("eboa_nav/explicit_references_nav.html", ers=ers)
+    # end if
+    return render_template("eboa_nav/query_explicit_references.html")
+
+def query_ers():
+    """
+    Query explicit references.
+    """
+    current_app.logger.debug("Query explicit references")
+
+    query = Query()
+    kwargs = {}
+    if request.form["er_like"] != "":
+        kwargs["explicit_ref_like"] = {"str": request.form["er_like"], "op": "like"}
+    # end if
+    if "ers" in request.form and request.form["ers"] != "":
+        kwargs["ers"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("ers"):
+            kwargs["ers"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["group_like"] != "":
+        kwargs["group_like"] = {"str": request.form["group_like"], "op": "like"}
+    # end if
+    if "groups" in request.form and request.form["groups"] != "":
+        kwargs["groups"] = {"list": [], "op": "in"}
+        i = 0
+        for source in request.form.getlist("groups"):
+            kwargs["groups"]["list"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["ingestion_time"] != "":
+        kwargs["ingestion_time_filters"] = []
+        i = 0
+        operators = request.form.getlist("ingestion_time_operator")
+        for ingestion_time in request.form.getlist("ingestion_time"):
+            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    ers = query.get_explicit_refs_join(**kwargs)
+
+    return ers
+
 @bp.route("/query-jsonify-ers")
 def query_jsonify_ers():
     """
@@ -340,6 +618,17 @@ def query_jsonify_ers():
     ers = query.get_explicit_refs()
     jsonified_ers = [er.jsonify() for er in ers]
     return jsonify(jsonified_ers)
+
+@bp.route("/query-jsonify-er-groups")
+def query_jsonify_er_groups():
+    """
+    Query all the ers groups.
+    """
+    current_app.logger.debug("Query explicit reference groups")
+    query = Query()
+    er_groups = query.get_explicit_refs_groups()
+    jsonified_er_groups = [er_group.jsonify() for er_group in er_groups]
+    return jsonify(jsonified_er_groups)
 
 @bp.route("/query-dim-signatures", methods=["GET", "POST"])
 def query_dim_signatures_and_render():
@@ -370,17 +659,6 @@ def query_dim_signatures():
         i = 0
         for source in request.form.getlist("dim_signatures"):
             kwargs["dim_signatures"]["list"].append(source)
-            i+=1
-        # end for
-    # end if
-    if request.form["dim_exec_name_like"] != "":
-        kwargs["dim_exec_name_like"] = {"str": request.form["dim_exec_name_like"], "op": "like"}
-    # end if
-    if "dim_exec_names" in request.form and request.form["dim_exec_names"] != "":
-        kwargs["dim_exec_names"] = {"list": [], "op": "in"}
-        i = 0
-        for source in request.form.getlist("dim_exec_names"):
-            kwargs["dim_exec_names"]["list"].append(source)
             i+=1
         # end for
     # end if
