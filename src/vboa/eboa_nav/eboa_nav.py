@@ -690,8 +690,8 @@ def treat_data():
 
     data = request.get_json()
     engine = Engine()
-    exit_status = engine.treat_data(data)
+    returned_values = engine.treat_data(data)
     exit_information = {
-        "exit_status": str(exit_status)
+        "returned_values": returned_values
     }
     return jsonify(exit_information)
