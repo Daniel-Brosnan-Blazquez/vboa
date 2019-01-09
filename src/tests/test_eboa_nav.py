@@ -37,6 +37,8 @@ def test_query_events_and_render(client):
         "stop_operator": "",
         "ingestion_time": "",
         "ingestion_time_operator": "",
+        "key_like": "",
+        "keys": ""
     })
     assert response.status_code == 200
 
@@ -63,9 +65,9 @@ def test_query_events(app, client):
     }]
     }
     response = client.post('/eboa_nav/treat-data', json=data)
-    exit_information = json.loads(response.get_data().decode('utf8').replace("'", '"'))
+    exit_information = json.loads(response.get_data().decode('utf8'))
     assert response.status_code == 200
-    assert int(exit_information["exit_status"]) == 0
+    assert int(exit_information["returned_values"][0]["status"]) == 0
 
     with app.test_request_context(
             '/eboa_nav/query-events', data={
@@ -79,6 +81,8 @@ def test_query_events(app, client):
                 "stop_operator": ["=="],
                 "ingestion_time": ["1900-06-05T02:07:36"],
                 "ingestion_time_operator": [">"],
+                "key_like": "EVENT_KEY",
+                "keys": ["EVENT_KEY"]
             }):
         events = eboa_nav.query_events()
 
@@ -123,9 +127,9 @@ def test_query_event_links_and_render(client, app):
             }]
         }]}
     response = client.post('/eboa_nav/treat-data', json=data)
-    exit_information = json.loads(response.get_data().decode('utf8').replace("'", '"'))
+    exit_information = json.loads(response.get_data().decode('utf8'))
     assert response.status_code == 200
-    assert int(exit_information["exit_status"]) == 0
+    assert int(exit_information["returned_values"][0]["status"]) == 0
 
     with app.test_request_context(
             '/eboa_nav/query-events', data={
@@ -139,6 +143,8 @@ def test_query_event_links_and_render(client, app):
                 "stop_operator": "",
                 "ingestion_time": "",
                 "ingestion_time_operator": "",
+                "key_like": "",
+                "keys": ""
             }):
         events = eboa_nav.query_events()
 
@@ -186,9 +192,9 @@ def test_query_event_links(app, client):
             }]
         }]}
     response = client.post('/eboa_nav/treat-data', json=data)
-    exit_information = json.loads(response.get_data().decode('utf8').replace("'", '"'))
+    exit_information = json.loads(response.get_data().decode('utf8'))
     assert response.status_code == 200
-    assert int(exit_information["exit_status"]) == 0
+    assert int(exit_information["returned_values"][0]["status"]) == 0
 
     with app.test_request_context(
             '/eboa_nav/query-events', data={
@@ -202,6 +208,8 @@ def test_query_event_links(app, client):
                 "stop_operator": "",
                 "ingestion_time": "",
                 "ingestion_time_operator": "",
+                "key_like": "",
+                "keys": ""
             }):
         events = eboa_nav.query_events()
 
@@ -219,6 +227,8 @@ def test_query_event_links(app, client):
                 "stop_operator": "",
                 "ingestion_time": "",
                 "ingestion_time_operator": "",
+                "key_like": "",
+                "keys": ""
             }):
         links = eboa_nav.query_event_links(uuid1)
 
@@ -232,6 +242,7 @@ def test_query_source_and_render(client):
 
     response = client.post('/eboa_nav/query-sources', data={
         "source_like": "",
+        "processor_like": "",
         "dim_signature_like": "",
         "validity_start": "",
         "validity_start_operator": "",
@@ -239,6 +250,8 @@ def test_query_source_and_render(client):
         "validity_stop_operator": "",
         "ingestion_time": "",
         "ingestion_time_operator": "",
+        "ingestion_duration": "",
+        "ingestion_duration_operator": "",
         "generation_time": "",
         "generation_time_operator": "",
     })
@@ -267,13 +280,14 @@ def test_query_sources(app, client):
     }]
     }
     response = client.post('/eboa_nav/treat-data', json=data)
-    exit_information = json.loads(response.get_data().decode('utf8').replace("'", '"'))
+    exit_information = json.loads(response.get_data().decode('utf8'))
     assert response.status_code == 200
-    assert int(exit_information["exit_status"]) == 0
+    assert int(exit_information["returned_values"][0]["status"]) == 0
 
     with app.test_request_context(
-            '/eboa_nav/query-events', data={
+            '/eboa_nav/query-sources', data={
                 "source_like": "source.json",
+                "processor_like": "exec",
                 "dim_signature_like": "dim_signature",
                 "validity_start": ["2018-06-05T02:07:03"],
                 "validity_start_operator": ["=="],
@@ -281,6 +295,8 @@ def test_query_sources(app, client):
                 "validity_stop_operator": ["=="],
                 "ingestion_time": ["1900-06-05T02:07:36"],
                 "ingestion_time_operator": [">"],
+                "ingestion_duration": [0],
+                "ingestion_duration_operator": [">"],
                 "generation_time": ["2018-07-05T02:07:03"],
                 "generation_time_operator": ["=="],
             }):
@@ -311,9 +327,9 @@ def test_query_source(app, client):
     }]
     }
     response = client.post('/eboa_nav/treat-data', json=data)
-    exit_information = json.loads(response.get_data().decode('utf8').replace("'", '"'))
+    exit_information = json.loads(response.get_data().decode('utf8'))
     assert response.status_code == 200
-    assert int(exit_information["exit_status"]) == 0
+    assert int(exit_information["returned_values"][0]["status"]) == 0
 
     with app.test_request_context(
             '/eboa_nav/query-events', data={
@@ -327,10 +343,12 @@ def test_query_source(app, client):
                 "stop_operator": "",
                 "ingestion_time": "",
                 "ingestion_time_operator": "",
+                "key_like": "",
+                "keys": ""
             }):
         events = eboa_nav.query_events()
 
-    source_uuid = events[0].source.processing_uuid
+    source_uuid = events[0].source.source_uuid
 
     response = client.get('/eboa_nav/query-source/' + str(source_uuid))
     assert response.status_code == 200
@@ -358,12 +376,12 @@ def test_query_gauges(app, client):
     }]
     }
     response = client.post('/eboa_nav/treat-data', json=data)
-    exit_information = json.loads(response.get_data().decode('utf8').replace("'", '"'))
+    exit_information = json.loads(response.get_data().decode('utf8'))
     assert response.status_code == 200
-    assert int(exit_information["exit_status"]) == 0
+    assert int(exit_information["returned_values"][0]["status"]) == 0
 
     response = client.get('/eboa_nav/query-jsonify-gauges')
-    gauges = json.loads(response.get_data().decode('utf8').replace("'", '"'))
+    gauges = json.loads(response.get_data().decode('utf8'))
     assert response.status_code == 200
     assert len(gauges) == 1
 
