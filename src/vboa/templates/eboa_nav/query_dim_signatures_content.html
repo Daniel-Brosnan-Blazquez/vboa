@@ -6,13 +6,13 @@
           <form role="form" method=post action="/eboa_nav/query-dim-signatures">
             <div class="row">
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signature like</label>
+                <label>DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="dim_signature_like_dims" name="dim_signature_like"/>
                 <datalist id="dim_signature_like_dims">
                 </datalist>
               </div>
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signatures</label>
+                <label>DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>

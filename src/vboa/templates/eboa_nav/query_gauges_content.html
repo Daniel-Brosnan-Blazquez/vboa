@@ -7,13 +7,13 @@
             <div>
               <div class="row  query-gauges">
                 <div class="col-xs-3 query-gauge-names">
-                  <label>Gauge name like</label>
+                  <label>Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                   <input class="form-control" list="gauge_name_like_gauges" name="gauge_name_like"/>
                   <datalist id="gauge_name_like_gauges">
                   </datalist>
                 </div>
                 <div class="col-xs-3 query-gauge-systems">
-                  <label>Gauge system like</label>
+                  <label>Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                   <input class="form-control" list="gauge_system_like_gauges" name="gauge_system_like"/>
                   <datalist id="gauge_system_like_gauges">
                   </datalist>
@@ -21,12 +21,12 @@
               </div>
               <div class="row query-gauges">
                 <div class="col-xs-3 query-gauge-names">
-                  <label>Gauge names</label>
+                  <label>Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                   <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                   </select>
                 </div>
                 <div class="col-xs-3 query-gauge-systems">
-                  <label>Gauge systems</label>
+                  <label>Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                   <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                   </select>
                 </div>
@@ -34,13 +34,13 @@
             </div>
             <div class="row">
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signature like</label>
+                <label>DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="dim_signature_like_sources" name="dim_signature_like"/>
                 <datalist id="dim_signature_like_sources">
                 </datalist>
               </div>
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signatures</label>
+                <label>DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>

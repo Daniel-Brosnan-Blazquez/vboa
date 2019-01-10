@@ -6,39 +6,39 @@
           <form role="form" method=post action="/eboa_nav/query-sources">
             <div class="row query-sources">
               <div class="col-xs-3 query-source-names">
-                <label>Name like</label>
+                <label>Name like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="source_like_sources" name="source_like"/>
                 <datalist id="source_like_sources">
                 </datalist>
               </div>
               <div class="col-xs-3 query-source-names">
-                <label>Names</label>
+                <label>Names (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>
             <div class="row query-sources">
               <div class="col-xs-3 query-source-processors">
-                <label>Processor like</label>
+                <label>Processor like (<input type="checkbox" name="processor_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="processor_like_sources" name="processor_like"/>
                 <datalist id="processor_like_sources">
                 </datalist>
               </div>
               <div class="col-xs-3 query-source-processors">
-                <label>Processors</label>
+                <label>Processors (<input type="checkbox" name="processor_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="processors" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>
             <div class="row">
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signature like</label>
+                <label>DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="dim_signature_like_sources" name="dim_signature_like"/>
                 <datalist id="dim_signature_like_sources">
                 </datalist>
               </div>
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signatures</label>
+                <label>DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
@@ -83,7 +83,7 @@
             </div>
             <div class="row">
               <div class="col-xs-3 query-source-statuses">
-                <label>Statuses</label>
+                <label>Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="source_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>

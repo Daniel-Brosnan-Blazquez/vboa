@@ -7,13 +7,13 @@
             <!-- Sources -->
             <div class="row query-sources">
               <div class="col-xs-3 query-source-names">
-                <label>Source like</label>
+                <label>Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="source_like_events" name="source_like"/>
                 <datalist id="source_like_events">
                 </datalist>
               </div>
               <div class="col-xs-3 query-source-names">
-                <label>Sources</label>
+                <label>Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
@@ -21,13 +21,13 @@
             <!-- Exlicit references -->
             <div class="row">
               <div class="col-xs-3 query-ers">
-                <label>Explicit reference like</label>
+                <label>Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="er_like_events" name="er_like"/>
                 <datalist id="er_like_events">
                 </datalist>
               </div>
               <div class="col-xs-3 query-ers">
-                <label>Explicit references</label>
+                <label>Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
@@ -35,13 +35,13 @@
             <!-- Event keys -->
             <div class="row">
               <div class="col-xs-3 query-keys">
-                <label>Key like</label>
+                <label>Key like (<input type="checkbox" name="key_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                 <input class="form-control" list="key_like_events" name="key_like"/>
                 <datalist id="key_like_events">
                 </datalist>
               </div>
               <div class="col-xs-3 query-keys">
-                <label>Keys</label>
+                <label>Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
@@ -50,13 +50,13 @@
             <div>
               <div class="row  query-gauges">
                 <div class="col-xs-3 query-gauge-names">
-                  <label>Gauge name like</label>
+                  <label>Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                   <input class="form-control" list="gauge_name_like_events" name="gauge_name_like"/>
                   <datalist id="gauge_name_like_events">
                   </datalist>
                 </div>
                 <div class="col-xs-3 query-gauge-systems">
-                  <label>Gauge system like</label>
+                  <label>Gauge system like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                   <input class="form-control" list="gauge_system_like_events" name="gauge_system_like"/>
                   <datalist id="gauge_system_like_events">
                   </datalist>
@@ -64,12 +64,12 @@
               </div>
               <div class="row query-gauges">
                 <div class="col-xs-3 query-gauge-names">
-                  <label>Gauge names</label>
+                  <label>Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                   <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                   </select>
                 </div>
                 <div class="col-xs-3 query-gauge-systems">
-                  <label>Gauge systems</label>
+                  <label>Gauge systems (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                   <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                   </select>
                 </div>
