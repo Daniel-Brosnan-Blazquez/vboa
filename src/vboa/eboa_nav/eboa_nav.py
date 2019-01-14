@@ -129,19 +129,6 @@ def query_events():
             i+=1
         # end for
     # end if
-    if request.form["value_name_like"] != "":
-        kwargs["values_name_type_like"] = []
-        kwargs["value_filters"] = []
-        i = 0
-        operators = request.form.getlist("value_operator")
-        value_types = request.form.getlist("value_type")
-        values = request.form.getlist("value")
-        for value_name_like in request.form.getlist("value_name_like"):
-            kwargs["values_name_type_like"].append({"name_like": value_name_like, "type": value_types[i]})
-            kwargs["value_filters"].append({"value": values[i], "type": value_types[i], "op": operators[i]})
-            i+=1
-        # end for
-    # end if
     if request.form["start"] != "":
         kwargs["start_filters"] = []
         i = 0
@@ -198,6 +185,21 @@ def query_events():
         event_keys = query.get_event_keys(**kwargs)
         event_uuids_from_keys = {"list": [event_key.event_uuid for event_key in event_keys], "op": "in"}
         events = query.get_events(event_uuids = event_uuids_from_keys)
+    # end if
+
+    kwargs = {}
+    if request.form["value_name_like"] != "":
+        i = 0
+        operators = request.form.getlist("value_operator")
+        value_types = request.form.getlist("value_type")
+        values = request.form.getlist("value")
+        for value_name_like in request.form.getlist("value_name_like"):
+            event_uuids = {"list": [event.event_uuid for event in events], "op": "in"}
+            values_name_type_like = [{"name_like": value_name_like, "type": value_types[i]}]
+            value_filters = [{"value": values[i], "type": value_types[i], "op": operators[i]}]
+            events = query.get_events_join(values_name_type_like = values_name_type_like, value_filters = value_filters, event_uuids = event_uuids)
+            i+=1
+        # end for
     # end if
 
     return events
