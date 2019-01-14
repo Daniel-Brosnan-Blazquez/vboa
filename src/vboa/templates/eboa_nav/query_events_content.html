@@ -88,7 +88,7 @@
                     <option>object</option>
                   </select>
               </div>
-              <div class="col-xs-3 query-event-values">
+              <div class="col-xs-3 query-event-value-names">
                 <label>Value name like</label>
                 <input class="form-control" list="value_name_like_events" name="value_name_like"/>
                 <datalist id="value_name_like_events">
@@ -103,6 +103,13 @@
                   </select>
                 </div>
               </div>
+              <div>
+                <span onclick="vboa.add_value_query_events('more-value-query-events')">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-value-query-events">
             </div>
             <!-- Start and stop -->
             <div class="row">

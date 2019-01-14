@@ -97,3 +97,12 @@ export function create_event_timeline(events, dom_id){
     graph.display_timeline(dom_id, items, groups);
 
 };
+
+/* Function to add more value filter selectors when commanded */
+export function add_value_query(dom_id){
+    
+    jQuery.get("/static/html/more_value_query_events.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+
+};

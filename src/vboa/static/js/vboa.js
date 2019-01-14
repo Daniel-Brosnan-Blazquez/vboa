@@ -55,6 +55,10 @@ export function add_generation_time(dom_id){
     dates.add_generation_time(dom_id);
 }
 
+export function add_value_query_events(dom_id){
+    eventFunctions.add_value_query(dom_id);
+}
+
 /* Associate datetimepicker functionality */
 jQuery(function () {
     dates.activate_datetimepicker();

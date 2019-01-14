@@ -139,6 +139,7 @@ def query_events():
         for value_name_like in request.form.getlist("value_name_like"):
             kwargs["values_name_type_like"].append({"name_like": value_name_like, "type": value_types[i]})
             kwargs["value_filters"].append({"value": values[i], "type": value_types[i], "op": operators[i]})
+            i+=1
         # end for
     # end if
     if request.form["start"] != "":
