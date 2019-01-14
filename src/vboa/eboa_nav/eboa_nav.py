@@ -225,6 +225,17 @@ def query_event_links(event_uuid):
     
     return links
 
+@bp.route("/query-jsonify-event-values/<uuid:event_uuid>")
+def query_jsonify_event_values(event_uuid):
+    """
+    Query values related to the event with the corresponding received UUID.
+    """
+    current_app.logger.debug("Query values corresponding to the event with specified UUID " + str(event_uuid))
+    query = Query()
+    values = query.get_event_values([event_uuid])
+    jsonified_values = [value.jsonify() for value in values]
+    return jsonify(jsonified_values)
+
 @bp.route("/query-annotations", methods=["GET", "POST"])
 def query_annotations_and_render():
     """

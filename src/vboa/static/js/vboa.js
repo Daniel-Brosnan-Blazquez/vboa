@@ -59,6 +59,10 @@ export function add_value_query_events(dom_id){
     eventFunctions.add_value_query(dom_id);
 }
 
+export function expand_event_values(dom_id, event_uuid){
+    eventFunctions.expand_values(dom_id, event_uuid);
+}
+
 /* Associate datetimepicker functionality */
 jQuery(function () {
     dates.activate_datetimepicker();

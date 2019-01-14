@@ -14,6 +14,7 @@
     <table width="100%" class="table table-striped table-bordered table-hover" id="events">
       <thead>
         <tr>
+          <th></th>
           <th>Gauge name</th>
           <th>Gauge system</th>
           <th>Start</th>
@@ -28,6 +29,7 @@
       <tbody>
         {% for event in events %}
         <tr>
+          <td><i id="expand-values-{{ event.event_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-{{ event.event_uuid }}', '{{ event.event_uuid }}')" data-toggle="tooltip" title="Click to show the related values"></i></td>
           <td>{{ event.gauge.name }}</td>
           <td>{{ event.gauge.system }}</td>
           <td>{{ event.start }}</td>
@@ -49,6 +51,7 @@
       </tbody>
       <tfoot>
         <tr>
+          <th></th>
           <th>Gauge name</th>
           <th>Gauge system</th>
           <th>Start</th>
