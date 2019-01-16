@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-xs-3">
+    <label>Value type</label>
+    <select style="width: 100%" name="value_type">
+      <option>text</option>
+      <option>timestamp</option>
+      <option>boolean</option>
+      <option>double</option>
+      <option>geometry</option>
+      <option>object</option>
+    </select>
+  </div>
+  <div class="col-xs-3 query-event-value-names">
+    <label>Value name like</label>
+    <input class="form-control" list="value_name_like_events" name="value_name_like"/>
+    <datalist id="value_name_like_events">
+    </datalist>
+  </div>
+  <div class="col-xs-3">
+    <label>Value</label>
+    <div class="input-group" style="width: 100%">
+      <input type="text" class="form-control" style="width: 80%" name="value"/>
+      <select class="form-control" style="padding-left: 0; width: 20%" name="value_operator">
+        <option>></option>
+        <option>>=</option>
+        <option><</option>
+                   <option><=</option>
+                              <option>==</option>
+        <option>!=</option>
+
+      </select>
+    </div>
+  </div>
+  <div>
+    <span onclick="vboa.add_value_query_events('more-value-query-events')">
+      <span class="glyphicon glyphicon-plus"></span>
+    </span>
+  </div>
+</div>
