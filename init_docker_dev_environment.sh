@@ -121,5 +121,5 @@ docker exec -it eboa-vboa-dev-container bash -c 'sed -i "s/localhost/$EBOA_VBOA_
 docker exec -it eboa-vboa-dev-container bash -c 'sed -i "s/5432/$EBOA_VBOA_PORT_5432_TCP_PORT/" /eboa/src/config/datamodel.json'
 
 # Execute flask server
-docker exec -it eboa-vboa-dev-container -d bash -c 'flask run --host=0.0.0.0 -p 5000'
+docker exec -d -it eboa-vboa-dev-container bash -c 'flask run --host=0.0.0.0 -p 5000'
 
