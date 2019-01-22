@@ -9,7 +9,8 @@ RUN yum install -y postgresql \
     python34-tkinter \
     gcc \
     python34-devel \
-    pytest
+    pytest \
+    npm
 
 RUN pip3 install pytest-cov \
     termcolor \
