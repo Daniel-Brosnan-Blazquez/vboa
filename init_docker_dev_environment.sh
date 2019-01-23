@@ -7,7 +7,7 @@
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -p path_to_vboa_src"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile [-p port]"
 PATH_TO_EBOA_SRC=""
 PATH_TO_VBOA_SRC=""
 PATH_TO_VBOA_SRC="Dockerfile"
@@ -71,9 +71,6 @@ then
     exit -1
 fi
 
-DOCKERFILE=`basename $PATH_TO_DOCKERFILE`
-PATH_DOCKERFILE=`dirname $PATH_TO_DOCKERFILE`
-
 ######
 # Create EBOA database container
 ######
@@ -91,7 +88,7 @@ docker stop eboa-vboa-dev-container
 docker rm eboa-vboa-dev-container
 docker rmi $(docker images eboa-vboa -q)
 find . -name *pyc -delete
-docker build -t eboa-vboa -f $DOCKERFILE $PATH_DOCKERFILE
+docker build -t eboa-vboa -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA_SRC
 # Initialize the eboa database
 docker run -p $VBOA_PORT:5000 -it --name eboa-vboa-dev-container --link eboa-database-dev-container:eboa-vboa -d -v $PATH_TO_EBOA_SRC:/eboa -v $PATH_TO_VBOA_SRC:/vboa eboa-vboa
 # Generate the python archive
