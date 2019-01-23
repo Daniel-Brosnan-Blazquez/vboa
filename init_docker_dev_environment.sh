@@ -123,5 +123,8 @@ docker exec -it eboa-vboa-dev-container bash -c 'sed -i "s/5432/$EBOA_VBOA_PORT_
 # Execute flask server
 docker exec -d -it eboa-vboa-dev-container bash -c 'flask run --host=0.0.0.0 -p 5000'
 
-docker exec -d -it eboa-vboa-dev-container bash -c "npm --prefix /vboa/src/vboa/static run watch"
+# Install web packages
+docker exec -d -it eboa-vboa-dev-container bash -c "npm --prefix /vboa/src/vboa/static install"
 
+# Listen for changes on the web packages
+docker exec -d -it eboa-vboa-dev-container bash -c "npm --prefix /vboa/src/vboa/static run watch"
