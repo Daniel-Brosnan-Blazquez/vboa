@@ -10,6 +10,7 @@ import * as sourceFunctions from "./sources.js";
 import * as gaugeFunctions from "./gauges.js";
 import * as annotationCnfsFunctions from "./annotation_confs.js";
 import * as eventFunctions from "./events.js";
+import * as annotationFunctions from "./annotations.js";
 import * as eventKeyFunctions from "./event_keys.js";
 import * as dimSignatureFunctions from "./dim_signatures.js";
 import * as erFunctions from "./explicit_references.js";
@@ -55,12 +56,22 @@ export function add_generation_time(dom_id){
     dates.add_generation_time(dom_id);
 }
 
+/* Functions to add more filters by values for events and annotations */
 export function add_value_query_events(dom_id){
     eventFunctions.add_value_query(dom_id);
 }
 
+export function add_value_query_annotations(dom_id){
+    annotationFunctions.add_value_query(dom_id);
+}
+
+/* Functions to expand the values associated to events and annotations */
 export function expand_event_values(dom_id, event_uuid){
     eventFunctions.expand_values(dom_id, event_uuid);
+}
+
+export function expand_annotation_values(dom_id, annotation_uuid){
+    annotationFunctions.expand_values(dom_id, annotation_uuid);
 }
 
 /* Associate datetimepicker functionality */

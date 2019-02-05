@@ -351,6 +351,17 @@ def query_annotations():
 
     return annotations
 
+@bp.route("/query-jsonify-annotation-values/<uuid:annotation_uuid>")
+def query_jsonify_annotation_values(annotation_uuid):
+    """
+    Query values related to the annotation with the corresponding received UUID.
+    """
+    current_app.logger.debug("Query values corresponding to the annotation with specified UUID " + str(annotation_uuid))
+    query = Query()
+    values = query.get_annotation_values([annotation_uuid])
+    jsonified_values = [value.jsonify() for value in values]
+    return jsonify(jsonified_values)
+
 @bp.route("/query-sources", methods=["GET", "POST"])
 def query_sources_and_render():
     """
@@ -759,17 +770,17 @@ def query_ers():
         if not "group_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["group_like"] = {"str": request.form["group_like"], "op": op}
+        kwargs["expl_group_like"] = {"str": request.form["group_like"], "op": op}
     # end if
     if "groups" in request.form and request.form["groups"] != "":
         op="notin"
         if not "group_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["groups"] = {"list": [], "op": op}
+        kwargs["expl_groups"] = {"list": [], "op": op}
         i = 0
         for source in request.form.getlist("groups"):
-            kwargs["groups"]["list"].append(source)
+            kwargs["expl_groups"]["list"].append(source)
             i+=1
         # end for
     # end if

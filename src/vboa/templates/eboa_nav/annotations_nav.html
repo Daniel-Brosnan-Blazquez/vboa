@@ -14,6 +14,7 @@
     <table width="100%" class="table table-striped table-bordered table-hover" id="annotations">
       <thead>
         <tr>
+          <th></th>
           <th>Annotation name</th>
           <th>Annotation system</th>
           <th>Ingestion Time</th>
@@ -25,6 +26,7 @@
       <tbody>
         {% for annotation in annotations %}
         <tr>
+          <td><i id="expand-values-annotation-{{ annotation.annotation_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_annotation_values('expand-values-annotation-{{ annotation.annotation_uuid }}', '{{ annotation.annotation_uuid }}')" data-toggle="tooltip" title="Click to show the related values"></i></td>
           <td>{{ annotation.annotationCnf.name }}</td>
           <td>{{ annotation.annotationCnf.system }}</td>
           <td>{{ annotation.ingestion_time }}</td>
@@ -37,6 +39,7 @@
       </tbody>
       <tfoot>
         <tr>
+          <th></th>
           <th>Annotation name</th>
           <th>Annotation system</th>
           <th>Ingestion Time</th>
