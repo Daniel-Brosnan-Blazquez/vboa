@@ -29,6 +29,17 @@ import "vis/dist/vis-timeline-graph2d.min.css";
 import "vis/dist/vis-network.min.css";
 import "chosen-js/chosen.min.css";
 
+var timeout = 10000
+
+/* Set a timeout if the page is not ready after 10 seconds */
+setTimeout(go_back, timeout);
+
+function go_back(){
+    if (document.readyState != "complete"){
+        window.history.back();
+    }
+}
+
 /* Activate chosen for the multiple input selection */
 jQuery(".chosen-select").chosen({
     no_results_text: "Nothing found for the following criteria: ",
