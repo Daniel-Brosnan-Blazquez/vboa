@@ -88,11 +88,15 @@
                     <option>object</option>
                   </select>
               </div>
-              <div class="col-xs-3 query-event-value-names">
-                <label>Value name like</label>
-                <input class="form-control" list="value_name_like_events" name="value_name_like"/>
-                <datalist id="value_name_like_events">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Value name</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="value_name_like"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="value_name_like_op">
+                    <option>like</option>
+                    <option>notlike</option>
+                  </select>
+                </div>
               </div>
               <div class="col-xs-3">
                 <label>Value</label>

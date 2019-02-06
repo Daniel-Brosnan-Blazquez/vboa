@@ -52,6 +52,55 @@ def query_events():
     current_app.logger.debug("Query events")
 
     query = Query()
+    event_uuids = []
+
+    kwargs = {}
+    if request.form["key_like"] != "":
+        op="notlike"
+        if not "key_notlike_check" in request.form:
+            op="like"
+        # end if
+        kwargs["key_like"] = {"str": request.form["key_like"], "op": op}
+    # end if
+    if "keys" in request.form and request.form["keys"] != "":
+        op="notin"
+        if not "key_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["keys"] = {"list": [], "op": op}
+        i = 0
+        for key in request.form.getlist("keys"):
+            kwargs["keys"]["list"].append(key)
+            i+=1
+        # end for
+    # end if
+
+    if request.form["key_like"] != "" or ("keys" in request.form and request.form["keys"] != ""):
+        event_keys = query.get_event_keys(**kwargs)
+        event_uuids = [event_key.event_uuid for event_key in event_keys]
+    # end if
+
+    if request.form["value_name_like"] != "":
+        i = 0
+        value_operators = request.form.getlist("value_operator")
+        value_types = request.form.getlist("value_type")
+        values = request.form.getlist("value")
+        value_name_like_ops = request.form.getlist("value_name_like_op")
+        for value_name_like in request.form.getlist("value_name_like"):
+            if value_name_like != "":
+                values_name_type_like = [{"name_like": value_name_like, "type": value_types[i], "op": value_name_like_ops[i]}]
+                value_filters = [{"value": values[i], "type": value_types[i], "op": value_operators[i]}]
+                event_uuids_to_filter = None
+                if len(event_uuids) > 0:
+                    event_uuids_to_filter = {"list": event_uuids, "op": "in"}
+                # end if
+                values_ddbb = query.get_event_values_interface(value_type = value_types[i], values_name_type_like = values_name_type_like, value_filters = value_filters, event_uuids = event_uuids_to_filter)
+                event_uuids = [value.event_uuid for value in values_ddbb]
+            # end if
+            i+=1
+        # end for
+    # end if
+
     kwargs = {}
     if request.form["source_like"] != "":
         op="notlike"
@@ -156,51 +205,14 @@ def query_events():
             i+=1
         # end for
     # end if
+
+    if len(event_uuids) > 0:
+        kwargs["event_uuids"] = {"list": event_uuids, "op": "in"}
+    # end if
+
+    current_app.logger.debug(kwargs)
+
     events = query.get_events_join(**kwargs)
-
-    kwargs = {}
-    if request.form["key_like"] != "":
-        op="notlike"
-        if not "key_notlike_check" in request.form:
-            op="like"
-        # end if
-        kwargs["key_like"] = {"str": request.form["key_like"], "op": op}
-    # end if
-    if "keys" in request.form and request.form["keys"] != "":
-        op="notin"
-        if not "key_notin_check" in request.form:
-            op="in"
-        # end if
-        kwargs["keys"] = {"list": [], "op": op}
-        i = 0
-        for key in request.form.getlist("keys"):
-            kwargs["keys"]["list"].append(key)
-            i+=1
-        # end for
-    # end if
-
-    if request.form["key_like"] != "" or ("keys" in request.form and request.form["keys"] != ""):
-        event_uuids = {"list": [event.event_uuid for event in events], "op": "in"}
-        kwargs["event_uuids"] = event_uuids
-        event_keys = query.get_event_keys(**kwargs)
-        event_uuids_from_keys = {"list": [event_key.event_uuid for event_key in event_keys], "op": "in"}
-        events = query.get_events(event_uuids = event_uuids_from_keys)
-    # end if
-
-    kwargs = {}
-    if request.form["value_name_like"] != "":
-        i = 0
-        operators = request.form.getlist("value_operator")
-        value_types = request.form.getlist("value_type")
-        values = request.form.getlist("value")
-        for value_name_like in request.form.getlist("value_name_like"):
-            event_uuids = {"list": [event.event_uuid for event in events], "op": "in"}
-            values_name_type_like = [{"name_like": value_name_like, "type": value_types[i]}]
-            value_filters = [{"value": values[i], "type": value_types[i], "op": operators[i]}]
-            events = query.get_events_join(values_name_type_like = values_name_type_like, value_filters = value_filters, event_uuids = event_uuids)
-            i+=1
-        # end for
-    # end if
 
     return events
 
