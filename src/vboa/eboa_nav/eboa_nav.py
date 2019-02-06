@@ -210,8 +210,6 @@ def query_events():
         kwargs["event_uuids"] = {"list": event_uuids, "op": "in"}
     # end if
 
-    current_app.logger.debug(kwargs)
-
     events = query.get_events_join(**kwargs)
 
     return events
@@ -273,6 +271,29 @@ def query_annotations():
     current_app.logger.debug("Query annotations")
 
     query = Query()
+    annotation_uuids = []
+
+    if request.form["value_name_like"] != "":
+        i = 0
+        value_operators = request.form.getlist("value_operator")
+        value_types = request.form.getlist("value_type")
+        values = request.form.getlist("value")
+        value_name_like_ops = request.form.getlist("value_name_like_op")
+        for value_name_like in request.form.getlist("value_name_like"):
+            if value_name_like != "":
+                values_name_type_like = [{"name_like": value_name_like, "type": value_types[i], "op": value_name_like_ops[i]}]
+                value_filters = [{"value": values[i], "type": value_types[i], "op": value_operators[i]}]
+                annotation_uuids_to_filter = None
+                if len(annotation_uuids) > 0:
+                    annotation_uuids_to_filter = {"list": annotation_uuids, "op": "in"}
+                # end if
+                values_ddbb = query.get_annotation_values_interface(value_type = value_types[i], values_name_type_like = values_name_type_like, value_filters = value_filters, annotation_uuids = annotation_uuids_to_filter)
+                annotation_uuids = [value.annotation_uuid for value in values_ddbb]
+            # end if
+            i+=1
+        # end for
+    # end if
+
     kwargs = {}
     if request.form["source_like"] != "":
         op="notlike"
@@ -359,6 +380,11 @@ def query_annotations():
             i+=1
         # end for
     # end if
+
+    if len(annotation_uuids) > 0:
+        kwargs["annotation_uuids"] = {"list": annotation_uuids, "op": "in"}
+    # end if
+
     annotations = query.get_annotations_join(**kwargs)
 
     return annotations

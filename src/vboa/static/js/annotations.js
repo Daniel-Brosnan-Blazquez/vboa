@@ -4,9 +4,10 @@ import * as query from "./query.js";
 /* Function to add more value filter selectors when commanded */
 export function add_value_query(dom_id){
     
-    jQuery.get("/static/html/more_value_query_annotations.html", function (data){
-        jQuery("#" + dom_id).append(data);
-    });
+    jQuery.ajax({url: "/static/html/more_value_query_annotations.html",
+                cache: false}).done(function (data){
+                    jQuery("#" + dom_id).append(data);
+                });
 
 };
 
