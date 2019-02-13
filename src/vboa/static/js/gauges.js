@@ -72,9 +72,6 @@ function create_gauge_tooltip_text(gauge){
 
 export function create_gauge_network(gauges, dom_id){
 
-    console.log(gauges)
-    console.log(dom_id)
-
     var nodes = []
     var edges = []
     for (const gauge of gauges["gauges"]){
@@ -96,14 +93,18 @@ export function create_gauge_network(gauges, dom_id){
             "font": {"align": "left"}
         });
     }
-    console.log(nodes)
-    console.log(edges)
+
     const options = {
         physics: {
             enabled: true,
-            barnesHut: {
-                gravitationalConstant: -50000
-            }
+            repulsion: {
+                nodeDistance: 1000
+            },
+            solver: "repulsion"
+        },
+        edges: {
+            width: 10,
+            color: "green"
         },
         interaction:{hover:true}
     };
