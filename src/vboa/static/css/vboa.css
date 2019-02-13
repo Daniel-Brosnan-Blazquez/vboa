@@ -44,6 +44,10 @@ i.green {
     float: left;
 }
 
+.draggable-div-body td {
+    width: 100%;
+}
+
 /*Check box*/
 
 input[type="checkbox"], input[type="radio"]{
