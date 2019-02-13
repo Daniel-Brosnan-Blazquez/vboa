@@ -14,7 +14,7 @@ export function activate_search_on_columns() {
             [10, 25, 50, 100, 200, -1],
             [10, 25, 50, 100, 200, "All"]
         ],
-        iDisplayLength: 10,
+        iDisplayLength: -1,
         scrollX: true,
         scrollY: "500px"
     });
