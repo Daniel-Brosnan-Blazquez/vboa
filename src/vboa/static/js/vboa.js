@@ -29,7 +29,7 @@ import "vis/dist/vis-timeline-graph2d.min.css";
 import "vis/dist/vis-network.min.css";
 import "chosen-js/chosen.min.css";
 
-var timeout = 10000
+var timeout = 1000000
 
 /* Set a timeout if the page is not ready after 10 seconds */
 setTimeout(go_back, timeout);
