@@ -175,6 +175,18 @@ export function create_event_network(events, dom_id){
 
 };
 
+
+/*
+* GAUGES *
+*/
+
+/* Function to show a network of gauges */
+export function create_gauge_network(gauges, dom_id){
+
+    gaugeFunctions.create_gauge_network(gauges, dom_id);
+
+};
+
 /*
 * SOURCES *
 */

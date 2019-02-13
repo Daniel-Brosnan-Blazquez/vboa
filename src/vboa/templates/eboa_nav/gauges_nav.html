@@ -44,4 +44,31 @@
   <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
+{% if show["network"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Network of gauges
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div class="network-gauges" id="gauges_nav_network">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+      {% if show["network"] %}
+      {% with links=links %}
+      {% include "graphs/gauges_to_json_for_network.js" %}
+      {% endwith %}
+      const gauges_for_network = gauges;
+
+      vboa.create_gauge_network(gauges_for_network, "gauges_nav_network");
+      {% endif %}
+    </script>
 {% endblock %}

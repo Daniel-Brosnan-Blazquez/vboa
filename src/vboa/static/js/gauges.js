@@ -1,5 +1,6 @@
 import * as query from "./query.js";
 import * as selectorFunctions from "./selectors.js";
+import * as graph from "./graph.js";
 
 /* Functions for the query interface */
 export function fill_gauges(){
@@ -57,3 +58,56 @@ function fill_gauges_into_selectors(selectors, gauges){
     /* Update chosen for the multiple input selection */
     jQuery(".chosen-select").trigger("chosen:updated");
 }
+
+/* Function to create the text for the tooltip of the gauge information */
+function create_gauge_tooltip_text(gauge){
+
+    return "<table border='1'>" +
+            "<tr><td>UUID</td><td>" + gauge["id"] + "</td>" +
+            "<tr><td>Gauge name</td><td>" + gauge["name"] + "</td>" +
+            "<tr><td>Gauge system</td><td>" + gauge["system"] + "</td>" +
+            "<tr><td>DIM signature UUID</td><td>" + gauge["dim_signature_uuid"] + "</td>" +
+            "</tr></table>"
+};
+
+export function create_gauge_network(gauges, dom_id){
+
+    console.log(gauges)
+    console.log(dom_id)
+
+    var nodes = []
+    var edges = []
+    for (const gauge of gauges["gauges"]){
+
+        for (const gauge_link of gauge["gauges_linking"]){
+            edges.push({
+                "from": gauge_link["gauge_uuid"],
+                "to": gauge["id"],
+                "arrows": "to",
+                "label": gauge_link["link_name"]
+            })
+        }
+        nodes.push({
+            "id": gauge["id"],
+            "color": "lightblue",
+            "shape": "elipse",
+            "tooltip": create_gauge_tooltip_text(gauge),
+            "label": "Gauge name: " + gauge["name"] + "\nGauge system: " + gauge["system"] + "\nGauge UUID: " + gauge["id"] + "\nDIM signature UUID: " + gauge["dim_signature_uuid"],
+            "font": {"align": "left"}
+        });
+    }
+    console.log(nodes)
+    console.log(edges)
+    const options = {
+        physics: {
+            enabled: true,
+            barnesHut: {
+                gravitationalConstant: -50000
+            }
+        },
+        interaction:{hover:true}
+    };
+
+    graph.display_network(dom_id, nodes, edges, options);
+
+};

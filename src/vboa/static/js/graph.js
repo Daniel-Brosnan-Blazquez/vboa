@@ -36,7 +36,7 @@ function show_timeline_item_information(params, items, dom_id){
 
 /* Function to display a network given the id of the DOM where to
  * attach it and the nodes to show with the corresponding relations */
-export function display_network(dom_id, nodes, edges){
+export function display_network(dom_id, nodes, edges, options){
 
     /* create timeline */
     const container = document.getElementById(dom_id);
@@ -46,15 +46,20 @@ export function display_network(dom_id, nodes, edges){
         edges: new vis.DataSet(edges)
     };
     
-    const options = {
-        physics: {
-            enabled: true,
-            barnesHut: {
-                gravitationalConstant: -250000
-            }
-        },
-        interaction:{hover:true}
-    };
+    if (options == undefined){
+        console.log("define options")
+        options = {
+            physics: {
+                enabled: true,
+                barnesHut: {
+                    gravitationalConstant: -250000
+                }
+            },
+            interaction:{hover:true}
+        };
+        console.log(options)
+    }
+    console.log(options)
     const network = new vis.Network(container, data, options);
 
     network.on("click", function (params) {
@@ -86,7 +91,7 @@ export function display_x_time(dom_id, items, groups, options){
     const container = document.getElementById(dom_id);
     
     if (options == undefined){
-        const options = {
+        options = {
             legend: true
         };
     }

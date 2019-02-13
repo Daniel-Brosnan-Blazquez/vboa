@@ -19,6 +19,7 @@ import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
 
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
+query = Query()
 
 @bp.route("/", methods=["GET"])
 def navigate():
@@ -51,7 +52,6 @@ def query_events():
     """
     current_app.logger.debug("Query events")
 
-    query = Query()
     event_uuids = []
 
     kwargs = {}
@@ -230,7 +230,6 @@ def query_event_links(event_uuid):
     Query events linked to the event corresponding to the UUID received.
     """
     current_app.logger.debug("Query event links")
-    query = Query()
     links = query.get_linked_events_details(event_uuid=event_uuid, back_ref = True)
     
     return links
@@ -241,7 +240,6 @@ def query_jsonify_event_values(event_uuid):
     Query values related to the event with the corresponding received UUID.
     """
     current_app.logger.debug("Query values corresponding to the event with specified UUID " + str(event_uuid))
-    query = Query()
     values = query.get_event_values([event_uuid])
     jsonified_values = [value.jsonify() for value in values]
     return jsonify(jsonified_values)
@@ -270,7 +268,6 @@ def query_annotations():
     """
     current_app.logger.debug("Query annotations")
 
-    query = Query()
     annotation_uuids = []
 
     if request.form["value_name_like"] != "":
@@ -395,7 +392,6 @@ def query_jsonify_annotation_values(annotation_uuid):
     Query values related to the annotation with the corresponding received UUID.
     """
     current_app.logger.debug("Query values corresponding to the annotation with specified UUID " + str(annotation_uuid))
-    query = Query()
     values = query.get_annotation_values([annotation_uuid])
     jsonified_values = [value.jsonify() for value in values]
     return jsonify(jsonified_values)
@@ -440,7 +436,6 @@ def query_sources():
     Query sources.
     """
     current_app.logger.debug("Query sources")
-    query = Query()
     kwargs = {}
     if request.form["source_like"] != "":
         op="notlike"
@@ -531,7 +526,6 @@ def query_source(source_uuid):
     Query source corresponding to the UUID received.
     """
     current_app.logger.debug("Query source")
-    query = Query()
     source = query.get_sources(source_uuids={"list": [source_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=source)
 
@@ -541,7 +535,6 @@ def query_sources_by_dim(dim_signature_uuid):
     Query sources associated to the DIM signature corresponding to the UUID received.
     """
     current_app.logger.debug("Query sources by DIM signature")
-    query = Query()
     sources = query.get_sources(dim_signature_uuids={"list": [dim_signature_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=sources)
 
@@ -551,7 +544,6 @@ def query_jsonify_sources():
     Query all the sources.
     """
     current_app.logger.debug("Query source")
-    query = Query()
     sources = query.get_sources()
     jsonified_sources = [source.jsonify() for source in sources]
     return jsonify(jsonified_sources)
@@ -573,17 +565,54 @@ def query_gauges_and_render():
     if request.method == "POST":
         gauges = query_gauges()
 
-        return render_template("eboa_nav/gauges_nav.html", gauges=gauges)
+        show = {}
+        links = []
+        if not "show_network" in request.form:
+            show["network"] = False
+        else:
+            show["network"]=True
+            links = query_linked_gauges(gauges)
+        # end if
+
+        current_app.logger.debug(links)
+
+        return render_template("eboa_nav/gauges_nav.html", gauges=gauges, links=links, show=show)
     # end if
 
     return render_template("eboa_nav/query_gauges.html")
+
+def query_linked_gauges(gauges):
+    """
+    Query linked gauges.
+    """
+    current_app.logger.debug("Query linked gauges")
+    links = []
+    for gauge in gauges:
+        gauge_node = {
+            "gauge_uuid": gauge.gauge_uuid,
+            "name": gauge.name,
+            "system": gauge.system,
+            "dim_signature_uuid": gauge.dim_signature_uuid,
+            "gauges_linking": []
+        }
+        links.append(gauge_node)
+        events = query.get_events(gauge_uuids = {"list": [gauge.gauge_uuid], "op": "in"},
+                                 limit = 1)
+        if len(events) > 0:
+            event_uuids = [event_link.event_uuid_link for event_link in events[0].eventLinks]
+            linked_events = query.get_events(event_uuids = {"list": event_uuids, "op": "in"})
+            gauge_node["gauges_linking"] = [{"gauge_uuid": str(event.gauge.gauge_uuid), "link_name": [event_link.name for event_link in events[0].eventLinks if event_link.event_uuid_link == event.event_uuid][0]} for event in linked_events]
+            current_app.logger.debug(gauge_node)
+        # end if
+    # end for
+
+    return links
 
 def query_gauges():
     """
     Query gauges.
     """
     current_app.logger.debug("Query gauges")
-    query = Query()
     kwargs = {}
     if request.form["gauge_name_like"] != "":
         op="notlike"
@@ -653,7 +682,6 @@ def query_jsonify_gauges():
     Query all the gauges.
     """
     current_app.logger.debug("Query gauge")
-    query = Query()
     gauges = query.get_gauges()
     jsonified_gauges = [gauge.jsonify() for gauge in gauges]
     return jsonify(jsonified_gauges)
@@ -677,7 +705,6 @@ def query_annotation_cnfs():
     Query annotation configurations.
     """
     current_app.logger.debug("Query annotation configurations")
-    query = Query()
     kwargs = {}
     if request.form["annotation_name_like"] != "":
         op="notlike"
@@ -747,7 +774,6 @@ def query_jsonify_annotation_cnfs():
     Query all the annotation configurations.
     """
     current_app.logger.debug("Query annotation configurations")
-    query = Query()
     annotation_cnfs = query.get_annotation_cnfs()
     jsonified_annotation_cnfs = [annotation_cnf.jsonify() for annotation_cnf in annotation_cnfs]
     return jsonify(jsonified_annotation_cnfs)
@@ -758,7 +784,6 @@ def query_jsonify_keys():
     Query all the keys.
     """
     current_app.logger.debug("Query event keys")
-    query = Query()
     keys = query.get_event_keys()
     jsonified_keys = [key.jsonify() for key in keys]
     return jsonify(jsonified_keys)
@@ -782,7 +807,6 @@ def query_ers():
     """
     current_app.logger.debug("Query explicit references")
 
-    query = Query()
     kwargs = {}
     if request.form["er_like"] != "":
         op="notlike"
@@ -841,7 +865,6 @@ def query_jsonify_ers():
     Query all the ers.
     """
     current_app.logger.debug("Query explicit references")
-    query = Query()
     ers = query.get_explicit_refs()
     jsonified_ers = [er.jsonify() for er in ers]
     return jsonify(jsonified_ers)
@@ -852,7 +875,6 @@ def query_jsonify_er_groups():
     Query all the ers groups.
     """
     current_app.logger.debug("Query explicit reference groups")
-    query = Query()
     er_groups = query.get_explicit_refs_groups()
     jsonified_er_groups = [er_group.jsonify() for er_group in er_groups]
     return jsonify(jsonified_er_groups)
@@ -876,7 +898,6 @@ def query_dim_signatures():
     Query DIM signatures.
     """
     current_app.logger.debug("Query DIM signatures")
-    query = Query()
     kwargs = {}
     if request.form["dim_signature_like"] != "":
         op="notlike"
@@ -908,7 +929,6 @@ def query_jsonify_dim_signatures():
     Query all the DIM signatures.
     """
     current_app.logger.debug("Query DIM signatures")
-    query = Query()
     dim_signatures = query.get_dim_signatures()
     jsonified_dim_signatures = [dim_signature.jsonify() for dim_signature in dim_signatures]
     return jsonify(jsonified_dim_signatures)
