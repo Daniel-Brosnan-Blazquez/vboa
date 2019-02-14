@@ -231,7 +231,7 @@ def query_event_links(event_uuid):
     """
     current_app.logger.debug("Query event links")
     links = query.get_linked_events_details(event_uuid=event_uuid, back_ref = True)
-    
+
     return links
 
 @bp.route("/query-jsonify-event-values/<uuid:event_uuid>")
@@ -591,6 +591,7 @@ def query_linked_gauges(gauges):
             "name": gauge.name,
             "system": gauge.system,
             "dim_signature_uuid": gauge.dim_signature_uuid,
+            "dim_signature_name": gauge.dim_signature.dim_signature,
             "gauges_linking": []
         }
         links.append(gauge_node)
@@ -600,7 +601,7 @@ def query_linked_gauges(gauges):
             event_uuids = [event_link.event_uuid_link for event_link in events[0].eventLinks]
             linked_events = query.get_events(event_uuids = {"list": event_uuids, "op": "in"})
             gauges_linking = set([(str(event.gauge.gauge_uuid), [event_link.name for event_link in events[0].eventLinks if event_link.event_uuid_link == event.event_uuid][0]) for event in linked_events])
-            
+
             gauge_node["gauges_linking"] = [{"gauge_uuid": element[0], "link_name": element[1]} for element in gauges_linking]
         # end if
     # end for

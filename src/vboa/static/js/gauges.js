@@ -66,6 +66,7 @@ function create_gauge_tooltip_text(gauge){
             "<tr><td>UUID</td><td>" + gauge["id"] + "</td>" +
             "<tr><td>Gauge name</td><td>" + gauge["name"] + "</td>" +
             "<tr><td>Gauge system</td><td>" + gauge["system"] + "</td>" +
+            "<tr><td>DIM signature</td><td>" + gauge["dim_signature_name"] + "</td>" +
             "<tr><td>DIM signature UUID</td><td>" + gauge["dim_signature_uuid"] + "</td>" +
             "</tr></table>"
 };
@@ -89,7 +90,7 @@ export function create_gauge_network(gauges, dom_id){
             "color": "lightblue",
             "shape": "elipse",
             "tooltip": create_gauge_tooltip_text(gauge),
-            "label": "Gauge name: " + gauge["name"] + "\nGauge system: " + gauge["system"] + "\nGauge UUID: " + gauge["id"] + "\nDIM signature UUID: " + gauge["dim_signature_uuid"],
+            "label": "Gauge name: " + gauge["name"] + "\nGauge system: " + gauge["system"] + "\nGauge UUID: " + gauge["id"] + "\nDIM signature: " + gauge["dim_signature_name"],
             "font": {"align": "left"}
         });
     }
