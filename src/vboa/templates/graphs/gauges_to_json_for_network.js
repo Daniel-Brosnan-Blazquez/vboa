@@ -7,7 +7,8 @@ var gauges = {
             "system": "{{ gauge['system'] }}",
             "dim_signature_uuid": "{{ gauge['dim_signature_uuid'] }}",
             "dim_signature_name": "{{ gauge['dim_signature_name'] }}",
-            "gauges_linking": {{ gauge['gauges_linking'] }}
+            "gauges_linking": {{ gauge['gauges_linking'] }},
+            "gauges_linked": {{ gauge['gauges_linked'] }}
         },
         {% endfor %}
     ]

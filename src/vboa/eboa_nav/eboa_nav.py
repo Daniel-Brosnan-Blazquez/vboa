@@ -579,30 +579,76 @@ def query_gauges_and_render():
 
     return render_template("eboa_nav/query_gauges.html")
 
+def register_gauge_node (links, gauge, registered_gauges):
+    """
+    Register gauge node for the linked gauges.
+    """
+    if gauge.gauge_uuid not in registered_gauges:
+        registered_gauges[gauge.gauge_uuid] = {
+            "gauge_uuid": str(gauge.gauge_uuid),
+            "name": gauge.name,
+            "system": gauge.system,
+            "dim_signature_uuid": gauge.dim_signature_uuid,
+            "dim_signature_name": gauge.dim_signature.dim_signature,
+            "gauges_linking": [],
+            "gauges_linked": []
+        }
+        links.append(registered_gauges[gauge.gauge_uuid])
+    # end if
+    return registered_gauges[gauge.gauge_uuid]
+
 def query_linked_gauges(gauges):
     """
     Query linked gauges.
     """
     current_app.logger.debug("Query linked gauges")
     links = []
+    linked_gauges = {}
+    registered_gauges = {}
     for gauge in gauges:
-        gauge_node = {
-            "gauge_uuid": gauge.gauge_uuid,
-            "name": gauge.name,
-            "system": gauge.system,
-            "dim_signature_uuid": gauge.dim_signature_uuid,
-            "dim_signature_name": gauge.dim_signature.dim_signature,
-            "gauges_linking": []
-        }
-        links.append(gauge_node)
+        gauge_node = register_gauge_node(links, gauge, registered_gauges)
+        # Get the associated events
         events = query.get_events(gauge_uuids = {"list": [gauge.gauge_uuid], "op": "in"},
                                   limit = 1)
         if len(events) > 0:
-            event_uuids = [event_link.event_uuid_link for event_link in events[0].eventLinks]
-            linked_events = query.get_events(event_uuids = {"list": event_uuids, "op": "in"})
-            gauges_linking = set([(str(event.gauge.gauge_uuid), [event_link.name for event_link in events[0].eventLinks if event_link.event_uuid_link == event.event_uuid][0]) for event in linked_events])
+            # Get the events that link to the related events
+            linking_event_uuids = [event_link.event_uuid_link for event_link in events[0].eventLinks]
+            linking_events = query.get_events(event_uuids = {"list": linking_event_uuids, "op": "in"})
 
-            gauge_node["gauges_linking"] = [{"gauge_uuid": element[0], "link_name": element[1]} for element in gauges_linking]
+            # Get the events that linked by the related events
+            linked_event_links = query.get_event_links(event_uuid_links = {"list": [events[0].event_uuid], "op": "in"})
+            linked_event_uuids = [event_link.event_uuid for event_link in linked_event_links]
+            linked_events = query.get_events(event_uuids = {"list": linked_event_uuids, "op": "in"})
+
+            # Get the gauges associated to the events linking to the related events
+            gauges_linking = set([(str(event.gauge.gauge_uuid), [event_link.name for event_link in events[0].eventLinks if event_link.event_uuid_link == event.event_uuid][0]) for event in linking_events])
+
+            # Get the gauges associated to the events linked by the related events
+            gauges_linked = set([(str(event.gauge.gauge_uuid), [event_link.name for event_link in linked_event_links if event_link.event_uuid == event.event_uuid][0]) for event in linked_events])
+
+            linking_linked_events = set (linked_events + linking_events)
+            unique_linking_linked_gauges = set([event.gauge for event in linking_linked_events])
+            for linking_linked_gauge in unique_linking_linked_gauges:
+                register_gauge_node(links, linking_linked_gauge, registered_gauges)
+            # end for
+            
+            # Associate gauges
+            for gauge_linking in gauges_linking:
+                gauge_linking_uuid = gauge_linking[0]
+                link_name = gauge_linking[1]
+                if (gauge_linking_uuid, str(gauge.gauge_uuid)) not in linked_gauges:
+                    linked_gauges[(gauge_linking_uuid, str(gauge.gauge_uuid))] = True
+                    gauge_node["gauges_linking"].append({"gauge_uuid": gauge_linking_uuid, "link_name": link_name})
+                # end if
+            # end for
+            for gauge_linked in gauges_linked:
+                gauge_linked_uuid = gauge_linked[0]
+                link_name = gauge_linked[1]
+                if (str(gauge.gauge_uuid), gauge_linked_uuid) not in linked_gauges:
+                    linked_gauges[(str(gauge.gauge_uuid), gauge_linked_uuid)] = True
+                    gauge_node["gauges_linked"].append({"gauge_uuid": gauge_linked_uuid, "link_name": link_name})
+                # end if
+            # end for
         # end if
     # end for
 

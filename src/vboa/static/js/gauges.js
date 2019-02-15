@@ -85,6 +85,14 @@ export function create_gauge_network(gauges, dom_id){
                 "label": gauge_link["link_name"]
             })
         }
+        for (const gauge_link of gauge["gauges_linked"]){
+            edges.push({
+                "from": gauge["id"],
+                "to": gauge_link["gauge_uuid"],
+                "arrows": "to",
+                "label": gauge_link["link_name"]
+            })
+        }
         nodes.push({
             "id": gauge["id"],
             "color": "lightblue",
