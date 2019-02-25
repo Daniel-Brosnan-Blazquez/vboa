@@ -133,10 +133,10 @@ def query_events():
         if not "er_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["ers"] = {"list": [], "op": op}
+        kwargs["explicit_refs"] = {"list": [], "op": op}
         i = 0
-        for source in request.form.getlist("ers"):
-            kwargs["ers"]["list"].append(source)
+        for er in request.form.getlist("ers"):
+            kwargs["explicit_refs"]["list"].append(er)
             i+=1
         # end for
     # end if
