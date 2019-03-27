@@ -52,72 +52,61 @@ def query_events():
     """
     current_app.logger.debug("Query events")
 
-    event_uuids = []
-
     kwargs = {}
+
     if request.form["key_like"] != "":
         op="notlike"
         if not "key_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["key_like"] = {"str": request.form["key_like"], "op": op}
+        kwargs["keys"] = {"filter": request.form["key_like"], "op": op}
     # end if
-    if "keys" in request.form and request.form["keys"] != "":
+    elif "keys" in request.form and request.form["keys"] != "":
         op="notin"
         if not "key_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["keys"] = {"list": [], "op": op}
+        kwargs["keys"] = {"filter": [], "op": op}
         i = 0
         for key in request.form.getlist("keys"):
-            kwargs["keys"]["list"].append(key)
+            kwargs["keys"]["filter"].append(key)
             i+=1
         # end for
     # end if
 
-    if request.form["key_like"] != "" or ("keys" in request.form and request.form["keys"] != ""):
-        event_keys = query.get_event_keys(**kwargs)
-        event_uuids = [event_key.event_uuid for event_key in event_keys]
-    # end if
-
     if request.form["value_name_like"] != "":
-        i = 0
         value_operators = request.form.getlist("value_operator")
         value_types = request.form.getlist("value_type")
         values = request.form.getlist("value")
         value_name_like_ops = request.form.getlist("value_name_like_op")
+        kwargs["value_filters"] = []
+        i = 0
         for value_name_like in request.form.getlist("value_name_like"):
             if value_name_like != "":
-                values_name_type_like = [{"name_like": value_name_like, "type": value_types[i], "op": value_name_like_ops[i]}]
-                value_filters = [{"value": values[i], "type": value_types[i], "op": value_operators[i]}]
-                event_uuids_to_filter = None
-                if len(event_uuids) > 0:
-                    event_uuids_to_filter = {"list": event_uuids, "op": "in"}
-                # end if
-                values_ddbb = query.get_event_values_interface(value_type = value_types[i], values_name_type_like = values_name_type_like, value_filters = value_filters, event_uuids = event_uuids_to_filter)
-                event_uuids = [value.event_uuid for value in values_ddbb]
+                kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                                               "type": value_types[i],
+                                                "value": {"op": value_operators[i], "value": values[i]}})
             # end if
             i+=1
         # end for
     # end if
 
-    kwargs = {}
     if request.form["source_like"] != "":
         op="notlike"
         if not "source_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["source_like"] = {"str": request.form["source_like"], "op": op}
+        kwargs["sources"] = {"filter": request.form["source_like"], "op": op}
     # end if
-    if "sources" in request.form and request.form["sources"] != "":
+    elif "sources" in request.form and request.form["sources"] != "":
         op="notin"
         if not "source_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["sources"] = {"list": [], "op": op}
+        kwargs["sources"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("sources"):
-            kwargs["sources"]["list"].append(source)
+            kwargs["sources"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -126,17 +115,17 @@ def query_events():
         if not "er_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["explicit_ref_like"] = {"str": request.form["er_like"], "op": op}
+        kwargs["explicit_refs"] = {"filter": request.form["er_like"], "op": op}
     # end if
-    if "ers" in request.form and request.form["ers"] != "":
+    elif "ers" in request.form and request.form["ers"] != "":
         op="notin"
         if not "er_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["explicit_refs"] = {"list": [], "op": op}
+        kwargs["explicit_refs"] = {"filter": [], "op": op}
         i = 0
         for er in request.form.getlist("ers"):
-            kwargs["explicit_refs"]["list"].append(er)
+            kwargs["explicit_refs"]["filter"].append(er)
             i+=1
         # end for
     # end if
@@ -145,17 +134,17 @@ def query_events():
         if not "gauge_name_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["gauge_name_like"] = {"str": request.form["gauge_name_like"], "op": op}
+        kwargs["gauge_names"] = {"filter": request.form["gauge_name_like"], "op": op}
     # end if
-    if "gauge_names" in request.form and request.form["gauge_names"] != "":
+    elif "gauge_names" in request.form and request.form["gauge_names"] != "":
         op="notin"
         if not "gauge_name_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["gauge_names"] = {"list": [], "op": op}
+        kwargs["gauge_names"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("gauge_names"):
-            kwargs["gauge_names"]["list"].append(source)
+            kwargs["gauge_names"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -164,17 +153,17 @@ def query_events():
         if not "gauge_system_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["gauge_system_like"] = {"str": request.form["gauge_system_like"], "op": op}
+        kwargs["gauge_systems"] = {"filter": request.form["gauge_system_like"], "op": op}
     # end if
-    if "gauge_systems" in request.form and request.form["gauge_systems"] != "":
+    elif "gauge_systems" in request.form and request.form["gauge_systems"] != "":
         op="notin"
         if not "gauge_system_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["gauge_systems"] = {"list": [], "op": op}
+        kwargs["gauge_systems"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("gauge_systems"):
-            kwargs["gauge_systems"]["list"].append(source)
+            kwargs["gauge_systems"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -206,11 +195,7 @@ def query_events():
         # end for
     # end if
 
-    if len(event_uuids) > 0:
-        kwargs["event_uuids"] = {"list": event_uuids, "op": "in"}
-    # end if
-
-    events = query.get_events_join(**kwargs)
+    events = query.get_events(**kwargs)
 
     return events
 
@@ -268,46 +253,41 @@ def query_annotations():
     """
     current_app.logger.debug("Query annotations")
 
-    annotation_uuids = []
+    kwargs = {}
 
     if request.form["value_name_like"] != "":
-        i = 0
         value_operators = request.form.getlist("value_operator")
         value_types = request.form.getlist("value_type")
         values = request.form.getlist("value")
         value_name_like_ops = request.form.getlist("value_name_like_op")
+        kwargs["value_filters"] = []
+        i = 0
         for value_name_like in request.form.getlist("value_name_like"):
             if value_name_like != "":
-                values_name_type_like = [{"name_like": value_name_like, "type": value_types[i], "op": value_name_like_ops[i]}]
-                value_filters = [{"value": values[i], "type": value_types[i], "op": value_operators[i]}]
-                annotation_uuids_to_filter = None
-                if len(annotation_uuids) > 0:
-                    annotation_uuids_to_filter = {"list": annotation_uuids, "op": "in"}
-                # end if
-                values_ddbb = query.get_annotation_values_interface(value_type = value_types[i], values_name_type_like = values_name_type_like, value_filters = value_filters, annotation_uuids = annotation_uuids_to_filter)
-                annotation_uuids = [value.annotation_uuid for value in values_ddbb]
+                kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                                               "type": value_types[i],
+                                                "value": {"op": value_operators[i], "value": values[i]}})
             # end if
             i+=1
         # end for
     # end if
 
-    kwargs = {}
     if request.form["source_like"] != "":
         op="notlike"
         if not "source_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["source_like"] = {"str": request.form["source_like"], "op": op}
+        kwargs["sources"] = {"filter": request.form["source_like"], "op": op}
     # end if
-    if "sources" in request.form and request.form["sources"] != "":
+    elif "sources" in request.form and request.form["sources"] != "":
         op="notin"
         if not "source_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["sources"] = {"list": [], "op": op}
+        kwargs["sources"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("sources"):
-            kwargs["sources"]["list"].append(source)
+            kwargs["sources"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -316,17 +296,17 @@ def query_annotations():
         if not "er_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["explicit_ref_like"] = {"str": request.form["er_like"], "op": op}
+        kwargs["explicit_refs"] = {"filter": request.form["er_like"], "op": op}
     # end if
-    if "ers" in request.form and request.form["ers"] != "":
+    elif "ers" in request.form and request.form["ers"] != "":
         op="notin"
         if not "er_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["ers"] = {"list": [], "op": op}
+        kwargs["ers"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("ers"):
-            kwargs["ers"]["list"].append(source)
+            kwargs["ers"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -335,17 +315,17 @@ def query_annotations():
         if not "annotation_name_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["name_like"] = {"str": request.form["annotation_name_like"], "op": op}
+        kwargs["names"] = {"filter": request.form["annotation_name_like"], "op": op}
     # end if
-    if "annotation_names" in request.form and request.form["annotation_names"] != "":
+    elif "annotation_names" in request.form and request.form["annotation_names"] != "":
         op="notin"
         if not "annotation_name_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["names"] = {"list": [], "op": op}
+        kwargs["names"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("annotation_names"):
-            kwargs["names"]["list"].append(source)
+            kwargs["names"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -354,17 +334,17 @@ def query_annotations():
         if not "annotation_system_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["system_like"] = {"str": request.form["annotation_system_like"], "op": op}
+        kwargs["systems"] = {"filter": request.form["annotation_system_like"], "op": op}
     # end if
-    if "annotation_systems" in request.form and request.form["annotation_systems"] != "":
+    elif "annotation_systems" in request.form and request.form["annotation_systems"] != "":
         op="notin"
         if not "annotation_system_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["systems"] = {"list": [], "op": op}
+        kwargs["systems"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("annotation_systems"):
-            kwargs["systems"]["list"].append(source)
+            kwargs["systems"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -378,11 +358,7 @@ def query_annotations():
         # end for
     # end if
 
-    if len(annotation_uuids) > 0:
-        kwargs["annotation_uuids"] = {"list": annotation_uuids, "op": "in"}
-    # end if
-
-    annotations = query.get_annotations_join(**kwargs)
+    annotations = query.get_annotations(**kwargs)
 
     return annotations
 
@@ -442,14 +418,38 @@ def query_sources():
         if not "source_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["name_like"] = {"str": request.form["source_like"], "op": op}
+        kwargs["names"] = {"filter": request.form["source_like"], "op": op}
+    # end if
+    elif "sources" in request.form and request.form["sources"] != "":
+        op="notin"
+        if not "source_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["names"] = {"filter": [], "op": op}
+        i = 0
+        for source in request.form.getlist("sources"):
+            kwargs["names"]["filter"].append(source)
+            i+=1
+        # end for
     # end if
     if request.form["dim_signature_like"] != "":
         op="notlike"
         if not "dim_signature_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": request.form["dim_signature_like"], "op": op}
+    # end if
+    elif "dim_signatures" in request.form and request.form["dim_signatures"] != "":
+        op="notin"
+        if not "dim_signature_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["dim_signatures"] = {"filter": [], "op": op}
+        i = 0
+        for source in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["filter"].append(source)
+            i+=1
+        # end for
     # end if
     if request.form["validity_start"] != "":
         kwargs["validity_start_filters"] = []
@@ -501,22 +501,22 @@ def query_sources():
         if not "processor_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["processor_like"] = {"str": request.form["processor_like"], "op": op}
+        kwargs["processors"] = {"filter": request.form["processor_like"], "op": op}
     # end if
-    if "processors" in request.form and request.form["processors"] != "":
+    elif "processors" in request.form and request.form["processors"] != "":
         op="notin"
         if not "processor_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["processors"] = {"list": [], "op": op}
+        kwargs["processors"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("processors"):
-            kwargs["processors"]["list"].append(source)
+            kwargs["processors"]["filter"].append(source)
             i+=1
         # end for
     # end if
 
-    sources = query.get_sources_join(**kwargs)
+    sources = query.get_sources(**kwargs)
 
     return sources
 
@@ -526,7 +526,7 @@ def query_source(source_uuid):
     Query source corresponding to the UUID received.
     """
     current_app.logger.debug("Query source")
-    source = query.get_sources(source_uuids={"list": [source_uuid], "op": "in"})
+    source = query.get_sources(source_uuids={"filter": [source_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=source)
 
 @bp.route("/query-sources-by-dim/<uuid:dim_signature_uuid>")
@@ -535,7 +535,7 @@ def query_sources_by_dim(dim_signature_uuid):
     Query sources associated to the DIM signature corresponding to the UUID received.
     """
     current_app.logger.debug("Query sources by DIM signature")
-    sources = query.get_sources(dim_signature_uuids={"list": [dim_signature_uuid], "op": "in"})
+    sources = query.get_sources(dim_signature_uuids={"filter": [dim_signature_uuid], "op": "in"})
     return render_template("eboa_nav/sources_nav.html", sources=sources)
 
 @bp.route("/query-jsonify-sources")
@@ -608,17 +608,17 @@ def query_linked_gauges(gauges):
     for gauge in gauges:
         gauge_node = register_gauge_node(links, gauge, registered_gauges)
         # Get the associated events
-        events = query.get_events(gauge_uuids = {"list": [gauge.gauge_uuid], "op": "in"},
+        events = query.get_events(gauge_uuids = {"filter": [gauge.gauge_uuid], "op": "in"},
                                   limit = 1)
         if len(events) > 0:
             # Get the events that link to the related events
             linking_event_uuids = [event_link.event_uuid_link for event_link in events[0].eventLinks]
-            linking_events = query.get_events(event_uuids = {"list": linking_event_uuids, "op": "in"})
+            linking_events = query.get_events(event_uuids = {"filter": linking_event_uuids, "op": "in"})
 
             # Get the events that linked by the related events
-            linked_event_links = query.get_event_links(event_uuid_links = {"list": [events[0].event_uuid], "op": "in"})
+            linked_event_links = query.get_event_links(event_uuid_links = {"filter": [events[0].event_uuid], "op": "in"})
             linked_event_uuids = [event_link.event_uuid for event_link in linked_event_links]
-            linked_events = query.get_events(event_uuids = {"list": linked_event_uuids, "op": "in"})
+            linked_events = query.get_events(event_uuids = {"filter": linked_event_uuids, "op": "in"})
 
             # Get the gauges associated to the events linking to the related events
             gauges_linking = set([(str(event.gauge.gauge_uuid), [event_link.name for event_link in events[0].eventLinks if event_link.event_uuid_link == event.event_uuid][0]) for event in linking_events])
@@ -665,17 +665,17 @@ def query_gauges():
         if not "gauge_name_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["name_like"] = {"str": request.form["gauge_name_like"], "op": op}
+        kwargs["names"] = {"filter": request.form["gauge_name_like"], "op": op}
     # end if
-    if "gauge_names" in request.form and request.form["gauge_names"] != "":
+    elif "gauge_names" in request.form and request.form["gauge_names"] != "":
         op="notin"
         if not "gauge_name_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["names"] = {"list": [], "op": op}
+        kwargs["names"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("gauge_names"):
-            kwargs["names"]["list"].append(source)
+            kwargs["names"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -684,17 +684,17 @@ def query_gauges():
         if not "gauge_system_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["system_like"] = {"str": request.form["gauge_system_like"], "op": op}
+        kwargs["systems"] = {"filter": request.form["gauge_system_like"], "op": op}
     # end if
-    if "gauge_systems" in request.form and request.form["gauge_systems"] != "":
+    elif "gauge_systems" in request.form and request.form["gauge_systems"] != "":
         op="notin"
         if not "gauge_system_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["systems"] = {"list": [], "op": op}
+        kwargs["systems"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("gauge_systems"):
-            kwargs["systems"]["list"].append(source)
+            kwargs["systems"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -703,22 +703,22 @@ def query_gauges():
         if not "dim_signature_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": request.form["dim_signature_like"], "op": op}
     # end if
-    if "dim_signatures" in request.form and request.form["dim_signatures"] != "":
+    elif "dim_signatures" in request.form and request.form["dim_signatures"] != "":
         op="notin"
         if not "dim_signature_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["dim_signatures"] = {"list": [], "op": op}
+        kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("dim_signatures"):
-            kwargs["dim_signatures"]["list"].append(source)
+            kwargs["dim_signatures"]["filter"].append(source)
             i+=1
         # end for
     # end if
 
-    gauges = query.get_gauges_join(**kwargs)
+    gauges = query.get_gauges(**kwargs)
 
     return gauges
 
@@ -757,17 +757,17 @@ def query_annotation_cnfs():
         if not "annotation_name_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["name_like"] = {"str": request.form["annotation_name_like"], "op": op}
+        kwargs["names"] = {"filter": request.form["annotation_name_like"], "op": op}
     # end if
-    if "annotation_names" in request.form and request.form["annotation_names"] != "":
+    elif "annotation_names" in request.form and request.form["annotation_names"] != "":
         op="notin"
         if not "annotation_name_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["names"] = {"list": [], "op": op}
+        kwargs["names"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("annotation_names"):
-            kwargs["names"]["list"].append(source)
+            kwargs["names"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -776,17 +776,17 @@ def query_annotation_cnfs():
         if not "annotation_system_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["system_like"] = {"str": request.form["annotation_system_like"], "op": op}
+        kwargs["systems"] = {"filter": request.form["annotation_system_like"], "op": op}
     # end if
-    if "annotation_systems" in request.form and request.form["annotation_systems"] != "":
+    elif "annotation_systems" in request.form and request.form["annotation_systems"] != "":
         op="notin"
         if not "annotation_system_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["systems"] = {"list": [], "op": op}
+        kwargs["systems"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("annotation_systems"):
-            kwargs["systems"]["list"].append(source)
+            kwargs["systems"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -795,22 +795,22 @@ def query_annotation_cnfs():
         if not "dim_signature_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": request.form["dim_signature_like"], "op": op}
     # end if
-    if "dim_signatures" in request.form and request.form["dim_signatures"] != "":
+    elif "dim_signatures" in request.form and request.form["dim_signatures"] != "":
         op="notin"
         if not "dim_signature_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["dim_signatures"] = {"list": [], "op": op}
+        kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("dim_signatures"):
-            kwargs["dim_signatures"]["list"].append(source)
+            kwargs["dim_signatures"]["filter"].append(source)
             i+=1
         # end for
     # end if
 
-    annotation_cnfs = query.get_annotation_cnfs_join(**kwargs)
+    annotation_cnfs = query.get_annotation_cnfs(**kwargs)
 
     return annotation_cnfs
 
@@ -859,17 +859,17 @@ def query_ers():
         if not "er_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["explicit_ref_like"] = {"str": request.form["er_like"], "op": op}
+        kwargs["explicit_refs"] = {"filter": request.form["er_like"], "op": op}
     # end if
-    if "ers" in request.form and request.form["ers"] != "":
+    elif "ers" in request.form and request.form["ers"] != "":
         op="notin"
         if not "er_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["ers"] = {"list": [], "op": op}
+        kwargs["ers"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("ers"):
-            kwargs["ers"]["list"].append(source)
+            kwargs["ers"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -878,17 +878,17 @@ def query_ers():
         if not "group_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["expl_group_like"] = {"str": request.form["group_like"], "op": op}
+        kwargs["groups"] = {"filter": request.form["group_like"], "op": op}
     # end if
-    if "groups" in request.form and request.form["groups"] != "":
+    elif "groups" in request.form and request.form["groups"] != "":
         op="notin"
         if not "group_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["expl_groups"] = {"list": [], "op": op}
+        kwargs["groups"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("groups"):
-            kwargs["expl_groups"]["list"].append(source)
+            kwargs["groups"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -901,7 +901,7 @@ def query_ers():
             i+=1
         # end for
     # end if
-    ers = query.get_explicit_refs_join(**kwargs)
+    ers = query.get_explicit_refs(**kwargs)
 
     return ers
 
@@ -950,17 +950,17 @@ def query_dim_signatures():
         if not "dim_signature_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["dim_signature_like"] = {"str": request.form["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": request.form["dim_signature_like"], "op": op}
     # end if
-    if "dim_signatures" in request.form and request.form["dim_signatures"] != "":
+    elif "dim_signatures" in request.form and request.form["dim_signatures"] != "":
         op="notin"
         if not "dim_signature_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["dim_signatures"] = {"list": [], "op": op}
+        kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("dim_signatures"):
-            kwargs["dim_signatures"]["list"].append(source)
+            kwargs["dim_signatures"]["filter"].append(source)
             i+=1
         # end for
     # end if
