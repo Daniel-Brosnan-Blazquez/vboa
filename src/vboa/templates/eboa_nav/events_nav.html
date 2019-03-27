@@ -19,6 +19,7 @@
           <th>Gauge system</th>
           <th>Start</th>
           <th>Stop</th>
+          <th>Duration (s)</th>
           <th>Ingestion Time</th>
           <th>Source</th>
           <th>Explicit Reference</th>
@@ -34,6 +35,7 @@
           <td>{{ event.gauge.system }}</td>
           <td>{{ event.start }}</td>
           <td>{{ event.stop }}</td>
+          <td>{{ (event.stop - event.start).total_seconds() }}</td>
           <td>{{ event.ingestion_time }}</td>
           {% set source_uuid = event.source.source_uuid %}
           <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
@@ -56,6 +58,7 @@
           <th>Gauge system</th>
           <th>Start</th>
           <th>Stop</th>
+          <th>Duration (s)</th>
           <th>Ingestion Time</th>
           <th>Source</th>
           <th>Explicit Reference</th>
