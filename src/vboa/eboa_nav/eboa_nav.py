@@ -303,10 +303,10 @@ def query_annotations():
         if not "er_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["ers"] = {"filter": [], "op": op}
+        kwargs["explicit_refs"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("ers"):
-            kwargs["ers"]["filter"].append(source)
+        for er in request.form.getlist("ers"):
+            kwargs["explicit_refs"]["filter"].append(er)
             i+=1
         # end for
     # end if
@@ -315,17 +315,17 @@ def query_annotations():
         if not "annotation_name_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["names"] = {"filter": request.form["annotation_name_like"], "op": op}
+        kwargs["annotation_cnf_names"] = {"filter": request.form["annotation_name_like"], "op": op}
     # end if
     elif "annotation_names" in request.form and request.form["annotation_names"] != "":
         op="notin"
         if not "annotation_name_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["names"] = {"filter": [], "op": op}
+        kwargs["annotation_cnf_names"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("annotation_names"):
-            kwargs["names"]["filter"].append(source)
+            kwargs["annotation_cnf_names"]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -334,17 +334,17 @@ def query_annotations():
         if not "annotation_system_notlike_check" in request.form:
             op="like"
         # end if
-        kwargs["systems"] = {"filter": request.form["annotation_system_like"], "op": op}
+        kwargs["annotation_cnf_systems"] = {"filter": request.form["annotation_system_like"], "op": op}
     # end if
     elif "annotation_systems" in request.form and request.form["annotation_systems"] != "":
         op="notin"
         if not "annotation_system_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["systems"] = {"filter": [], "op": op}
+        kwargs["annotation_cnf_systems"] = {"filter": [], "op": op}
         i = 0
         for source in request.form.getlist("annotation_systems"):
-            kwargs["systems"]["filter"].append(source)
+            kwargs["annotation_cnf_systems"]["filter"].append(source)
             i+=1
         # end for
     # end if
