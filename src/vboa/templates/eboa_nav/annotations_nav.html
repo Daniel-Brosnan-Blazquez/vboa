@@ -53,4 +53,29 @@
   <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
+{% if show["map"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Map of footprints related to the queried annotations
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="annotations_nav_map">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+      {% if show["map"] %}
+      {% with annotations_geometries=annotations_geometries %}
+      {% include "graphs/annotations_geometries_to_json_for_map.js" %}
+      {% endwith %}
+      vboa.create_annotation_map(annotations_geometries, "annotations_nav_map");
+      {% endif %}
+    </script>
 {% endblock %}

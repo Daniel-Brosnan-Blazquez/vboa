@@ -4,6 +4,8 @@ import "bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js";
 import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.js";
 import "datatables/media/js/jquery.dataTables.min.js";
 import "chosen-js/chosen.jquery.min.js";
+import * as olMap from "ol/Map.js";
+import * as olView from "ol/View.js";
 import * as vis from "vis/dist/vis.js";
 import * as graph from "./graph.js";
 import * as sourceFunctions from "./sources.js";
@@ -28,6 +30,7 @@ import "vis/dist/vis.css";
 import "vis/dist/vis-timeline-graph2d.min.css";
 import "vis/dist/vis-network.min.css";
 import "chosen-js/chosen.min.css";
+import "ol/ol.css";
 
 var timeout = 1000000
 
@@ -175,6 +178,16 @@ export function create_event_network(events, dom_id){
 
 };
 
+/*
+* ANNOTATIONS *
+*/
+
+/* Function to show a map for annotations */
+export function create_annotation_map(geometries, dom_id){
+
+    annotationFunctions.create_annotation_map(geometries, dom_id);
+
+};
 
 /*
 * GAUGES *

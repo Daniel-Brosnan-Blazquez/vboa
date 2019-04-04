@@ -20,6 +20,7 @@ from eboa.engine.engine import Engine
 
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 query = Query()
+engine = Engine()
 
 @bp.route("/", methods=["GET"])
 def navigate():
@@ -238,12 +239,15 @@ def query_annotations_and_render():
     if request.method == "POST":
         annotations = query_annotations()
         show = {}
-        show["timeline"]=True
-        if not "show_timeline" in request.form:
-            show["timeline"] = False
+        show["map"]=True
+        annotations_geometries = []
+        if not "show_map" in request.form:
+            show["map"] = False
+        else:
+            annotations_geometries = [{"annotation": annotation, "geometries": engine.geometries_to_wkt(annotation.annotationGeometries)} for annotation in annotations if len(annotation.annotationGeometries) > 0]
         # end if
 
-        return render_template("eboa_nav/annotations_nav.html", annotations=annotations, show=show)
+        return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show)
     # end if
     return render_template("eboa_nav/query_annotations.html")
 
@@ -990,7 +994,6 @@ def treat_data():
     # end if
 
     data = request.get_json()
-    engine = Engine()
     returned_values = engine.treat_data(data)
     exit_information = {
         "returned_values": returned_values

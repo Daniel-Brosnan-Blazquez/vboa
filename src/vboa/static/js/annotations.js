@@ -1,5 +1,5 @@
 import * as query from "./query.js";
-
+import * as graph from "./graph.js";
 
 /* Function to add more value filter selectors when commanded */
 export function add_value_query(dom_id){
@@ -72,3 +72,19 @@ function show_annotation_values(row, values){
 
     return
 }
+
+export function create_annotation_map(annotations_geometries, dom_id){
+
+    console.log(annotations_geometries)
+    console.log(dom_id)
+    var polygons = [];
+
+    for (const annotation_geometries of annotations_geometries["annotations_geometries"]){
+        console.log(annotation_geometries)
+        for (const geometry of annotation_geometries["geometries"]){
+            polygons.push(geometry["value"])
+        }
+    }
+    
+    graph.display_map(dom_id, polygons);
+};

@@ -1,4 +1,13 @@
 import * as vis from "vis/dist/vis.min.js";
+import Map from 'ol/Map.js';
+import View from 'ol/View.js';
+import WKT from 'ol/format/WKT.js';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
+import {OSM, Vector as VectorSource} from 'ol/source.js';
+import {fromLonLat} from 'ol/proj';
+import MousePosition from 'ol/control/MousePosition.js';
+import {createStringXY} from 'ol/coordinate.js';
+import {defaults as defaultControls} from 'ol/control.js';
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
@@ -205,4 +214,53 @@ function drag_element(element) {
         document.onmouseup = null;
         document.onmousemove = null;
     }
+}
+
+/* Function to display a map given the id of the DOM where to
+ * attach it and the polygons to show */
+export function display_map(dom_id, polygons){
+
+    var raster = new TileLayer({
+        source: new OSM()
+    });
+
+    var wkt = 'POLYGON((10.689 -25.092, 34.595 ' +
+        '-20.170, 38.814 -35.639, 13.502 ' +
+        '-39.155, 10.689 -25.092))';
+    
+    var format = new WKT();
+    
+    var features = []
+    for (const polygon of polygons){
+        features.push(format.readFeature(polygon, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        }));
+    }
+    console.log(features)
+    
+    var vector = new VectorLayer({
+        source: new VectorSource({
+            features: features
+        })
+    });
+    var mousePositionControl = new MousePosition({
+        coordinateFormat: createStringXY(4),
+        projection: 'EPSG:4326',
+        // comment the following two lines to have the mouse position
+        // be placed within the map.
+        // className: 'custom-mouse-position',
+        // target: document.getElementById('mouse-position'),
+        // undefinedHTML: '&nbsp;'
+    })
+;
+    var map = new Map({
+        controls: defaultControls().extend([mousePositionControl]),
+        layers: [raster, vector],
+        target: dom_id,
+        view: new View({
+            center: [2952104.0199, -3277504.823],
+            zoom: 4
+        })
+    });
 }
