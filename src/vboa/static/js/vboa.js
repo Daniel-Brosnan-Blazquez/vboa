@@ -4,6 +4,7 @@ import "bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js";
 import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.js";
 import "datatables/media/js/jquery.dataTables.min.js";
 import "chosen-js/chosen.jquery.min.js";
+import "metismenu/dist/metisMenu.min.js";
 import * as olMap from "ol/Map.js";
 import * as olView from "ol/View.js";
 import * as vis from "vis/dist/vis.js";
@@ -31,6 +32,7 @@ import "vis/dist/vis-timeline-graph2d.min.css";
 import "vis/dist/vis-network.min.css";
 import "chosen-js/chosen.min.css";
 import "ol/ol.css";
+import "metismenu/dist/metisMenu.min.css";
 
 var timeout = 1000000
 
@@ -47,6 +49,11 @@ function go_back(){
 jQuery(".chosen-select").chosen({
     no_results_text: "Nothing found for the following criteria: ",
     width: "100%"
+});
+
+/* Manage side menu */
+$(function() {
+    $('#side-menu').metisMenu();
 });
 
 /* Functions to add more time filters (start-stop, validity start-validity stop, ingestion time, generation time) */
