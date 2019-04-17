@@ -237,7 +237,6 @@ export function display_map(dom_id, polygons){
             featureProjection: 'EPSG:3857'
         }));
     }
-    console.log(features)
     
     var vector = new VectorLayer({
         source: new VectorSource({

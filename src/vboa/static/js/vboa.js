@@ -172,6 +172,13 @@ export function display_x_time(dom_id, items, groups, options){
 */
 
 /* Function to show a timeline of events */
+export function prepare_events_data_for_timeline(events, items, groups){
+
+    eventFunctions.prepare_events_data_for_timeline(events, items, groups);
+
+};
+
+/* Function to show a timeline of events */
 export function create_event_timeline(events, dom_id){
 
     eventFunctions.create_event_timeline(events, dom_id);

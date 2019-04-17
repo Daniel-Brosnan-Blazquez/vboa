@@ -61,6 +61,39 @@ export function create_event_network(linked_events, dom_id){
 
 };
 
+
+/* Function to prepare data from events for a timeline given the events to be displayed */
+export function prepare_events_data_for_timeline(events, items, groups){
+
+    var event_groups = new Set(events.map(event => event["group"]))
+
+    for (const group of event_groups){
+        var several_associated_timeliness = new Set(events.filter(event => event["group"] == group).map(event => event["timeline"] + "_" + event["group"]))
+        groups.push({
+            id: group,
+            content: group,
+            nestedGroups: Array.from(several_associated_timeliness)
+        })
+        for (const associated_timeliness of several_associated_timeliness){
+            groups.push({
+                id: associated_timeliness,
+                content: associated_timeliness
+            })
+        }
+    }
+
+    for (const event of events){
+        items.push({
+            id: event["id"],
+            group: event["timeline"] + "_" + event["group"],
+            start: event["start"],
+            end: event["stop"],
+            tooltip: event["tooltip"]
+        })
+    }
+
+};
+
 export function create_event_timeline(events, dom_id){
     var groups = [];
     var items = [];
