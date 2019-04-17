@@ -8,24 +8,25 @@ export function activate_search_on_columns() {
     } );
  
     // DataTable
-    var table = jQuery(".table").DataTable({
-        responsive: true,
-        aLengthMenu: [
-            [10, 25, 50, 100, 200, -1],
-            [10, 25, 50, 100, 200, "All"]
-        ],
-        iDisplayLength: -1,
-        scrollX: true,
-        scrollY: "500px"
-    });
-    
-    // Apply the search
-    table.columns().every( function () {
-        var that = this;
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-            if ( that.search() !== this.value ) {
-                that.search( this.value ).draw();
-            }
+    var tables = jQuery(".table").each( function (){
+        var table = $(this).DataTable({
+            responsive: true,
+            aLengthMenu: [
+                [10, 25, 50, 100, 200, -1],
+                [10, 25, 50, 100, 200, "All"]
+            ],
+            iDisplayLength: -1,
+            scrollX: true,
+            scrollY: "500px"
+        });
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that.search( this.value ).draw();
+                }
+            } );
         } );
-    } );
+    })
 };
