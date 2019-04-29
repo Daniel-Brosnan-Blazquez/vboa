@@ -1,4 +1,18 @@
 
+/* Static table */
+.table-static {
+    width:1px;
+    white-space: nowrap;
+}
+.table-static thead {
+    background: #C8F0F0;
+}
+
+p {
+    font-syze:14px;
+}
+
+/* Graphs */
 .network {
   width: 100%;
   height: 600px;
