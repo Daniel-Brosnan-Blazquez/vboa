@@ -17,7 +17,12 @@ export function display_timeline(dom_id, items, groups){
     const container = document.getElementById(dom_id);
 
     const options = {
-        groupOrder: 'content'
+        groupOrder: 'content',
+        margin: {
+            item : {
+                horizontal : -1
+            }
+        }
     };
     
     const timeline = new vis.Timeline(container, new vis.DataSet(items), new vis.DataSet(groups), options);
