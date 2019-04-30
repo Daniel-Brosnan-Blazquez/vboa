@@ -75,12 +75,9 @@ function show_annotation_values(row, values){
 
 export function create_annotation_map(annotations_geometries, dom_id){
 
-    console.log(annotations_geometries)
-    console.log(dom_id)
     var polygons = [];
 
     for (const annotation_geometries of annotations_geometries["annotations_geometries"]){
-        console.log(annotation_geometries)
         for (const geometry of annotation_geometries["geometries"]){
             polygons.push(geometry["value"])
         }
