@@ -62,7 +62,7 @@ class TestEngine(unittest.TestCase):
 
     def test_gauges_no_filter_no_network(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -91,7 +91,7 @@ class TestEngine(unittest.TestCase):
                 }]
             }]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -102,16 +102,16 @@ class TestEngine(unittest.TestCase):
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         driver.quit()
 
@@ -119,7 +119,13 @@ class TestEngine(unittest.TestCase):
 
     def test_gauges_no_filter_with_network(self):
 
-        #insert data
+        screenshot_path = os.path.dirname(os.path.abspath(__file__)) + "/screenshots/gauges/"
+
+        if not os.path.exists(screenshot_path):
+            os.makedirs(screenshot_path)
+        #end if
+
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -138,17 +144,10 @@ class TestEngine(unittest.TestCase):
                           "insertion_type": "SIMPLE_UPDATE"},
                 "start": "2018-06-05T04:07:03",
                 "stop": "2018-06-05T06:07:36"
-                },{
-                "explicit_reference": "EXPLICIT_REFERENCE_EVENT_2",
-                "gauge": {"name": "GAUGE_NAME_2",
-                          "system": "GAUGE_SYSTEM_2",
-                          "insertion_type": "SIMPLE_UPDATE"},
-                "start": "2018-06-05T04:07:12",
-                "stop": "2018-06-05T06:07:24"
                 }]
             }]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -159,31 +158,39 @@ class TestEngine(unittest.TestCase):
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        #Click on show network
+        # Click on show network
         networkButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[3]/label")
         if not networkButton.find_element_by_xpath('input').is_selected():
             networkButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        gauge = self.session.query(Gauge).all()[0]
 
-        assert number_of_elements == 2
+        dim_signature = self.session.query(DimSignature).all()[0]
 
-        time.sleep(5)
+        assert driver.execute_script('return gauges;') == {
+            "gauges":[{
+                "id": str(gauge.gauge_uuid),
+                "name": "GAUGE_NAME",
+                "system": "GAUGE_SYSTEM",
+                "dim_signature_uuid": str(dim_signature.dim_signature_uuid),
+                "dim_signature_name": "DIM_SIGNATURE",
+                "gauges_linking": [],
+                "gauges_linked": []
+                }
+                ]
+            }
 
         network = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div/div/div[5]/div[3]/div[2]')
-        #driver.execute_script("arguments[0].scrollIntoView();", element)
 
-        network.screenshot("network_of_gauges_screenshot.png")
+        network.screenshot(screenshot_path + "network_of_gauges_screenshot.png")
 
         condition = network.is_displayed()
 
@@ -192,7 +199,8 @@ class TestEngine(unittest.TestCase):
         assert condition
 
     def test_gauges_query_gauge_name_filter(self):
-        #insert data
+
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -244,7 +252,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -253,34 +261,34 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_name_like
+        # Fill the gauge_name_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[1]/input")
         inputElement.send_keys("GAUGE_NAME_1")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_name_like
+        # Fill the gauge_name_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[1]/input")
         inputElement.send_keys("GAUGE_NAME_1")
 
@@ -289,24 +297,24 @@ class TestEngine(unittest.TestCase):
             notLikeButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_name_in
+        # Fill the gauge_name_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_2")
@@ -315,24 +323,24 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys("GAUGE_NAME_3")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not in ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_name_in
+        # Fill the gauge_name_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_1")
@@ -343,14 +351,14 @@ class TestEngine(unittest.TestCase):
             notInButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -358,7 +366,7 @@ class TestEngine(unittest.TestCase):
 
     def test_gauges_query_gauge_system_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -410,7 +418,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -419,34 +427,34 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_system_in
+        # Fill the gauge_system_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[2]/input")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_system_like
+        # Fill the gauge_system_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[2]/input")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
@@ -455,24 +463,24 @@ class TestEngine(unittest.TestCase):
             notLikeButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_system_in
+        # Fill the gauge_system_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
@@ -481,24 +489,24 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys("GAUGE_SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not in ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is gauge_system_in
+        # Fill the gauge_system_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
@@ -509,14 +517,14 @@ class TestEngine(unittest.TestCase):
             notInButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -524,7 +532,7 @@ class TestEngine(unittest.TestCase):
 
     def test_gauges_query_dim_signature_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -576,7 +584,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -585,34 +593,34 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[1]/input")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[1]/input")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
@@ -621,45 +629,45 @@ class TestEngine(unittest.TestCase):
             notLikeButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not in ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Gauges")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_2")
@@ -670,14 +678,14 @@ class TestEngine(unittest.TestCase):
             notInButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 

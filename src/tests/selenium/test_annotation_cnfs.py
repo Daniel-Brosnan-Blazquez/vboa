@@ -62,7 +62,7 @@ class TestEngine(unittest.TestCase):
 
     def test_annotation_cnfs_no_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -99,7 +99,7 @@ class TestEngine(unittest.TestCase):
                 }]
             }]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -110,24 +110,24 @@ class TestEngine(unittest.TestCase):
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         driver.quit()
 
         assert number_of_elements == 2
 
-    def test_annotation_cnfs_query_annotation_names(self):
+    def test_annotation_cnfs_query_annotation_name_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -188,7 +188,7 @@ class TestEngine(unittest.TestCase):
             }]
         }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -197,34 +197,34 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is annotation_name_like
+        # Fill the annotation_name_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[1]/div[1]/input")
         inputElement.send_keys("NAME_2")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not like
+        ## Not like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is annotation_name_like
+        # Fill the annotation_name_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[1]/div[1]/input")
         inputElement.send_keys("NAME_2")
 
@@ -232,47 +232,45 @@ class TestEngine(unittest.TestCase):
         if not notLikeButton.find_element_by_xpath("input").is_selected():
                     notLikeButton.click()
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
-        # find the element that's name attribute is source_in
+        # Fill the annotation_name_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("NAME_1")
         inputElement.send_keys(Keys.RETURN)
-        driver.save_screenshot("t.png")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        driver.save_screenshot("rf.png")
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not in ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
 
-        # find the element that's name attribute is source_not_in
+        # Fill the annotation_name_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("NAME_2")
@@ -282,22 +280,22 @@ class TestEngine(unittest.TestCase):
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
         assert number_of_elements == 2
 
-    def test_annotation_cnfs_query_annotation_system(self):
+    def test_annotation_cnfs_query_annotation_system_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -358,7 +356,7 @@ class TestEngine(unittest.TestCase):
             }]
         }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -367,34 +365,34 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is annotation_system_in
+        # Fill the annotation_system_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[1]/div[2]/input")
         inputElement.send_keys("SYSTEM_2")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not like
+        ## Not like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is annotation_system_in
+        # Fill the annotation_system_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[1]/div[2]/input")
         inputElement.send_keys("SYSTEM_2")
 
@@ -402,44 +400,44 @@ class TestEngine(unittest.TestCase):
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
-        # find the element that's name attribute is annotation_system_in
+        # Fill the annotation_system_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not in ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is annotation_system_in
+        # Fill the annotation_system_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[1]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("SYSTEM_2")
@@ -449,14 +447,14 @@ class TestEngine(unittest.TestCase):
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -464,7 +462,7 @@ class TestEngine(unittest.TestCase):
 
     def test_annotation_cnfs_query_dim_signature_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -537,7 +535,7 @@ class TestEngine(unittest.TestCase):
             }]
         }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -546,34 +544,34 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[2]/div[1]/input")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[2]/div[1]/input")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
@@ -582,23 +580,23 @@ class TestEngine(unittest.TestCase):
             notLikeButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_1")
@@ -607,23 +605,23 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys("DIM_SIGNATURE_3")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not in ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Annotation Cnfs")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_2")
@@ -634,14 +632,14 @@ class TestEngine(unittest.TestCase):
             notInButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[6]/div/div/div/div/div/form/div[3]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 

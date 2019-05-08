@@ -62,7 +62,7 @@ class TestEngine(unittest.TestCase):
 
     def test_dim_signatures_query_no_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -88,7 +88,7 @@ class TestEngine(unittest.TestCase):
             }]
         }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -99,16 +99,16 @@ class TestEngine(unittest.TestCase):
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"DIM Signatures")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
 
         driver.quit()
 
@@ -116,7 +116,7 @@ class TestEngine(unittest.TestCase):
 
     def test_dim_signatures_query_dim_signature_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -153,7 +153,7 @@ class TestEngine(unittest.TestCase):
             }]
         }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -162,34 +162,34 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"DIM Signatures")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[1]/input")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(dim_signatures_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"DIM Signatures")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[1]/input")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
@@ -197,25 +197,24 @@ class TestEngine(unittest.TestCase):
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
-        driver.save_screenshot("test.png")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"DIM Signatures")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_1")
@@ -224,23 +223,23 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys("DIM_SIGNATURE_3")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not in ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"DIM Signatures")
 
-        # find the element that's name attribute is dim_signature_like
+        # Fill the dim_signature_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_2")
@@ -251,14 +250,14 @@ class TestEngine(unittest.TestCase):
             notInButton.click()
         #end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(dim_signatures_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
