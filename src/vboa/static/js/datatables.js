@@ -8,7 +8,7 @@ export function activate_search_on_columns() {
     } );
  
     // DataTable
-    var tables = jQuery(".table").each( function (){
+    var tables = jQuery(".table-search").each( function (){
         var table = $(this).DataTable({
             responsive: true,
             aLengthMenu: [

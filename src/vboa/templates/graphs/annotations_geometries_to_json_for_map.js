@@ -8,7 +8,7 @@ var annotations_geometries = {
                 "system": "{{ annotation_geometry['annotation'].annotationCnf.system }}",
                 "description": "{{ annotation_geometry['annotation'].annotationCnf.description }}"
             },
-            "explicit_reference": "{{ annotation_geometry['annotation'].explicitRef }}",
+            "explicit_reference": "{{ annotation_geometry['annotation'].explicitRef.explicit_ref }}",
             "ingestion_time": "{{ annotation_geometry['annotation'].ingestion_time }}",
             "source": "{{ annotation_geometry['annotation'].source.name }}",
             "geometries": [
