@@ -16,8 +16,30 @@ export function activate_search_on_columns() {
                 [10, 25, 50, 100, 200, "All"]
             ],
             iDisplayLength: -1,
+            select: true,
             scrollX: true,
-            scrollY: "500px"
+            scrollY: "500px",
+            /* dom:
+               B: Buttons
+               l: lenght changing input control
+               f: filtering input
+               t: table
+               i: summary information
+             */
+            dom: 'Blftip',
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export excel',
+                    filename: 'Export excel',
+                    exportOptions: {
+                        modifier: {
+                            page: 'all'
+                        }
+                    }
+                },
+            ]
         });
         // Apply the search
         table.columns().every( function () {
