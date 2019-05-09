@@ -4,12 +4,16 @@
     width:1px;
     white-space: nowrap;
 }
-.table-static thead {
+
+.table-static th {
     background: #C8F0F0;
+}
+.table-static td.highlight {
+    background: #ffe8b0;
 }
 
 p {
-    font-syze:14px;
+    font-size:16px;
 }
 
 /* Graphs */
