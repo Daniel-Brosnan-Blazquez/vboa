@@ -59,15 +59,32 @@ def create_app():
         return list_result
 
     @app.template_filter()
-    def events_group_by_value(list_of_events, name):
+    def events_group_by_text_value(list_of_events, name):
         """Convert a string to all caps."""
         result = {}
         for event in list_of_events:
-            value = [value.value for value in event.eventTexts if value.name == name][0]
+            values = [value.value for value in event.eventTexts if value.name == name]
+            if len(values) > 0:
+                value = values[0]
+            else:
+                value = "N/A"
+            # end if                
             if not value in result:
                 result[value] = []
             # end if
             result[value].append(event)
+        # end for
+        return result
+
+    @app.template_filter()
+    def filter_events_by_text_values(list_of_events, name, values):
+        """Convert a string to all caps."""
+        result = []
+        for event in list_of_events:
+            list_values = [value.value for value in event.eventTexts if value.name == name and value.value in values]
+            if len(list_values) > 0:
+                result.append(event)
+            # end if
         # end for
         return result
 
@@ -78,5 +95,19 @@ def create_app():
             result += event.get_duration()
         # end for
         return result
+
+    @app.template_filter()
+    def get_timeline_minimum_duration(list_of_events):
+        durations = [event.get_duration() for event in list_of_events]
+        return min(durations)
+
+    @app.template_filter()
+    def get_timeline_maximum_duration(list_of_events):
+        durations = [event.get_duration() for event in list_of_events]
+        return max(durations)
+
+    @app.template_filter()
+    def flatten(list_of_lists):
+        return [item for list in list_of_lists for item in list]
 
     return app
