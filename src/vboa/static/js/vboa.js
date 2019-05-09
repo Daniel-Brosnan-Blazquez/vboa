@@ -3,6 +3,11 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js";
 import "bootstrap-responsive-tabs/dist/js/jquery.bootstrap-responsive-tabs.min.js";
 import "datatables/media/js/jquery.dataTables.min.js";
+import "datatables.net/js/jquery.dataTables.min.js";
+import "datatables.net-buttons/js/dataTables.buttons.min.js";
+import "datatables.net-buttons/js/buttons.html5.min.js";
+import "datatables.net-select/js/dataTables.select.js";
+import "jszip/dist/jszip.min.js";
 import "chosen-js/chosen.jquery.min.js";
 import "metismenu/dist/metisMenu.min.js";
 import * as olMap from "ol/Map.js";
@@ -33,17 +38,6 @@ import "vis/dist/vis-network.min.css";
 import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
-
-var timeout = 1000000
-
-/* Set a timeout if the page is not ready after 10 seconds */
-setTimeout(go_back, timeout);
-
-function go_back(){
-    if (document.readyState != "complete"){
-        window.history.back();
-    }
-}
 
 /* Activate chosen for the multiple input selection */
 jQuery(".chosen-select").chosen({
