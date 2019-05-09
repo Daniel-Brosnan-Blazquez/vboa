@@ -4,11 +4,11 @@ MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 RUN yum install -y epel-release
 
 RUN yum install -y postgresql \
-    python34 \
-    python34-pip \
-    python34-tkinter \
+    python36 \
+    python36-pip \
+    python36-tkinter \
     gcc \
-    python34-devel \
+    python36-devel \
     pytest \
     npm
 
