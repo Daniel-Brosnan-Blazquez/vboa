@@ -106,11 +106,11 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         driver.quit()
@@ -161,16 +161,17 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Click on show map
-        timelineButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[11]/label")
-        if not timelineButton.find_element_by_xpath('input').is_selected():
+        timelineButton = driver.find_element_by_id("events_show_timeline")
+        if not timelineButton.find_element_by_xpath("input").is_selected():
             timelineButton.click()
         # end if
 
+
         # Apply filters and click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
-        timeline = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div/div/div[1]/div[3]/div[2]')
+        timeline = driver.find_element_by_id('events_nav_timeline')
 
         timeline.screenshot(screenshot_path + "timeline_events_screenshot.png")
 
@@ -262,15 +263,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the source_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_sources_like_text")
         inputElement.send_keys("source_2.xml")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -283,20 +284,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the source_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_sources_like_text")
         inputElement.send_keys("source_2.xml")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[1]/label")
+        notLikeButton = driver.find_element_by_id("events_sources_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -308,17 +309,17 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the source_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_sources_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("source_1.xml")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -330,22 +331,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the source_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_sources_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[2]/label")
+        notInButton = driver.find_element_by_id("events_sources_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generate
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -420,15 +421,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the explicit_ref_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_explicit_refs_like_text")
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -441,20 +442,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the explicit_ref_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_explicit_refs_like_text")
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[1]/label")
+        notLikeButton = driver.find_element_by_id("events_explicit_refs_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -466,17 +467,17 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the explicit_ref_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_explicit_refs_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_1")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -488,22 +489,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the explicit_ref_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_explicit_refs_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[2]/label")
+        notInButton = driver.find_element_by_id("events_explicit_refs_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generate
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -581,15 +582,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the key_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_event_keys_like_text")
         inputElement.send_keys("EVENT_KEY")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -602,20 +603,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the key_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_event_keys_like_text")
         inputElement.send_keys("EVENT_KEY")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[1]/label")
+        notLikeButton = driver.find_element_by_id("events_event_keys_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -628,17 +629,17 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the key_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_event_keys_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("EVENT_KEY_2")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -651,22 +652,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the key_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_event_keys_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("EVENT_KEY")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[2]/label")
+        notInButton = driver.find_element_by_id("events_event_keys_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generate
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -743,15 +744,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_name_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_gauge_names_like_text")
         inputElement.send_keys("GAUGE_NAME_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -764,20 +765,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_name_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[1]/input")
+        inputElement = driver.find_element_by_id("events_gauge_names_like_text")
         inputElement.send_keys("GAUGE_NAME_1")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[1]/label")
+        notLikeButton = driver.find_element_by_id("events_gauge_names_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -790,17 +791,17 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_name_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[1]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_gauge_names_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -813,22 +814,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_name_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[1]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_gauge_names_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[1]/label")
+        notInButton = driver.find_element_by_id("events_gauge_names_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generate
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -906,15 +907,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_system_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/input")
+        inputElement = driver.find_element_by_id("events_gauge_system_like_text")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -927,20 +928,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_system_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/input")
+        inputElement = driver.find_element_by_id("events_gauge_system_like_text")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/label")
+        notLikeButton = driver.find_element_by_id("events_gauge_system_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -953,17 +954,17 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_system_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_gauge_system_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -976,22 +977,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Events")
 
         # Fill the gauge_system_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_id("events_gauge_system_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/label")
+        notInButton = driver.find_element_by_id("events_gauge_system_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
         submitButton.click()
 
         # Check table generate
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1043,7 +1044,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "text", "text_name_1", "text_value_1", True, "==")
+        functions.fill_value(driver, wait, "events", "text", "text_name_1", "text_value_1", True, "==", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1053,7 +1063,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "text", "text_name_1", "text_value_2", False, "==")
+        functions.fill_value(driver, wait, "events", "text", "text_name_1", "text_value_2", False, "==", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -1102,7 +1121,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1111,7 +1139,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1121,7 +1158,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1130,7 +1176,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1139,7 +1194,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element == True
 
@@ -1149,7 +1213,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1158,7 +1231,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1167,7 +1249,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element == True
 
@@ -1177,7 +1268,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1186,7 +1286,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1195,7 +1304,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1205,7 +1323,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1214,7 +1341,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1223,7 +1359,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1232,7 +1377,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1242,7 +1396,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1251,7 +1414,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=")
+        functions.fill_value(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -1301,15 +1473,34 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "==")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.5", True, "==", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
+
         driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", False, "==")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.5", False, "==", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1319,7 +1510,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, ">")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.5", True, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1328,7 +1528,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, ">")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.25", True, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1337,7 +1546,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, ">")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.75", True, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element == True
 
@@ -1347,7 +1565,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, ">=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.5", True, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1356,7 +1583,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, ">=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.25", True, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1365,7 +1601,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, ">=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.75", True, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element == True
 
@@ -1375,7 +1620,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "<")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.5", True, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1384,7 +1638,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, "<")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.25", True, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1393,7 +1656,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, "<")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.75", True, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1403,7 +1675,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "<=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.5", True, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1412,7 +1693,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, "<=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.25", True, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1421,7 +1711,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, "<=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.75", True, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1431,7 +1730,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "!=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.5", True, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1440,7 +1748,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, "!=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.25", True, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1449,7 +1766,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, "!=")
+        functions.fill_value(driver, wait, "events", "double", "double_name_1", "3.75", True, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -1501,7 +1827,15 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "==")
+        functions.fill_ingestion_time(driver, wait, "events", ingestion_time, True, "==", 1)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1511,7 +1845,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, ">")
+        functions.fill_ingestion_time(driver, wait, "events", ingestion_time, True, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1521,7 +1864,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, ">=")
+        functions.fill_ingestion_time(driver, wait, "events", ingestion_time, True, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1531,7 +1883,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "<")
+        functions.fill_ingestion_time(driver, wait, "events", ingestion_time, True, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1541,7 +1902,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "<=")
+        functions.fill_ingestion_time(driver, wait, "events", ingestion_time, True, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1551,7 +1921,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "!=")
+        functions.fill_ingestion_time(driver, wait, "events", ingestion_time, True, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert empty_element is True
 
@@ -1642,7 +2021,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.two_values_comparer(driver, wait, "events", "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
+        functions.fill_two_values(driver, wait, "events", "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1722,7 +2110,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.period_comparer(driver, wait, "events", start_value = "2018-06-05T03:00:00", start_operator = "==", end_value = "2018-06-05T04:00:00", end_operator = "==")
+        functions.fill_period(driver, wait, "events", 1,  start_value = "2018-06-05T03:00:00", start_operator = "==", end_value = "2018-06-05T04:00:00", end_operator = "==")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1732,7 +2129,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.period_comparer(driver, wait, "events", start_value = "2018-06-05T03:00:00", start_operator = ">=")
+        functions.fill_period(driver, wait, "events", 1,  start_value = "2018-06-05T03:00:00", start_operator = ">=")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1742,7 +2148,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.period_comparer(driver, wait, "events", end_value = "2018-06-05T04:00:00", end_operator = "!=")
+        functions.fill_period(driver, wait, "events", 1,  end_value = "2018-06-05T04:00:00", end_operator = "!=")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1752,7 +2167,16 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.two_periods_comparer(driver, wait, "events", start_value_1 = "2018-06-05T01:30:00", start_operator_1 = ">", start_value_2 = "2018-06-05T03:00:00", start_operator_2 = "<")
+        functions.fill_two_periods(driver, wait, "events", start_value_1 = "2018-06-05T01:30:00", start_operator_1 = ">", start_value_2 = "2018-06-05T03:00:00", start_operator_2 = "<")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1762,8 +2186,17 @@ class TestEngine(unittest.TestCase):
         # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.two_periods_comparer(driver, wait, "events", start_value_1 = "2018-06-05T03:00:00", start_operator_1 = "<=", end_value_1 = "2018-06-05T02:30:00", end_operator_1 = ">",
+        functions.fill_two_periods(driver, wait, "events", start_value_1 = "2018-06-05T03:00:00", start_operator_1 = "<=", end_value_1 = "2018-06-05T02:30:00", end_operator_1 = ">",
         start_value_2 = "2018-06-05T04:00:00", start_operator_2 = "!=", end_value_2 = "2018-06-05T03:00:00", end_operator_2 = ">=")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events_submit_button')))
+        submitButton.click()
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events_table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
