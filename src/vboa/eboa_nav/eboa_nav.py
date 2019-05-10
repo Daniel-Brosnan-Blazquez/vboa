@@ -47,6 +47,19 @@ def query_events_and_render():
     # end if
     return render_template("eboa_nav/query_events.html")
 
+@bp.route("/query-events-by-er/<string:er>")
+def query_events_by_er(er):
+    """
+    Query events associated to the explicit reference received.
+    """
+    current_app.logger.debug("Query events by explicit reference")
+    show = {}
+    show["timeline"]=True
+
+    events = query.get_events(explicit_refs={"filter": [er], "op": "in"})
+
+    return render_template("eboa_nav/events_nav.html", events=events, show=show)
+
 def query_events():
     """
     Query events.
@@ -259,6 +272,21 @@ def query_annotations_and_render():
         return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show)
     # end if
     return render_template("eboa_nav/query_annotations.html")
+
+@bp.route("/query-annotations-by-er/<string:er>")
+def query_annotations_by_er(er):
+    """
+    Query annotations associated to the explicit reference received.
+    """
+    current_app.logger.debug("Query annotations by explicit reference")
+    show = {}
+    show["map"]=True
+
+    annotations = query.get_annotations(explicit_refs={"filter": [er], "op": "in"})
+
+    annotations_geometries = [{"annotation": annotation, "geometries": engine.geometries_to_wkt(annotation.annotationGeometries)} for annotation in annotations if len(annotation.annotationGeometries) > 0]
+
+    return render_template("eboa_nav/annotations_nav.html", annotations=annotations, show=show)
 
 def query_annotations():
     """
