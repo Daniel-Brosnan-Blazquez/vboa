@@ -602,6 +602,19 @@ def query_gauges_and_render():
 
     return render_template("eboa_nav/query_gauges.html")
 
+@bp.route("/query-gauges-by-dim/<uuid:dim_signature_uuid>")
+def query_gauges_by_dim(dim_signature_uuid):
+    """
+    Query gauges associated to the DIM signature corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query gauges by DIM signature")
+    gauges = query.get_gauges(dim_signature_uuids={"filter": [dim_signature_uuid], "op": "in"})
+    show = {}
+    show["network"]=True
+    links = query_linked_gauges(gauges)
+
+    return render_template("eboa_nav/gauges_nav.html", gauges=gauges, links=links, show=show)
+
 def register_gauge_node (links, gauge, registered_gauges):
     """
     Register gauge node for the linked gauges.
@@ -768,6 +781,16 @@ def query_annotation_cnfs_and_render():
     # end if
 
     return render_template("eboa_nav/query_annotation_cnfs.html")
+
+@bp.route("/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>")
+def query_annotation_cnfs_by_dim(dim_signature_uuid):
+    """
+    Query annotation configurations associated to the DIM signature corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query annotation configurations by DIM signature")
+    annotation_cnfs = query.get_annotation_cnfs(dim_signature_uuids={"filter": [dim_signature_uuid], "op": "in"})
+
+    return render_template("eboa_nav/annotation_cnfs_nav.html", annotation_cnfs=annotation_cnfs)
 
 def query_annotation_cnfs():
     """
