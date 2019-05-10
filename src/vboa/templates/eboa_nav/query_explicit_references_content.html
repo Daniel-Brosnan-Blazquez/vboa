@@ -36,8 +36,8 @@
             <div class="row query-sources">
               <div class="col-xs-3 query-source-names">
                 <label>Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="source_like_events" name="source_like"/>
-                <datalist id="source_like_events">
+                <input class="form-control" list="source_like_ers" name="source_like"/>
+                <datalist id="source_like_ers">
                 </datalist>
               </div>
               <div class="col-xs-3 query-source-names">
@@ -50,50 +50,119 @@
             <div class="panel-group">
               <div class="panel panel-default">
                 <div class="panel-heading">Specify search by using event filters</div>
-                <!-- Gauges -->
-                <div>
-                  <div class="row  query-gauges">
-                    <div class="col-xs-3 query-gauge-names">
-                      <label>Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                      <input class="form-control" list="gauge_name_like_events" name="gauge_name_like"/>
-                      <datalist id="gauge_name_like_events">
+                <div class="panel-body">
+                  <!-- Event keys -->
+                  <div class="row">
+                    <div class="col-xs-3 query-keys">
+                      <label>Key like (<input type="checkbox" name="key_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                      <input class="form-control" list="key_like_events" name="key_like"/>
+                      <datalist id="key_like_events">
                       </datalist>
                     </div>
-                    <div class="col-xs-3 query-gauge-systems">
-                      <label>Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                      <input class="form-control" list="gauge_system_like_events" name="gauge_system_like"/>
-                      <datalist id="gauge_system_like_events">
-                      </datalist>
-                    </div>
-                  </div>
-                  <div class="row query-gauges">
-                    <div class="col-xs-3 query-gauge-names">
-                      <label>Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                      <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
-                      </select>
-                    </div>
-                    <div class="col-xs-3 query-gauge-systems">
-                      <label>Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                      <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                    <div class="col-xs-3 query-keys">
+                      <label>Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                      <select name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                       </select>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  {% include "eboa_nav/start_stop.html" %}
+                  <!-- Gauges -->
                   <div>
-                    <span onclick="vboa.add_start_stop('more-start-stop-query-ers')">
-                      <span class="glyphicon glyphicon-plus"></span>
-                    </span>
+                    <div class="row  query-gauges">
+                      <div class="col-xs-3 query-gauge-names">
+                        <label>Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                        <input class="form-control" list="gauge_name_like_events" name="gauge_name_like"/>
+                        <datalist id="gauge_name_like_events">
+                        </datalist>
+                      </div>
+                      <div class="col-xs-3 query-gauge-systems">
+                        <label>Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                        <input class="form-control" list="gauge_system_like_events" name="gauge_system_like"/>
+                        <datalist id="gauge_system_like_events">
+                        </datalist>
+                      </div>
+                    </div>
+                    <div class="row query-gauges">
+                      <div class="col-xs-3 query-gauge-names">
+                        <label>Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                        <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        </select>
+                      </div>
+                      <div class="col-xs-3 query-gauge-systems">
+                        <label>Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                        <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div id="more-start-stop-query-ers">
+                  <!-- Values -->
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <label>Value type</label>
+                      <select style="width: 100%" name="event_value_type">
+                        <option>text</option>
+                        <option>timestamp</option>
+                        <option>boolean</option>
+                        <option>double</option>
+                        <option>geometry</option>
+                        <option>object</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value name</label>
+                      <div class="input-group" style="width: 100%">
+                        <input class="form-control" style="width: 80%" name="event_value_name_like"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_name_like_op">
+                          <option>like</option>
+                          <option>notlike</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value</label>
+                      <div class="input-group" style="width: 100%">
+                        <input type="text" class="form-control" style="width: 80%" name="event_value"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_operator">
+                          {% include "eboa_nav/operators.html" %}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <span onclick="vboa.add_value_query_events('more-value-events-query-ers')">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-value-events-query-ers">
+                  </div>
+                  <!-- Start and stop -->
+                  <div class="row">
+                    {% include "eboa_nav/start_stop.html" %}
+                    <div>
+                      <span onclick="vboa.add_start_stop('more-start-stop-events-query-ers')">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-start-stop-events-query-ers">
+                  </div>
+                  <!-- Event duration -->
+                  <div class="row">
+                    {% include "eboa_nav/event_duration.html" %}
+                    <div>
+                      <span onclick="vboa.add_event_duration('more-event-duration-query-ers')">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-event-duration-query-ers">
+                  </div>
                 </div>
               </div>
-            <!-- Annotation configurations -->
+              <!-- Annotation filters -->
               <div class="panel panel-default">
                 <div class="panel-heading">Specify search by using annotation filters</div>
-                <div>
+                <div class="panel-body">
+                  <!-- Annotation configurations -->
                   <div class="row  query-annotation-cnfs">
                     <div class="col-xs-3 query-annotation-names">
                       <label>Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
@@ -119,6 +188,46 @@
                       <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                       </select>
                     </div>
+                  </div>
+                  <!-- Values -->
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <label>Value type</label>
+                      <select style="width: 100%" name="annotation_value_type">
+                        <option>text</option>
+                        <option>timestamp</option>
+                        <option>boolean</option>
+                        <option>double</option>
+                        <option>geometry</option>
+                        <option>object</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value name</label>
+                      <div class="input-group" style="width: 100%">
+                        <input class="form-control" style="width: 80%" name="annotation_value_name_like"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_like_op">
+                          <option>like</option>
+                          <option>notlike</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value</label>
+                      <div class="input-group" style="width: 100%">
+                        <input type="text" class="form-control" style="width: 80%" name="annotation_value"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_operator">
+                          {% include "eboa_nav/operators.html" %}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <span onclick="vboa.add_value_query_annotations('more-value-annotations-query-ers')">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-value-annotations-query-ers">
                   </div>
                 </div>
               </div>

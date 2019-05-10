@@ -75,14 +75,14 @@ def query_events():
         # end for
     # end if
 
-    if request.form["value_name_like"] != "":
-        value_operators = request.form.getlist("value_operator")
-        value_types = request.form.getlist("value_type")
-        values = request.form.getlist("value")
-        value_name_like_ops = request.form.getlist("value_name_like_op")
+    if request.form["event_value_name_like"] != "":
+        value_operators = request.form.getlist("event_value_operator")
+        value_types = request.form.getlist("event_value_type")
+        values = request.form.getlist("event_value")
+        value_name_like_ops = request.form.getlist("event_value_name_like_op")
         kwargs["value_filters"] = []
         i = 0
-        for value_name_like in request.form.getlist("value_name_like"):
+        for value_name_like in request.form.getlist("event_value_name_like"):
             if value_name_like != "":
                 kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
                                                "type": value_types[i],
@@ -268,14 +268,14 @@ def query_annotations():
 
     kwargs = {}
 
-    if request.form["value_name_like"] != "":
-        value_operators = request.form.getlist("value_operator")
-        value_types = request.form.getlist("value_type")
-        values = request.form.getlist("value")
-        value_name_like_ops = request.form.getlist("value_name_like_op")
+    if request.form["annotation_value_name_like"] != "":
+        value_operators = request.form.getlist("annotation_value_operator")
+        value_types = request.form.getlist("annotation_value_type")
+        values = request.form.getlist("annotation_value")
+        value_name_like_ops = request.form.getlist("annotation_value_name_like_op")
         kwargs["value_filters"] = []
         i = 0
-        for value_name_like in request.form.getlist("value_name_like"):
+        for value_name_like in request.form.getlist("annotation_value_name_like"):
             if value_name_like != "":
                 kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
                                                "type": value_types[i],
@@ -924,6 +924,169 @@ def query_ers():
             i+=1
         # end for
     # end if
+
+    ####
+    # Event filters
+    ####
+    if request.form["key_like"] != "":
+        op="notlike"
+        if not "key_notlike_check" in request.form:
+            op="like"
+        # end if
+        kwargs["keys"] = {"filter": request.form["key_like"], "op": op}
+    # end if
+    elif "keys" in request.form and request.form["keys"] != "":
+        op="notin"
+        if not "key_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["keys"] = {"filter": [], "op": op}
+        i = 0
+        for key in request.form.getlist("keys"):
+            kwargs["keys"]["filter"].append(key)
+            i+=1
+        # end for
+    # end if
+    if request.form["event_value_name_like"] != "":
+        value_operators = request.form.getlist("event_value_operator")
+        value_types = request.form.getlist("event_value_type")
+        values = request.form.getlist("event_value")
+        value_name_like_ops = request.form.getlist("event_value_name_like_op")
+        kwargs["event_value_filters"] = []
+        i = 0
+        for value_name_like in request.form.getlist("event_value_name_like"):
+            if value_name_like != "":
+                kwargs["event_value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                                               "type": value_types[i],
+                                                "value": {"op": value_operators[i], "value": values[i]}})
+            # end if
+            i+=1
+        # end for
+    # end if
+    if request.form["gauge_name_like"] != "":
+        op="notlike"
+        if not "gauge_name_notlike_check" in request.form:
+            op="like"
+        # end if
+        kwargs["gauge_names"] = {"filter": request.form["gauge_name_like"], "op": op}
+    # end if
+    elif "gauge_names" in request.form and request.form["gauge_names"] != "":
+        op="notin"
+        if not "gauge_name_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["gauge_names"] = {"filter": [], "op": op}
+        i = 0
+        for source in request.form.getlist("gauge_names"):
+            kwargs["gauge_names"]["filter"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["gauge_system_like"] != "":
+        op="notlike"
+        if not "gauge_system_notlike_check" in request.form:
+            op="like"
+        # end if
+        kwargs["gauge_systems"] = {"filter": request.form["gauge_system_like"], "op": op}
+    # end if
+    elif "gauge_systems" in request.form and request.form["gauge_systems"] != "":
+        op="notin"
+        if not "gauge_system_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["gauge_systems"] = {"filter": [], "op": op}
+        i = 0
+        for source in request.form.getlist("gauge_systems"):
+            kwargs["gauge_systems"]["filter"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["start"] != "":
+        kwargs["start_filters"] = []
+        i = 0
+        operators = request.form.getlist("start_operator")
+        for start in request.form.getlist("start"):
+            kwargs["start_filters"].append({"date": start, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if request.form["stop"] != "":
+        kwargs["stop_filters"] = []
+        i = 0
+        operators = request.form.getlist("stop_operator")
+        for stop in request.form.getlist("stop"):
+            kwargs["stop_filters"].append({"date": stop, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if request.form["event_duration"] != "":
+        kwargs["duration_filters"] = []
+        i = 0
+        operators = request.form.getlist("event_duration_operator")
+        for event_duration in request.form.getlist("event_duration"):
+            kwargs["duration_filters"].append({"float": float(event_duration), "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+
+    ####
+    # Annotation filters
+    ####
+    if request.form["annotation_value_name_like"] != "":
+        value_operators = request.form.getlist("annotation_value_operator")
+        value_types = request.form.getlist("annotation_value_type")
+        values = request.form.getlist("annotation_value")
+        value_name_like_ops = request.form.getlist("annotation_value_name_like_op")
+        kwargs["annotation_value_filters"] = []
+        i = 0
+        for value_name_like in request.form.getlist("annotation_value_name_like"):
+            if value_name_like != "":
+                kwargs["annotation_value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                                               "type": value_types[i],
+                                                "value": {"op": value_operators[i], "value": values[i]}})
+            # end if
+            i+=1
+        # end for
+    # end if
+    if request.form["annotation_name_like"] != "":
+        op="notlike"
+        if not "annotation_name_notlike_check" in request.form:
+            op="like"
+        # end if
+        kwargs["annotation_cnf_names"] = {"filter": request.form["annotation_name_like"], "op": op}
+    # end if
+    elif "annotation_names" in request.form and request.form["annotation_names"] != "":
+        op="notin"
+        if not "annotation_name_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["annotation_cnf_names"] = {"filter": [], "op": op}
+        i = 0
+        for source in request.form.getlist("annotation_names"):
+            kwargs["annotation_cnf_names"]["filter"].append(source)
+            i+=1
+        # end for
+    # end if
+    if request.form["annotation_system_like"] != "":
+        op="notlike"
+        if not "annotation_system_notlike_check" in request.form:
+            op="like"
+        # end if
+        kwargs["annotation_cnf_systems"] = {"filter": request.form["annotation_system_like"], "op": op}
+    # end if
+    elif "annotation_systems" in request.form and request.form["annotation_systems"] != "":
+        op="notin"
+        if not "annotation_system_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["annotation_cnf_systems"] = {"filter": [], "op": op}
+        i = 0
+        for source in request.form.getlist("annotation_systems"):
+            kwargs["annotation_cnf_systems"]["filter"].append(source)
+            i+=1
+        # end for
+    # end if
+
     ers = query.get_explicit_refs(**kwargs)
 
     return ers

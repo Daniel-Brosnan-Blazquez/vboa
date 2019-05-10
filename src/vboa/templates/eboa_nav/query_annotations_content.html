@@ -33,52 +33,50 @@
               </div>
             </div>
             <!-- Annotation configurations -->
-            <div>
-              <div class="row  query-annotation-cnfs">
-                <div class="col-xs-3 query-annotation-names">
-                  <label>Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="annotation_name_like_annotations" name="annotation_name_like"/>
-                  <datalist id="annotation_name_like_annotations">
-                  </datalist>
-                </div>
-                <div class="col-xs-3 query-annotation-systems">
-                  <label>Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="annotation_system_like_annotations" name="annotation_system_like"/>
-                  <datalist id="annotation_system_like_annotations">
-                  </datalist>
-                </div>
+            <div class="row  query-annotation-cnfs">
+              <div class="col-xs-3 query-annotation-names">
+                <label>Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="annotation_name_like_annotations" name="annotation_name_like"/>
+                <datalist id="annotation_name_like_annotations">
+                </datalist>
               </div>
-              <div class="row query-annotation-cnfs">
-                <div class="col-xs-3 query-annotation-names">
-                  <label>Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
-                  </select>
-                </div>
-                <div class="col-xs-3 query-annotation-systems">
-                  <label>Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
-                  </select>
-                </div>
+              <div class="col-xs-3 query-annotation-systems">
+                <label>Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="annotation_system_like_annotations" name="annotation_system_like"/>
+                <datalist id="annotation_system_like_annotations">
+                </datalist>
+              </div>
+            </div>
+            <div class="row query-annotation-cnfs">
+              <div class="col-xs-3 query-annotation-names">
+                <label>Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+              <div class="col-xs-3 query-annotation-systems">
+                <label>Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
               </div>
             </div>
             <!-- Values -->
             <div class="row">
               <div class="col-xs-3">
-                  <label>Value type</label>
-                  <select style="width: 100%" name="value_type">
-                    <option>text</option>
-                    <option>timestamp</option>
-                    <option>boolean</option>
-                    <option>double</option>
-                    <option>geometry</option>
-                    <option>object</option>
-                  </select>
+                <label>Value type</label>
+                <select style="width: 100%" name="annotation_value_type">
+                  <option>text</option>
+                  <option>timestamp</option>
+                  <option>boolean</option>
+                  <option>double</option>
+                  <option>geometry</option>
+                  <option>object</option>
+                </select>
               </div>
               <div class="col-xs-3">
                 <label>Value name</label>
                 <div class="input-group" style="width: 100%">
-                  <input class="form-control" style="width: 80%" name="value_name_like"/>
-                  <select class="form-control" style="padding-left: 0; width: 20%" name="value_name_like_op">
+                  <input class="form-control" style="width: 80%" name="annotation_value_name_like"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_like_op">
                     <option>like</option>
                     <option>notlike</option>
                   </select>
@@ -87,8 +85,8 @@
               <div class="col-xs-3">
                 <label>Value</label>
                 <div class="input-group" style="width: 100%">
-                  <input type="text" class="form-control" style="width: 80%" name="value"/>
-                  <select class="form-control" style="padding-left: 0; width: 20%" name="value_operator">
+                  <input type="text" class="form-control" style="width: 80%" name="annotation_value"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_operator">
                     {% include "eboa_nav/operators.html" %}
                   </select>
                 </div>
