@@ -195,6 +195,15 @@ def query_events():
             i+=1
         # end for
     # end if
+    if request.form["event_duration"] != "":
+        kwargs["duration_filters"] = []
+        i = 0
+        operators = request.form.getlist("event_duration_operator")
+        for event_duration in request.form.getlist("event_duration"):
+            kwargs["duration_filters"].append({"float": float(event_duration), "op": operators[i]})
+            i+=1
+        # end for
+    # end if
 
     events = query.get_events(**kwargs)
 

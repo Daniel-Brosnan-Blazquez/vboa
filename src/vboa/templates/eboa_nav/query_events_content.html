@@ -126,6 +126,18 @@
             </div>
             <div id="more-start-stop-query-events">
             </div>
+            <!-- Event duration -->
+            <div class="row">
+              {% include "eboa_nav/event_duration.html" %}
+              <div>
+                <span onclick="vboa.add_event_duration('more-event-duration-query-events')">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-event-duration-query-events">
+            </div>
+            <!-- Ingestion time -->
             <div class="row">
               {% include "eboa_nav/ingestion_time.html" %}
               <div>
@@ -134,7 +146,6 @@
                 </span>
               </div>
             </div>
-            <!-- Ingestion time -->
             <div id="more-ingestion-time-query-events">
             </div>
             <div>

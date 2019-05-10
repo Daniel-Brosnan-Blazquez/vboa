@@ -71,6 +71,10 @@ export function add_generation_time(dom_id){
     dates.add_generation_time(dom_id);
 }
 
+export function add_event_duration(dom_id){
+    dates.add_event_duration(dom_id);
+}
+
 /* Functions to add more filters by values for events and annotations */
 export function add_value_query_events(dom_id){
     eventFunctions.add_value_query(dom_id);
