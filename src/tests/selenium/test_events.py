@@ -62,7 +62,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_no_filter_no_timeline(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -91,7 +91,7 @@ class TestEngine(unittest.TestCase):
                 }]
             }]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -102,16 +102,16 @@ class TestEngine(unittest.TestCase):
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         driver.quit()
 
@@ -119,7 +119,12 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_no_filter_with_timeline(self):
 
-        #insert data
+        screenshot_path = os.path.dirname(os.path.abspath(__file__)) + "/screenshots/events/"
+
+        if not os.path.exists(screenshot_path):
+            os.makedirs(screenshot_path)
+
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -138,18 +143,10 @@ class TestEngine(unittest.TestCase):
                           "insertion_type": "SIMPLE_UPDATE"},
                 "start": "2018-06-05T04:07:03",
                 "stop": "2018-06-05T06:07:36"
-                },{
-                "explicit_reference": "EXPLICIT_REFERENCE_EVENT_2",
-                "gauge": {"name": "GAUGE_NAME_2",
-                          "system": "GAUGE_SYSTEM_2",
-                          "insertion_type": "SIMPLE_UPDATE"},
-                "start": "2018-06-05T04:07:12",
-                "stop": "2018-06-05T06:07:24"
                 }]
             }]}
 
-
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -160,27 +157,39 @@ class TestEngine(unittest.TestCase):
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        #Click on show map
+        # Click on show map
         timelineButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[11]/label")
         if not timelineButton.find_element_by_xpath('input').is_selected():
             timelineButton.click()
-        #end if
+        # end if
 
-        #Apply filters and click on query button
+        # Apply filters and click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        time.sleep(5)
-
         timeline = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div/div/div[1]/div[3]/div[2]')
-        #driver.execute_script("arguments[0].scrollIntoView();", element)
 
-        timeline.screenshot("timeline_events_screenshot.png")
+        timeline.screenshot(screenshot_path + "timeline_events_screenshot.png")
 
         condition = timeline.is_displayed()
+
+        event = self.session.query(Event).all()[0]
+
+        assert driver.execute_script('return events;') == {
+            "events":[{
+                "id": str(event.event_uuid),
+                "gauge":{
+                    "name": "GAUGE_NAME",
+                    "system": "GAUGE_SYSTEM"
+                },
+                "start": "2018-06-05 04:07:03",
+                "stop": "2018-06-05 06:07:36",
+                "source": "source.xml"
+                }]
+            }
 
         driver.quit()
 
@@ -188,7 +197,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_source_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -237,7 +246,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -246,81 +255,81 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is source_like
+        # Fill the source_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[1]/input")
         inputElement.send_keys("source_2.xml")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is source_like
+        # Fill the source_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[1]/input")
         inputElement.send_keys("source_2.xml")
 
         notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[1]/label")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is source_like
+        # Fill the source_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("source_1.xml")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is source_like
+        # Fill the source_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("source_2.xml")
@@ -329,16 +338,16 @@ class TestEngine(unittest.TestCase):
         notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[1]/div[2]/label")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -346,7 +355,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_explicit_ref_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -395,7 +404,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -404,81 +413,81 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is explicit_ref_like
+        # Fill the explicit_ref_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[1]/input")
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is explicit_ref_like
+        # Fill the explicit_ref_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[1]/input")
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[1]/label")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is explicit_ref_like
+        # Fill the explicit_ref_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_1")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is source_like
+        # Fill the explicit_ref_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
@@ -487,16 +496,16 @@ class TestEngine(unittest.TestCase):
         notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[2]/div[2]/label")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -504,7 +513,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_key_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -556,7 +565,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -565,83 +574,83 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is key_like
+        # Fill the key_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[1]/input")
         inputElement.send_keys("EVENT_KEY")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is key_like
+        # Fill the key_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[1]/input")
         inputElement.send_keys("EVENT_KEY")
 
         notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[1]/label")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is key_in
+        # Fill the key_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("EVENT_KEY_2")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not in
+        ## Not In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is key_in
+        # Fill the key_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("EVENT_KEY")
@@ -650,23 +659,23 @@ class TestEngine(unittest.TestCase):
         notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[3]/div[2]/label")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
         assert number_of_elements == 1 and empty_element is False
 
     def test_events_query_gauge_name_filter(self):
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -718,7 +727,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -727,83 +736,83 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_name_like
+        # Fill the gauge_name_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[1]/input")
         inputElement.send_keys("GAUGE_NAME_1")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_name_like
+        # Fill the gauge_name_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[1]/input")
         inputElement.send_keys("GAUGE_NAME_1")
 
         notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[1]/label")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_name_in
+        # Fill the gauge_name_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_name_in
+        # Fill the gauge_name_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_1")
@@ -812,16 +821,16 @@ class TestEngine(unittest.TestCase):
         notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[1]/label")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -829,7 +838,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_gauge_system_filter(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -881,7 +890,7 @@ class TestEngine(unittest.TestCase):
             }
         ]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -890,83 +899,83 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
-        #Like
+        ## Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_system_in
+        # Fill the gauge_system_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/input")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not Like
+        ## Not Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_system_like
+        # Fill the gauge_system_like input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/input")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
         notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/label")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #In
+        ## In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_system_in
+        # Fill the gauge_system_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generated
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
-        #Not in
+        ## Not In ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        # find the element that's name attribute is gauge_system_in
+        # Fill the gauge_system_in input
         inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
@@ -975,16 +984,16 @@ class TestEngine(unittest.TestCase):
         notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/label")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
-        #end if
+        # end if
 
-        #Click on query button
+        # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[12]/button')))
         submitButton.click()
 
-        #Check table generate
-        annot_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
-        number_of_elements = len(annot_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annot_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generate
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         driver.quit()
 
@@ -992,6 +1001,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_value_text(self):
 
+        # Insert data
         data = {"operations":[{
                         "mode": "insert",
                         "dim_signature": {"name": "dim_signature",
@@ -1018,7 +1028,7 @@ class TestEngine(unittest.TestCase):
                     }]
                 }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -1027,22 +1037,23 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
+        ## == ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "text", "text_name_1", "text_value_1", True, "==")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "text", "text_name_1", "text_value_1", True, "==")
 
         assert number_of_elements == 1 and empty_element is False
 
-        #Not like
+        ## Not Like ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "text", "text_name_1", "text_value_2", False, "==")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "text", "text_name_1", "text_value_2", False, "==")
 
         driver.quit()
 
@@ -1050,7 +1061,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_value_timestamp(self):
 
-        #insert data
+        # Insert data
         data = {"operations":[{
                         "mode": "insert",
                         "dim_signature": {"name": "dim_signature",
@@ -1076,7 +1087,7 @@ class TestEngine(unittest.TestCase):
                         }]
                     }]}
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -1085,156 +1096,162 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
+        ## == ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==")
+
+        assert empty_element is True
+
+        ## > ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Events")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">")
-
-        assert empty_element is True
-
-        driver.get("http://localhost:5000/eboa_nav/")
-
-        #Go to tab
-        functions.goToTab(driver,"Events")
-
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">")
 
         assert empty_element == True
 
+        ## >= ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=")
 
         assert empty_element == True
 
+        ## < ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## <= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Events")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=")
-
-        assert number_of_elements == 1 and empty_element is False
-
-        driver.get("http://localhost:5000/eboa_nav/")
-
-        #Go to tab
-        functions.goToTab(driver,"Events")
-
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=")
 
         assert empty_element is True
 
+        ## != ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events", driver, wait, "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=")
 
         driver.quit()
 
@@ -1242,7 +1259,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_value_double(self):
 
-        #insert data
+        # Insert data
         data = {"operations":[{
                         "mode": "insert",
                         "dim_signature": {"name": "dim_signature",
@@ -1269,7 +1286,7 @@ class TestEngine(unittest.TestCase):
                     }]
                 }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -1278,155 +1295,161 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
+        ## == ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.5", True, "==")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "==")
 
         assert number_of_elements == 1 and empty_element is False
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.5", False, "==")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", False, "==")
+
+        assert empty_element is True
+
+        ## > ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Events")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, ">")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.5", True, ">")
-
-        assert empty_element is True
-
-        driver.get("http://localhost:5000/eboa_nav/")
-
-        #Go to tab
-        functions.goToTab(driver,"Events")
-
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.25", True, ">")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, ">")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.75", True, ">")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, ">")
 
         assert empty_element == True
 
+        ## >= ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.5", True, ">=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, ">=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.25", True, ">=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, ">=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.75", True, ">=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, ">=")
 
         assert empty_element == True
 
+        ## < ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.5", True, "<")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "<")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.25", True, "<")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, "<")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.75", True, "<")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, "<")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## <= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Events")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "<=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.5", True, "<=")
-
-        assert number_of_elements == 1 and empty_element is False
-
-        driver.get("http://localhost:5000/eboa_nav/")
-
-        #Go to tab
-        functions.goToTab(driver,"Events")
-
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.25", True, "<=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, "<=")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.75", True, "<=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, "<=")
 
         assert number_of_elements == 1 and empty_element is False
 
+        ## != ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.5", True, "!=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.5", True, "!=")
 
         assert empty_element is True
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.25", True, "!=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.25", True, "!=")
 
         assert number_of_elements == 1 and empty_element is False
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element = functions.value_comparer("events",driver, wait, "double", "double_name_1", "3.75", True, "!=")
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "events", "double", "double_name_1", "3.75", True, "!=")
 
         driver.quit()
 
@@ -1434,7 +1457,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_ingestion_time(self):
 
-        #insert data
+        # Insert data
         data = {"operations":[{
                         "mode": "insert",
                         "dim_signature": {"name": "dim_signature",
@@ -1461,7 +1484,7 @@ class TestEngine(unittest.TestCase):
                     }]
                 }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -1472,69 +1495,69 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
+        ## == ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer("events", driver, wait, "ingestion_time", ingestion_time, None, True, "==")
-        time = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div[2]/div[2]/div/div[3]/div[2]/table/tbody/tr/td[7]")
-        driver.execute_script("arguments[0].scrollIntoView()", time)
+        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "==")
+
         assert number_of_elements == 1 and empty_element is False
 
-        #>
+        ## > ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer("events", driver, wait, "ingestion_time", ingestion_time, None, True, ">")
+        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, ">")
 
         assert empty_element is True
 
-        #>=
+        ## >= ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer("events", driver, wait, "ingestion_time", ingestion_time, None, True, ">=")
+        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, ">=")
 
         assert number_of_elements == 1 and empty_element is False
 
-        #<
+        ## < ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer("events", driver, wait, "ingestion_time", ingestion_time, None, True, "<")
+        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "<")
 
         assert empty_element is True
 
-        #<=
+        ## <= ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer("events", driver, wait, "ingestion_time", ingestion_time, None, True, "<=")
+        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "<=")
 
         assert number_of_elements == 1 and empty_element is False
 
-        #!=
+        ## != ##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.value_comparer("events", driver, wait, "ingestion_time", ingestion_time, None, True, "!=")
+        number_of_elements, empty_element =  functions.value_comparer(driver, wait, "events", "ingestion_time", ingestion_time, None, True, "!=")
 
         assert empty_element is True
 
     def test_events_query_two_values(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -1605,7 +1628,7 @@ class TestEngine(unittest.TestCase):
             }]
         }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -1616,10 +1639,10 @@ class TestEngine(unittest.TestCase):
 
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.two_values_comparer("events", driver, wait, "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
+        number_of_elements, empty_element =  functions.two_values_comparer(driver, wait, "events", "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1629,7 +1652,7 @@ class TestEngine(unittest.TestCase):
 
     def test_events_query_period(self):
 
-        #insert data
+        # Insert data
         data = {"operations": [{
             "mode": "insert",
             "dim_signature": {
@@ -1684,7 +1707,7 @@ class TestEngine(unittest.TestCase):
             }]
         }
 
-        #check data is correctly inserted
+        # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
@@ -1693,48 +1716,53 @@ class TestEngine(unittest.TestCase):
 
         wait = WebDriverWait(driver,30);
 
+        ## == ## Full period##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.period_comparer(driver, wait, "2018-06-05T03:00:00", "==","2018-06-05T04:00:00", "==")
+        number_of_elements, empty_element =  functions.period_comparer(driver, wait, "events", start_value = "2018-06-05T03:00:00", start_operator = "==", end_value = "2018-06-05T04:00:00", end_operator = "==")
 
         assert number_of_elements == 1 and empty_element is False
 
+        ## >= ## Only Start##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.period_comparer(driver, wait, start_value = "2018-06-05T03:00:00", start_operator = ">=")
+        number_of_elements, empty_element =  functions.period_comparer(driver, wait, "events", start_value = "2018-06-05T03:00:00", start_operator = ">=")
 
         assert number_of_elements == 2
 
+        ## != ## Only End##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.period_comparer(driver, wait, end_value = "2018-06-05T04:00:00", end_operator = "!=")
+        number_of_elements, empty_element =  functions.period_comparer(driver, wait, "events", end_value = "2018-06-05T04:00:00", end_operator = "!=")
 
         assert number_of_elements == 2
 
+        ## > ## Only Start## < ## Only Start##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.two_periods_comparer(driver, wait, start_value_1 = "2018-06-05T01:30:00", start_operator_1 = ">", start_value_2 = "2018-06-05T03:00:00", start_operator_2 = "<")
+        number_of_elements, empty_element =  functions.two_periods_comparer(driver, wait, "events", start_value_1 = "2018-06-05T01:30:00", start_operator_1 = ">", start_value_2 = "2018-06-05T03:00:00", start_operator_2 = "<")
 
         assert number_of_elements == 1 and empty_element is False
 
+        ## <= ## Start## > ## End## != ## Start## >= ## End##
         driver.get("http://localhost:5000/eboa_nav/")
 
-        #Go to tab
+        # Go to tab
         functions.goToTab(driver,"Events")
 
-        number_of_elements, empty_element =  functions.two_periods_comparer(driver, wait, start_value_1 = "2018-06-05T03:00:00", start_operator_1 = "<=", end_value_1 = "2018-06-05T02:30:00", end_operator_1 = ">",
+        number_of_elements, empty_element =  functions.two_periods_comparer(driver, wait, "events", start_value_1 = "2018-06-05T03:00:00", start_operator_1 = "<=", end_value_1 = "2018-06-05T02:30:00", end_operator_1 = ">",
         start_value_2 = "2018-06-05T04:00:00", start_operator_2 = "!=", end_value_2 = "2018-06-05T03:00:00", end_operator_2 = ">=")
 
         assert number_of_elements == 2
