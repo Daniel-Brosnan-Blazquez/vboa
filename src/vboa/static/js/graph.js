@@ -263,8 +263,8 @@ export function display_map(dom_id, polygons){
         layers: [raster, vector],
         target: dom_id,
         view: new View({
-            center: [2952104.0199, -3277504.823],
-            zoom: 4
+            center: [0, 0],
+            zoom: 2
         })
     });
 }

@@ -286,7 +286,7 @@ def query_annotations_by_er(er):
 
     annotations_geometries = [{"annotation": annotation, "geometries": engine.geometries_to_wkt(annotation.annotationGeometries)} for annotation in annotations if len(annotation.annotationGeometries) > 0]
 
-    return render_template("eboa_nav/annotations_nav.html", annotations=annotations, show=show)
+    return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show)
 
 def query_annotations():
     """
