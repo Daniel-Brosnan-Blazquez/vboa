@@ -67,6 +67,15 @@ export function add_event_duration(dom_id){
 
 };
 
+/* Function to add more source validity duration selectors when commanded */
+export function add_source_validity_duration(dom_id){
+    
+    jQuery.get("/static/html/more_source_validity_duration.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+
+};
+
 /* Function to add more ingestion time selectors when commanded */
 export function add_generation_time(dom_id){
     

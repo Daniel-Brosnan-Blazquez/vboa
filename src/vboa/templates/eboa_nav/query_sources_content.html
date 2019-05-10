@@ -53,6 +53,18 @@
             </div>
             <div id="more-validity-start-validity-stop-query-sources">
             </div>
+            <!-- Validity duration -->
+            <div class="row">
+              {% include "eboa_nav/source_validity_duration.html" %}
+              <div>
+                <span onclick="vboa.add_source_validity_duration('more-source-validity-duration-query-sources')">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-source-validity-duration-query-sources">
+            </div>
+            <!-- Ingestion time -->
             <div class="row">
               {% include "eboa_nav/ingestion_time.html" %}
               <div>

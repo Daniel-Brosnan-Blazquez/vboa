@@ -19,6 +19,7 @@
           <th>Name</th>
           <th>Validity start</th>
           <th>Validity stop</th>
+          <th>Duration (s)</th>
           <th>Generation time</th>
           <th>DIM signature</th>
           <th>Processor</th>
@@ -32,6 +33,7 @@
           <td>{{ source.name }}</td>
           <td>{{ source.validity_start }}</td>
           <td>{{ source.validity_stop }}</td>
+          <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
           <td>{{ source.generation_time }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
           <td>{{ source.processor }}</td>
@@ -45,6 +47,7 @@
           <th>Name</th>
           <th>Validity start</th>
           <th>Validity stop</th>
+          <th>Duration (s)</th>
           <th>Generation time</th>
           <th>DIM signature</th>
           <th>Processor</th>
@@ -70,6 +73,7 @@
           <th>Name</th>
           <th>Validity start</th>
           <th>Validity stop</th>
+          <th>Duration (s)</th>
           <th>Generation time</th>
           <th>Ingestion Time</th>
           <th>Ingestion Duration</th>
@@ -85,6 +89,7 @@
           <td>{{ source.name }}</td>
           <td>{{ source.validity_start }}</td>
           <td>{{ source.validity_stop }}</td>
+          <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
           <td>{{ source.generation_time }}</td>
           <td>{{ source.ingestion_time }}</td>
           <td>{{ source.ingestion_duration }}</td>
@@ -100,6 +105,7 @@
           <th>Name</th>
           <th>Validity start</th>
           <th>Validity stop</th>
+          <th>Duration (s)</th>
           <th>Generation time</th>
           <th>Ingestion Time</th>
           <th>Ingestion Duration</th>

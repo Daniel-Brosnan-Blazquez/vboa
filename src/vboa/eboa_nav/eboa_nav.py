@@ -529,6 +529,16 @@ def query_sources():
         # end for
     # end if
 
+    if request.form["source_validity_duration"] != "":
+        kwargs["validity_duration_filters"] = []
+        i = 0
+        operators = request.form.getlist("source_validity_duration_operator")
+        for source_validity_duration in request.form.getlist("source_validity_duration"):
+            kwargs["validity_duration_filters"].append({"float": float(source_validity_duration), "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+
     sources = query.get_sources(**kwargs)
 
     return sources
