@@ -30,6 +30,7 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool
         value_query_div = driver.find_element_by_id(tab + "_value_query_initial")
     else:
         value_query_div = driver.find_element_by_id("more-value-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        
     type = Select(value_query_div.find_element_by_id(tab + "_value_type"))
     type.select_by_visible_text(value_type)
 

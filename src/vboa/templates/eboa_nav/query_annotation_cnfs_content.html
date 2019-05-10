@@ -7,46 +7,46 @@
             <div>
               <div class="row  query-annotation-cnfs">
                 <div class="col-xs-3 query-annotation-names">
-                  <label>Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="annotation_name_like_annotation_cnfs" name="annotation_name_like"/>
+                  <label id="annotation_cnfs_annotation_names_like_checkbox">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                  <input class="form-control" list="annotation_name_like_annotation_cnfs" name="annotation_name_like" id="annotation_cnfs_annotation_names_like_text"/>
                   <datalist id="annotation_name_like_annotation_cnfs">
                   </datalist>
                 </div>
                 <div class="col-xs-3 query-annotation-systems">
-                  <label>Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="annotation_system_like_annotation_cnfs" name="annotation_system_like"/>
+                  <label id="annotation_cnfs_annotation_system_like_checkbox">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                  <input class="form-control" list="annotation_system_like_annotation_cnfs" name="annotation_system_like" id="annotation_cnfs_annotation_system_like_text"/>
                   <datalist id="annotation_system_like_annotation_cnfs">
                   </datalist>
                 </div>
               </div>
               <div class="row query-annotation-cnfs">
                 <div class="col-xs-3 query-annotation-names">
-                  <label>Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                  <label id="annotation_cnfs_annotation_names_in_checkbox">Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation_cnfs_annotation_names_in_text">
                   </select>
                 </div>
                 <div class="col-xs-3 query-annotation-systems">
-                  <label>Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                  <label id="annotation_cnfs_annotation_system_in_checkbox">Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation_cnfs_annotation_system_in_text">
                   </select>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="dim_signature_like_sources" name="dim_signature_like"/>
+                <label id="annotation_cnfs_dim_signature_like_checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="dim_signature_like_sources" name="dim_signature_like" id ="annotation_cnfs_dim_signature_like_text"/>
                 <datalist id="dim_signature_like_sources">
                 </datalist>
               </div>
               <div class="col-xs-3 query-dim-signatures">
-                <label>DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                <label id="annotation_cnfs_dim_signature_in_checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1"id="annotation_cnfs_dim_signature_in_text">
                 </select>
               </div>
             </div>
             <div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 12px">Query</button>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="annotation_cnfs_submit_button">Query</button>
             </div>
           </form>
         </div>
@@ -59,4 +59,3 @@
   <!-- /.panel -->
 </div>
 <!-- /.panel -->
-

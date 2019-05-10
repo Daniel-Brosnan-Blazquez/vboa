@@ -38,7 +38,7 @@ from eboa.datamodel.explicit_refs import ExplicitRef, ExplicitRefGrp, ExplicitRe
 from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText, AnnotationDouble, AnnotationObject, AnnotationGeometry, AnnotationBoolean, AnnotationTimestamp
 
 
-class TestEngine(unittest.TestCase):
+class TestDimSignaturesTab(unittest.TestCase):
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -107,11 +107,11 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim_signatures_submit_button')))
         submitButton.click()
 
         # Check table generated
-        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim_signatures_table")))
         number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -168,15 +168,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[1]/input")
+        inputElement = self.driver.find_element_by_id("dim_signatures_dim_signature_like_text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim_signatures_submit_button')))
         submitButton.click()
 
         # Check table generated
-        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim_signatures_table")))
         number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(dim_signatures_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -189,20 +189,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[1]/input")
+        inputElement = self.driver.find_element_by_id("dim_signatures_dim_signature_like_text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[1]/label")
+        notLikeButton = self.driver.find_element_by_id("dim_signatures_dim_signature_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim_signatures_submit_button')))
         submitButton.click()
 
         # Check table generated
-        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim_signatures_table")))
         number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -214,7 +214,7 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("dim_signatures_dim_signature_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
@@ -223,11 +223,11 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim_signatures_submit_button')))
         submitButton.click()
 
         # Check table generated
-        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim_signatures_table")))
         number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -239,22 +239,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[2]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("dim_signatures_dim_signature_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[1]/div[2]/label")
+        notInButton = self.driver.find_element_by_id("dim_signatures_dim_signature_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[7]/div/div/div/div/div/form/div[2]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim_signatures_submit_button')))
         submitButton.click()
 
         # Check table generate
-        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim_signatures_table")))
         number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(dim_signatures_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
