@@ -11,13 +11,14 @@ import unittest
 import time
 import subprocess
 import datetime
+import re
 import tests.selenium.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -50,15 +51,23 @@ class TestEngine(unittest.TestCase):
         # Clear all tables before executing the test
         self.query_eboa.clear_db()
 
-        self.options = Options()
-        self.options.headless = True
-        subprocess.call(["pkill", "firefox"])
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('window-size=1920,1080')
+
+        # Kill webserver
+        subprocess.call(["pkill", "chrome"])
+
+        # Create a new instance of the Chrome driver
+        self.driver = webdriver.Chrome(options=options)
 
     def tearDown(self):
         # Close connections to the DDBB
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
         self.session.close()
+        self.driver.quit()
 
     def test_gauges_no_filter_no_network(self):
 
@@ -95,27 +104,42 @@ class TestEngine(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        # Create a new instance of the Firefox driver
-        driver = webdriver.Firefox(options=self.options)
+        wait = WebDriverWait(self.driver,30);
 
-        wait = WebDriverWait(driver,30);
-
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
-        driver.quit()
-
         assert number_of_elements == 2
+
+        # Check gauge_name
+        gauge_name = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
+
+        assert gauge_name[0].text == "GAUGE_NAME"
+
+        # Check gauge_system
+        gauge_system = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[2]")
+
+        assert gauge_system[0].text == "GAUGE_SYSTEM"
+
+        #Check dim_signature
+        dim_signature = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[3]")
+
+        assert dim_signature[0].text == "DIM_SIGNATURE"
+
+        # Check uuid
+        uuid = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[4]")
+
+        assert re.match("........-....-....-....-............", uuid[0].text)
 
     def test_gauges_no_filter_with_network(self):
 
@@ -151,31 +175,28 @@ class TestEngine(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        # Create a new instance of the Firefox driver
-        driver = webdriver.Firefox(options=self.options)
+        wait = WebDriverWait(self.driver,30);
 
-        wait = WebDriverWait(driver,30);
-
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Click on show network
-        networkButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[3]/label")
+        networkButton = self.driver.find_element_by_id("gauges_network_button")
         if not networkButton.find_element_by_xpath('input').is_selected():
             networkButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         gauge = self.session.query(Gauge).all()[0]
 
         dim_signature = self.session.query(DimSignature).all()[0]
 
-        assert driver.execute_script('return gauges;') == {
+        assert self.driver.execute_script('return gauges;') == {
             "gauges":[{
                 "id": str(gauge.gauge_uuid),
                 "name": "GAUGE_NAME",
@@ -188,13 +209,11 @@ class TestEngine(unittest.TestCase):
                 ]
             }
 
-        network = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div/div/div[5]/div[3]/div[2]')
+        network = self.driver.find_element_by_id("gauges_nav_network")
 
         network.screenshot(screenshot_path + "network_of_gauges_screenshot.png")
 
         condition = network.is_displayed()
-
-        driver.quit()
 
         assert condition
 
@@ -256,111 +275,106 @@ class TestEngine(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        # Create a new instance of the Firefox driver
-        driver = webdriver.Firefox(options=self.options)
-
-        wait = WebDriverWait(driver,30);
+        wait = WebDriverWait(self.driver,30);
 
         ## Like ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[1]/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_names_like_text")
         inputElement.send_keys("GAUGE_NAME_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
         ## Not like ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[1]/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_names_like_text")
         inputElement.send_keys("GAUGE_NAME_1")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[1]/label")
+        notLikeButton = self.driver.find_element_by_id("gauges_gauge_names_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
         ## In ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[1]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_names_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
-        inputElement.send_keys("GAUGE_NAME_2")
+        inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_3")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
         ## Not in ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[1]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_names_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[1]/label")
+        notInButton = self.driver.find_element_by_id("gauges_gauge_names_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generate
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
-
-        driver.quit()
 
         assert number_of_elements == 2
 
@@ -422,66 +436,63 @@ class TestEngine(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        # Create a new instance of the Firefox driver
-        driver = webdriver.Firefox(options=self.options)
-
-        wait = WebDriverWait(driver,30);
+        wait = WebDriverWait(self.driver,30);
 
         ## Like ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[2]/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_system_like_text")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
         ## Not like ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[2]/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_system_like_text")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[1]/div[2]/label")
+        notLikeButton = self.driver.find_element_by_id("gauges_gauge_system_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
         ## In ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[2]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_system_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
@@ -490,43 +501,41 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
         ## Not in ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[2]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges_gauge_system_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[1]/div[2]/div[2]/label")
+        notInButton = self.driver.find_element_by_id("gauges_gauge_system_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generate
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
-
-        driver.quit()
 
         assert number_of_elements == 2
 
@@ -588,105 +597,100 @@ class TestEngine(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        # Create a new instance of the Firefox driver
-        driver = webdriver.Firefox(options=self.options)
-
-        wait = WebDriverWait(driver,30);
+        wait = WebDriverWait(self.driver,30);
 
         ## Like ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[1]/input")
+        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_like_text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
         ## Not like ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[1]/input")
+        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_like_text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[1]/label")
+        notLikeButton = self.driver.find_element_by_id("gauges_dim_signatures_like_checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
         ## In ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
         ## Not in ##
-        driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(driver,"Gauges")
+        functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[2]/div/ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_in_text_chosen").find_element_by_xpath("ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[2]/div[2]/label")
+        notInButton = self.driver.find_element_by_id("gauges_dim_signatures_in_checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[4]/button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
         submitButton.click()
 
         # Check table generate
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"sources")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
-
-        driver.quit()
 
         assert number_of_elements == 2

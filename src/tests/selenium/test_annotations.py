@@ -539,8 +539,6 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
         inputElement.send_keys("EXPLICIT_REFERENCE_2")
         inputElement.send_keys(Keys.RETURN)
-
-        self.driver.save_screenshot("test.png")
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
         submitButton.click()
