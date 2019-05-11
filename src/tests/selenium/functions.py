@@ -98,7 +98,6 @@ def fill_period(driver, wait, tab, row, start_value = None, start_operator = Non
         period_div = driver.find_element_by_id(tab + "-start-stop-initial")
     else:
         period_div = driver.find_element_by_id("more-start-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
-
     if start_value is not None:
         start = period_div.find_element_by_id("start-input")
         start.click()
