@@ -39,7 +39,7 @@ from eboa.datamodel.explicit_refs import ExplicitRef, ExplicitRefGrp, ExplicitRe
 from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText, AnnotationDouble, AnnotationObject, AnnotationGeometry, AnnotationBoolean, AnnotationTimestamp
 
 
-class TestEngine(unittest.TestCase):
+class TestGaugesTab(unittest.TestCase):
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -112,11 +112,11 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -183,13 +183,13 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Click on show network
-        networkButton = self.driver.find_element_by_id("gauges_network_button")
+        networkButton = self.driver.find_element_by_id("gauges-network-button")
         if not networkButton.find_element_by_xpath('input').is_selected():
             networkButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         gauge = self.session.query(Gauge).all()[0]
@@ -209,7 +209,7 @@ class TestEngine(unittest.TestCase):
                 ]
             }
 
-        network = self.driver.find_element_by_id("gauges_nav_network")
+        network = self.driver.find_element_by_id("gauges-nav-network")
 
         network.screenshot(screenshot_path + "network_of_gauges_screenshot.png")
 
@@ -284,15 +284,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_like input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_names_like_text")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-names-like-text")
         inputElement.send_keys("GAUGE_NAME_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -305,20 +305,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_like input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_names_like_text")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-names-like-text")
         inputElement.send_keys("GAUGE_NAME_1")
 
-        notLikeButton = self.driver.find_element_by_id("gauges_gauge_names_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("gauges-gauge-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -331,7 +331,7 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_in input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_names_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
@@ -340,11 +340,11 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -357,22 +357,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_name_in input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_names_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("gauges_gauge_names_in_checkbox")
+        notInButton = self.driver.find_element_by_id("gauges-gauge-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generate
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -445,15 +445,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_like input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_system_like_text")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-system-like-text")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -466,20 +466,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_like input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_system_like_text")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-system-like-text")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
-        notLikeButton = self.driver.find_element_by_id("gauges_gauge_system_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("gauges-gauge-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -492,7 +492,7 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_in input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_system_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
@@ -501,11 +501,11 @@ class TestEngine(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -518,22 +518,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the gauge_system_in input
-        inputElement = self.driver.find_element_by_id("gauges_gauge_system_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("gauges_gauge_system_in_checkbox")
+        notInButton = self.driver.find_element_by_id("gauges-gauge-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generate
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -606,15 +606,15 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_like_text")
+        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-like-text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -627,20 +627,20 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_like_text")
+        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-like-text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = self.driver.find_element_by_id("gauges_dim_signatures_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("gauges-dim-signatures-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -652,17 +652,17 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -674,22 +674,22 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(self.driver,"Gauges")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("gauges_dim_signatures_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("gauges_dim_signatures_in_checkbox")
+        notInButton = self.driver.find_element_by_id("gauges-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         submitButton.click()
 
         # Check table generate
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges_table")))
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
         number_of_elements = len(gauges_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 

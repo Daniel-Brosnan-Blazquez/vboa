@@ -122,11 +122,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -210,16 +210,16 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Click on show map
-        mapButton = self.driver.find_element_by_id("annotations_map_button")
+        mapButton = self.driver.find_element_by_id("annotations-map-button")
         if not mapButton.find_element_by_xpath('input').is_selected():
             mapButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
-        map = self.driver.find_element_by_id("annotations_nav_map")
+        map = self.driver.find_element_by_id("annotations-nav-map")
 
         map.screenshot(screenshot_path + "map_screenshot.png")
 
@@ -324,15 +324,15 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the source_like input
-        inputElement = self.driver.find_element_by_id("annotations_sources_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-sources-like-text")
         inputElement.send_keys("source_1.xml")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -345,20 +345,20 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the source_like input
-        inputElement = self.driver.find_element_by_id("annotations_sources_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-sources-like-text")
         inputElement.send_keys("source_1.xml")
 
-        notLikeButton = self.driver.find_element_by_id("annotations_sources_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-sources-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -370,17 +370,17 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the source_in input
-        inputElement = self.driver.find_element_by_id("annotations_sources_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -392,22 +392,22 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the source_in input
-        inputElement = self.driver.find_element_by_id("annotations_sources_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("source_1.xml")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("annotations_sources_in_checkbox")
+        notInButton = self.driver.find_element_by_id("annotations-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query butto
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -489,15 +489,15 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the explicit_ref_like input
-        inputElement = self.driver.find_element_by_id("annotations_explicit_refs_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-like-text")
         inputElement.send_keys("EXPLICIT_REFERENCE")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -510,20 +510,20 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the explicit_ref_like input
-        inputElement = self.driver.find_element_by_id("annotations_explicit_refs_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-like-text")
         inputElement.send_keys("EXPLICIT_REFERENCE")
 
-        notLikeButton = self.driver.find_element_by_id("annotations_explicit_refs_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-explicit-refs-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -535,16 +535,16 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the explicit_ref_in input
-        inputElement = self.driver.find_element_by_id("annotations_explicit_refs_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("EXPLICIT_REFERENCE_2")
         inputElement.send_keys(Keys.RETURN)
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -555,23 +555,23 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        notInButton = self.driver.find_element_by_id("annotations_explicit_refs_in_checkbox")
+        notInButton = self.driver.find_element_by_id("annotations-explicit-refs-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Fill the explicit_ref_in input
-        inputElement = self.driver.find_element_by_id("annotations_explicit_refs_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("EXPLICIT_REFERENCE")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -653,15 +653,15 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the annotation_name_like input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_names_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-names-like-text")
         inputElement.send_keys("NAME_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -674,20 +674,20 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the annotation_name_like input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_names_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-names-like-text")
         inputElement.send_keys("NAME_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotations_annotation_names_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-annotation-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -698,17 +698,17 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         # Fill the annotation_name_in input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_names_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -720,22 +720,22 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the annotation_name_in input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_names_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("annotations_annotation_names_in_checkbox")
+        notInButton = self.driver.find_element_by_id("annotations-annotation-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -817,15 +817,15 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the annotation_system_like input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_system_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-system-like-text")
         inputElement.send_keys("SYSTEM_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -838,20 +838,20 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the annotation_system_like input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_system_like_text")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-system-like-text")
         inputElement.send_keys("SYSTEM_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotations_annotation_system_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-annotation-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -863,17 +863,17 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # Fill the annotation_system_in input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_system_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -885,22 +885,22 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
 
         # # Fill the annotation_system_in input
-        inputElement = self.driver.find_element_by_id("annotations_annotation_system_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("annotations_annotation_system_in_checkbox")
+        notInButton = self.driver.find_element_by_id("annotations-annotation-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -930,9 +930,9 @@ class TestAnnotationsTab(unittest.TestCase):
                     "name": "details",
                     "type": "object",
                     "values": [
-                        {"name": "text_name_1",
+                        {"name": "textname_1",
                          "type": "text",
-                         "value": "text_value_1"
+                         "value": "textvalue_1"
                         }]
                     }]
                 }]
@@ -957,9 +957,9 @@ class TestAnnotationsTab(unittest.TestCase):
                     "name": "details",
                     "type": "object",
                     "values":  [
-                    {"name": "text_name_2",
+                    {"name": "textname_2",
                      "type": "text",
-                     "value": "text_value_2"
+                     "value": "textvalue_2"
                         }]
                     }]
                 },{
@@ -972,9 +972,9 @@ class TestAnnotationsTab(unittest.TestCase):
                     "name": "details",
                     "type": "object",
                     "values": [
-                        {"name": "text_name_3",
+                        {"name": "textname_3",
                          "type": "text",
-                         "value": "text_value_2"
+                         "value": "textvalue_2"
                         }]
                     }]
                 }]
@@ -993,14 +993,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_value(self.driver, wait,"annotations", "text", "text_name_1", "text_value_1", True, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_1", True, "==", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1012,14 +1012,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_value(self.driver, wait,"annotations", "text", "text_name_1", "text_value_2", False, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_2", False, "==", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1073,11 +1073,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1091,11 +1091,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1110,11 +1110,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1128,11 +1128,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1146,11 +1146,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1165,11 +1165,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1183,11 +1183,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1201,11 +1201,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1220,11 +1220,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1238,11 +1238,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1256,11 +1256,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1275,11 +1275,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1293,11 +1293,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1311,11 +1311,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1330,11 +1330,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1348,11 +1348,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1366,11 +1366,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1424,11 +1424,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "==", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1441,11 +1441,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", False, "==", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1460,11 +1460,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, ">", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1478,11 +1478,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, ">", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1496,11 +1496,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, ">", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1515,11 +1515,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, ">=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1533,11 +1533,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, ">=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1551,11 +1551,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, ">=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1570,11 +1570,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "<", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1588,11 +1588,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "<", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1606,11 +1606,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "<", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1625,11 +1625,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "<=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1643,11 +1643,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "<=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1661,11 +1661,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "<=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1680,11 +1680,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "!=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1698,11 +1698,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "!=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1716,11 +1716,11 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "!=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1769,14 +1769,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_ingestion_time(self.driver, wait, "annotations", ingestion_time, True, "==", 1)
+        functions.fill_ingestion_time(self.driver, wait, "annotations", ingestion_time, "==", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1788,14 +1788,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, True, ">", 1)
+        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, ">", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1807,14 +1807,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, True, ">=", 1)
+        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, ">=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1826,14 +1826,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, True, "<", 1)
+        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, "<", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1845,14 +1845,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, True, "<=", 1)
+        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, "<=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1864,14 +1864,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, True, "!=", 1)
+        functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, "!=", 1)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -1901,9 +1901,9 @@ class TestAnnotationsTab(unittest.TestCase):
                     "name": "details",
                     "type": "object",
                     "values": [
-                        {"name": "text_name_1",
+                        {"name": "textname_1",
                          "type": "text",
-                         "value": "text_value_1"
+                         "value": "textvalue_1"
                         }]
                     }]
                 }]
@@ -1928,9 +1928,9 @@ class TestAnnotationsTab(unittest.TestCase):
                     "name": "details",
                     "type": "object",
                     "values":  [
-                    {"name": "text_name_1",
+                    {"name": "textname_1",
                      "type": "text",
-                     "value": "text_value_1"
+                     "value": "textvalue_1"
                         },
                     {"name": "double_name_1",
                      "type": "double",
@@ -1947,9 +1947,9 @@ class TestAnnotationsTab(unittest.TestCase):
                     "name": "details",
                     "type": "object",
                     "values": [
-                        {"name": "text_name_3",
+                        {"name": "textname_3",
                          "type": "text",
-                         "value": "text_value_2"
+                         "value": "textvalue_2"
                         }]
                     }]
                 }]
@@ -1967,14 +1967,16 @@ class TestAnnotationsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
 
-        functions.fill_two_values(self.driver, wait, "annotations", "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
+        functions.fill_value(self.driver, wait, "annotations", "text", "textname_1", "textvalue_1", True, "==", 1)
+        self.driver.find_element_by_id("annotations-add-value").click()
+        functions.fill_value(self.driver, wait, "annotations", "double", "double_name_1", "1.4", True, "==", 2)
 
         # Click on query butto
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations_table")))
+        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
         number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
