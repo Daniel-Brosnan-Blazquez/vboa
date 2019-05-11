@@ -110,6 +110,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
@@ -181,9 +182,10 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Click on show network
-        networkButton = self.driver.find_element_by_id("gauges-network-button")
+        networkButton = self.driver.find_element_by_id("gauges-show-network")
         if not networkButton.find_element_by_xpath('input').is_selected():
             networkButton.click()
         #end if
@@ -282,6 +284,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_like input
         inputElement = self.driver.find_element_by_id("gauges-gauge-names-like-text")
@@ -303,6 +306,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_like input
         inputElement = self.driver.find_element_by_id("gauges-gauge-names-like-text")
@@ -329,6 +333,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("gauges-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -355,6 +360,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("gauges-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -443,6 +449,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_like input
         inputElement = self.driver.find_element_by_id("gauges-gauge-system-like-text")
@@ -464,6 +471,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_like input
         inputElement = self.driver.find_element_by_id("gauges-gauge-system-like-text")
@@ -490,6 +498,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("gauges-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -516,6 +525,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("gauges-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -604,6 +614,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_like input
         inputElement = self.driver.find_element_by_id("gauges-dim-signatures-like-text")
@@ -625,6 +636,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_like input
         inputElement = self.driver.find_element_by_id("gauges-dim-signatures-like-text")
@@ -650,6 +662,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -672,6 +685,7 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")

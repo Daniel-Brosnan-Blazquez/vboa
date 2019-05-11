@@ -142,61 +142,59 @@ def fill_validity_period(driver, wait, tab, row, start_value = None, start_opera
         end_op = Select(period_div.find_element_by_id("stop-operator"))
         end_op.select_by_visible_text(end_operator)
 
-def click_no_graphs(driver, tab):
+def click_no_graphs_events(driver):
 
-    if tab is "Events":
-        #Disable show timeline
-        timeline_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[11]/label")
-        if timeline_button.find_element_by_xpath('input').is_selected():
-            timeline_button.click()
-        #end if
+    #Disable show timeline
+    timeline_button = driver.find_element_by_id("events-show-timeline")
+    if timeline_button.find_element_by_xpath('input').is_selected():
+        timeline_button.click()
     #end if
 
-    if tab is "Annotations":
-        #Disable show map
-        map_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[2]/div/div/div/div/div/form/div[8]/label")
-        if map_button.find_element_by_xpath('input').is_selected():
-            map_button.click()
-        #end if
+def click_no_graphs_annotations(driver):
+
+    #Disable show map
+    map_button = driver.find_element_by_id("annotations-show-map")
+    if map_button.find_element_by_xpath('input').is_selected():
+        map_button.click()
     #end if
 
-    if tab is "Sources":
-        #Click on show map                                         /html/body/div[1]/div/div[2]/div/div/div[3]/div/div/div/div/div/form/div[14]/label
-        validity_timeline_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[3]/div/div/div/div/div/form/div[14]/label")
-        driver.execute_script("arguments[0].scrollIntoView();", validity_timeline_button)
-        if validity_timeline_button.find_element_by_xpath('input').is_selected():
-            validity_timeline_button.click()
-        #end if
+def click_no_graphs_sources(driver):
 
-        #Click on show map
-        gen2ing_timeline_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[3]/div/div/div/div/div/form/div[15]/label")
-        if gen2ing_timeline_button.find_element_by_xpath('input').is_selected():
-            gen2ing_timeline_button.click()
-        #end if
-
-        #Click on show map
-        number_events_per_source_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[3]/div/div/div/div/div/form/div[16]/label")
-        if number_events_per_source_button.find_element_by_xpath('input').is_selected():
-            number_events_per_source_button.click()
-        #end if
-
-        #Click on show map
-        ingestion_duration_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[3]/div/div/div/div/div/form/div[17]/label")
-        if ingestion_duration_button.find_element_by_xpath('input').is_selected():
-            ingestion_duration_button.click()
-        #end if
-
-        #Click on show map
-        gen2ing_times_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[3]/div/div/div/div/div/form/div[18]/label")
-        if gen2ing_times_button.find_element_by_xpath('input').is_selected():
-            gen2ing_times_button.click()
-        #end if
+    #Click on show map
+    validity_timeline_button = driver.find_element_by_id("sources-show-validity-timeline")
+    #driver.execute_script("arguments[0].scrollIntoView();", validity_timeline_button)
+    if validity_timeline_button.find_element_by_xpath('input').is_selected():
+        validity_timeline_button.click()
     #end if
 
-    if tab is "Gauges":
-        #Disable show map
-        network_button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[5]/div/div/div/div/div/form/div[3]/label")
-        if network_button.find_element_by_xpath('input').is_selected():
-            network_button.click()
-        #end if
+    #Click on show map
+    gen2ing_timeline_button = driver.find_element_by_id("sources-show-generation-to-ingestion-timeline")
+    if gen2ing_timeline_button.find_element_by_xpath('input').is_selected():
+        gen2ing_timeline_button.click()
+    #end if
+
+    #Click on show map
+    number_events_per_source_button = driver.find_element_by_id("sources-show-number-events-xy")
+    if number_events_per_source_button.find_element_by_xpath('input').is_selected():
+        number_events_per_source_button.click()
+    #end if
+
+    #Click on show map
+    ingestion_duration_button = driver.find_element_by_id("sources-show-ingestion-duration-xy")
+    if ingestion_duration_button.find_element_by_xpath('input').is_selected():
+        ingestion_duration_button.click()
+    #end if
+
+    #Click on show map
+    gen2ing_times_button = driver.find_element_by_id("sources-show-generation-time-to-ingestion-time-xy")
+    if gen2ing_times_button.find_element_by_xpath('input').is_selected():
+        gen2ing_times_button.click()
+    #end if
+
+def click_no_graphs_gauges(driver):
+
+    #Disable show map
+    network_button = driver.find_element_by_id("gauges-show-network")
+    if network_button.find_element_by_xpath('input').is_selected():
+        network_button.click()
     #end if

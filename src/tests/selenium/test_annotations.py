@@ -120,6 +120,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -208,9 +209,10 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Click on show map
-        mapButton = self.driver.find_element_by_id("annotations-map-button")
+        mapButton = self.driver.find_element_by_id("annotations-show-map")
         if not mapButton.find_element_by_xpath('input').is_selected():
             mapButton.click()
         #end if
@@ -322,6 +324,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_like input
         inputElement = self.driver.find_element_by_id("annotations-sources-like-text")
@@ -343,6 +346,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_like input
         inputElement = self.driver.find_element_by_id("annotations-sources-like-text")
@@ -368,6 +372,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -390,6 +395,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -487,6 +493,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
         inputElement = self.driver.find_element_by_id("annotations-explicit-refs-like-text")
@@ -508,6 +515,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
         inputElement = self.driver.find_element_by_id("annotations-explicit-refs-like-text")
@@ -533,6 +541,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -554,6 +563,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         notInButton = self.driver.find_element_by_id("annotations-explicit-refs-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -651,6 +661,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_like input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-like-text")
@@ -672,6 +683,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_like input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-like-text")
@@ -697,6 +709,8 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
+
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
@@ -718,6 +732,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -815,6 +830,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_like input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-like-text")
@@ -836,6 +852,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_like input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-like-text")
@@ -861,6 +878,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -883,6 +901,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         # # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -992,6 +1011,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_1", True, "==", 1)
 
@@ -1011,6 +1031,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_2", False, "==", 1)
 
@@ -1069,6 +1090,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
 
@@ -1087,6 +1109,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==", 1)
 
@@ -1106,6 +1129,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
 
@@ -1124,6 +1148,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
 
@@ -1142,6 +1167,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
 
@@ -1161,6 +1187,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
 
@@ -1179,6 +1206,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
 
@@ -1197,6 +1225,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=", 1)
 
@@ -1216,6 +1245,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<", 1)
 
@@ -1234,6 +1264,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<", 1)
 
@@ -1252,6 +1283,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
 
@@ -1271,6 +1303,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
 
@@ -1289,6 +1322,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=", 1)
 
@@ -1307,6 +1341,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
 
@@ -1326,6 +1361,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=", 1)
 
@@ -1344,6 +1380,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
 
@@ -1362,6 +1399,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=", 1)
 
@@ -1420,6 +1458,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "==", 1)
 
@@ -1437,6 +1476,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", False, "==", 1)
 
@@ -1456,6 +1496,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, ">", 1)
 
@@ -1474,6 +1515,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, ">", 1)
 
@@ -1492,6 +1534,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, ">", 1)
 
@@ -1511,6 +1554,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, ">=", 1)
 
@@ -1529,6 +1573,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, ">=", 1)
 
@@ -1547,6 +1592,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, ">=", 1)
 
@@ -1566,6 +1612,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "<", 1)
 
@@ -1584,6 +1631,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "<", 1)
 
@@ -1602,6 +1650,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "<", 1)
 
@@ -1621,6 +1670,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "<=", 1)
 
@@ -1639,6 +1689,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "<=", 1)
 
@@ -1657,6 +1708,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "<=", 1)
 
@@ -1676,6 +1728,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "!=", 1)
 
@@ -1694,6 +1747,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "!=", 1)
 
@@ -1712,6 +1766,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "!=", 1)
 
@@ -1768,6 +1823,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait, "annotations", ingestion_time, "==", 1)
 
@@ -1787,6 +1843,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, ">", 1)
 
@@ -1806,6 +1863,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, ">=", 1)
 
@@ -1825,6 +1883,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, "<", 1)
 
@@ -1844,6 +1903,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, "<=", 1)
 
@@ -1863,6 +1923,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"annotations", ingestion_time, "!=", 1)
 
@@ -1966,6 +2027,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait, "annotations", "text", "textname_1", "textvalue_1", True, "==", 1)
         self.driver.find_element_by_id("annotations-add-value").click()

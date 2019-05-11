@@ -107,10 +107,11 @@ class TestEventsTab(unittest.TestCase):
 
         wait = WebDriverWait(self.driver,30);
 
-        self.   driver.get("http://localhost:5000/eboa_nav/")
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -206,6 +207,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Click on show map
         timelineButton = self.driver.find_element_by_id("events-show-timeline")
@@ -303,6 +305,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the source_like input
         inputElement = self.driver.find_element_by_id("events-sources-like-text")
@@ -324,6 +327,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the source_like input
         inputElement = self.driver.find_element_by_id("events-sources-like-text")
@@ -349,6 +353,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -371,6 +376,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -456,6 +462,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_like input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-like-text")
@@ -477,6 +484,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_like input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-like-text")
@@ -502,6 +510,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -524,6 +533,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -612,6 +622,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the key_like input
         inputElement = self.driver.find_element_by_id("events-event-keys-like-text")
@@ -633,6 +644,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the key_like input
         inputElement = self.driver.find_element_by_id("events-event-keys-like-text")
@@ -659,6 +671,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the key_in input
         inputElement = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -682,6 +695,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the key_in input
         inputElement = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -769,6 +783,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_like input
         inputElement = self.driver.find_element_by_id("events-gauge-names-like-text")
@@ -790,6 +805,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_like input
         inputElement = self.driver.find_element_by_id("events-gauge-names-like-text")
@@ -816,6 +832,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -839,6 +856,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -927,6 +945,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_like input
         inputElement = self.driver.find_element_by_id("events-gauge-system-like-text")
@@ -948,6 +967,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_like input
         inputElement = self.driver.find_element_by_id("events-gauge-system-like-text")
@@ -974,6 +994,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -997,6 +1018,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -1059,6 +1081,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", True, "==", 1)
 
@@ -1078,6 +1101,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_2", False, "==", 1)
 
@@ -1131,6 +1155,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
 
@@ -1149,6 +1174,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==", 1)
 
@@ -1168,6 +1194,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
 
@@ -1186,6 +1213,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
 
@@ -1204,6 +1232,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
 
@@ -1223,6 +1252,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
 
@@ -1241,6 +1271,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
 
@@ -1259,6 +1290,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=", 1)
 
@@ -1278,6 +1310,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<", 1)
 
@@ -1296,6 +1329,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<", 1)
 
@@ -1314,6 +1348,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
 
@@ -1333,6 +1368,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
 
@@ -1351,6 +1387,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=", 1)
 
@@ -1369,6 +1406,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
 
@@ -1387,6 +1425,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=", 1)
 
@@ -1406,6 +1445,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
 
@@ -1424,6 +1464,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=", 1)
 
@@ -1478,6 +1519,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "==", 1)
 
@@ -1496,6 +1538,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", False, "==", 1)
 
@@ -1515,6 +1558,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, ">", 1)
 
@@ -1533,6 +1577,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, ">", 1)
 
@@ -1551,6 +1596,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, ">", 1)
 
@@ -1570,6 +1616,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, ">=", 1)
 
@@ -1588,6 +1635,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, ">=", 1)
 
@@ -1606,6 +1654,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, ">=", 1)
 
@@ -1625,6 +1674,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "<", 1)
 
@@ -1643,6 +1693,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, "<", 1)
 
@@ -1661,6 +1712,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, "<", 1)
 
@@ -1680,6 +1732,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "<=", 1)
 
@@ -1698,6 +1751,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, "<=", 1)
 
@@ -1716,6 +1770,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, "<=", 1)
 
@@ -1735,6 +1790,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "!=", 1)
 
@@ -1753,6 +1809,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, "!=", 1)
 
@@ -1771,6 +1828,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, "!=", 1)
 
@@ -1827,6 +1885,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait, "events", ingestion_time, "==", 1)
         # Click on query button
@@ -1845,6 +1904,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait, "events", ingestion_time, ">", 1)
 
@@ -1864,6 +1924,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait, "events", ingestion_time, ">=", 1)
 
@@ -1883,6 +1944,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait, "events", ingestion_time, "<", 1)
 
@@ -1902,6 +1964,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait, "events", ingestion_time, "<=", 1)
 
@@ -1921,6 +1984,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait, "events", ingestion_time, "!=", 1)
 
@@ -2018,6 +2082,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", True, "==", 1)
         self.driver.find_element_by_id("events-add-value").click()
@@ -2104,6 +2169,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1,  start_value = "2018-06-05T03:00:00", start_operator = "==", end_value = "2018-06-05T04:00:00", end_operator = "==")
 
@@ -2123,6 +2189,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1,  start_value = "2018-06-05T03:00:00", start_operator = ">=")
 
@@ -2142,6 +2209,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1,  end_value = "2018-06-05T04:00:00", end_operator = "!=")
 
@@ -2161,6 +2229,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
         self.driver.find_element_by_id("events-add-start-stop").click()
@@ -2182,6 +2251,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
         self.driver.find_element_by_id("events-add-start-stop").click()

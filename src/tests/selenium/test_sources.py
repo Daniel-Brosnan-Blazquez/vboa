@@ -105,6 +105,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
@@ -150,6 +151,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Click on show validity_timeline
         validity_timeline_button = self.driver.find_element_by_id("sources-show-validity-timeline")
@@ -278,6 +280,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_like input
         inputElement = self.driver.find_element_by_id("sources-source-names-like-text")
@@ -299,6 +302,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_like input
         inputElement = self.driver.find_element_by_id("sources-source-names-like-text")
@@ -324,6 +328,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -349,6 +354,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -422,6 +428,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_like input
         inputElement = self.driver.find_element_by_id("sources-processors-like-text")
@@ -443,6 +450,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_like input
         inputElement = self.driver.find_element_by_id("sources-processors-like-text")
@@ -468,6 +476,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
         inputElement = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -490,6 +499,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
         inputElement = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -563,6 +573,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_like input
         inputElement = self.driver.find_element_by_id("sources-dim-signatures-like-text")
@@ -584,6 +595,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_like input
         inputElement = self.driver.find_element_by_id("sources-dim-signatures-like-text")
@@ -609,6 +621,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -634,6 +647,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -707,6 +721,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, "2018-06-05T03:00:00", "==","2018-06-05T04:00:00", "==")
 
@@ -726,6 +741,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T03:00:00", start_operator = ">=")
 
@@ -745,6 +761,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, end_value = "2018-06-05T04:00:00", end_operator = "!=")
 
@@ -764,6 +781,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
         self.driver.find_element_by_id("sources-add-validity-start-validity-stop").click()
@@ -785,6 +803,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
         self.driver.find_element_by_id("sources-add-validity-start-validity-stop").click()
@@ -828,6 +847,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "==", 1)
 
@@ -847,6 +867,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources",ingestion_time, ">", 1)
 
@@ -866,6 +887,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, ">=", 1)
 
@@ -885,6 +907,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "<", 1)
 
@@ -904,6 +927,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "<=", 1)
 
@@ -923,6 +947,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "!=", 1)
 
@@ -962,6 +987,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "==", 1)
 
@@ -981,6 +1007,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">", 1)
 
@@ -1000,6 +1027,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">=", 1)
 
@@ -1019,6 +1047,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<", 1)
 
@@ -1038,6 +1067,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<=", 1)
 
@@ -1057,6 +1087,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "!=", 1)
 
@@ -1098,6 +1129,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "==", 1)
 
@@ -1117,6 +1149,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, ">", 1)
 
@@ -1136,6 +1169,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, ">=", 1)
 
@@ -1155,6 +1189,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "<", 1)
 
@@ -1174,6 +1209,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "<=", 1)
 
@@ -1193,6 +1229,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "!=", 1)
 
@@ -1236,6 +1273,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the status_in input
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
@@ -1259,6 +1297,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        functions.click_no_graphs_sources(self.driver)
 
         # Fill the status_in input
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
