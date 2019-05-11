@@ -19,11 +19,13 @@ setup(name="vboa",
           "Flask",
           "Flask-DebugToolbar"
       ],
-      tests_require=[
-          "nose",
-          "before_after",
-          "coverage",
-          "termcolor",
-          "selenium"
-      ],
+      extras_require={
+          "tests" :[
+              "nose",
+              "before_after",
+              "coverage",
+              "termcolor",
+              "selenium"
+          ]
+      },
       test_suite='nose.collector')

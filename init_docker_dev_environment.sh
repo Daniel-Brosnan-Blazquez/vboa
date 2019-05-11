@@ -149,8 +149,8 @@ docker build --build-arg FLASK_APP=$APP -t boa -f $PATH_TO_DOCKERFILE $PATH_TO_V
 docker run -p $PORT:5000 -it --name $APP_CONTAINER --link $DATABASE_CONTAINER:boa -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP -v $EBOA_RESOURCES_PATH:/resources_path boa
 # Generate the python archive
 docker exec -it $APP_CONTAINER bash -c "pip3 install --upgrade pip"
-docker exec -it $APP_CONTAINER bash -c "pip3 install -e /eboa/src"
-docker exec -it $APP_CONTAINER bash -c "pip3 install -e /vboa/src"
+docker exec -it $APP_CONTAINER bash -c "pip3 install -e '/eboa/src[tests]'"
+docker exec -it $APP_CONTAINER bash -c "pip3 install -e '/vboa/src[tests]'"
 if [ "$PATH_TO_TAILORED" != "" ];
 then
     docker exec -it $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
