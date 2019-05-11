@@ -12,6 +12,7 @@ import time
 import subprocess
 import datetime
 import re
+import dateutil.parser as parser
 import tests.selenium.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -116,6 +117,60 @@ class TestSourcesTab(unittest.TestCase):
         number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
+
+        # Check name
+        name = sources_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
+
+        assert name[0].text == "source_1.xml"
+
+        # Check validity_start
+        validity_start = sources_table.find_elements_by_xpath("tbody/tr[1]/td[2]")
+
+        assert validity_start[0].text == "2018-06-05 02:07:03"
+
+        # Check validity_stop
+        validity_stop = sources_table.find_elements_by_xpath("tbody/tr[1]/td[3]")
+
+        assert validity_stop[0].text == "2018-06-05 08:07:36"
+        # Check duration
+        duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[4]")
+
+        assert duration[0].text == str((parser.parse(validity_stop[0].text) - parser.parse(validity_start[0].text)).total_seconds())
+
+        # Check generation_time
+        generation_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
+
+        assert generation_time[0].text == "2018-07-05 02:07:03"
+
+        #Check ingestion_time
+        ingestion_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[6]")
+
+        assert ingestion_time[0].text == self.session.query(Source).all()[0].ingestion_time.isoformat().replace("T"," ")
+
+        # Check ingestion_duration
+        ingestion_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[7]")
+
+        assert re.match(".:..:..\.......", ingestion_duration[0].text)
+
+        #Check dim_signature
+        dim_signature = sources_table.find_elements_by_xpath("tbody/tr[1]/td[8]")
+
+        assert dim_signature[0].text == "DIM_SIGNATURE_1"
+
+        #Check processor
+        processor = sources_table.find_elements_by_xpath("tbody/tr[1]/td[9]")
+
+        assert processor[0].text == "exec"
+
+        #Check version
+        version = sources_table.find_elements_by_xpath("tbody/tr[1]/td[10]")
+
+        assert version[0].text == "1.0"
+
+        # Check uuid
+        uuid = sources_table.find_elements_by_xpath("tbody/tr[1]/td[11]")
+
+        assert re.match("........-....-....-....-............", uuid[0].text)
 
     def test_sources_query_no_filter_with_graphs(self):
 

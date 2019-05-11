@@ -11,6 +11,7 @@ import unittest
 import time
 import subprocess
 import datetime
+import re
 import tests.selenium.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -115,6 +116,14 @@ class TestDimSignaturesTab(unittest.TestCase):
         number_of_elements = len(dim_signatures_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
+
+        # Check dim_signature
+        name = dim_signatures_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
+
+        # Check uuid
+        uuid = dim_signatures_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
+
+        assert re.match("........-....-....-....-............", uuid[0].text)
 
     def test_dim_signatures_query_dim_signature_filter(self):
 
