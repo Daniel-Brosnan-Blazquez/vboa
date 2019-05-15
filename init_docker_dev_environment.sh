@@ -1,7 +1,7 @@
 #################################################################
 #
 # Init docker environment of the vboa and its tailored app
-n#
+#
 # Written by DEIMOS Space S.L. (dibb)
 #
 # module vboa
