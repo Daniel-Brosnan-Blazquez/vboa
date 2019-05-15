@@ -1,6 +1,9 @@
 # Base the image on centos
 FROM centos
 MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
+
+ARG FLASK_APP
+
 RUN yum install -y epel-release
 
 RUN yum install -y postgresql \
@@ -18,9 +21,13 @@ RUN pip3 install pytest-cov \
     before_after \
     Sphinx
 
+RUN mkdir /log
+
 # Environment Variables
-ENV EBOA_RESOURCES_PATH /eboa/src
-ENV FLASK_APP vboa
+ENV EBOA_RESOURCES_PATH /resources_path
+ENV EBOA_LOG_PATH /log
+ENV EBOA_SCHEMAS_PATH /eboa/src/schemas
+ENV FLASK_APP $FLASK_APP
 ENV FLASK_ENV development
 ENV LC_ALL en_US.utf-8
 ENV LANG en_US.utf-8
