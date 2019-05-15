@@ -174,8 +174,8 @@ do
     fi
 done
 # Change port and address configuration of the eboa defined by the postgis container
-docker exec -it $APP_CONTAINER bash -c 'sed -i "s/localhost/$BOA_PORT_5432_TCP_ADDR/" /eboa/src/config/datamodel.json'
-docker exec -it $APP_CONTAINER bash -c 'sed -i "s/5432/$BOA_PORT_5432_TCP_PORT/" /eboa/src/config/datamodel.json'
+docker exec -it $APP_CONTAINER bash -c 'sed -i "s/\"host\".*\".*\"/\"host\": \"$BOA_PORT_5432_TCP_ADDR\"/" /resources_path/datamodel.json'
+docker exec -it $APP_CONTAINER bash -c 'sed -i "s/\"port\".*\".*\"/\"port\": \"$BOA_PORT_5432_TCP_PORT\"/" /resources_path/datamodel.json'
 
 # Execute flask server
 docker exec -d -it $APP_CONTAINER bash -c 'flask run --host=0.0.0.0 -p 5000'
