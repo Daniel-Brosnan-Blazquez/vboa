@@ -94,6 +94,48 @@ export function prepare_events_data_for_timeline(events, items, groups){
 
 };
 
+/* Function to prepare data from events for a XY graph given the events to be displayed */
+export function prepare_events_data_for_xy(events, items, groups, title){
+
+    var event_groups = new Set(events.map(event => event["group"]))
+
+    for (const group of event_groups){
+        groups.push({
+            id: group,
+            content: group,
+            options: {
+                drawPoints: {
+                    style: "circle"
+                },
+                interpolation: false
+            }
+        })
+    }
+
+    for (const event of events){
+        items.push({
+            id: event["id"],
+            group: event["group"],
+            x: event["x"],
+            y: event["y"],
+            tooltip: event["tooltip"]
+        })
+    }
+
+    var options = {
+        legend: true,
+        dataAxis: {
+            left: {
+                title: {
+                    text: title
+                }
+            }
+        }
+    };
+    return options;
+
+};
+
 export function create_event_timeline(events, dom_id){
     var groups = [];
     var items = [];

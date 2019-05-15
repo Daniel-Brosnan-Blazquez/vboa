@@ -179,6 +179,13 @@ export function prepare_events_data_for_timeline(events, items, groups){
     eventFunctions.prepare_events_data_for_timeline(events, items, groups);
 
 };
+/* Function to show a X_time of events */
+export function prepare_events_data_for_xy(events, items, groups, title){
+
+    var options = eventFunctions.prepare_events_data_for_xy(events, items, groups, title);
+
+    return options;
+};
 
 /* Function to show a timeline of events */
 export function create_event_timeline(events, dom_id){
