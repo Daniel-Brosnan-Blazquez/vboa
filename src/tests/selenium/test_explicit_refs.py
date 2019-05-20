@@ -117,7 +117,7 @@ class TestEngine(unittest.TestCase):
 
         assert number_of_elements == 2
 
-    # Input "In" not working
+    # Not working
     def test_explicit_refs_query_explicit_ref_filter(self):
 
         # Insert data
@@ -431,7 +431,7 @@ class TestEngine(unittest.TestCase):
 
         assert number_of_elements == 2
 
-    #Source filter not working
+    # Not filtering
     def test_explicit_refs_query_source_filter(self):
 
         # Insert data
@@ -578,6 +578,171 @@ class TestEngine(unittest.TestCase):
 
         assert number_of_elements == 2
 
+    def test_explicit_refs_query_key_filter(self):
+
+        # Insert data
+        data = {"operations": [{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_1.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "events": [{
+                "explicit_reference": "EXPLICIT_REFERENCE_EVENT_1",
+                "gauge": {"name": "GAUGE_NAME_1",
+                          "system": "GAUGE_SYSTEM_1",
+                          "insertion_type": "EVENT_KEYS"},
+                "start": "2018-06-05T04:07:03",
+                "stop": "2018-06-05T06:07:36",
+                "key": "EVENT_KEY_1"
+                },{
+                "explicit_reference": "EXPLICIT_REFERENCE_EVENT_2",
+                "gauge": {"name": "GAUGE_NAME_2",
+                          "system": "GAUGE_SYSTEM_2",
+                          "insertion_type": "EVENT_KEYS"},
+                "start": "2018-06-05T04:07:12",
+                "stop": "2018-06-05T06:07:24",
+                "key": "EVENT_KEY_2"
+                }]
+            },{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_2.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "events": [{
+                "explicit_reference": "EXPLICIT_REFERENCE_EVENT_3",
+                "gauge": {"name": "GAUGE_NAME_2",
+                          "system": "GAUGE_SYSTEM_2",
+                          "insertion_type": "EVENT_KEYS"},
+                "start": "2018-06-05T04:07:05",
+                "stop": "2018-06-05T06:07:31",
+                "key": "EVENT_KEY_3"
+                }]
+            }
+        ]}
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        ## Like ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        # Fill the gauge_name_like input
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[1]/input")
+        inputElement.send_keys("EVENT_KEY_1")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[7]/button')))
+        submitButton.click()
+
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"DataTables_Table_0")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(explicit_ref_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not like ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        # Fill the gauge_name_like input
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[1]/input")
+        inputElement.send_keys("EVENT_KEY_1")
+
+        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[1]/label")
+        if not notLikeButton.find_element_by_xpath("input").is_selected():
+            notLikeButton.click()
+        #end if
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[7]/button')))
+        submitButton.click()
+
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"DataTables_Table_0")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(explicit_ref_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 2
+
+        ## In ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        # Fill the gauge_name_in input
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[2]/div/ul/li/input")
+        inputElement.click()
+        inputElement.send_keys("EVENT_KEY_2")
+        inputElement.send_keys(Keys.RETURN)
+        inputElement.click()
+        inputElement.send_keys("EVENT_KEY_3")
+        inputElement.send_keys(Keys.RETURN)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[7]/button')))
+        submitButton.click()
+
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"DataTables_Table_0")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(explicit_ref_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 2
+
+        ## Not in ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        # Fill the gauge_name_in input
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[2]/div/ul/li/input")
+        inputElement.click()
+        inputElement.send_keys("EVENT_KEY_1")
+        inputElement.send_keys(Keys.RETURN)
+
+        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[2]/label")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            notInButton.click()
+        #end if
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.XPATH,'/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[7]/button')))
+        submitButton.click()
+
+        # Check table generate
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"DataTables_Table_0")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(explicit_ref_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        driver.quit()
+
+        assert number_of_elements == 2
+
     def test_explicit_refs_query_gauge_name_filter(self):
 
         # Insert data
@@ -621,7 +786,7 @@ class TestEngine(unittest.TestCase):
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
             "events": [{
-                "explicit_reference": "EXPLICIT_REFERENCE_EVENT_2",
+                "explicit_reference": "EXPLICIT_REFERENCE_EVENT_3",
                 "gauge": {"name": "GAUGE_NAME_2",
                           "system": "GAUGE_SYSTEM_2",
                           "insertion_type": "EVENT_KEYS"},
@@ -648,7 +813,7 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_name_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[1]/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div[1]/input")
         inputElement.send_keys("GAUGE_NAME_1")
 
         # Click on query button
@@ -669,10 +834,10 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_name_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[1]/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div[1]/input")
         inputElement.send_keys("GAUGE_NAME_1")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[1]/label")
+        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div[1]/label")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
@@ -695,7 +860,7 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div/ul/li/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_2")
         inputElement.send_keys(Keys.RETURN)
@@ -718,12 +883,12 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div/ul/li/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[2]/div[1]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/label")
+        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[2]/div[1]/label")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
@@ -811,7 +976,7 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_system_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div[2]/input")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
@@ -832,10 +997,10 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_system_like input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div[2]/input")
         inputElement.send_keys("GAUGE_SYSTEM_1")
 
-        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[1]/div[2]/label")
+        notLikeButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[1]/div[2]/label")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
@@ -858,7 +1023,7 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_system_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
@@ -881,12 +1046,12 @@ class TestEngine(unittest.TestCase):
         functions.goToTab(driver,"Explicit references")
 
         # Fill the gauge_system_in input
-        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div/ul/li/input")
+        inputElement = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[2]/div[2]/div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[1]/div/div/div/div/div/form/div[4]/div[2]/div[2]/label")
+        notInButton = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[2]/div[2]/div[2]/label")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
@@ -903,6 +1068,563 @@ class TestEngine(unittest.TestCase):
         driver.quit()
 
         assert number_of_elements == 2
+
+    def test_explicit_refs_query_events_value_text(self):
+
+        # Insert data
+        data = {"operations":[{
+                        "mode": "insert",
+                        "dim_signature": {"name": "dim_signature",
+                                          "exec": "exec",
+                                          "version": "1.0"},
+                        "source": {"name": "source.xml",
+                                   "generation_time": "2018-07-05T02:07:03",
+                                   "validity_start": "2018-06-05T02:07:03",
+                                   "validity_stop": "2018-06-05T08:07:36"},
+                        "events": [{"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "explicit_reference": "EXPLICIT_REFERENCE_1",
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36",
+                                    "values": [{"name": "VALUES",
+                                               "type": "object",
+                                               "values": [
+                                                   {"type": "text",
+                                                    "name": "text_name_1",
+                                                    "value": "text_value_1"
+                                                    }]
+                                                }]
+                        }]
+                    }]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        ## == ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "text", "text_name_1", "text_value_1", True, "==")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not Like ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "text", "text_name_1", "text_value_2", False, "==")
+
+        driver.quit()
+
+        assert  number_of_elements == 1 and empty_element is True
+
+    def test_explicit_refs_query_events_value_timestamp(self):
+
+        # Insert data
+        data = {"operations":[{
+                        "mode": "insert",
+                        "dim_signature": {"name": "dim_signature",
+                                          "exec": "exec",
+                                          "version": "1.0"},
+                        "source": {"name": "source.xml",
+                                   "generation_time": "2018-07-05T02:07:03",
+                                   "validity_start": "2018-06-05T02:07:03",
+                                   "validity_stop": "2018-06-05T08:07:36"},
+                        "events": [{"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "explicit_reference": "EXPLICIT_REFERENCE_1",
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36",
+                                    "values": [{"name": "VALUES",
+                                               "type": "object",
+                                               "values": [
+                                                   {"type": "timestamp",
+                                                    "name": "timestamp_name_1",
+                                                    "value": "2019-04-26T14:14:14"
+                                                    }]
+                                                }]
+                        }]
+                    }]}
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        ## == ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==")
+
+        assert empty_element is True
+
+        ## > ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">")
+
+        assert empty_element == True
+
+        ## >= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=")
+
+        assert empty_element == True
+
+        ## < ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## <= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=")
+
+        assert empty_element is True
+
+        ## != ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=")
+
+        driver.quit()
+
+        assert number_of_elements == 1 and empty_element is False
+
+    def test_explicit_refs_query_events_value_double(self):
+
+        # Insert data
+        data = {"operations":[{
+                        "mode": "insert",
+                        "dim_signature": {"name": "dim_signature",
+                                          "exec": "exec",
+                                          "version": "1.0"},
+                        "source": {"name": "source.xml",
+                                   "generation_time": "2018-07-05T02:07:03",
+                                   "validity_start": "2018-06-05T02:07:03",
+                                   "validity_stop": "2018-06-05T08:07:36"},
+                        "events": [{"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "explicit_reference": "EXPLICIT_REFERENCE_1",
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36",
+                                    "values": [{"name": "VALUES",
+                                               "type": "object",
+                                               "values": [
+                                                   {"type": "double",
+                                                    "name": "double_name_1",
+                                                    "value": "3.5"
+                                                    }]
+                                                }]
+                        }]
+                    }]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        ## == ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "==")
+
+        assert number_of_elements == 1 and empty_element is False
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", False, "==")
+
+        assert empty_element is True
+
+        ## > ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, ">")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, ">")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, ">")
+
+        assert empty_element == True
+
+        ## >= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, ">=")
+
+        assert empty_element == True
+
+        ## < ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, "<")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## <= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, "<=")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "!=")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, "!=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit references")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, "!=")
+
+        driver.quit()
+
+        assert number_of_elements == 1 and empty_element is False
+
+    def test_explicit_refs_query_events_two_values(self):
+
+        # Insert data
+        data = {"operations": [{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_1",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_1.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "events": [{"gauge": {"name": "GAUGE_NAME",
+                                  "system": "GAUGE_SYSTEM",
+                                  "insertion_type": "SIMPLE_UPDATE"},
+                        "explicit_reference": "EXPLICIT_REFERENCE_1",
+                        "start": "2018-06-05T02:07:03",
+                        "stop": "2018-06-05T08:07:36",
+                        "values": [{"name": "VALUES",
+                                   "type": "object",
+                                   "values": [
+                                       {"name": "text_name_1",
+                                        "type": "text",
+                                        "value": "text_value_1"
+                                       }]
+                                   }]
+                    }]
+            },{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_2",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_2.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "events": [{"gauge": {"name": "GAUGE_NAME",
+                                  "system": "GAUGE_SYSTEM",
+                                  "insertion_type": "SIMPLE_UPDATE"},
+                        "explicit_reference": "EXPLICIT_REFERENCE_2",
+                        "start": "2018-06-05T02:07:03",
+                        "stop": "2018-06-05T08:07:36",
+                        "values": [{"name": "VALUES",
+                                   "type": "object",
+                                   "values":  [
+                                   {"name": "text_name_1",
+                                    "type": "text",
+                                    "value": "text_value_1"
+                                       },
+                                   {"name": "double_name_1",
+                                    "type": "double",
+                                    "value": "1.4"
+                                       }]
+                                   }]
+                        },{"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "explicit_reference": "EXPLICIT_REFERENCE_3",
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36",
+                                    "values": [{"name": "VALUES",
+                                               "type": "object",
+                                               "values": [
+                                                   {"name": "text_name_3",
+                                                    "type": "text",
+                                                    "value": "text_value_2"
+                                                   }]
+                                               }]
+                                    }]
+            }]
+        }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Events")
+
+        number_of_elements, empty_element =  functions.two_values_comparer(driver, wait, "events", "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.quit()
+
+        assert True
 
     def test_explicit_refs_query_annotation_name_filter(self):
 
@@ -1248,6 +1970,7 @@ class TestEngine(unittest.TestCase):
 
         assert number_of_elements == 2
 
+    # Not working
     def test_explicit_refs_query_ingestion_time(self):
 
         # Insert data
@@ -1337,6 +2060,618 @@ class TestEngine(unittest.TestCase):
         number_of_elements, empty_element =  functions.value_comparer(driver, wait, "explicit_refs", "ingestion_time", ingestion_time, None, True, "!=")
 
         assert empty_element is True
+
+    def test_explicit_refs_query_annotations_value_text(self):
+
+        # Insert data
+        data = {"operations": [{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_1",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_1.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "annotations": [{
+                "explicit_reference" : "EXPLICIT_REFERENCE",
+                "annotation_cnf": {
+                    "name": "NAME_1",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values": [
+                        {"name": "text_name_1",
+                         "type": "text",
+                         "value": "text_value_1"
+                        }]
+                    }]
+                }]
+            },{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_2",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_2.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "annotations": [{
+                "explicit_reference" : "EXPLICIT_REFERENCE",
+                "annotation_cnf": {
+                    "name": "NAME_1",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values":  [
+                    {"name": "text_name_2",
+                     "type": "text",
+                     "value": "text_value_2"
+                        }]
+                    }]
+                },{
+                "explicit_reference" : "EXPLICIT_REFERENCE",
+                "annotation_cnf": {
+                    "name": "NAME_2",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values": [
+                        {"name": "text_name_3",
+                         "type": "text",
+                         "value": "text_value_2"
+                        }]
+                    }]
+                }]
+            }]
+        }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        ## == ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "text", "text_name_1", "text_value_1", True, "==")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not like ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "text", "text_name_1", "text_value_2", False, "==")
+
+        driver.quit()
+
+        assert  number_of_elements == 2
+
+    def test_explicit_refs_query_annotations_value_timestamp(self):
+
+        # Insert data
+        data = {"operations": [{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_1",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_1.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "annotations": [{
+                "explicit_reference" : "EXPLICIT_REFERENCE",
+                "annotation_cnf": {
+                    "name": "NAME_1",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values": [
+                        {"name": "timestamp_name_1",
+                         "type": "timestamp",
+                         "value": "2019-04-26T14:14:14"
+                        }]
+                    }]
+                }]
+            }]
+        }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        ## == ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==")
+
+        assert empty_element is True
+
+        ## > ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">")
+
+        assert empty_element == True
+
+        ## >= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=")
+
+        assert empty_element == True
+
+        ## < ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## <= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=")
+
+        driver.quit()
+
+        assert number_of_elements == 1 and empty_element is False
+
+    def test_explicit_refs_query_annotations_value_double(self):
+
+        # Insert data
+        data = {"operations": [{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_1",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_1.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "annotations": [{
+                "explicit_reference" : "EXPLICIT_REFERENCE",
+                "annotation_cnf": {
+                    "name": "NAME_1",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values": [
+                        {"name": "double_name_1",
+                         "type": "double",
+                         "value": "3.5"
+                        }]
+                    }]
+                }]
+            }]
+        }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        ## == ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.5", True, "==")
+
+        assert number_of_elements == 1 and empty_element is False
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.5", False, "==")
+
+        assert empty_element is True
+
+        ## > ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.5", True, ">")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.25", True, ">")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.75", True, ">")
+
+        assert empty_element == True
+
+        ## >= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.5", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.25", True, ">=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.75", True, ">=")
+
+        assert empty_element == True
+
+        ## < ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.5", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.25", True, "<")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.75", True, "<")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## <= ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.5", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.25", True, "<=")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.75", True, "<=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.5", True, "!=")
+
+        assert empty_element is True
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.25", True, "!=")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element = functions.value_comparer(driver, wait,"explicit_refs_2", "double", "double_name_1", "3.75", True, "!=")
+
+        driver.quit()
+
+        assert number_of_elements == 1 and empty_element is False
+
+    def test_explicit_refs_query_annotations_two_values(self):
+
+        # Insert data
+        data = {"operations": [{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_1",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_1.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "annotations": [{
+                "explicit_reference" : "EXPLICIT_REFERENCE_1",
+                "annotation_cnf": {
+                    "name": "NAME_1",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values": [
+                        {"name": "text_name_1",
+                         "type": "text",
+                         "value": "text_value_1"
+                        }]
+                    }]
+                }]
+            },{
+            "mode": "insert",
+            "dim_signature": {
+                  "name": "DIM_SIGNATURE_2",
+                  "exec": "exec",
+                  "version": "1.0"
+            },
+            "source":  {"name": "source_2.xml",
+                           "generation_time": "2018-07-05T02:07:03",
+                           "validity_start": "2018-06-05T02:07:03",
+                           "validity_stop": "2018-06-05T08:07:36"},
+            "annotations": [{
+                "explicit_reference" : "EXPLICIT_REFERENCE_2",
+                "annotation_cnf": {
+                    "name": "NAME_1",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values":  [
+                    {"name": "text_name_1",
+                     "type": "text",
+                     "value": "text_value_1"
+                        },
+                    {"name": "double_name_1",
+                     "type": "double",
+                     "value": "1.4"
+                        }]
+                    }]
+                },{
+                "explicit_reference" : "EXPLICIT_REFERENCE_3",
+                "annotation_cnf": {
+                    "name": "NAME_2",
+                    "system": "SYSTEM"
+                    },
+                "values": [{
+                    "name": "details",
+                    "type": "object",
+                    "values": [
+                        {"name": "text_name_3",
+                         "type": "text",
+                         "value": "text_value_2"
+                        }]
+                    }]
+                }]
+            }]
+        }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        # Create a new instance of the Firefox driver
+        driver = webdriver.Firefox(options=self.options)
+
+        wait = WebDriverWait(driver,30);
+
+        driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(driver,"Explicit References")
+
+        number_of_elements, empty_element =  functions.two_values_comparer( driver, wait, "explicit_refs_1", "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
+
+        assert number_of_elements == 1 and empty_element is False
+
+        driver.quit()
+
+        assert True
 
     def test_explicit_refs_query_period(self):
 
