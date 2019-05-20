@@ -47,7 +47,7 @@ function show_annotation_values(row, values){
         '<th>Type</th>' +
         '<th>Name</th>' +
         '<th>Value</th>' +
-        '<th>Level position</th>' +
+        '<th>Position</th>' +
         '<th>Parent level</th>' +
         '<th>Parent position</th>' +
         '</tr>' +
@@ -60,7 +60,7 @@ function show_annotation_values(row, values){
             '<td>' + value["type"] + '</td>' +
             '<td>' + value["name"] + '</td>' +
             '<td>' + value["value"] + '</td>' +
-            '<td>' + value["level_position"] + '</td>' +
+            '<td>' + value["position"] + '</td>' +
             '<td>' + value["parent_level"] + '</td>' +
             '<td>' + value["parent_position"] + '</td>' +
             '</tr>'
