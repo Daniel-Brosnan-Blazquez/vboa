@@ -65,7 +65,7 @@ class TestEngine(unittest.TestCase):
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
         self.session.close()
-        self.driver.quit()        
+        self.driver.quit()
 
     def test_dim_signatures_query_no_filter(self):
 
@@ -159,7 +159,7 @@ class TestEngine(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebSelf.DriverWait(driver,30);
+        wait = WebDriverWait(self.driver,30);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
