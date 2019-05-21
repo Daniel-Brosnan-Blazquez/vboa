@@ -23,6 +23,7 @@ setup(name="vboa",
           "nose",
           "before_after",
           "coverage",
-          "termcolor"
+          "termcolor",
+          "selenium"
       ],
       test_suite='nose.collector')

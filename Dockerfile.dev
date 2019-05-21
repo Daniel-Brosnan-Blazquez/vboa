@@ -13,7 +13,9 @@ RUN yum install -y postgresql \
     gcc \
     python36-devel \
     pytest \
-    npm
+    npm \
+    chromium \
+    chromedriver
 
 RUN pip3 install pytest-cov \
     termcolor \
