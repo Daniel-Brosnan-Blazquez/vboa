@@ -157,8 +157,8 @@ def query_events():
         # end if
         kwargs["gauge_names"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("gauge_names"):
-            kwargs["gauge_names"]["filter"].append(source)
+        for gauge_name in request.form.getlist("gauge_names"):
+            kwargs["gauge_names"]["filter"].append(gauge_name)
             i+=1
         # end for
     # end if
@@ -176,8 +176,8 @@ def query_events():
         # end if
         kwargs["gauge_systems"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("gauge_systems"):
-            kwargs["gauge_systems"]["filter"].append(source)
+        for gauge_system in request.form.getlist("gauge_systems"):
+            kwargs["gauge_systems"]["filter"].append(gauge_system)
             i+=1
         # end for
     # end if
@@ -365,8 +365,8 @@ def query_annotations():
         # end if
         kwargs["annotation_cnf_names"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("annotation_names"):
-            kwargs["annotation_cnf_names"]["filter"].append(source)
+        for annotation_name in request.form.getlist("annotation_names"):
+            kwargs["annotation_cnf_names"]["filter"].append(annotation_name)
             i+=1
         # end for
     # end if
@@ -384,8 +384,8 @@ def query_annotations():
         # end if
         kwargs["annotation_cnf_systems"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("annotation_systems"):
-            kwargs["annotation_cnf_systems"]["filter"].append(source)
+        for annotation_system in request.form.getlist("annotation_systems"):
+            kwargs["annotation_cnf_systems"]["filter"].append(annotation_system)
             i+=1
         # end for
     # end if
@@ -487,8 +487,8 @@ def query_sources():
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("dim_signatures"):
-            kwargs["dim_signatures"]["filter"].append(source)
+        for dim_signature in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
@@ -551,8 +551,8 @@ def query_sources():
         # end if
         kwargs["processors"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("processors"):
-            kwargs["processors"]["filter"].append(source)
+        for processor in request.form.getlist("processors"):
+            kwargs["processors"]["filter"].append(processor)
             i+=1
         # end for
     # end if
@@ -738,8 +738,8 @@ def query_gauges():
         # end if
         kwargs["names"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("gauge_names"):
-            kwargs["names"]["filter"].append(source)
+        for gauge_name in request.form.getlist("gauge_names"):
+            kwargs["names"]["filter"].append(gauge_name)
             i+=1
         # end for
     # end if
@@ -757,8 +757,8 @@ def query_gauges():
         # end if
         kwargs["systems"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("gauge_systems"):
-            kwargs["systems"]["filter"].append(source)
+        for gauge_system in request.form.getlist("gauge_systems"):
+            kwargs["systems"]["filter"].append(gauge_system)
             i+=1
         # end for
     # end if
@@ -776,8 +776,8 @@ def query_gauges():
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("dim_signatures"):
-            kwargs["dim_signatures"]["filter"].append(source)
+        for dim_signature in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
@@ -840,8 +840,8 @@ def query_annotation_cnfs():
         # end if
         kwargs["names"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("annotation_names"):
-            kwargs["names"]["filter"].append(source)
+        for annotation_name in request.form.getlist("annotation_names"):
+            kwargs["names"]["filter"].append(annotation_name)
             i+=1
         # end for
     # end if
@@ -859,8 +859,8 @@ def query_annotation_cnfs():
         # end if
         kwargs["systems"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("annotation_systems"):
-            kwargs["systems"]["filter"].append(source)
+        for annotation_system in request.form.getlist("annotation_systems"):
+            kwargs["systems"]["filter"].append(annotation_system)
             i+=1
         # end for
     # end if
@@ -878,8 +878,8 @@ def query_annotation_cnfs():
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("dim_signatures"):
-            kwargs["dim_signatures"]["filter"].append(source)
+        for dim_signature in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
@@ -940,10 +940,10 @@ def query_ers():
         if not "er_notin_check" in request.form:
             op="in"
         # end if
-        kwargs["ers"] = {"filter": [], "op": op}
+        kwargs["explicit_refs"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("ers"):
-            kwargs["ers"]["filter"].append(source)
+        for er in request.form.getlist("ers"):
+            kwargs["explicit_refs"]["filter"].append(er)
             i+=1
         # end for
     # end if
@@ -961,17 +961,36 @@ def query_ers():
         # end if
         kwargs["groups"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("groups"):
-            kwargs["groups"]["filter"].append(source)
+        for group in request.form.getlist("groups"):
+            kwargs["groups"]["filter"].append(group)
+            i+=1
+        # end for
+    # end if
+    if request.form["source_like"] != "":
+        op="notlike"
+        if not "source_notlike_check" in request.form:
+            op="like"
+        # end if
+        kwargs["sources"] = {"filter": request.form["source_like"], "op": op}
+    # end if
+    elif "sources" in request.form and request.form["sources"] != "":
+        op="notin"
+        if not "source_notin_check" in request.form:
+            op="in"
+        # end if
+        kwargs["sources"] = {"filter": [], "op": op}
+        i = 0
+        for source in request.form.getlist("sources"):
+            kwargs["sources"]["filter"].append(source)
             i+=1
         # end for
     # end if
     if request.form["ingestion_time"] != "":
-        kwargs["ingestion_time_filters"] = []
+        kwargs["explicit_ref_ingestion_time_filters"] = []
         i = 0
         operators = request.form.getlist("ingestion_time_operator")
         for ingestion_time in request.form.getlist("ingestion_time"):
-            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            kwargs["explicit_ref_ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
             i+=1
         # end for
     # end if
@@ -1028,8 +1047,8 @@ def query_ers():
         # end if
         kwargs["gauge_names"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("gauge_names"):
-            kwargs["gauge_names"]["filter"].append(source)
+        for gauge_name in request.form.getlist("gauge_names"):
+            kwargs["gauge_names"]["filter"].append(gauge_name)
             i+=1
         # end for
     # end if
@@ -1047,8 +1066,8 @@ def query_ers():
         # end if
         kwargs["gauge_systems"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("gauge_systems"):
-            kwargs["gauge_systems"]["filter"].append(source)
+        for gauge_system in request.form.getlist("gauge_systems"):
+            kwargs["gauge_systems"]["filter"].append(gauge_system)
             i+=1
         # end for
     # end if
@@ -1113,8 +1132,8 @@ def query_ers():
         # end if
         kwargs["annotation_cnf_names"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("annotation_names"):
-            kwargs["annotation_cnf_names"]["filter"].append(source)
+        for annotation_name in request.form.getlist("annotation_names"):
+            kwargs["annotation_cnf_names"]["filter"].append(annotation_name)
             i+=1
         # end for
     # end if
@@ -1132,8 +1151,8 @@ def query_ers():
         # end if
         kwargs["annotation_cnf_systems"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("annotation_systems"):
-            kwargs["annotation_cnf_systems"]["filter"].append(source)
+        for annotation_system in request.form.getlist("annotation_systems"):
+            kwargs["annotation_cnf_systems"]["filter"].append(annotation_system)
             i+=1
         # end for
     # end if
@@ -1196,8 +1215,8 @@ def query_dim_signatures():
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for source in request.form.getlist("dim_signatures"):
-            kwargs["dim_signatures"]["filter"].append(source)
+        for dim_signature in request.form.getlist("dim_signatures"):
+            kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
