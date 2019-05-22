@@ -7,42 +7,42 @@
             <!-- Exlicit references -->
             <div class="row">
               <div class="col-xs-3 query-ers">
-                <label>Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="er_like_ers" name="er_like"/>
+                <label id="er-like-label-ers">Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="er_like_ers" name="er_like" id="er-like-input-ers"/>
                 <datalist id="er_like_ers">
                 </datalist>
               </div>
               <div class="col-xs-3 query-ers">
-                <label>Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                <label id="er-in-label-ers">Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="er-in-select-ers">
                 </select>
               </div>
             </div>
             <!-- Configuration -->
             <div class="row">
               <div class="col-xs-3 query-er-groups">
-                <label>Group like (<input type="checkbox" name="group_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="group_like_explicit_reference" name="group_like"/>
+                <label id="er-group-like-label-ers">Group like (<input type="checkbox" name="group_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="group_like_explicit_reference" name="group_like" id="er-group-like-input-ers"/>
                 <datalist id="group_like_explicit_reference">
                 </datalist>
               </div>
               <div class="col-xs-3 query-er-groups">
-                <label>Groups (<input type="checkbox" name="group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="groups" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                <label id="er-group-in-label-ers">Groups (<input type="checkbox" name="group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select id="er-group-in-select-ers" name="groups" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>
             <!-- Sources -->
             <div class="row query-sources">
               <div class="col-xs-3 query-source-names">
-                <label>Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="source_like_ers" name="source_like"/>
+                <label id="source-like-label-ers">Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input id="source-like-input-ers" class="form-control" list="source_like_ers" name="source_like"/>
                 <datalist id="source_like_ers">
                 </datalist>
               </div>
               <div class="col-xs-3 query-source-names">
-                <label>Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                <label id="source-in-label-ers">Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select id="source-in-select-ers" name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                 </select>
               </div>
             </div>
@@ -54,14 +54,14 @@
                   <!-- Event keys -->
                   <div class="row">
                     <div class="col-xs-3 query-keys">
-                      <label>Key like (<input type="checkbox" name="key_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                      <input class="form-control" list="key_like_events" name="key_like"/>
+                      <label id="key-like-label-ers">Key like (<input type="checkbox" name="key_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                      <input id="key-like-input-ers" class="form-control" list="key_like_events" name="key_like"/>
                       <datalist id="key_like_events">
                       </datalist>
                     </div>
                     <div class="col-xs-3 query-keys">
-                      <label>Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                      <select name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      <label id="key-in-label-ers">Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                      <select id="key-in-select-ers" name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                       </select>
                     </div>
                   </div>
@@ -69,27 +69,27 @@
                   <div>
                     <div class="row  query-gauges">
                       <div class="col-xs-3 query-gauge-names">
-                        <label>Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                        <input class="form-control" list="gauge_name_like_events" name="gauge_name_like"/>
+                        <label id="gauge-name-like-label-ers">Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                        <input id="gauge-name-like-input-ers" class="form-control" list="gauge_name_like_events" name="gauge_name_like"/>
                         <datalist id="gauge_name_like_events">
                         </datalist>
                       </div>
                       <div class="col-xs-3 query-gauge-systems">
-                        <label>Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                        <input class="form-control" list="gauge_system_like_events" name="gauge_system_like"/>
+                        <label id="gauge-system-like-label-ers">Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                        <input id="gauge-system-like-input-ers" class="form-control" list="gauge_system_like_events" name="gauge_system_like"/>
                         <datalist id="gauge_system_like_events">
                         </datalist>
                       </div>
                     </div>
                     <div class="row query-gauges">
                       <div class="col-xs-3 query-gauge-names">
-                        <label>Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                        <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        <label id="gauge-name-in-label-ers">Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                        <select id="gauge-name-in-select-ers" name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                         </select>
                       </div>
                       <div class="col-xs-3 query-gauge-systems">
-                        <label>Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                        <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        <label id="gauge-system-in-label-ers">Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                        <select id="gauge-system-in-select-ers" name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
                         </select>
                       </div>
                     </div>
@@ -165,13 +165,13 @@
                   <!-- Annotation configurations -->
                   <div class="row  query-annotation-cnfs">
                     <div class="col-xs-3 query-annotation-names">
-                      <label>Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                      <label id="annotation-system-like-label-ers">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                       <input class="form-control" list="annotation_name_like_annotations" name="annotation_name_like"/>
                       <datalist id="annotation_name_like_annotations">
                       </datalist>
                     </div>
                     <div class="col-xs-3 query-annotation-systems">
-                      <label>Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                      <label id="annotation-system-like-label-ers">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
                       <input class="form-control" list="annotation_system_like_annotations" name="annotation_system_like"/>
                       <datalist id="annotation_system_like_annotations">
                       </datalist>
@@ -243,7 +243,7 @@
             <div id="more-ingestion-time-query-ers">
             </div>
             <div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 12px">Query</button>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="submit-button-query-explicit-references">Query</button>
             </div>
           </form>
         </div>
