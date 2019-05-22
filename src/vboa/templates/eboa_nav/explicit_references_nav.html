@@ -11,7 +11,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="explicit-reference-nav-details-table">
       <thead>
         <tr>
           <th>Explicit reference</th>
@@ -30,7 +30,7 @@
           <td>{{ er.group.name }}</td>
           <td><a href="/eboa_nav/query-events-by-er/{{ er.explicit_ref }}"><i class="fa fa-link"></i></a></td>
           <td><a href="/eboa_nav/query-annotations-by-er/{{ er.explicit_ref }}"><i class="fa fa-link"></i></a></td>
-          <td>{{ er.ingestion_time }}</td>
+          <td>{{ er.ingestion_time.isoformat() }}</td>
           <td><a href="/eboa_nav/query-er-links/{{ er.explicit_ref_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ er.explicit_ref_uuid }}</td>
         </tr>
