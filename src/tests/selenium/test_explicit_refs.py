@@ -537,10 +537,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button.click()
 
         # Check table generated
-        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
-        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
-
-        assert number_of_elements == 3
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+        
+        assert explicit_ref_table
 
         ## In ##
         self.driver.get("http://localhost:5000/eboa_nav/")
