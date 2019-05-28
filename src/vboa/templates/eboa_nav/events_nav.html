@@ -11,7 +11,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="events_table">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="events-table">
       <thead>
         <tr>
           <th></th>
@@ -78,7 +78,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <div id="events_nav_timeline">
+    <div id="events-nav-timeline">
     </div>
   </div>
   <!-- /.panel-body -->
@@ -93,7 +93,7 @@
       {% with events=events %}
       {% include "graphs/events_to_json_for_timeline.js" %}
       {% endwith %}
-      vboa.create_event_timeline(events, "events_nav_timeline");
+      vboa.create_event_timeline(events, "events-nav-timeline");
       {% endif %}
     </script>
 {% endblock %}

@@ -27,77 +27,120 @@ def goToTab(driver,tab_name):
 def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool, value_operator, row):
 
     if row is 1:
-        value_query_div = driver.find_element_by_id(tab + "_value_query_initial")
+        value_query_div = driver.find_element_by_id(tab + "-value-query-initial")
     else:
         value_query_div = driver.find_element_by_id("more-value-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
-        
-    type = Select(value_query_div.find_element_by_id(tab + "_value_type"))
+
+    type = Select(value_query_div.find_element_by_id(tab + "-value-type"))
     type.select_by_visible_text(value_type)
 
-    name = value_query_div.find_element_by_id(tab + "_value_name_text")
+    name = value_query_div.find_element_by_id(tab + "-value-name-text")
     name.send_keys(value_name)
 
-    name_like = Select(value_query_div.find_element_by_id(tab + "_value_name_option"))
+    name_like = Select(value_query_div.find_element_by_id(tab + "-value-name-option"))
     if like_bool is False:
         name_like.select_by_visible_text("notlike")
 
-    operator = Select(value_query_div.find_element_by_id(tab + "_value_value_operator"))
+    operator = Select(value_query_div.find_element_by_id(tab + "-value-value-operator"))
     operator.select_by_visible_text(value_operator)
 
-    value = value_query_div.find_element_by_id(tab + "_value_value_text")
+    value = value_query_div.find_element_by_id(tab + "-value-value-text")
     value.send_keys(value_value)
 
-def fill_ingestion_time(driver, wait, tab, value_value, like_bool, value_operator, row):
+def fill_ingestion_time(driver, wait, tab, value_value, value_operator, row):
 
     if row is 1:
-        ingestion_time_div = driver.find_element_by_id(tab + "_ingestion_time_initial")
+        ingestion_time_div = driver.find_element_by_id(tab + "-ingestion-time-initial")
     else:
         ingestion_time_div = driver.find_element_by_id("more-ingestion-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
 
-    operator = Select(ingestion_time_div.find_element_by_id("ingestion_duration_operator"))
+    operator = Select(ingestion_time_div.find_element_by_id("ingestion-time-operator"))
     operator.select_by_visible_text(value_operator)
 
-    value = ingestion_time_div.find_element_by_id("ingestion_duration_text")
+    value = ingestion_time_div.find_element_by_id("ingestion-time-text")
     value.click()
     value.click()
     value.send_keys(value_value)
 
-def fill_two_values(driver, wait, tab, type, type_2, value_name, value_value, value_name_2, value_value_2, like_bool, like_bool_2, value_operator, value_operator_2):
+def fill_generation_time(driver, wait, tab, value_value, value_operator, row):
 
-    fill_value(driver, wait, tab, type, value_name, value_value, like_bool, value_operator, 1)
-    driver.find_element_by_id(tab + "_add_value").click()
-    fill_value(driver, wait, tab, type_2, value_name_2, value_value_2, like_bool_2, value_operator_2, 2)
+    if row is 1:
+        generation_time_div = driver.find_element_by_id(tab + "-generation-time-initial")
+    else:
+        generation_time_div = driver.find_element_by_id("more-generation-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+
+    operator = Select(generation_time_div.find_element_by_id("generation-duration-operator"))
+    operator.select_by_visible_text(value_operator)
+
+    value = generation_time_div.find_element_by_id("generation-duration-text")
+    value.click()
+    value.click()
+    value.send_keys(value_value)
+
+def fill_ingestion_duration(driver, wait, tab, value_value, value_operator, row):
+
+    if row is 1:
+        generation_time_div = driver.find_element_by_id(tab + "-ingestion-duration-initial")
+    else:
+        generation_time_div = driver.find_element_by_id("more-ingestion-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+
+    operator = Select(generation_time_div.find_element_by_id("ingestion-duration-operator"))
+    operator.select_by_visible_text(value_operator)
+
+    value = generation_time_div.find_element_by_id("ingestion-duration-text")
+    value.click()
+    value.click()
+    value.send_keys(value_value)
 
 def fill_period(driver, wait, tab, row, start_value = None, start_operator = None, end_value = None, end_operator = None):
 
     if row is 1:
-        period_div = driver.find_element_by_id(tab + "_start_stop_initial")
+        period_div = driver.find_element_by_id(tab + "-start-stop-initial")
     else:
         period_div = driver.find_element_by_id("more-start-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
 
     if start_value is not None:
-        start = period_div.find_element_by_id("start_input")
+        start = period_div.find_element_by_id("start-input")
         start.click()
         start.click()
         start.send_keys(start_value)
 
-        start_op = Select(period_div.find_element_by_id("start_operator"))
+        start_op = Select(period_div.find_element_by_id("start-operator"))
         start_op.select_by_visible_text(start_operator)
 
     if end_value is not None:
-        end = period_div.find_element_by_id("stop_input")
+        end = period_div.find_element_by_id("stop-input")
         end.click()
         end.click()
         end.send_keys(end_value)
 
-        end_op = Select(period_div.find_element_by_id("stop_operator"))
+        end_op = Select(period_div.find_element_by_id("stop-operator"))
         end_op.select_by_visible_text(end_operator)
 
-def fill_two_periods(driver, wait, tab, start_value_1 = None, start_operator_1 = None, end_value_1 = None, end_operator_1 = None, start_value_2 = None, start_operator_2 = None, end_value_2 = None, end_operator_2 = None):
+def fill_validity_period(driver, wait, tab, row, start_value = None, start_operator = None, end_value = None, end_operator = None):
 
-    fill_period(driver, wait, tab, 1, start_value_1, start_operator_1, end_value_1, end_operator_1,)
-    driver.find_element_by_id("events_add_start_stop").click()
-    fill_period(driver, wait, tab, 2, start_value_2, start_operator_2, end_value_2, end_operator_2)
+    if row is 1:
+        period_div = driver.find_element_by_id(tab + "-validity-start-validity-stop-initial")
+    else:
+        period_div = driver.find_element_by_id("more-validity-start-validity-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+
+    if start_value is not None:
+        start = period_div.find_element_by_id("start-input")
+        start.click()
+        start.click()
+        start.send_keys(start_value)
+
+        start_op = Select(period_div.find_element_by_id("start-operator"))
+        start_op.select_by_visible_text(start_operator)
+
+    if end_value is not None:
+        end = period_div.find_element_by_id("stop-input")
+        end.click()
+        end.click()
+        end.send_keys(end_value)
+
+        end_op = Select(period_div.find_element_by_id("stop-operator"))
+        end_op.select_by_visible_text(end_operator)
 
 def click_no_graphs(driver, tab):
 

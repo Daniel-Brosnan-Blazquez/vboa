@@ -12,7 +12,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="gauges_table">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="gauges-table">
       <thead>
         <tr>
           <th>Name</th>
@@ -51,7 +51,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <div class="network-gauges" id="gauges_nav_network">
+    <div class="network-gauges" id="gauges-nav-network">
     </div>
   </div>
   <!-- /.panel-body -->
@@ -68,7 +68,7 @@
       {% endwith %}
       const gauges_for_network = gauges;
 
-      vboa.create_gauge_network(gauges_for_network, "gauges_nav_network");
+      vboa.create_gauge_network(gauges_for_network, "gauges-nav-network");
       {% endif %}
     </script>
 {% endblock %}

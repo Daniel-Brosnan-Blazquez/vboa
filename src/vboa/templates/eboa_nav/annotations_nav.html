@@ -11,7 +11,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="annotations_table">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="annotations-table">
       <thead>
         <tr>
           <th></th>
@@ -60,7 +60,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <div id="annotations_nav_map">
+    <div id="annotations-nav-map">
     </div>
   </div>
   <!-- /.panel-body -->
@@ -75,7 +75,7 @@
       {% with annotations_geometries=annotations_geometries %}
       {% include "graphs/annotations_geometries_to_json_for_map.js" %}
       {% endwith %}
-      vboa.create_annotation_map(annotations_geometries, "annotations_nav_map");
+      vboa.create_annotation_map(annotations_geometries, "annotations-nav-map");
       {% endif %}
     </script>
 {% endblock %}

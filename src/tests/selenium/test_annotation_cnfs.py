@@ -120,11 +120,11 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -225,15 +225,15 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the annotation_name_like input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_names_like_text")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-names-like-text")
         inputElement.send_keys("NAME_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -246,19 +246,19 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the annotation_name_like input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_names_like_text")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-names-like-text")
         inputElement.send_keys("NAME_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotation_cnfs_annotation_names_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotation-cnfs-annotation-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
                     notLikeButton.click()
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -269,17 +269,17 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotation Cnfs")
         # Fill the annotation_name_in input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_names_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -292,21 +292,21 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
 
         # Fill the annotation_name_in input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_names_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("annotation_cnfs_annotation_names_in_checkbox")
+        notInButton = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -388,15 +388,15 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the annotation_system_like input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_system_like_text")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-system-like-text")
         inputElement.send_keys("SYSTEM_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -409,19 +409,19 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the annotation_system_like input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_system_like_text")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-system-like-text")
         inputElement.send_keys("SYSTEM_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotation_cnfs_annotation_system_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotation-cnfs-annotation-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -432,17 +432,17 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotation Cnfs")
         # Fill the annotation_system_in input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_system_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -454,21 +454,21 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the annotation_system_in input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_annotation_system_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("annotation_cnfs_annotation_system_in_checkbox")
+        notInButton = self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -562,15 +562,15 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_dim_signature_like_text")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-dim-signature-like-text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
@@ -583,20 +583,20 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_dim_signature_like_text")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-dim-signature-like-text")
         inputElement.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotation_cnfs_dim_signature_like_checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotation-cnfs-dim-signature-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             notLikeButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -608,7 +608,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_dim_signature_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
@@ -617,11 +617,11 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
@@ -633,22 +633,22 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation Cnfs")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("annotation_cnfs_dim_signature_in_text_chosen").find_element_by_xpath("ul/li/input")
+        inputElement = self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
         inputElement.send_keys("DIM_SIGNATURE_2")
         inputElement.send_keys(Keys.RETURN)
 
-        notInButton = self.driver.find_element_by_id("annotation_cnfs_dim_signature_in_checkbox")
+        notInButton = self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             notInButton.click()
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation_cnfs_submit_button')))
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         submitButton.click()
 
         # Check table generate
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation_cnfs_table")))
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
         number_of_elements = len(annot_cnf_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
