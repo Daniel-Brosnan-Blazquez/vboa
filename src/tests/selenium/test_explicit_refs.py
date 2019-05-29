@@ -56,7 +56,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
-
+        options.add_argument('window-size=1920,1080')
+        
         # Create a new instance of the Chrome driver
         self.driver = webdriver.Chrome(options=options)
 
@@ -66,7 +67,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
         self.session.close()
-
+        self.driver.quit()
+        
     @debug
     def test_explicit_refs_query_no_filter(self):
 
@@ -112,7 +114,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -205,7 +207,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -351,7 +353,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -497,7 +499,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -537,9 +539,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button.click()
 
         # Check table generated
-        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
         
-        assert explicit_ref_table
+        assert no_data
 
         ## In ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -648,7 +650,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -802,7 +804,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -954,7 +956,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1070,11 +1072,18 @@ class TestExplicitReferencesTab(unittest.TestCase):
                                                "type": "object",
                                                "values": [
                                                    {"type": "text",
-                                                    "name": "text_name_1",
-                                                    "value": "text_value_1"
+                                                    "name": "textname_1",
+                                                    "value": "textvalue_1"
                                                     }]
                                                 }]
-                        }]
+                                    },
+                                    {"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "explicit_reference": "EXPLICIT_REFERENCE_2",
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36"}
+                        ]
                     }]
                 }
 
@@ -1082,7 +1091,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1090,9 +1099,17 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "text", "text_name_1", "text_value_1", True, "==")
+        functions.fill_value(self.driver, wait, "events-ers", "text", "textname_1", "textvalue_1", True, "==", 1)
 
-        assert number_of_elements == 1 and empty_element is False
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
+
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
         ## Not Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1100,10 +1117,17 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "text", "text_name_1", "text_value_2", False, "==")
+        functions.fill_value(self.driver, wait, "events-ers", "text", "textname_1", "textvalue_2", False, "==", 1)
 
-        assert  number_of_elements == 1 and empty_element is True
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
+        
     def test_explicit_refs_query_events_value_timestamp(self):
 
         # Insert data
@@ -1130,14 +1154,20 @@ class TestExplicitReferencesTab(unittest.TestCase):
                                                     "value": "2019-04-26T14:14:14"
                                                     }]
                                                 }]
-                        }]
+                        },
+                                    {"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "explicit_reference": "EXPLICIT_REFERENCE_2",
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36"}]
                     }]}
 
         # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1145,18 +1175,30 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1164,27 +1206,44 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">")
-
-        assert number_of_elements == 1 and empty_element is False
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element == True
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Explicit references")
+
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1192,27 +1251,46 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=")
-
-        assert number_of_elements == 1 and empty_element is False
+        assert number_of_elements == 1
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element == True
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Explicit references")
+
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1220,27 +1298,30 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<")
-
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1248,36 +1329,46 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=")
-
-        assert empty_element is True
+        assert number_of_elements == 1
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
         ## != ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1285,18 +1376,30 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=")
+        functions.fill_value(self.driver, wait, "events-ers", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
     def test_explicit_refs_query_events_value_double(self):
 
@@ -1324,7 +1427,13 @@ class TestExplicitReferencesTab(unittest.TestCase):
                                                     "value": "3.5"
                                                     }]
                                                 }]
-                        }]
+                        },
+                                    {"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "explicit_reference": "EXPLICIT_REFERENCE_2",
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36"}]
                     }]
                 }
 
@@ -1332,7 +1441,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1340,17 +1449,30 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "==")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.5", True, "==", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", False, "==")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.5", False, "==",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1358,27 +1480,44 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, ">")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.5", True, ">",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, ">")
-
-        assert number_of_elements == 1 and empty_element is False
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, ">")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.25", True, ">", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element == True
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Explicit references")
+
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.75", True, ">",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1386,27 +1525,46 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, ">=")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.5", True, ">=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, ">=")
-
-        assert number_of_elements == 1 and empty_element is False
+        assert number_of_elements == 1
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, ">=")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.25", True, ">=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element == True
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Explicit references")
+
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.75", True, ">=",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
 
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1414,27 +1572,44 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "<")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.5", True, "<",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, "<")
-
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, "<")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.25", True, "<",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Explicit references")
+
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.75", True, "<", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
+
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1442,27 +1617,46 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "<=")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.5", True, "<=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, "<=")
-
-        assert empty_element is True
+        assert number_of_elements == 1
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, "<=")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.25", True, "<=",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
+
+        assert no_data
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Explicit references")
+
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.75", True, "<=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
+
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
         ## != ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1470,27 +1664,32 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.5", True, "!=")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.5", True, "!=",1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert empty_element is True
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-no-data")))
 
-        self.driver.get("http://localhost:5000/eboa_nav/")
-
-        # Go to tab
-        functions.goToTab(self.driver,"Explicit references")
-
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.25", True, "!=")
-
-        assert number_of_elements == 1 and empty_element is False
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element = functions.value_comparer(self.driver, wait, "explicit_refs_1", "double", "double_name_1", "3.75", True, "!=")
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "3.25", True, "!=", 1)
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert number_of_elements == 1 and empty_element is False
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
 
     def test_explicit_refs_query_events_two_values(self):
 
@@ -1572,18 +1771,26 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Events")
+        functions.goToTab(self.driver,"Explicit references")
 
-        number_of_elements, empty_element =  functions.two_values_comparer(self.driver, wait, "events", "text", "double", "text_name_1", "text_value_1", "double_name_1", "1.4", True, True, "==", "==")
+        functions.fill_value(self.driver, wait, "events-ers", "text", "text_name_1", "text_value_1", True, "==", 1)
+        self.driver.find_element_by_id("events-ers-add-value").click()
+        functions.fill_value(self.driver, wait, "events-ers", "double", "double_name_1", "1.4", True, "==", 2)
 
-        assert number_of_elements == 1 and empty_element is False
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"submit-button-query-explicit-references")))
+        submit_button.click()
 
-        assert True
+        # Check table generated
+        explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
+        number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
 
     def test_explicit_refs_query_annotation_name_filter(self):
 
@@ -1652,7 +1859,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1661,7 +1868,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_name_like input
-        input_element = self.driver.find_element_by_id("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div[1]/div[1]/input")
+        # Fill the gauge_name_like input
+        input_element = self.driver.find_element_by_id("annotation-name-like-input-ers")
         input_element.send_keys("NAME_2")
 
         # Click on query button
@@ -1671,9 +1879,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Check table generated
         explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
         number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(explicit_ref_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
-        assert number_of_elements == 1 and empty_element is False
+        assert number_of_elements == 1
 
         ## Not like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1682,10 +1889,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_name_like input
-        input_element = self.driver.find_element_by_id("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[1]/div[2]/div[1]/div[1]/input")
+        input_element = self.driver.find_element_by_id("annotation-name-like-input-ers")
         input_element.send_keys("NAME_2")
 
-        not_like_button = self.driver.find_element_by_id("/html/body/div[1]/div/div[2]/div/div/div[4]/div/div/div/div/div/form/div[4]/div[2]/div[2]/div[1]/div[1]/label")
+        not_like_button = self.driver.find_element_by_id("annotation-name-like-label-ers")
         not_like_button.click()
 
         # Click on query button
@@ -1695,7 +1902,6 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Check table generated
         explicit_ref_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-reference-nav-details-table")))
         number_of_elements = len(explicit_ref_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(explicit_ref_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1815,7 +2021,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1937,7 +2143,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         ingestion_time = self.session.query(ExplicitRef).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2078,7 +2284,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2137,7 +2343,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2335,7 +2541,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2578,7 +2784,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2655,7 +2861,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ## Full period##
         self.driver.get("http://localhost:5000/eboa_nav/")

@@ -58,9 +58,6 @@ class TestAnnotationsTab(unittest.TestCase):
         options.add_argument('--no-sandbox')
         options.add_argument('window-size=1920,1080')
 
-        # Kill webserver
-        subprocess.call(["pkill", "chrome"])
-
         # Create a new instance of the Chrome driver
         self.driver = webdriver.Chrome(options=options)
 
@@ -114,7 +111,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -203,7 +200,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -317,7 +314,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -486,7 +483,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -654,7 +651,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -823,7 +820,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1004,7 +1001,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1083,7 +1080,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1451,7 +1448,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1816,7 +1813,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Annotation).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2021,7 +2018,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 

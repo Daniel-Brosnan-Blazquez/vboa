@@ -56,9 +56,6 @@ class TestSourcesTab(unittest.TestCase):
         options.add_argument('--no-sandbox')
         options.add_argument('window-size=1920,1080')
 
-        # Kill webserver
-        subprocess.call(["pkill", "chrome"])
-
         # Create a new instance of the Chrome driver
         self.driver = webdriver.Chrome(options=options)
 
@@ -100,7 +97,7 @@ class TestSourcesTab(unittest.TestCase):
         # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -200,7 +197,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -328,7 +325,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -476,7 +473,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -621,7 +618,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -769,7 +766,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -840,6 +837,7 @@ class TestSourcesTab(unittest.TestCase):
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
         self.driver.find_element_by_id("sources-add-validity-start-validity-stop").click()
+#        wait.until(EC.visibility_of_element_located((By.ID,"more-validity-start-validity-stop-query-sources")))
         functions.fill_validity_period(self.driver, wait, "sources", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
@@ -896,7 +894,7 @@ class TestSourcesTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Source).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1036,7 +1034,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1177,7 +1175,7 @@ class TestSourcesTab(unittest.TestCase):
 
         ingestion_duration = str(self.session.query(Source).all()[0].ingestion_duration.total_seconds())
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1321,7 +1319,7 @@ class TestSourcesTab(unittest.TestCase):
 
         assert eboa_engine.exit_codes["SOURCE_ALREADY_INGESTED"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,30);
+        wait = WebDriverWait(self.driver,5);
 
         ## OK Status ##
         self.driver.get("http://localhost:5000/eboa_nav/")

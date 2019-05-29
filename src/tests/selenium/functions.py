@@ -31,20 +31,20 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool
     else:
         value_query_div = driver.find_element_by_id("more-value-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
 
-    type = Select(value_query_div.find_element_by_id(tab + "-value-type"))
+    type = Select(value_query_div.find_element_by_id("value-type"))
     type.select_by_visible_text(value_type)
 
-    name = value_query_div.find_element_by_id(tab + "-value-name-text")
+    name = value_query_div.find_element_by_id("value-name-text")
     name.send_keys(value_name)
 
-    name_like = Select(value_query_div.find_element_by_id(tab + "-value-name-option"))
+    name_like = Select(value_query_div.find_element_by_id("value-name-option"))
     if like_bool is False:
         name_like.select_by_visible_text("notlike")
 
-    operator = Select(value_query_div.find_element_by_id(tab + "-value-value-operator"))
+    operator = Select(value_query_div.find_element_by_id("value-value-operator"))
     operator.select_by_visible_text(value_operator)
 
-    value = value_query_div.find_element_by_id(tab + "-value-value-text")
+    value = value_query_div.find_element_by_id("value-value-text")
     value.send_keys(value_value)
 
 def fill_ingestion_time(driver, wait, tab, value_value, value_operator, row):
