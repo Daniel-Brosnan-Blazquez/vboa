@@ -24,6 +24,9 @@ RUN pip3 install pytest-cov \
     Sphinx
 
 RUN mkdir /log
+RUN mkdir /scripts
+RUN ln -s /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py
+RUN ln -s /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py
 
 # Environment Variables
 ENV EBOA_RESOURCES_PATH /resources_path
@@ -33,6 +36,7 @@ ENV FLASK_APP $FLASK_APP
 ENV FLASK_ENV development
 ENV LC_ALL en_US.utf-8
 ENV LANG en_US.utf-8
+ENV PATH="${PATH}:/scripts"
 
 # expose port
 EXPOSE 5000
