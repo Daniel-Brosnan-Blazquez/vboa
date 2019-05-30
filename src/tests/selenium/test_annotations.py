@@ -42,6 +42,14 @@ from vboa.eboa_nav import eboa_nav
 
 
 class TestAnnotationsTab(unittest.TestCase):
+
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('window-size=1920,1080')
+    driver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(5)    
+    
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -53,19 +61,14 @@ class TestAnnotationsTab(unittest.TestCase):
         # Clear all tables before executing the test
         self.query_eboa.clear_db()
 
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('window-size=1920,1080')
-
-        # Create a new instance of the Chrome driver
-        self.driver = webdriver.Chrome(options=options)
-
     def tearDown(self):
         # Close connections to the DDBB
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
         self.session.close()
+
+    @classmethod
+    def tearDownClass(self):
         self.driver.quit()
 
     def test_annotations_query_no_filter_no_map(self):
@@ -374,6 +377,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -397,6 +403,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("source_1.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -543,6 +552,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("EXPLICIT_REFERENCE_2")
         inputElement.send_keys(Keys.RETURN)
         # Click on query button
@@ -570,6 +582,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("EXPLICIT_REFERENCE")
         inputElement.send_keys(Keys.RETURN)
 
@@ -711,6 +726,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -734,6 +752,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -880,6 +901,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -903,6 +927,9 @@ class TestAnnotationsTab(unittest.TestCase):
         # # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 

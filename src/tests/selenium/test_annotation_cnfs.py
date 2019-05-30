@@ -40,6 +40,14 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 
 class TestAnnotationCnfsTab(unittest.TestCase):
+
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('window-size=1920,1080')
+    driver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(5)    
+    
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -51,19 +59,14 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Clear all tables before executing the test
         self.query_eboa.clear_db()
 
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('window-size=1920,1080')
-
-        # Create a new instance of the Chrome driver
-        self.driver = webdriver.Chrome(options=options)
-
     def tearDown(self):
         # Close connections to the DDBB
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
         self.session.close()
+
+    @classmethod
+    def tearDownClass(self):
         self.driver.quit()
 
     def test_annotation_cnfs_query_no_filter(self):
@@ -268,6 +271,9 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -291,6 +297,9 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
+                
         inputElement.send_keys("NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -431,6 +440,9 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
+                
         inputElement.send_keys("SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -453,6 +465,9 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
+                
         inputElement.send_keys("SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -607,6 +622,9 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-text").find_elements_by_xpath("option")) == 3
+        
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
         inputElement.click()
@@ -632,6 +650,9 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-text").find_elements_by_xpath("option")) == 3
+                
         inputElement.send_keys("DIM_SIGNATURE_2")
         inputElement.send_keys(Keys.RETURN)
 

@@ -39,8 +39,15 @@ from eboa.datamodel.sources import Source, SourceStatus
 from eboa.datamodel.explicit_refs import ExplicitRef, ExplicitRefGrp, ExplicitRefLink
 from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText, AnnotationDouble, AnnotationObject, AnnotationGeometry, AnnotationBoolean, AnnotationTimestamp
 
-
 class TestEventsTab(unittest.TestCase):
+
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('window-size=1920,1080')
+    driver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(5)    
+    
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -52,19 +59,14 @@ class TestEventsTab(unittest.TestCase):
         # Clear all tables before executing the test
         self.query_eboa.clear_db()
 
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('window-size=1920,1080')
-
-        # Create a new instance of the Chrome driver
-        self.driver = webdriver.Chrome(options=options)
-
     def tearDown(self):
         # Close connections to the DDBB
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
         self.session.close()
+
+    @classmethod
+    def tearDownClass(self):
         self.driver.quit()
 
     def test_events_query_no_filter_no_timeline(self):
@@ -121,47 +123,47 @@ class TestEventsTab(unittest.TestCase):
         assert number_of_elements == 2
 
         # Check gauge_name
-        gauge_name = events_table.find_elements_by_xpath("tbody/tr[1]/td[2]")
+        gauge_name = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[2]")
 
         assert gauge_name[0].text == "GAUGE_NAME"
 
         # Check gauge_system
-        gauge_system = events_table.find_elements_by_xpath("tbody/tr[1]/td[3]")
+        gauge_system = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[3]")
 
         assert gauge_system[0].text == "GAUGE_SYSTEM"
 
         # Check start
-        start_date = events_table.find_elements_by_xpath("tbody/tr[1]/td[4]")
+        start_date = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[4]")
 
         assert start_date[0].text == "2018-06-05 04:07:03"
 
         # Check stop
-        stop_date = events_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
+        stop_date = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[5]")
 
         assert stop_date[0].text == "2018-06-05 06:07:36"
 
         # Check duration
-        duration = events_table.find_elements_by_xpath("tbody/tr[1]/td[6]")
+        duration = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[6]")
 
         assert duration[0].text == str((parser.parse(stop_date[0].text) - parser.parse(start_date[0].text)).total_seconds())
 
         # Check ingestion_time
-        ingestion_time = events_table.find_elements_by_xpath("tbody/tr[1]/td[7]")
+        ingestion_time = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[7]")
 
         assert re.match("....-..-.. ..:..:...*", ingestion_time[0].text)
 
         #Check source
-        source = events_table.find_elements_by_xpath("tbody/tr[1]/td[8]")
+        source = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[8]")
 
         assert source[0].text == "source.xml"
 
         #Check source
-        explicit_ref = events_table.find_elements_by_xpath("tbody/tr[1]/td[9]")
+        explicit_ref = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[9]")
 
         assert explicit_ref[0].text == "EXPLICIT_REFERENCE_EVENT"
 
         # Check uuid
-        uuid = events_table.find_elements_by_xpath("tbody/tr[1]/td[11]")
+        uuid = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[11]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -355,6 +357,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("source_1.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -378,6 +383,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -512,6 +520,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -535,6 +546,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -673,6 +687,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the key_in input
         inputElement = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("EVENT_KEY_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -697,6 +714,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the key_in input
         inputElement = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("EVENT_KEY")
         inputElement.send_keys(Keys.RETURN)
 
@@ -834,6 +854,8 @@ class TestEventsTab(unittest.TestCase):
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-gauge-names-in-text").find_elements_by_xpath("option")) == 2
         inputElement.send_keys("GAUGE_NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -858,6 +880,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-gauge-names-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -996,6 +1021,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("GAUGE_SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -1020,6 +1048,9 @@ class TestEventsTab(unittest.TestCase):
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
+
+        assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
+        
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 

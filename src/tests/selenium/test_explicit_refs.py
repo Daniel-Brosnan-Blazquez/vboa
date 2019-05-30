@@ -41,7 +41,14 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 
 class TestExplicitReferencesTab(unittest.TestCase):
-    @debug
+
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('window-size=1920,1080')
+    driver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(5)    
+    
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -53,20 +60,14 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Clear all tables before executing the test
         self.query_eboa.clear_db()
 
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('window-size=1920,1080')
-
-        # Create a new instance of the Chrome driver
-        self.driver = webdriver.Chrome(options=options)
-
-    @debug
     def tearDown(self):
         # Close connections to the DDBB
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
         self.session.close()
+
+    @classmethod
+    def tearDownClass(self):
         self.driver.quit()
 
     @debug
@@ -261,6 +262,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the explicit_ref_in input
         input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
+        
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_1")
         input_element.send_keys(Keys.RETURN)
         input_element.click()
@@ -286,6 +290,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the explicit_ref_in input
         input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
+                
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
         input_element.send_keys(Keys.RETURN)
 
@@ -405,6 +412,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the group_in input
         input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
+        
         input_element.send_keys("EXPL_GROUP_1")
         input_element.send_keys(Keys.RETURN)
 
@@ -427,6 +437,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the group_in input
         input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
+        
         input_element.send_keys("EXPL_GROUP_2")
         input_element.send_keys(Keys.RETURN)
 
@@ -534,10 +547,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button.click()
 
         # Check table generated
-        explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
-        number_of_elements = len(explicit_refs_table.find_elements_by_xpath("tbody/tr"))
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
-        assert number_of_elements == 1
+        assert no_data
 
         ## In ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -548,6 +560,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the source_in input
         input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
+        
         input_element.send_keys("source_1.xml")
         input_element.send_keys(Keys.RETURN)
 
@@ -570,6 +585,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the source_in input
         input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
+                
         input_element.send_keys("source_2.xml")
         input_element.send_keys(Keys.RETURN)
 
@@ -698,6 +716,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
+        
         input_element.send_keys("EVENT_KEY_2")
         input_element.send_keys(Keys.RETURN)
         input_element.click()
@@ -722,6 +743,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
+        
         input_element.send_keys("EVENT_KEY_1")
         input_element.send_keys(Keys.RETURN)
 
@@ -850,6 +874,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
+        
         input_element.send_keys("GAUGE_NAME_2")
         input_element.send_keys(Keys.RETURN)
 
@@ -872,6 +899,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
+                
         input_element.send_keys("GAUGE_NAME_1")
         input_element.send_keys(Keys.RETURN)
 
@@ -1000,6 +1030,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the gauge_system_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
+                
         input_element.send_keys("GAUGE_SYSTEM_2")
         input_element.send_keys(Keys.RETURN)
 
@@ -1022,6 +1055,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the gauge_system_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
+                
         input_element.send_keys("GAUGE_SYSTEM_1")
         input_element.send_keys(Keys.RETURN)
 
@@ -1903,6 +1939,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the annotation_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
+        
         input_element.send_keys("NAME_1")
         input_element.send_keys(Keys.RETURN)
 
@@ -1926,6 +1965,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Fill the annotation_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
+        
         input_element.send_keys("NAME_2")
         input_element.send_keys(Keys.RETURN)
 
@@ -2065,6 +2107,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # find the element that's name attribute is gauge_system_in
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
+                
         input_element.send_keys("SYSTEM_1")
         input_element.send_keys(Keys.RETURN)
 
@@ -2088,6 +2133,9 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # find the element that's name attribute is gauge_system_in
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
         input_element.click()
+
+        assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
+                
         input_element.send_keys("SYSTEM_2")
         input_element.send_keys(Keys.RETURN)
 
@@ -2279,7 +2327,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
             "annotations": [{
-                "explicit_reference" : "EXPLICIT_REFERENCE",
+                "explicit_reference" : "EXPLICIT_REFERENCE2",
                 "annotation_cnf": {
                     "name": "NAME_1",
                     "system": "SYSTEM"
@@ -2294,7 +2342,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
                         }]
                     }]
                 },{
-                "explicit_reference" : "EXPLICIT_REFERENCE",
+                "explicit_reference" : "EXPLICIT_REFERENCE3",
                 "annotation_cnf": {
                     "name": "NAME_2",
                     "system": "SYSTEM"
@@ -3239,7 +3287,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         functions.fill_period(self.driver, wait, "explicit-refs-events", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
-        self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value")
+        self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value").click()
         functions.fill_period(self.driver, wait, "explicit-refs-events", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
@@ -3259,7 +3307,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         functions.fill_period(self.driver, wait, "explicit-refs-events", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value")
+        self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value").click()
         functions.fill_period(self.driver, wait, "explicit-refs-events", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
