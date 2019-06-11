@@ -201,6 +201,13 @@ export function create_event_network(events, dom_id){
 
 };
 
+/* Function to show a map for events */
+export function create_event_map(geometries, dom_id){
+
+    eventFunctions.create_event_map(geometries, dom_id);
+
+};
+
 /*
 * ANNOTATIONS *
 */

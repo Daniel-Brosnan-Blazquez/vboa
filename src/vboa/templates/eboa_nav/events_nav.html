@@ -85,6 +85,20 @@
 </div>
 <!-- /.panel -->
 {% endif %}
+{% if show["map"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Map of footprints related to the queried events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="events-nav-map">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
 {% endblock %}
 {% block scripts %}
     {{ super() }}
@@ -95,5 +109,11 @@
       {% endwith %}
       vboa.create_event_timeline(events, "events-nav-timeline");
       {% endif %}
+      {% if show["map"] %}
+      {% with events_geometries=events_geometries %}
+      {% include "graphs/events_geometries_to_json_for_map.js" %}
+      {% endwith %}
+      vboa.create_event_map(events_geometries, "events-nav-map");
+      {% endif %}      
     </script>
 {% endblock %}

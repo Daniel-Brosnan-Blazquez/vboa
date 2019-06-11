@@ -245,3 +245,16 @@ function show_event_values(row, values){
 
     return
 }
+
+export function create_event_map(events_geometries, dom_id){
+
+    var polygons = [];
+
+    for (const event_geometries of events_geometries["events_geometries"]){
+        for (const geometry of event_geometries["geometries"]){
+            polygons.push(geometry["value"])
+        }
+    }
+    console.log(polygons)
+    graph.display_map(dom_id, polygons);
+};

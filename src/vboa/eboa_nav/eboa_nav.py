@@ -42,8 +42,15 @@ def query_events_and_render():
         if not "show_timeline" in request.form:
             show["timeline"] = False
         # end if
+        show["map"]=True
+        events_geometries = []
+        if not "show_map" in request.form:
+            show["map"] = False
+        else:
+            events_geometries = [{"event": event, "geometries": engine.geometries_to_wkt(event.eventGeometries)} for event in events if len(event.eventGeometries) > 0]
+        # end if        
 
-        return render_template("eboa_nav/events_nav.html", events=events, show=show)
+        return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show)
     # end if
     return render_template("eboa_nav/query_events.html")
 

@@ -229,10 +229,6 @@ export function display_map(dom_id, polygons){
         source: new OSM()
     });
 
-    var wkt = 'POLYGON((10.689 -25.092, 34.595 ' +
-        '-20.170, 38.814 -35.639, 13.502 ' +
-        '-39.155, 10.689 -25.092))';
-    
     var format = new WKT();
     
     var features = []
