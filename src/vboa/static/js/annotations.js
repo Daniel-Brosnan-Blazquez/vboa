@@ -1,6 +1,43 @@
 import * as query from "./query.js";
 import * as graph from "./graph.js";
 
+/*
+* Functions for the EBOA navigation
+*/
+
+/* Function to create the text for the tooltip of the annotation information */
+function create_annotation_tooltip_text(annotation){
+
+    return "<table border='1'>" +
+        "<tr><td>UUID</td><td>" + annotation['id'] + "</td></tr>" +
+        "<tr><td>Explicit reference</td><td>" + annotation['explicit_reference'] + "</td></tr>" +
+        "<tr><td>Annotation name</td><td>" + annotation['annotation_cnf']['name'] + "</td></tr>" +
+        "<tr><td>Annotation system</td><td>" + annotation['annotation_cnf']['system'] + "</td></tr>" +
+        "<tr><td>Source</td><td>" + annotation['source'] + "</td></tr>" +
+        "<tr><td>Ingestion time</td><td>" + annotation['ingestion_time'] + "</td></tr>" +
+        "</tr></table>"
+};
+
+/* Function to create a network graph for the EBOA navigation view */
+export function create_annotation_map(annotations_geometries, dom_id){
+
+    var polygons = [];
+
+    for (const annotation_geometries of annotations_geometries){
+        for (const geometry of annotation_geometries["geometries"]){
+            polygons.push({"polygon": geometry["value"],
+                           "id": annotation_geometries["id"],
+                           "tooltip": create_annotation_tooltip_text(annotation_geometries)})
+        }
+    }
+    
+    graph.display_map(dom_id, polygons);
+};
+
+/*
+* Query functions
+*/
+
 /* Function to add more value filter selectors when commanded */
 export function add_value_query(dom_id){
     
@@ -73,15 +110,3 @@ function show_annotation_values(row, values){
     return
 }
 
-export function create_annotation_map(annotations_geometries, dom_id){
-
-    var polygons = [];
-
-    for (const annotation_geometries of annotations_geometries["annotations_geometries"]){
-        for (const geometry of annotation_geometries["geometries"]){
-            polygons.push(geometry["value"])
-        }
-    }
-    
-    graph.display_map(dom_id, polygons);
-};

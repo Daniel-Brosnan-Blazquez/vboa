@@ -94,7 +94,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <div class="network" id="events_nav_network">
+    <div class="network" id="events-nav-network">
     </div>
   </div>
   <!-- /.panel-body -->
@@ -106,7 +106,19 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <div id="events_nav_timeline">
+    <div id="events-nav-timeline">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Map of events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="events-nav-map">
     </div>
   </div>
   <!-- /.panel-body -->
@@ -124,8 +136,14 @@
       {% include "graphs/events_to_json_for_timeline.js" %}
       {% endwith %}
       const events_for_timeline = events;
+      {% with events_geometries=events_geometries %}
+      {% include "graphs/events_geometries_to_json_for_map.js" %}
+      {% endwith %}
+      const events_for_map = events_geometries;
 
-      vboa.create_event_network(events_for_network, "events_nav_network");
-      vboa.create_event_timeline(events_for_timeline, "events_nav_timeline");
+      vboa.create_event_network(events_for_network, "events-nav-network");
+      vboa.create_event_timeline(events_for_timeline, "events-nav-timeline");
+      vboa.create_event_map(events_for_map, "events-nav-map");
+
     </script>
 {% endblock %}

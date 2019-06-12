@@ -62,10 +62,14 @@ def query_events_by_er(er):
     current_app.logger.debug("Query events by explicit reference")
     show = {}
     show["timeline"]=True
+    show["map"]=True
 
     events = query.get_events(explicit_refs={"filter": [er], "op": "in"})
 
-    return render_template("eboa_nav/events_nav.html", events=events, show=show)
+    events_geometries = []
+    events_geometries = [{"event": event, "geometries": engine.geometries_to_wkt(event.eventGeometries)} for event in events if len(event.eventGeometries) > 0]
+
+    return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show)
 
 def query_events():
     """
@@ -241,8 +245,8 @@ def query_event_links_and_render(event_uuid):
     current_app.logger.debug("Query event links and render")
     links = query_event_links(event_uuid)
     events = links["prime_events"] + [link["event"] for link in links["events_linking"]] + [link["event"] for link in links["linked_events"]]
-
-    return render_template("eboa_nav/linked_events_nav.html", links=links, events=events)
+    events_geometries = [{"event": event, "geometries": engine.geometries_to_wkt(event.eventGeometries)} for event in events if len(event.eventGeometries) > 0]
+    return render_template("eboa_nav/linked_events_nav.html", links=links, events=events, events_geometries=events_geometries)
 
 def query_event_links(event_uuid):
     """

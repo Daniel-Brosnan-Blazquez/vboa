@@ -138,6 +138,71 @@ function show_x_time_item_information(params, items, dom_id){
     }
 }
 
+/* Function to display a map given the id of the DOM where to
+ * attach it and the polygons to show */
+export function display_map(dom_id, polygons){
+
+    var raster = new TileLayer({
+        source: new OSM()
+    });
+
+    var format = new WKT();
+    
+    var features = []
+    for (const polygon of polygons){
+        var feature = format.readFeature(polygon["polygon"], {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        });
+        feature.setId(polygon["id"])
+        feature.setProperties({"tooltip": polygon["tooltip"]})        
+        features.push(feature);
+    }
+    
+    var vector = new VectorLayer({
+        source: new VectorSource({
+            features: features
+        })
+    });
+    var mousePositionControl = new MousePosition({
+        coordinateFormat: createStringXY(4),
+        projection: 'EPSG:4326',
+    });
+    
+    var map = new Map({
+        controls: defaultControls().extend([mousePositionControl]),
+        layers: [raster, vector],
+        target: dom_id,
+        view: new View({
+            center: [0, 0],
+            zoom: 2
+        })
+    });
+
+    /**
+     * Add a click handler to the map to render the tooltip.
+     */
+    map.on('singleclick', function(event) {
+        show_map_item_information(event, map, dom_id)
+    });
+}
+
+function show_map_item_information(event, map, dom_id){
+
+    var feature = map.forEachFeatureAtPixel(event.pixel, function(feature) {
+        return feature;
+    });
+
+    const header_content = "Detailed information for polygon with id: " + feature.getId();
+    const body_content = feature.getProperties()["tooltip"]
+    const x = event.originalEvent.pageX;
+    const y = event.originalEvent.pageY;
+
+    const div = create_div(dom_id, feature.getId(), header_content, body_content, x, y)
+    drag_element(div)
+
+}
+
 function create_div(dom_id, element_id, header_content, body_content, x, y){
 
     const container = document.getElementById(dom_id);
@@ -219,48 +284,4 @@ function drag_element(element) {
         document.onmouseup = null;
         document.onmousemove = null;
     }
-}
-
-/* Function to display a map given the id of the DOM where to
- * attach it and the polygons to show */
-export function display_map(dom_id, polygons){
-
-    var raster = new TileLayer({
-        source: new OSM()
-    });
-
-    var format = new WKT();
-    
-    var features = []
-    for (const polygon of polygons){
-        features.push(format.readFeature(polygon, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857'
-        }));
-    }
-    
-    var vector = new VectorLayer({
-        source: new VectorSource({
-            features: features
-        })
-    });
-    var mousePositionControl = new MousePosition({
-        coordinateFormat: createStringXY(4),
-        projection: 'EPSG:4326',
-        // comment the following two lines to have the mouse position
-        // be placed within the map.
-        // className: 'custom-mouse-position',
-        // target: document.getElementById('mouse-position'),
-        // undefinedHTML: '&nbsp;'
-    })
-;
-    var map = new Map({
-        controls: defaultControls().extend([mousePositionControl]),
-        layers: [raster, vector],
-        target: dom_id,
-        view: new View({
-            center: [0, 0],
-            zoom: 2
-        })
-    });
 }

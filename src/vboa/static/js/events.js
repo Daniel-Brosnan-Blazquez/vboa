@@ -2,27 +2,36 @@ import * as query from "./query.js";
 import * as dates from "./dates.js";
 import * as graph from "./graph.js";
 
+/*
+* Functions for the EBOA navigation
+*/
+
 /* Function to create the text for the tooltip of the event information */
 function create_event_tooltip_text(event){
 
     return "<table border='1'>" +
-            "<tr><td>UUID</td><td>" + event['id'] + "</td>" +
-            "<tr><td>Gauge name</td><td>" + event['gauge']['name'] + "</td>" +
-            "<tr><td>Gauge system</td><td>" + event['gauge']['system'] + "</td>" +
-            "<tr><td>Start</td><td>" + event["start"] + "</td>" +
-            "<tr><td>Stop</td><td>" + event["stop"] + "</td>" +
-            "<tr><td>Source</td><td>" + event['source'] + "</td>" +
-            "</tr></table>"
+        "<tr><td>UUID</td><td>" + event['id'] + "</td></tr>" +
+        "<tr><td>Explicit reference</td><td>" + event['explicit_reference'] + "</td></tr>" +
+        "<tr><td>Gauge name</td><td>" + event['gauge']['name'] + "</td></tr>" +
+        "<tr><td>Gauge system</td><td>" + event['gauge']['system'] + "</td></tr>" +
+        "<tr><td>Start</td><td>" + event["start"] + "</td></tr>" +
+        "<tr><td>Stop</td><td>" + event["stop"] + "</td></tr>" +
+        "<tr><td>Source</td><td>" + event['source'] + "</td></tr>" +
+        "<tr><td>Ingestion time</td><td>" + event['ingestion_time'] + "</td></tr>" +
+        "<tr><td>Links</td><td><a href='/eboa_nav/query-event-links/" + event["id"] + "'><i class='fa fa-link'></i></a></td></tr>" +
+        "<tr id='expand-tooltip-values-event-" + event["id"] + "'><td>Values</td><td><i class='fa fa-plus-square green' onclick='" + 'vboa.expand_event_values_in_tooltip("expand-tooltip-values-event-' + event["id"] + '", "' + event["id"] + '")' + "' data-toggle='tooltip' title='Click to show the related values'></i></td></tr>" +
+        "</tr></table>"
 };
 
+/* Function to create a network graph for the EBOA navigation view */
 export function create_event_network(linked_events, dom_id){
-    var unique_event_uuids = new Set(linked_events["events"].map(event => event["id"]));
-    var prime_event_id = linked_events["events"].filter(event => event["label"] == "prime_events").map(event => event["id"])[0];
+    var unique_event_uuids = new Set(linked_events.map(event => event["id"]));
+    var prime_event_id = linked_events.filter(event => event["label"] == "prime_events").map(event => event["id"])[0];
 
     var nodes = []
     var edges = []
     for (const id of unique_event_uuids){
-        var associated_events = linked_events["events"].filter(event => event["id"] == id)
+        var associated_events = linked_events.filter(event => event["id"] == id)
 
         for (const event of associated_events){
             var shape = "box";
@@ -61,6 +70,62 @@ export function create_event_network(linked_events, dom_id){
 
 };
 
+/* Function to create a network graph for the EBOA navigation view */
+export function create_event_timeline(events, dom_id){
+    var groups = [];
+    var items = [];
+
+    var gauge_systems = new Set(events.map(event => event["gauge"]["system"]))
+
+    for (const gauge_system of gauge_systems){
+        var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"] + "_" + event["gauge"]["system"]))
+        groups.push({
+            id: gauge_system,
+            content: gauge_system,
+            nestedGroups: Array.from(associated_gauges)
+        })
+        for (const associated_gauge of associated_gauges){
+            groups.push({
+                id: associated_gauge,
+                content: associated_gauge
+            })
+        }
+    }
+
+    var unique_event_uuids = new Set(events.map(event => event["id"]));
+
+    for (const event_uuid of unique_event_uuids){
+        var event = events.filter(event => event["id"] == event_uuid)[0]
+        items.push({
+            id: event["id"],
+            group: event["gauge"]["name"] + "_" + event["gauge"]["system"],
+            start: event["start"],
+            end: event["stop"],
+            tooltip: create_event_tooltip_text(event)
+        })
+    }
+
+    graph.display_timeline(dom_id, items, groups);
+
+};
+
+/* Function to create a network graph for the EBOA navigation view */
+export function create_event_map(events_geometries, dom_id){
+
+    var polygons = [];
+
+    for (const event_geometries of events_geometries){
+        for (const geometry of event_geometries["geometries"]){
+            polygons.push({"polygon": geometry["value"],
+                           "id": event_geometries["id"],
+                           "tooltip": create_event_tooltip_text(event_geometries)})
+        }
+    }
+    graph.display_map(dom_id, polygons);
+};
+
+/*
+* Functions to build the needed structures for the graph library (data is already formated by the calling module)
 
 /* Function to prepare data from events for a timeline given the events to be displayed */
 export function prepare_events_data_for_timeline(events, items, groups){
@@ -136,43 +201,11 @@ export function prepare_events_data_for_xy(events, items, groups, title){
 
 };
 
-export function create_event_timeline(events, dom_id){
-    var groups = [];
-    var items = [];
+//export function prepare_events_geometries_for_map(event_geometries){
 
-    var gauge_systems = new Set(events["events"].map(event => event["gauge"]["system"]))
-
-    for (const gauge_system of gauge_systems){
-        var associated_gauges = new Set(events["events"].filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"] + "_" + event["gauge"]["system"]))
-        groups.push({
-            id: gauge_system,
-            content: gauge_system,
-            nestedGroups: Array.from(associated_gauges)
-        })
-        for (const associated_gauge of associated_gauges){
-            groups.push({
-                id: associated_gauge,
-                content: associated_gauge
-            })
-        }
-    }
-
-    var unique_event_uuids = new Set(events["events"].map(event => event["id"]));
-
-    for (const event_uuid of unique_event_uuids){
-        var event = events["events"].filter(event => event["id"] == event_uuid)[0]
-        items.push({
-            id: event["id"],
-            group: event["gauge"]["name"] + "_" + event["gauge"]["system"],
-            start: event["start"],
-            end: event["stop"],
-            tooltip: create_event_tooltip_text(event)
-        })
-    }
-
-    graph.display_timeline(dom_id, items, groups);
-
-};
+/*
+* Query functions
+*/
 
 /* Function to add more value filter selectors when commanded */
 export function add_value_query(dom_id){
@@ -203,7 +236,11 @@ export function expand_values(dom_id, event_uuid){
     }
     else {
         // Open this row
-        query.request_info("/eboa_nav/query-jsonify-event-values/" + event_uuid, show_event_values, row);
+        var parameters = {
+            "row": row,
+            "insert_method": insert_in_datatable
+        }
+        query.request_info("/eboa_nav/query-jsonify-event-values/" + event_uuid, show_event_values, parameters);
         tr.addClass('shown');
         tdi.first().removeClass('fa-plus-square');
         tdi.first().removeClass('green');
@@ -212,7 +249,54 @@ export function expand_values(dom_id, event_uuid){
     }
 };
 
-function show_event_values(row, values){
+/* Function to show the values related to an event in a tooltip */
+export function expand_values_in_tooltip(dom_id, event_uuid){
+
+    var tr = document.getElementById(dom_id);
+    // Structure is /div/div/table/tbody/tr
+    var container_div = tr.parentNode.parentNode.parentNode.parentNode;
+    var tdi = tr.getElementsByTagName("i")[0];
+
+    var expanded_div = container_div.querySelector("#expanded_values")
+    if (tr.classList.contains("expanded")) {
+        // This tr is already open - close it
+        expanded_div.style.display = 'none';
+        tr.classList.remove('expanded');
+        tdi.classList.remove('fa-minus-square');
+        tdi.classList.remove('red');
+        tdi.classList.add('fa-plus-square');
+        tdi.classList.add('green');
+    }
+    else if (expanded_div == undefined){
+        // Create the expanded tr
+        const expanded_div = document.createElement("div");
+        expanded_div.id = "expanded_values"        
+        container_div.appendChild(expanded_div);
+        var parameters = {
+            "row": expanded_div,
+            "insert_method": insert_in_html_table
+        }
+        query.request_info("/eboa_nav/query-jsonify-event-values/" + event_uuid, show_event_values, parameters);
+        tr.classList.add('expanded');
+        tdi.classList.remove('fa-plus-square');
+        tdi.classList.remove('green');
+        tdi.classList.add('fa-minus-square');
+        tdi.classList.add('red');
+    }
+    else {
+        // Open this tr
+        tr.classList.add('expanded');
+        tdi.classList.remove('fa-plus-square');
+        tdi.classList.remove('green');
+        tdi.classList.add('fa-minus-square');
+        tdi.classList.add('red');
+        expanded_div.style.display = 'block';        
+    }
+};
+
+function show_event_values(parameters, values){
+
+    var row = parameters["row"]
 
     var table = '<table class="table">' +
         '<thead>' +
@@ -240,21 +324,15 @@ function show_event_values(row, values){
     }
     table = table + '</tbody>' +
         '</table>';
-    
-    row.child(table).show();
 
-    return
+    parameters["insert_method"](row, table);
+    
 }
 
-export function create_event_map(events_geometries, dom_id){
+function insert_in_datatable(row, table){
+    row.child(table).show();
+}
 
-    var polygons = [];
-
-    for (const event_geometries of events_geometries["events_geometries"]){
-        for (const geometry of event_geometries["geometries"]){
-            polygons.push(geometry["value"])
-        }
-    }
-    console.log(polygons)
-    graph.display_map(dom_id, polygons);
-};
+function insert_in_html_table(row, table){
+    row.innerHTML = table;
+}

@@ -93,6 +93,11 @@ export function expand_event_values(dom_id, event_uuid){
     eventFunctions.expand_values(dom_id, event_uuid);
 }
 
+/* Functions to expand the values associated to events and annotations */
+export function expand_event_values_in_tooltip(dom_id, event_uuid){
+    eventFunctions.expand_values_in_tooltip(dom_id, event_uuid);
+}
+
 export function expand_annotation_values(dom_id, annotation_uuid){
     annotationFunctions.expand_values(dom_id, annotation_uuid);
 }
