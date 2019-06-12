@@ -174,6 +174,14 @@ export function display_x_time(dom_id, items, groups, options){
 
 };
 
+/* Function to display a map graph given the id of the DOM where to
+ * attach it and the items to show with the corresponding groups */
+export function display_map(dom_id, polygons){
+
+    graph.display_map(dom_id, polygons);
+
+};
+
 /*
 * EVENTS *
 */
@@ -190,6 +198,12 @@ export function prepare_events_data_for_xy(events, items, groups, title){
     var options = eventFunctions.prepare_events_data_for_xy(events, items, groups, title);
 
     return options;
+};
+/* Function to show a map of events */
+export function prepare_events_geometries_for_map(events_geometries, polygons){
+
+    eventFunctions.prepare_events_geometries_for_map(events_geometries, polygons);
+
 };
 
 /* Function to show a timeline of events */

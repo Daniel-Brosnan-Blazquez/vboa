@@ -201,7 +201,17 @@ export function prepare_events_data_for_xy(events, items, groups, title){
 
 };
 
-//export function prepare_events_geometries_for_map(event_geometries){
+export function prepare_events_geometries_for_map(events_geometries, polygons){
+
+    for (const event_geometries of events_geometries){
+        for (const geometry of event_geometries["geometries"]){
+            polygons.push({"polygon": geometry["value"],
+                           "id": event_geometries["id"],
+                           "tooltip": event_geometries["tooltip"]})
+        }
+    }
+
+}
 
 /*
 * Query functions
