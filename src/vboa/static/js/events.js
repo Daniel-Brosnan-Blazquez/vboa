@@ -115,10 +115,12 @@ export function create_event_map(events_geometries, dom_id){
     var polygons = [];
 
     for (const event_geometries of events_geometries){
+        var i = 0;
         for (const geometry of event_geometries["geometries"]){
             polygons.push({"polygon": geometry["value"],
-                           "id": event_geometries["id"],
+                           "id": event_geometries["id"] + "_" + i,
                            "tooltip": create_event_tooltip_text(event_geometries)})
+            i = i + 1;
         }
     }
     graph.display_map(dom_id, polygons);
@@ -204,10 +206,12 @@ export function prepare_events_data_for_xy(events, items, groups, title){
 export function prepare_events_geometries_for_map(events_geometries, polygons){
 
     for (const event_geometries of events_geometries){
+        var i = 0;
         for (const geometry of event_geometries["geometries"]){
             polygons.push({"polygon": geometry["value"],
-                           "id": event_geometries["id"],
+                           "id": event_geometries["id"] + "_" + i,
                            "tooltip": event_geometries["tooltip"]})
+            i = i + 1;
         }
     }
 
