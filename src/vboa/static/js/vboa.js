@@ -50,6 +50,18 @@ $(function() {
     $('#side-menu').metisMenu();
 });
 
+/* Update view */
+export function update_view(parameters, repeat_cycle, view){
+    setTimeout(function(){
+        var href = view + "?"
+        for (const parameter of Object.keys(parameters)){
+                href = href + parameter + "=" + parameters[parameter] + "&";
+        }
+        href = href + "repeat_cycle=" + repeat_cycle;
+        window.location.href = href;
+    }, repeat_cycle * 60 * 1000);
+}
+
 /* Functions to add more time filters (start-stop, validity start-validity stop, ingestion time, generation time) */
 export function add_start_stop(dom_id){
     dates.add_start_stop(dom_id);
