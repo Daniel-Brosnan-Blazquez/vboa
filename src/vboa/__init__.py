@@ -7,6 +7,8 @@ module vboa
 """
 # Import python utilities
 import os
+import numpy
+import re
 
 # Import flask utilities
 from flask import Flask, current_app
@@ -15,6 +17,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 # Import contents
 from vboa import panel
 from vboa.eboa_nav import eboa_nav
+from vboa.boa_health import boa_health
+
+# Import engine
+import eboa.engine.engine as eboa_engine
 
 def create_app():
     """
@@ -28,6 +34,7 @@ def create_app():
 
     app.register_blueprint(panel.bp)
     app.register_blueprint(eboa_nav.bp)
+    app.register_blueprint(boa_health.bp)
 
     # the toolbar is only enabled in debug mode:
     app.debug = True
@@ -109,5 +116,25 @@ def create_app():
     @app.template_filter()
     def flatten(list_of_lists):
         return [item for list in list_of_lists for item in list]
+
+    @app.template_filter()
+    def get_severity_label(severity):
+        severity_labels = [severity_label for severity_label in eboa_engine.alert_severity_codes if eboa_engine.alert_severity_codes[severity_label] == severity]
+        return severity_labels[0]
+
+    @app.template_filter()
+    def get_value_key(dict, key):
+        
+        return dict[key]
+
+    @app.template_filter()
+    def mean(list_of_items):
+        
+        return numpy.mean(list_of_items)
+
+    @app.template_test()
+    def match(item, matching_text):
+        
+        return re.match(matching_text, item)
 
     return app

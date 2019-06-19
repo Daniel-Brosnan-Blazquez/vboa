@@ -1,0 +1,39 @@
+<div class="row">
+  <!-- /.col-lg-6 (nested) -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#vboa-reporting-header">Reporting header <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    {% if reporting_start != None and reporting_stop != None %}
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="vboa-reporting-header">
+      <div>
+        <h3><u>Reporting period details</u></h3>
+      </div>
+      <div class="row row2">
+        <table align="left" class="table table-striped table-bordered table-hover table-static" id="header-table">
+          <tr>
+            <td></td>
+            <th>Period start</th>
+            <th>Period stop</th>
+          </tr>
+          <tr>
+            <th>Time information</th>
+            <td>{{ reporting_start }}</td>
+            <td>{{ reporting_stop }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <!-- /.panel-body -->
+    {% else %}
+    <div>
+      <br/>
+      <p style="text-indent: 1em">There is not enough information for setting the reporting header.</p>
+      <br/>
+    </div>
+    {% endif %}
+  </div>
+</div>

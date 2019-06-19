@@ -1,3 +1,22 @@
+/* Severity levels */
+.info-severity {
+    color: green;
+}
+.warning-severity {
+    color: blue;
+}
+.minor-severity {
+    color: yellow;
+}
+.major-severity {
+    color: pink;
+}
+.critical-severity {
+    color: brown;
+}
+.fatal-severity {
+    color: red;
+}
 
 /* Static table */
 .table-static {
