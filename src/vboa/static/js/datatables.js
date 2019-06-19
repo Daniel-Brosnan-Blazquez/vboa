@@ -27,6 +27,7 @@ export function activate_search_on_columns() {
                i: summary information
              */
             dom: 'Blftip',
+            "order": [],
             buttons: [
                 'copyHtml5',
                 {
