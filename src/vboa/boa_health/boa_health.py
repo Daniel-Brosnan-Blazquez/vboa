@@ -25,6 +25,11 @@ bp = Blueprint("health", __name__, url_prefix="/health")
 query = Query()
 engine = Engine()
 
+# Default configuration
+window_delay=0
+window_size=0.25
+repeat_cycle=5
+
 def get_start_stop_filters(window_size):
 
     start_filter = None
@@ -70,16 +75,18 @@ def show_health():
     """
     current_app.logger.debug("Health monitoring view")
 
-    # Initialize reporting period (now - 2 days, now)
+    template_name = request.args.get("template")
+
+    # Initialize reporting period (now - window_size days, now)
     start_filter = {
-        "date": datetime.datetime.now().isoformat(),
+        "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
         "operator": "<"
     }
     stop_filter = {
-        "date": (datetime.datetime.now() - datetime.timedelta(days=2)).isoformat(),
+        "date": (datetime.datetime.now() - datetime.timedelta(days=(window_delay+window_size))).isoformat(),
         "operator": ">"
     }
-    start_filter_calculated, stop_filter_calculated = get_start_stop_filters(2)
+    start_filter_calculated, stop_filter_calculated = get_start_stop_filters(window_size)
 
     if start_filter_calculated != None:
         start_filter = start_filter_calculated
@@ -89,7 +96,7 @@ def show_health():
         stop_filter = stop_filter_calculated
     # end if
 
-    return query_health_and_render(start_filter, stop_filter)
+    return query_health_and_render(start_filter, stop_filter, template_name = template_name)
 
 @bp.route("/sliding-health-parameters", methods=["GET", "POST"])
 def show_sliding_health_parameters():
@@ -101,7 +108,8 @@ def show_sliding_health_parameters():
     window_delay = float(request.args.get("window_delay"))
     window_size = float(request.args.get("window_size"))
     repeat_cycle = float(request.args.get("repeat_cycle"))
-
+    template_name = request.args.get("template")
+    
     start_filter = {
         "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
         "operator": "<"
@@ -117,7 +125,7 @@ def show_sliding_health_parameters():
         "repeat_cycle": repeat_cycle,
     }
 
-    return query_health_and_render(start_filter, stop_filter, sliding_window)
+    return query_health_and_render(start_filter, stop_filter, sliding_window, template_name = template_name)
     
 @bp.route("/sliding-health", methods=["GET", "POST"])
 def show_sliding_health():
@@ -126,44 +134,58 @@ def show_sliding_health():
     """
     current_app.logger.debug("Sliding health view")
 
-    window_delay=0
-    window_size=2
-    repeat_cycle=1
+    template_name = request.args.get("template")
 
+    window_delay_parameter = None
+    window_size_parameter = None
+    repeat_cycle_parameter = None
+    
     if request.method == "POST":
 
         if request.form["health_window_delay"] != "":
-            window_delay = request.form["health_window_delay"]
+            window_delay_parameter = float(request.form["health_window_delay"])
         # end if
 
         if request.form["health_window_size"] != "":
-            window_size = request.form["health_window_size"]
+            window_size_parameter = float(request.form["health_window_size"])
         # end if
 
         if request.form["health_repeat_cycle"] != "":
-            repeat_cycle = request.form["health_repeat_cycle"]
+            repeat_cycle_parameter = float(request.form["health_repeat_cycle"])
         # end if
 
     # end if
 
+    if not window_delay_parameter:
+        window_delay_parameter = window_delay
+    # end if
+
+    if not window_size_parameter:
+        window_size_parameter = window_size
+    # end if
+
+    if not repeat_cycle_parameter:
+        repeat_cycle_parameter = repeat_cycle
+    # end if
+
     start_filter = {
-        "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
+        "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay_parameter)).isoformat(),
         "operator": "<"
     }
     stop_filter = {
-        "date": (datetime.datetime.now() - datetime.timedelta(days=(window_delay+window_size))).isoformat(),
+        "date": (datetime.datetime.now() - datetime.timedelta(days=(window_delay_parameter+window_size_parameter))).isoformat(),
         "operator": ">"
     }
 
     sliding_window = {
-        "window_delay": window_delay,
-        "window_size": window_size,
-        "repeat_cycle": repeat_cycle,
+        "window_delay": window_delay_parameter,
+        "window_size": window_size_parameter,
+        "repeat_cycle": repeat_cycle_parameter,
     }
 
-    return query_health_and_render(start_filter, stop_filter, sliding_window)
+    return query_health_and_render(start_filter, stop_filter, sliding_window, template_name = template_name)
 
-def query_health_and_render(start_filter = None, stop_filter = None, sliding_window = None):
+def query_health_and_render(start_filter = None, stop_filter = None, sliding_window = None, template_name = None):
 
     kwargs = {}
 
@@ -185,5 +207,10 @@ def query_health_and_render(start_filter = None, stop_filter = None, sliding_win
     reporting_stop = start_filter["date"]
 
     current_app.logger.debug(health_events)
+
+    template = "boa_health/boa_health.html"
+    if template_name != None:
+        template = "boa_health/boa_health_" + template_name + ".html"
+    # end if
     
-    return render_template("boa_health/boa_health.html", health_events=health_events, request=request, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window)
+    return render_template(template, health_events=health_events, request=request, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window)

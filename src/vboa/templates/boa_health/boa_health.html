@@ -1,0 +1,485 @@
+{% extends "panel/index.html" %}
+{% block content %}
+{% include "boa_health/boa_health_query.html" %}
+{% set health_events_sorted = health_events|sort(attribute="start") %}
+{% set alerts = health_events_sorted|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% include "boa_health/boa_health_alerts_content.html" %}
+{% if health_events|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#memory-status">Memory status <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="memory-status">
+      <div>
+        <h3><u>Evolution of the memory including the swap partition</u></h3>
+      </div>
+      <br/>
+      <div>
+        <div>
+          <h4>The following graph shows the evolution of the memory including the swap partition</h4>
+          <br/>
+        </div>
+        <div id="health-x-time-memory-evolution">
+        </div>
+        <br/>
+        <div>
+          <h4>The following table shows the statistics of the memory usage including swap partition</h4>
+        </div>
+        {% set memory_usage = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", "memory_usage_percentage")|map(attribute="value")|list %}
+        {% set buffers_usage = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", "memory_buffers_percentage")|map(attribute="value")|list %}
+        {% set cached_usage = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", "memory_cached_percentage")|map(attribute="value")|list %}
+        {% set swap_usage = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", "swap_usage_percentage")|map(attribute="value")|list %}
+        <table id="memory-evolution-statistics" align="center" class="table table-striped table-bordered table-hover table-static">
+          <tr>
+            <th>Memory</th>
+            <th>Minimum (%)</th>
+            <th>Maximum (%)</th>
+            <th>Mean (%)</th>
+          </tr>
+          <tr>
+            <td class="highlight">RAM</td>
+            <td>{{ memory_usage|min|round(3) }}</td>
+            <td>{{ memory_usage|max|round(3) }}</td>
+            <td>{{ memory_usage|mean|round(3) }}</td>
+          </tr>
+          <tr>
+            <td class="highlight">BUFFERS</td>
+            <td>{{ buffers_usage|min|round(3) }}</td>
+            <td>{{ buffers_usage|max|round(3) }}</td>
+            <td>{{ buffers_usage|mean|round(3) }}</td>
+          </tr>
+          <tr>
+            <td class="highlight">CACHED</td>
+            <td>{{ cached_usage|min|round(3) }}</td>
+            <td>{{ cached_usage|max|round(3) }}</td>
+            <td>{{ cached_usage|mean|round(3) }}</td>
+          </tr>
+          <tr>
+            <td class="highlight">SWAP</td>
+            <td>{{ swap_usage|min|round(3) }}</td>
+            <td>{{ swap_usage|max|round(3) }}</td>
+            <td>{{ swap_usage|mean|round(3) }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#disks-status">Disks status <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="disks-status">
+      <div>
+        <h3><u>Evolution of the disks' occupation including the swap partition</u></h3>
+      </div>
+      <br/>
+      <div>
+        <div>
+          <h4>The following graph shows the evolution of the disks' occupation</h4>
+          <br/>
+        </div>
+        <div id="health-x-time-disks-evolution">
+        </div>
+        <br/>
+        <div>
+          <h4>The following table shows the statistics of the disks' occupation</h4>
+        </div>
+        {% set disk_mountpoints = health_events|map(attribute="eventTexts")|flatten|selectattr("name", "equalto", "disk_mountpoint")|map(attribute="value")|unique|list %}
+        <table id="disks-evolution-statistics" align="center" class="table table-striped table-bordered table-hover table-static">
+          <tr>
+            <th>Disk</th>
+            <th>Minimum (%)</th>
+            <th>Maximum (%)</th>
+            <th>Mean (%)</th>
+          </tr>        
+          {% for disk_mountpoint in disk_mountpoints %}
+          {% set disk_usage = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", disk_mountpoint.replace("/", "_") + "_usage_percentage")|map(attribute="value")|list %}
+          <tr>
+            <td class="highlight">{{ disk_mountpoint }}</td>
+            <td>{{ disk_usage|min|round(3) }}</td>
+            <td>{{ disk_usage|max|round(3) }}</td>
+            <td>{{ disk_usage|mean|round(3) }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#cpu-status">General CPU status <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="cpu-status">
+      <div>
+        <h3><u>Evolution of the CPU consumption</u></h3>
+      </div>
+      <br/>
+      <div>
+        <div>
+          <h4>The following graph shows the evolution of the CPU consumption</h4>
+          <br/>
+        </div>
+        <div id="health-x-time-cpu-evolution">
+        </div>
+        <br/>
+        <div>
+          <h4>The following table shows the statistics of the CPU consumption</h4>
+        </div>
+        <table id="cpu-evolution-statistics" align="center" class="table table-striped table-bordered table-hover table-static">
+          <tr>
+            <th>CPU usage</th>
+            <th>Minimum (%)</th>
+            <th>Maximum (%)</th>
+            <th>Mean (%)</th>
+          </tr>        
+          {% for usage in ["cpu_user", "cpu_nice", "cpu_system", "cpu_idle", "cpu_iowait", "cpu_irq", "cpu_softirq", "cpu_steal", "cpu_guest", "cpu_guest_nice", "cpu_usage_percentage"] %}
+          {% set usage_percentages = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", usage)|map(attribute="value")|list %}
+          <tr>
+            <td class="highlight">{{ usage.replace("_", " ").upper() }}</td>
+            <td>{{ usage_percentages|min|round(3) }}</td>
+            <td>{{ usage_percentages|max|round(3) }}</td>
+            <td>{{ usage_percentages|mean|round(3) }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#processes-status">Processes status <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="processes-status">
+      <div>
+        <h3><u>Evolution of the status of processes</u></h3>
+      </div>
+      <br/>
+      <div>
+        <div>
+          <h4>The following graph shows the evolution of the number of processes in parallel</h4>
+          <br/>
+        </div>
+        <div id="health-x-time-number-of-processes-evolution">
+        </div>
+        <br/>
+        <div>
+          <h4>The following table shows the statistics of the number of processes in parallel</h4>
+        </div>
+        <table id="number-of-processes-evolution-statistics" align="center" class="table table-striped table-bordered table-hover table-static">
+          <tr>
+            <th>Minimum (%)</th>
+            <th>Maximum (%)</th>
+            <th>Mean (%)</th>
+          </tr>
+          {% set number_of_processes_over_time = [] %}
+          {% for event in health_events %}
+          {% set list = number_of_processes_over_time.append(event.eventObjects|selectattr("name", "match", "information_for_process_.*")|list|length) %}
+          {% endfor %}
+          <tr>
+            <td>{{ number_of_processes_over_time|min|round(3) }}</td>
+            <td>{{ number_of_processes_over_time|max|round(3) }}</td>
+            <td>{{ number_of_processes_over_time|mean|round(3) }}</td>
+          </tr>
+        </table>
+        <br/>
+        <div>
+          <h4>The following table shows the details of the last batch of monitored processes during this reporting period</h4>
+        </div>
+        <table width="100%" class="table table-striped table-bordered table-hover table-search"  id="processes-last-event">
+          <thead>
+            <tr>
+              <th>PID</th>
+              <th>PPID</th>
+              <th>Command</th>
+              <th>Status</th>
+              <th>Creation time</th>
+              <th>CPU usage %</th>
+              <th>Memory usage %</th>
+              <th>Number of threads</th>
+              <th>Number of fds</th>
+              <th>Time</th>
+              <th>Event UUID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set last_event_processes = health_events_sorted[-1].get_structured_values()[0]["values"]|selectattr("name", "match", "information_for_process_.*")|list %}
+            {% for process in last_event_processes %}
+            <tr>
+              {% for key in ["pid", "ppid", "command", "status", "create_time", "cpu_percentage", "memory_percentage", "number_of_threads", "number_of_fds"] %}
+              {% set value = process["values"]|selectattr("name", "equalto", key)|first|get_value_key("value") %}
+              <td>{{ value }}</td>
+              {% endfor %}
+              <td>{{ health_events_sorted[-1].start.isoformat() }}</td>
+              <td><a href="/eboa_nav/query-event-links/{{ health_events_sorted[-1].event_uuid }}">{{ health_events_sorted[-1].event_uuid }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>PID</th>
+              <th>PPID</th>
+              <th>Command</th>
+              <th>Status</th>
+              <th>Creation time</th>
+              <th>CPU usage %</th>
+              <th>Memory usage %</th>
+              <th>Number of threads</th>
+              <th>Number of fds</th>
+              <th>Time</th>
+              <th>Event UUID</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#ddbb-connections-status">DDBB connections status <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="ddbb-connections-status">
+      <div>
+        <h3><u>Evolution of the number of connections in parallel to the DDBB</u></h3>
+      </div>
+      <br/>
+      <div>
+        <div>
+          <h4>The following graph shows the evolution of the number of connections in parallel to the DDBB</h4>
+          <br/>
+        </div>
+        <div id="health-x-time-number-of-connections-to-ddbb">
+        </div>
+        <br/>
+        <div>
+          <h4>The following table shows the statistics of the number of connections in parallel to the DDBB</h4>
+        </div>
+        <table id="number-of-connections-to-ddbb" align="center" class="table table-striped table-bordered table-hover table-static">
+          <tr>
+            <th>Minimum (%)</th>
+            <th>Maximum (%)</th>
+            <th>Mean (%)</th>
+          </tr>
+          {% set number_of_connections_to_ddbb_over_time = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", "number_of_parallel_connections_to_ddbb")|map(attribute="value")|list %}
+          <tr>
+            <td>{{ number_of_connections_to_ddbb_over_time|min|round(3) }}</td>
+            <td>{{ number_of_connections_to_ddbb_over_time|max|round(3) }}</td>
+            <td>{{ number_of_connections_to_ddbb_over_time|mean|round(3) }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#folders-status">Monitored folders status <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="folders-status">
+      <div>
+        <h3><u>Evolution of the number of files in the monitored folders</u></h3>
+      </div>
+      <br/>
+      <div>
+        <div>
+          <h4>The following graph shows the evolution of the number of files in the monitored folders</h4>
+          <br/>
+        </div>
+        <div id="health-x-time-number-of-files-in-folders">
+        </div>
+        <br/>
+        <div>
+          <h4>The following table shows the statistics of the number of files in the monitored folders</h4>
+        </div>
+        {% set folders = health_events|map(attribute="eventTexts")|flatten|selectattr("name", "equalto", "folder_name")|map(attribute="value")|unique|list %}
+        <table id="folders-evolution-statistics" align="center" class="table table-striped table-bordered table-hover table-static">
+          <tr>
+            <th>Folder</th>
+            <th>Path</th>
+            <th>Minimum (%)</th>
+            <th>Maximum (%)</th>
+            <th>Mean (%)</th>
+          </tr>        
+          {% for folder in folders %}
+          {% set path = health_events|map(attribute="eventTexts")|flatten|selectattr("name", "equalto", folder + "_path")|map(attribute="value")|unique|first %}
+          {% set number_of_files = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", folder + "_number_of_files")|map(attribute="value")|list %}
+          <tr>
+            <td class="highlight">{{ folder }}</td>
+            <td class="highlight">{{ path }}</td>
+            <td>{{ number_of_files|min|round(3) }}</td>
+            <td>{{ number_of_files|max|round(3) }}</td>
+            <td>{{ number_of_files|mean|round(3) }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-body">
+        <div>
+          <h3><u>Monitoring data</u></h3>
+        </div>
+        <div>
+          <p id="no-monitoring-events" style="text-indent: 1em">There are no monitoring events during the requested period.</p>
+          <br/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  {% if health_events|length > 0 %}
+  {% set health_events_sorted = health_events|sort(attribute="start") %}
+  {% with events = health_events_sorted %}
+  {% include "boa_health/js/memory_evolution_xy.js" %}
+  {% endwith %}
+
+  var groups = [];
+  var items = [];
+
+  var memory_xy_events = events;
+
+  var options = vboa.prepare_events_data_for_xy(memory_xy_events, items, groups, "Evolution of the memory %");
+
+  options.dataAxis.left.range = {
+  max: 100,
+  min: 0
+  }
+  
+  vboa.display_x_time("health-x-time-memory-evolution", items, groups, options);
+
+  {% with events = health_events_sorted %}
+  {% include "boa_health/js/disks_evolution_xy.js" %}
+  {% endwith %}
+
+  var groups = [];
+  var items = [];
+
+  var disks_xy_events = events;
+
+  var options = vboa.prepare_events_data_for_xy(disks_xy_events, items, groups, "Evolution of the disks occupation %");
+
+  options.dataAxis.left.range = {
+  max: 100,
+  min: 0
+  }
+  
+  vboa.display_x_time("health-x-time-disks-evolution", items, groups, options);
+
+  {% with events = health_events_sorted %}
+  {% include "boa_health/js/cpu_evolution_xy.js" %}
+  {% endwith %}
+
+  var groups = [];
+  var items = [];
+
+  var cpu_xy_events = events;
+
+  var options = vboa.prepare_events_data_for_xy(cpu_xy_events, items, groups, "Evolution of the cpu occupation %");
+
+  options.dataAxis.left.range = {
+  max: 100,
+  min: 0
+  }
+  
+  vboa.display_x_time("health-x-time-cpu-evolution", items, groups, options);
+
+  {% with events = health_events_sorted %}
+  {% include "boa_health/js/number_of_processes_evolution_xy.js" %}
+  {% endwith %}
+
+  var groups = [];
+  var items = [];
+
+  var number_of_processes_xy_events = events;
+
+  var options = vboa.prepare_events_data_for_xy(number_of_processes_xy_events, items, groups, "Evolution of the number of processes in parallel");
+
+  options.dataAxis.left.range = {
+  min: 0
+  }
+
+  vboa.display_x_time("health-x-time-number-of-processes-evolution", items, groups, options);
+
+  {% with events = health_events_sorted %}
+  {% include "boa_health/js/connections_to_ddbb_evolution_xy.js" %}
+  {% endwith %}
+
+  var groups = [];
+  var items = [];
+
+  var connections_to_ddbb_xy_events = events;
+
+  var options = vboa.prepare_events_data_for_xy(connections_to_ddbb_xy_events, items, groups, "Evolution of the number of connections to DDBB in parallel");
+
+  options.dataAxis.left.range = {
+  min: 0
+  }
+
+  vboa.display_x_time("health-x-time-number-of-connections-to-ddbb", items, groups, options);
+
+  {% with events = health_events_sorted %}
+  {% include "boa_health/js/folders_evolution_xy.js" %}
+  {% endwith %}
+
+  var groups = [];
+  var items = [];
+
+  var folders_xy_events = events;
+
+  var options = vboa.prepare_events_data_for_xy(folders_xy_events, items, groups, "Evolution of the number of files in the folders");
+
+  options.dataAxis.left.range = {
+  min: 0
+  }
+
+  vboa.display_x_time("health-x-time-number-of-files-in-folders", items, groups, options);
+
+  {% endif %}
+  {% if sliding_window %}
+  var parameters = {
+  "window_delay": "{{ sliding_window['window_delay'] }}",
+  "window_size": "{{ sliding_window['window_size'] }}",
+  }
+  var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
+  vboa.update_view(parameters, repeat_cycle, "/health/sliding-health-parameters");
+  {% endif %}
+</script>
+{% endblock %}

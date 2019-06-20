@@ -52,20 +52,6 @@ def create_app():
             return False
 
     @app.template_filter()
-    def selectattr_map(list_of_items, attr, attr_filter, value):
-        """Convert a string to all caps."""
-        list_result = []
-        for items in list_of_items:
-            for item in items:
-                expression = eval("item." + attr)
-                if eval("expression " + attr_filter + " value"):
-                    list_result.append(item)
-                # end if
-            # end for
-        # end for
-        return list_result
-
-    @app.template_filter()
     def events_group_by_text_value(list_of_events, name):
         """Convert a string to all caps."""
         result = {}
