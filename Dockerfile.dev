@@ -25,7 +25,12 @@ RUN yum install -y postgresql \
     gcc-c++ \
     sqlite-devel \
     which \
-    p7zip
+    p7zip \
+    unzip
+
+# Notes for compiling get_footprint
+# gcc -Wno-deprecated -g -fpic -c -DSQLCA_STORAGE_CLASS=static -I /s2vboa/eopcfi/include/ get_footprint.c
+# gcc get_footprint.o -Wno-deprecated -g -I /s2vboa/eopcfi/include/ -L /s2vboa/eopcfi/lib/ -lexplorer_visibility -lexplorer_pointing -lexplorer_orbit -lexplorer_lib -lexplorer_data_handling -lexplorer_file_handling -lgeotiff -ltiff -lproj -lxml2 -lm -lc -fopenmp -o get_footprint
 
 RUN scl enable rh-ruby25 bash
 
