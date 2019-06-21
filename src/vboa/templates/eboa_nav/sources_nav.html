@@ -5,7 +5,7 @@
 <div>
   <a href="/eboa_nav/query-sources"><p class="fa fa-chevron-left"> Back to query sources</p></a>
 </div>
-{% set not_ingested_sources = sources|selectattr("ingestion_duration", "none")|list %}
+{% set not_ingested_sources = sources|rejectattr("ingested", "equalto", True)|list %}
 {% if not_ingested_sources|length > 0 %}
 <div class="panel panel-red">
   <div class="panel-heading">
@@ -33,7 +33,11 @@
           <td>{{ source.name }}</td>
           <td>{{ source.validity_start }}</td>
           <td>{{ source.validity_stop }}</td>
+          {% if source.validity_stop and source.validity_start %}
           <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
+          {% else %}
+          <td></td>
+          {% endif %}
           <td>{{ source.generation_time }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
           <td>{{ source.processor }}</td>
