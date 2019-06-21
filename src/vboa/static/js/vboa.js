@@ -39,6 +39,17 @@ import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
 
+var interval = setInterval(update_clock, 1000);
+
+/* Set clock */
+function update_clock() {
+    var date = new Date();
+    var local_date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    document.getElementById("time-clock").innerHTML = "<div class='nav navbar-text'>" +
+        "<p style='background:white'>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
+        "</div>"
+};
+
 /* Activate chosen for the multiple input selection */
 jQuery(".chosen-select").chosen({
     no_results_text: "Nothing found for the following criteria: ",
