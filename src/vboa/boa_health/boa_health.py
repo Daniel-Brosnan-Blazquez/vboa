@@ -98,7 +98,7 @@ def show_health():
 
     return query_health_and_render(start_filter, stop_filter, template_name = template_name)
 
-@bp.route("/sliding-health-parameters", methods=["GET", "POST"])
+@bp.route("/sliding_health_parameters", methods=["GET", "POST"])
 def show_sliding_health_parameters():
     """
     Health monitoring view of the BOA.
@@ -127,7 +127,7 @@ def show_sliding_health_parameters():
 
     return query_health_and_render(start_filter, stop_filter, sliding_window, template_name = template_name)
     
-@bp.route("/sliding-health", methods=["GET", "POST"])
+@bp.route("/sliding_health", methods=["GET", "POST"])
 def show_sliding_health():
     """
     Health monitoring view of the BOA.
