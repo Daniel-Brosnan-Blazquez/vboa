@@ -1,5 +1,9 @@
 {% extends "panel/index.html" %}
 {% block content %}
+<div class="row">
+  <h1 class="page-header">BOA health monitoring</h1>
+</div>
+<!-- /.row -->
 {% include "boa_health/boa_health_query.html" %}
 {% set health_events_sorted = health_events|sort(attribute="start") %}
 {% set alerts = health_events_sorted|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
@@ -347,14 +351,14 @@
 <div class="row">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div class="panel-body">
-        <div>
-          <h3><u>Monitoring data</u></h3>
-        </div>
-        <div>
-          <p id="no-monitoring-events" style="text-indent: 1em">There are no monitoring events during the requested period.</p>
-          <br/>
-        </div>
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#boa-health-monitoring">BOA health monitoring events <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <div class="panel-body panel-collapse collapse" id="boa-health-monitoring">
+      <div>
+        <p id="no-monitoring-events" style="text-indent: 1em">There are no monitoring events during the requested period.</p>
+        <br/>
       </div>
     </div>
   </div>

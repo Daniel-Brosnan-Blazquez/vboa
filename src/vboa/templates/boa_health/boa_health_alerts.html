@@ -1,6 +1,12 @@
 {% extends "panel/index.html" %}
 {% block content %}
+<div class="row">
+  <h1 class="page-header">BOA health alerts</h1>
+</div>
+<!-- /.row -->
+{% with template = "?template=alerts" %}
 {% include "boa_health/boa_health_query.html" %}
+{% endwith %}
 {% set health_events_sorted = health_events|sort(attribute="start") %}
 {% set alerts = health_events_sorted|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% include "boa_health/boa_health_alerts_content.html" %}

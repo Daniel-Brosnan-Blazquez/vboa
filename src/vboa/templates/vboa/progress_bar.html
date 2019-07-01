@@ -1,0 +1,25 @@
+{% if progress < 100 and error == True %}
+<td>
+  <div class="progress" style="background-color:red">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ progress }}%">
+      {{ progress }}%
+    </div>
+  </div>
+</td>
+{% elif progress < 100 %}
+<td>
+  <div class="progress" style="background-color:grey">
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ progress }}%">
+      {{ progress }}%
+    </div>
+  </div>
+</td>
+{% else %}
+<td>
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+      100%
+    </div>
+  </div>
+</td>
+{% endif %}

@@ -1,8 +1,4 @@
 <div class="row">
-  <h1 class="page-header">BOA health monitoring</h1>
-</div>
-<!-- /.row -->
-<div class="row">
   <div>
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -17,7 +13,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="health-query-window">          
-            <form role="form" method=post action="/health/health">
+            <form role="form" method=post action="/health/health{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">
@@ -40,7 +36,7 @@
             </form>
           </div>
           <div class="tab-pane" id="health-sliding-window">          
-            <form role="form" method=post action="/health/sliding_health">            
+            <form role="form" method=post action="/health/sliding_health{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">
