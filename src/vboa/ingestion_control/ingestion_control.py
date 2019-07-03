@@ -23,7 +23,6 @@ from eboa.engine.engine import Engine
 
 bp = Blueprint("ingestion_control", __name__, url_prefix="/ingestion_control")
 query = Query()
-engine = Engine()
 
 # Default configuration
 window_delay=0
@@ -199,6 +198,9 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
         kwargs["reception_time_filters"] = [{"date": stop_filter["date"], "op": stop_filter["operator"]}]
     # end if
 
+    # This is here because it seems that the ORM is caching values and does not show the updates.
+    # expunge_all removes all objects related to the session
+    query.session.expunge_all()
     sources = query.get_sources(**kwargs)
 
     reporting_start = stop_filter["date"]
