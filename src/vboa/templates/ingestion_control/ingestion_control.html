@@ -1,0 +1,132 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Ingestion control monitoring</h1>
+</div>
+<!-- /.row -->
+{% include "ingestion_control/ingestion_control_query.html" %}
+{% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% include "ingestion_control/ingestion_control_alerts_content.html" %}
+{% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|sort(attribute="reception_time", reverse=True)|list %}
+{% include "ingestion_control/ingestion_control_errors_content.html" %}
+{% set sources_to_be_shown = sources|rejectattr("ingestion_error", "equalto", True)|sort(attribute="reception_time", reverse=True)|list %}
+{% if sources_to_be_shown|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#ingested-sources-ingestion-control">Sources ingested successfully <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="ingested-sources-ingestion-control">
+      <div>
+        <h3><u>Table of sources successfully ingested</u></h3>
+      </div>
+      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="ingested-sources-ingestion-control-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>DIM signature</th>
+            <th>Ingestion progress</th>
+            <th>Processor progress</th>
+            <th>Ingestion completeness</th>
+            <th>Triggering Duration</th>
+            <th>Ingestion Duration</th>
+            <th>Processing Duration</th>
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Duration</th>
+            <th>Number of events</th>
+            <th>Reception time</th>
+            <th>Generation time</th>
+            <th>Ingestion Time</th>
+            <th>Processor</th>
+            <th>Processor version</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for source in sources_to_be_shown %}
+          <tr>
+            <td><i id="expand-source-ingestion-success-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
+            <td><a href="/eboa_nav/query-source/{{ source.source_uuid }}">{{ source.name }}</a></td>
+            <td>{{ source.dimSignature.dim_signature }}</td>
+            {% with progress = source.get_ingestion_progress(), error = False %}
+            {% include "vboa/progress_bar.html" %}
+            {% endwith %}
+            {% with progress = source.get_processor_progress(), error = False %}
+            {% include "vboa/progress_bar.html" %}
+            {% endwith %}
+            <td>{{ source.ingestion_completeness }}</td>
+            <td>{{ source.get_triggering_duration() }}</td>
+            <td>{{ source.ingestion_duration }}</td>
+            <td>{{ source.processing_duration }}</td>
+            {% with date = source.validity_start %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date = source.validity_stop %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date1 = source.validity_start, date2 = source.validity_stop %}
+            {% include "vboa/difference_date_td_value.html" %}
+            {% endwith %}
+            <td>{{ source.events|length }}</td>
+            {% with date = source.reception_time %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date = source.generation_time %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date = source.ingestion_time %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            <td>{{ source.processor }}</td>
+            <td>{{ source.processor_version }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>DIM signature</th>
+            <th>Ingestion progress</th>
+            <th>Processor progress</th>
+            <th>Ingestion completeness</th>
+            <th>Triggering Duration</th>
+            <th>Ingestion Duration</th>
+            <th>Processing Duration</th>
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Duration</th>
+            <th>Number of events</th>
+            <th>Reception time</th>
+            <th>Generation time</th>
+            <th>Ingestion Time</th>
+            <th>Processor</th>
+            <th>Processor version</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#ingestion-control-status">Ingestion control status <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <div class="panel-body panel-collapse collapse" id="ingestion-control-status">
+      <div>
+          <p id="no-sources-ingestion-control" style="text-indent: 1em">There are no sources being ingested during the requested period.</p>
+        <br/>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

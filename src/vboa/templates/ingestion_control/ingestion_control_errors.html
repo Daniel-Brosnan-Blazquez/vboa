@@ -1,0 +1,12 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Ingestion errors</h1>
+</div>
+<!-- /.row -->
+{% with template = "?template=errors" %}
+{% include "ingestion_control/ingestion_control_query.html" %}
+{% endwith %}
+{% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|sort(attribute="reception_time", reverse=True)|list %}
+{% include "ingestion_control/ingestion_control_errors_content.html" %}
+{% endblock %}

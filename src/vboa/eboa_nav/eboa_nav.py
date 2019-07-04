@@ -618,6 +618,16 @@ def query_jsonify_sources():
     jsonified_sources = [source.jsonify() for source in sources]
     return jsonify(jsonified_sources)
 
+@bp.route("/query-jsonify-source-statuses/<uuid:source_uuid>")
+def query_jsonify_source_statuses(source_uuid):
+    """
+    Query statuses related to the source with the corresponding received UUID.
+    """
+    current_app.logger.debug("Query statuses corresponding to the source with the specified UUID " + str(source_uuid))
+    sources = query.get_sources(source_uuids = {"filter": [source_uuid], "op": "in"})
+    jsonified_statuses = [source_status.jsonify() for source in sources for source_status in source.statuses]
+    return jsonify(jsonified_statuses)
+
 @bp.route("/get-source-status")
 def get_source_status():
     """

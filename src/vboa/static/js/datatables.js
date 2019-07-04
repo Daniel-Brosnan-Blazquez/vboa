@@ -18,6 +18,10 @@ export function activate_search_on_columns() {
             iDisplayLength: -1,
             select: true,
             scrollX: true,
+            // This is to hide the second header set by the scrollX
+            initComplete: function(settings, json) {
+                $('.dataTables_scrollBody thead tr').css({visibility:'collapse'});
+            },
             scrollY: "500px",
             /* dom:
                B: Buttons

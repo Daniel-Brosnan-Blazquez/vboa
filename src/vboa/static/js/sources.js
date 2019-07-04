@@ -165,6 +165,71 @@ export function create_source_generation_time_to_ingestion_time_xy(sources, dom_
 * Query functions
 */
 
+/* Function to show the statuses related to a source */
+export function expand_source_statuses(dom_id, source_uuid){
+    
+    var table = jQuery("#" + dom_id).closest("table").DataTable();
+    var tr = jQuery("#" + dom_id).closest("tr");
+    var tdi = tr.find("i.fa");
+    var row = table.row(tr);
+    
+    if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+        tdi.first().removeClass('fa-minus-square');
+        tdi.first().removeClass('red');
+        tdi.first().addClass('fa-plus-square');
+        tdi.first().addClass('green');
+    }
+    else {
+        // Open this row
+        var parameters = {
+            "row": row,
+            "insert_method": insert_in_datatable
+        }
+        query.request_info("/eboa_nav/query-jsonify-source-statuses/" + source_uuid, show_source_statuses, parameters);
+        tr.addClass('shown');
+        tdi.first().removeClass('fa-plus-square');
+        tdi.first().removeClass('green');
+        tdi.first().addClass('fa-minus-square');
+        tdi.first().addClass('red');
+    }
+};
+
+function show_source_statuses(parameters, statuses){
+
+    var row = parameters["row"]
+
+    var table = '<table class="table">' +
+        '<thead>' +
+        '<tr>' +
+        '<th>Status</th>' +
+        '<th>TIme stamp</th>' +
+        '<th>Log</th>' +
+        '</tr>' +
+        '</thead>' +
+        '<tbody>';
+
+    for (const status of statuses){
+        table = table + 
+            '<tr>' +
+            '<td>' + status["status"] + '</td>' +
+            '<td>' + status["time_stamp"] + '</td>' +
+            '<td>' + status["log"] + '</td>' +
+            '</tr>'
+    }
+    table = table + '</tbody>' +
+        '</table>';
+
+    parameters["insert_method"](row, table);
+    
+}
+
+function insert_in_datatable(row, table){
+    row.child(table).show();
+}
+
 /* Functions for the query interface */
 export function fill_sources(){
     const divs = document.getElementsByClassName("query-sources");
