@@ -18,15 +18,16 @@ RUN yum install -y postgresql \
     chromedriver \
     centos-release-scl-rh \
     centos-release-scl \
-    rh-ruby25 \
-    rh-ruby25-rubygem-bundler \
-    rh-ruby25-ruby-devel \
     make \
     gcc-c++ \
     sqlite-devel \
     which \
     p7zip \
     unzip
+
+RUN yum install -y rh-ruby25 \
+    rh-ruby25-rubygem-bundler \
+    rh-ruby25-ruby-devel
 
 # Notes for compiling get_footprint
 # gcc -Wno-deprecated -g -fpic -c -DSQLCA_STORAGE_CLASS=static -I /s2vboa/eopcfi/include/ get_footprint.c
