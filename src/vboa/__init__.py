@@ -29,8 +29,7 @@ def create_app():
     """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        # a default secret that should be overridden by instance config
-        SECRET_KEY='dev'
+        SECRET_KEY=b'\xca+-\x9b\xcek.\x9fkM \xea\x8d\x1c\x99&'
     )
 
     app.register_blueprint(panel.bp)
