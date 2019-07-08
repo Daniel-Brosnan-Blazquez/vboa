@@ -13,9 +13,10 @@ setup(name="vboa",
       url="https://bitbucket.org/dbrosnan/vboa/",
       author="Daniel Brosnan",
       author_email="daniel.brosnan@deimos-space.com",
-      packages=["vboa", "vboa.eboa_nav"],
+      packages=find_packages(),
       python_requires='>=3',
       install_requires=[
+          "eboa",
           "Flask",
           "Flask-DebugToolbar"
       ],
