@@ -1,13 +1,13 @@
 #################################################################
 #
-# Init docker environment of the vboa and its tailored app
+# Init docker development environment of the vboa and its tailored app
 #
 # Written by DEIMOS Space S.L. (dibb)
 #
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-c orc_tailoring_configuration_path]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-x orc_tailoring_configuration_path]"
 
 ########
 # Initialization
@@ -15,7 +15,7 @@ USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_d
 PATH_TO_EBOA=""
 PATH_TO_VBOA=""
 PATH_TO_TAILORED=""
-PATH_TO_DOCKERFILE="Dockerfile"
+PATH_TO_DOCKERFILE="Dockerfile.dev"
 PORT="5000"
 CONTAINERS_LABEL="dev"
 APP="vboa"
@@ -154,9 +154,9 @@ then
 fi
 
 EBOA_RESOURCES_PATH="/eboa/src/config"
-DATABASE_CONTAINER="boa-database-$CONTAINERS_LABEL"
-APP_CONTAINER="boa-app-$CONTAINERS_LABEL"
-DOCKER_NETWORK="boa-network-$CONTAINERS_LABEL"
+DATABASE_CONTAINER="boa_database_$CONTAINERS_LABEL"
+APP_CONTAINER="boa_app_$CONTAINERS_LABEL"
+DOCKER_NETWORK="boa_network_$CONTAINERS_LABEL"
 
 read -p "
 Welcome to the initializer of the BOA environment :-)
@@ -201,7 +201,7 @@ then
                 # Remove app image and container if it already exists
                 docker stop $APP_CONTAINER
                 docker rm $APP_CONTAINER
-                docker rmi $(docker images boa -q)
+                docker rmi $(docker images boa_dev -q)
 
                 break;;
             [Nn]* ) exit;;
@@ -231,14 +231,14 @@ then
     find $PATH_TO_TAILORED -name *pyc -delete
 fi
 
-docker build --build-arg FLASK_APP=$APP -t boa -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+docker build --build-arg FLASK_APP=$APP -t boa_dev -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 
 # Initialize the eboa database
 if [ "$PATH_TO_TAILORED" != "" ];
 then
-    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa
+    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_dev
 else
-    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v boa
+    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_dev
 fi
 
 # Copy configurations
