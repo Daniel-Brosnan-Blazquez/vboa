@@ -29,10 +29,6 @@ RUN yum install -y rh-ruby25 \
     rh-ruby25-rubygem-bundler \
     rh-ruby25-ruby-devel
 
-# Notes for compiling get_footprint
-# gcc -Wno-deprecated -g -fpic -c -DSQLCA_STORAGE_CLASS=static -I /s2vboa/eopcfi/include/ get_footprint.c
-# gcc get_footprint.o -Wno-deprecated -g -I /s2vboa/eopcfi/include/ -L /s2vboa/eopcfi/lib/ -lexplorer_visibility -lexplorer_pointing -lexplorer_orbit -lexplorer_lib -lexplorer_data_handling -lexplorer_file_handling -lgeotiff -ltiff -lproj -lxml2 -lm -lc -fopenmp -o get_footprint
-
 RUN scl enable rh-ruby25 bash
 
 RUN pip3 install pytest-cov \
@@ -41,12 +37,22 @@ RUN pip3 install pytest-cov \
     before_after \
     Sphinx
 
+# Create folders for BOA
 RUN mkdir /log
 RUN mkdir /scripts
+RUN mkdir /resources_path
+RUN mkdir /orc_packages
+
+# Create folders for ORC
+RUN mkdir /orc_config
+RUN mkdir /minarc_root
+RUN mkdir /inputs
+
+# Install scripts
 RUN ln -s /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py
 RUN ln -s /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py
 
-# Environment Variables
+# Environment Variables for BOA
 ENV EBOA_RESOURCES_PATH /resources_path
 ENV EBOA_LOG_PATH /log
 ENV EBOA_SCHEMAS_PATH /eboa/src/schemas
@@ -58,3 +64,17 @@ ENV PATH="${PATH}:/scripts"
 
 # expose port
 EXPOSE 5000
+
+# Environment Variables for ORC
+ENV MINARC_ARCHIVE_ROOT /minarc_root
+ENV MINARC_ARCHIVE_ERROR /minarc_root/.errors
+ENV MINARC_DATABASE_NAME /orc/minarc_inventory
+ENV MINARC_DB_ADAPTER sqlite3
+ENV MINARC_DATABASE_USER root
+ENV MINARC_DATABASE_PASSWORD 1mysql
+ENV ORC_CONFIG /orc_config
+ENV ORC_TMP /orc/tmp
+ENV ORC_DATABASE_NAME /orc/orc_inventory
+ENV ORC_DB_ADAPTER sqlite3
+ENV ORC_DATABASE_USER root
+ENV ORC_DATABASE_PASSWORD 1mysql
