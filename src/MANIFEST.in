@@ -1,0 +1,4 @@
+graft vboa/templates
+include vboa/static/dist/bundle.js
+include vboa/static/dist/styles.css
+graft vboa/static/html
