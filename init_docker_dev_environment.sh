@@ -159,7 +159,7 @@ APP_CONTAINER="boa_app_$CONTAINERS_LABEL"
 DOCKER_NETWORK="boa_network_$CONTAINERS_LABEL"
 
 read -p "
-Welcome to the initializer of the BOA environment :-)
+Welcome to the initializer of the BOA development environment :-)
 
 You are trying to initialize a new development environment for the app: $APP...
 These are the configuration options that will be applied to initialize the environment:
