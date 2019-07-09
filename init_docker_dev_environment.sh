@@ -86,7 +86,7 @@ then
 fi
 
 # Check that the needed orc packets are present
-minarc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -name 'minarc*' | wc -l)
+minarc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -mindepth 1 -name 'minarc*' | wc -l)
 if [ $minarc_count == 0 ];
 then
     echo "ERROR: The directory $PATH_TO_ORC does not contain a minarc packet"
@@ -96,7 +96,7 @@ then
     echo "ERROR: The directory $PATH_TO_ORC contains more than one minarc packet"
     exit -1
 fi
-orc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -name 'orc*' | wc -l)
+orc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -mindepth 1 -name 'orc*' | wc -l)
 if [ $orc_count == 0 ];
 then
     echo "ERROR: The directory $PATH_TO_ORC does not contain a orc packet"
@@ -106,7 +106,7 @@ then
     echo "ERROR: The directory $PATH_TO_ORC contains more than one orc packet"
     exit -1
 fi
-gemfile_count=$(find $PATH_TO_ORC/ -maxdepth 1 -name 'Gemfile' | wc -l)
+gemfile_count=$(find $PATH_TO_ORC/ -maxdepth 1 -mindepth 1 -name 'Gemfile' | wc -l)
 if [ $gemfile_count == 0 ];
 then
     echo "ERROR: The directory $PATH_TO_GEMFILE does not contain a Gemfile file"
