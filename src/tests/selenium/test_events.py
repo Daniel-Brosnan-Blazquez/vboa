@@ -80,6 +80,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -183,6 +184,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -253,6 +255,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -279,6 +282,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -416,6 +420,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -442,6 +447,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -579,6 +585,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -607,6 +614,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -746,6 +754,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -774,6 +783,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -913,6 +923,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -941,6 +952,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -1078,6 +1090,7 @@ class TestEventsTab(unittest.TestCase):
                                           "exec": "exec",
                                           "version": "1.0"},
                         "source": {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                                    "generation_time": "2018-07-05T02:07:03",
                                    "validity_start": "2018-06-05T02:07:03",
                                    "validity_stop": "2018-06-05T08:07:36"},
@@ -1153,6 +1166,7 @@ class TestEventsTab(unittest.TestCase):
                                           "exec": "exec",
                                           "version": "1.0"},
                         "source": {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                                    "generation_time": "2018-07-05T02:07:03",
                                    "validity_start": "2018-06-05T02:07:03",
                                    "validity_stop": "2018-06-05T08:07:36"},
@@ -1516,6 +1530,7 @@ class TestEventsTab(unittest.TestCase):
                                           "exec": "exec",
                                           "version": "1.0"},
                         "source": {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                                    "generation_time": "2018-07-05T02:07:03",
                                    "validity_start": "2018-06-05T02:07:03",
                                    "validity_stop": "2018-06-05T08:07:36"},
@@ -1880,6 +1895,7 @@ class TestEventsTab(unittest.TestCase):
                                           "exec": "exec",
                                           "version": "1.0"},
                         "source": {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                                    "generation_time": "2018-07-05T02:07:03",
                                    "validity_start": "2018-06-05T02:07:03",
                                    "validity_stop": "2018-06-05T08:07:36"},
@@ -2038,6 +2054,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -2063,6 +2080,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -2140,6 +2158,7 @@ class TestEventsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T00:00:00",
                            "validity_stop": "2018-06-05T08:00:00"},

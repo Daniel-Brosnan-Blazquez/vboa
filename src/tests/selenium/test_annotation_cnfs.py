@@ -80,6 +80,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -160,6 +161,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -183,6 +185,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -329,6 +332,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -352,6 +356,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -497,6 +502,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"},
@@ -520,6 +526,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T14:14:14",
                            "validity_start": "2018-06-05T14:14:14",
                            "validity_stop": "2018-06-06T11:57:17"},
@@ -543,6 +550,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
                   "version": "1.0"
             },
             "source":  {"name": "source_3.xml",
+                        "reception_time": "2018-07-05T02:07:03",
                            "generation_time": "2018-07-05T02:07:13",
                            "validity_start": "2018-06-05T03:09:33",
                            "validity_stop": "2018-06-05T08:17:46"},
