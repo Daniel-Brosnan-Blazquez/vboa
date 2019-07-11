@@ -1,110 +1,187 @@
 #################################################################
 #
-# Init docker environment of the vboa
+# Init docker environment of the vboa and its tailored app
 #
 # Written by DEIMOS Space S.L. (dibb)
 #
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -p path_to_vboa_src"
-PATH_TO_EBOA_SRC=""
-PATH_TO_VBOA_SRC=""
+USAGE="Usage: `basename $0` -d path_to_docker_image -i path_to_external_inputs_folder -b path_to_boa_ddbb -o path_to_orc_ddbb -m path_to_minarc_archive [-p port] [-l containers_label]"
 
-while getopts p:e: option
+########
+# Initialization
+########
+PORT="5000"
+CONTAINERS_LABEL="dev"
+PATH_TO_BOA_INPUTS=""
+PATH_TO_BOA_DDBB=""
+PATH_TO_ORC_DDBB=""
+PATH_TO_MINARC_ARCHIVE=""
+
+while getopts d:p:l:i:b:o:m: option
 do
     case "${option}"
         in
-        e) PATH_TO_EBOA_SRC=${OPTARG};;
-        p) PATH_TO_VBOA_SRC=${OPTARG};;
+        d) PATH_TO_DOCKERIMAGE=${OPTARG};;
+        p) PORT=${OPTARG};;
+        l) CONTAINERS_LABEL=${OPTARG};;
+        i) PATH_TO_BOA_INPUTS=${OPTARG};;
+        b) PATH_TO_BOA_DDBB=${OPTARG};;
+        o) PATH_TO_ORC_DDBB=${OPTARG};;
+        m) PATH_TO_MINARC_ARCHIVE=${OPTARG};;
         ?) echo -e $USAGE
             exit -1
     esac
 done
 
-# Check that option -e has been specified
-if [ "$PATH_TO_EBOA_SRC" == "" ];
+# Check that option -d has been specified
+if [ "$PATH_TO_DOCKERIMAGE" == "" ];
 then
-    echo "ERROR: The option -e has to be provided"
+    echo "ERROR: The option -d has to be provided"
     echo $USAGE
     exit -1
 fi
 
-# Check that the path to the eboa project exists
-if [ ! -d $PATH_TO_EBOA_SRC ];
+# Check that the docker image exists
+if [ ! -f $PATH_TO_DOCKERIMAGE ];
 then
-    echo "ERROR: The directory $PATH_TO_EBOA_SRC provided does not exist"
+    echo "ERROR: The file $PATH_TO_DOCKERIMAGE provided does not exist"
     exit -1
 fi
 
-# Check that option -p has been specified
-if [ "$PATH_TO_VBOA_SRC" == "" ];
+# Check that option -i has been specified
+if [ "$PATH_TO_BOA_INPUTS" == "" ];
 then
-    echo "ERROR: The option -p has to be provided"
+    echo "ERROR: The option -i has to be provided"
     echo $USAGE
     exit -1
 fi
 
-# Check that the path to the eboa project exists
-if [ ! -d $PATH_TO_VBOA_SRC ];
+# Check that the path to the inputs folder exists
+if [ ! -d $PATH_TO_BOA_INPUTS ];
 then
-    echo "ERROR: The directory $PATH_TO_VBOA_SRC provided does not exist"
+    echo "ERROR: The directory $PATH_TO_BOA_INPUTS provided does not exist"
     exit -1
 fi
 
+# Check that option -b has been specified
+if [ "$PATH_TO_BOA_DDBB" == "" ];
+then
+    echo "ERROR: The option -b has to be provided"
+    echo $USAGE
+    exit -1
+fi
+
+# Check that the path to the BOA DDBB folder exists
+if [ ! -d $PATH_TO_BOA_DDBB ];
+then
+    echo "ERROR: The directory $PATH_TO_BOA_DDBB provided does not exist"
+    exit -1
+fi
+
+# Check that option -o has been specified
+if [ "$PATH_TO_ORC_DDBB" == "" ];
+then
+    echo "ERROR: The option -o has to be provided"
+    echo $USAGE
+    exit -1
+fi
+
+# Check that the path to the ORC DDBB folder exists
+if [ ! -d $PATH_TO_ORC_DDBB ];
+then
+    echo "ERROR: The directory $PATH_TO_ORC_DDBB provided does not exist"
+    exit -1
+fi
+
+# Check that option -m has been specified
+if [ "$PATH_TO_MINARC_ARCHIVE" == "" ];
+then
+    echo "ERROR: The option -m has to be provided"
+    echo $USAGE
+    exit -1
+fi
+
+# Check that the path to the MINARC archive folder exists
+if [ ! -d $PATH_TO_MINARC_ARCHIVE ];
+then
+    echo "ERROR: The directory $PATH_TO_MINARC_ARCHIVE provided does not exist"
+    exit -1
+fi
+
+DATABASE_CONTAINER="boa_database_$CONTAINERS_LABEL"
+APP_CONTAINER="boa_app_$CONTAINERS_LABEL"
+DOCKER_NETWORK="boa_network_$CONTAINERS_LABEL"
+
+read -p "
+Welcome to the builder of the BOA environment :-)
+
+You are trying to initialize a new development environment for the app: $APP...
+These are the configuration options that will be applied to initialize the environment:
+- PATH_TO_DOCKERIMAGE: $PATH_TO_DOCKERIMAGE
+- PORT: $PORT
+- CONTAINERS_LABEL: $CONTAINERS_LABEL
+- PATH_TO_BOA_INPUTS: $PATH_TO_BOA_INPUTS
+- PATH_TO_BOA_DDBB: $PATH_TO_BOA_DDBB
+- PATH_TO_ORC_DDBB: $PATH_TO_ORC_DDBB
+- PATH_TO_MINARC_ARCHIVE: $PATH_TO_MINARC_ARCHIVE
+
+Do you wish to proceed with the building of the production environment?" answer
+
+if [ "$(docker ps -a | grep -w $DATABASE_CONTAINER)" ];
+then
+    while true; do
+        read -p "There has been detected a container with the same name: $DATABASE_CONTAINER. Do you wish to remove it and proceed with the new installation?" answer
+        case $answer in
+            [Yy]* )
+                # Remove eboa database container if it already exists
+                docker stop $DATABASE_CONTAINER
+                docker rm $DATABASE_CONTAINER
+                break;;
+            [Nn]* ) exit;;
+            * ) read -p "Please answer Y or y for yes or N or n for no: " answer;;
+        esac
+    done
+fi
+
+if [ "$(docker ps -a | grep -w $APP_CONTAINER)" ];
+then
+    while true; do
+        read -p "There has been detected a container with the same name: $APP_CONTAINER. Do you wish to remove it and proceed with the new installation?" answer
+        case $answer in
+            [Yy]* )
+                # Remove app image and container if it already exists
+                docker stop $APP_CONTAINER
+                docker rm $APP_CONTAINER
+
+                break;;
+            [Nn]* ) exit;;
+            * ) echo "Please answer Y or y for yes or N or n for no.";;
+        esac
+    done
+fi
+
 ######
-# Create EBOA database container
+# Create network
 ######
-# Remove eboa database container if it already exists
-docker stop eboa-database-container
-docker rm eboa-database-container
+docker network inspect $DOCKER_NETWORK &>/dev/null || docker network create --driver bridge $DOCKER_NETWORK
+
+######
+# Create database container
+######
 # Execute container
-docker run  --name eboa-database-container -d mdillon/postgis
+docker run --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql -d mdillon/postgis
 
 ######
-# Create EBOA and VBOA container
+# Create APP container
 ######
-# Remove eboa and vboa image and container if it already exists
-docker stop eboa-vboa-container
-docker rm eboa-vboa-container
-docker rmi $(docker images eboa-vboa -q)
-find . -name *pyc -delete
-docker build -t eboa-vboa .
-# Initialize the eboa database
-docker run -p 8000:5000 -it --name eboa-vboa-container --link eboa-database-container:eboa-vboa -d -v $PATH_TO_EBOA_SRC:/eboa -v $PATH_TO_VBOA_SRC:/vboa eboa-vboa
-# Generate the python archive
-PATH_TO_DOCKERFILE=$PWD
-cd $PATH_TO_EBOA_SRC/src
-rm -r dist
-python3 setup.py sdist
-cd $PATH_TO_DOCKERFILE
-docker exec -it eboa-vboa-container bash -c "pip3 install --upgrade pip"
-docker exec -it eboa-vboa-container bash -c "pip3 install /eboa/src/dist/*"
-cd $PATH_TO_VBOA_SRC/src
-rm -r dist
-python3 setup.py sdist
-cd $PATH_TO_DOCKERFILE
-docker exec -it eboa-vboa-container bash -c "pip3 install --upgrade pip"
-docker exec -it eboa-vboa-container bash -c "pip3 install /vboa/src/dist/*"
+docker load -i $PATH_TO_DOCKERIMAGE
 
-# Initialize the EBOA database inside the postgis-database container
-status=255
-while true
-do
-    echo "Trying to initialize database..."
-    docker exec -it eboa-vboa-container bash -c '/eboa/datamodel/init_ddbb.sh -h $EBOA_VBOA_PORT_5432_TCP_ADDR -p $EBOA_VBOA_PORT_5432_TCP_PORT -f /eboa/datamodel/eboa_data_model.sql' > /dev/null
-    status=$?
-    if [ $status -ne 0 ]
-    then
-        echo "Server is not ready yet..."
-        # Wait for the server to be initialize
-        sleep 1
-    else
-        echo "Database has been initialized..."
-        break
-    fi
-done
+docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/orc -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs  -d `basename $PATH_TO_DOCKERIMAGE .tar`
+
 # Change port and address configuration of the eboa defined by the postgis container
-docker exec -it eboa-vboa-container bash -c 'sed -i "s/localhost/$EBOA_VBOA_PORT_5432_TCP_ADDR/" /eboa/src/config/datamodel.json'
-docker exec -it eboa-vboa-container bash -c 'sed -i "s/5432/$EBOA_VBOA_PORT_5432_TCP_PORT/" /eboa/src/config/datamodel.json'
+docker exec -it $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
 
+# Execute flask server
+docker exec -d -it $APP_CONTAINER bash -c "flask run --host=0.0.0.0 -p 5000"

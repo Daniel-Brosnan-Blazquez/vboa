@@ -1,0 +1,14 @@
+# Base the image on centos
+FROM centos
+MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
+
+ARG FLASK_APP
+
+RUN yum install -y epel-release
+
+RUN yum install -y python36 \
+    python36-pip \
+    python36-tkinter \
+    gcc \
+    python36-devel
+    

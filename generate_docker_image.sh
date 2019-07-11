@@ -1,13 +1,13 @@
 #################################################################
 #
-# Init docker development environment of the vboa and its tailored app
+# Generate BOA image
 #
 # Written by DEIMOS Space S.L. (dibb)
 #
-# module vboa
+# module boa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-x orc_tailoring_configuration_path]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-c orc_tailoring_configuration_path] [-l version]"
 
 ########
 # Initialization
@@ -15,26 +15,25 @@ USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_d
 PATH_TO_EBOA=""
 PATH_TO_VBOA=""
 PATH_TO_TAILORED=""
-PATH_TO_DOCKERFILE="Dockerfile.dev"
-PORT="5000"
-CONTAINERS_LABEL="dev"
+PATH_TO_DOCKERFILE="Dockerfile"
 APP="vboa"
 PATH_TO_ORC=""
+VERSION="0.1.0"
 
-while getopts e:v:d:p:t:l:a:o:c:x: option
+while getopts e:v:d:p:t:a:o:c:x:p:l: option
 do
     case "${option}"
         in
-        e) PATH_TO_EBOA=${OPTARG};;
-        v) PATH_TO_VBOA=${OPTARG};;
-        t) PATH_TO_TAILORED=${OPTARG};;
-        d) PATH_TO_DOCKERFILE=${OPTARG};;
-        p) PORT=${OPTARG};;
-        l) CONTAINERS_LABEL=${OPTARG};;
-        a) APP=${OPTARG};;
-        o) PATH_TO_ORC=${OPTARG};;
-        c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG};;
-        x) PATH_TO_ORC_CONFIGURATION=${OPTARG};;
+        e) PATH_TO_EBOA=${OPTARG}; PATH_TO_EBOA_CALL="-e ${OPTARG}";;
+        v) PATH_TO_VBOA=${OPTARG}; PATH_TO_VBOA_CALL="-v ${OPTARG}";;
+        t) PATH_TO_TAILORED=${OPTARG}; PATH_TO_TAILORED_CALL="-t ${OPTARG}";;
+        d) PATH_TO_DOCKERFILE=${OPTARG}; PATH_TO_DOCKERFILE_CALL="-d ${OPTARG}";;
+        p) PATH_TO_DOCKERFILE_PKG=${OPTARG}; PATH_TO_DOCKERFILE_PKG_CALL="-d ${OPTARG}";;
+        a) APP=${OPTARG}; APP_CALL="-a ${OPTARG}";;
+        o) PATH_TO_ORC=${OPTARG}; PATH_TO_ORC_CALL="-o ${OPTARG}";;
+        c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG}; PATH_TO_BOA_TAILORING_CONFIGURATION_CALL="-c ${OPTARG}";;
+        x) PATH_TO_ORC_CONFIGURATION=${OPTARG}; PATH_TO_ORC_CONFIGURATION_CALL="-x ${OPTARG}";;
+        l) VERSION=${OPTARG};;
         ?) echo -e $USAGE
             exit -1
     esac
@@ -86,7 +85,7 @@ then
 fi
 
 # Check that the needed orc packets are present
-minarc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -mindepth 1 -name 'minarc*' | wc -l)
+minarc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -name 'minarc*' | wc -l)
 if [ $minarc_count == 0 ];
 then
     echo "ERROR: The directory $PATH_TO_ORC does not contain a minarc packet"
@@ -96,7 +95,7 @@ then
     echo "ERROR: The directory $PATH_TO_ORC contains more than one minarc packet"
     exit -1
 fi
-orc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -mindepth 1 -name 'orc*' | wc -l)
+orc_count=$(find $PATH_TO_ORC/ -maxdepth 1 -name 'orc*' | wc -l)
 if [ $orc_count == 0 ];
 then
     echo "ERROR: The directory $PATH_TO_ORC does not contain a orc packet"
@@ -106,7 +105,7 @@ then
     echo "ERROR: The directory $PATH_TO_ORC contains more than one orc packet"
     exit -1
 fi
-gemfile_count=$(find $PATH_TO_ORC/ -maxdepth 1 -mindepth 1 -name 'Gemfile' | wc -l)
+gemfile_count=$(find $PATH_TO_ORC/ -maxdepth 1 -name 'Gemfile' | wc -l)
 if [ $gemfile_count == 0 ];
 then
     echo "ERROR: The directory $PATH_TO_GEMFILE does not contain a Gemfile file"
@@ -132,6 +131,21 @@ then
     exit -1
 fi
 
+# Check that option -p has been specified
+if [ "$PATH_TO_DOCKERFILE_PKG" == "" ];
+then
+    echo "ERROR: The option -p has to be provided"
+    echo $USAGE
+    exit -1
+fi
+
+# Check that the docker file exists
+if [ ! -f $PATH_TO_DOCKERFILE_PKG ];
+then
+    echo "ERROR: The file $PATH_TO_DOCKERFILE_PKG provided does not exist"
+    exit -1
+fi
+
 # Check that the path to the tailored project exists
 if [ "$PATH_TO_TAILORED" != "" ] && [ ! -d $PATH_TO_TAILORED ];
 then
@@ -154,43 +168,25 @@ then
 fi
 
 EBOA_RESOURCES_PATH="/eboa/src/config"
-DATABASE_CONTAINER="boa_database_$CONTAINERS_LABEL"
-APP_CONTAINER="boa_app_$CONTAINERS_LABEL"
-DOCKER_NETWORK="boa_network_$CONTAINERS_LABEL"
+APP_CONTAINER="boa_app"
 
 read -p "
-Welcome to the initializer of the BOA development environment :-)
+Welcome to the docker image generator of the BOA environment :-)
 
-You are trying to initialize a new development environment for the app: $APP...
+You are going to generate the docker image for the app: $APP...
 These are the configuration options that will be applied to initialize the environment:
 - PATH_TO_EBOA: $PATH_TO_EBOA
 - PATH_TO_VBOA: $PATH_TO_VBOA
 - PATH_TO_TAILORED: $PATH_TO_TAILORED
 - PATH_TO_DOCKERFILE: $PATH_TO_DOCKERFILE
-- PORT: $PORT
-- CONTAINERS_LABEL: $CONTAINERS_LABEL
+- PATH_TO_DOCKERFILE_PKG: $PATH_TO_DOCKERFILE_PKG
 - APP: $APP
 - PATH_TO_ORC: $PATH_TO_ORC
 - PATH_TO_BOA_TAILORING_CONFIGURATION: $PATH_TO_BOA_TAILORING_CONFIGURATION
 - PATH_TO_ORC_CONFIGURATION: $PATH_TO_ORC_CONFIGURATION
+- VERSION: $VERSION
 
 Do you wish to proceed with the initialization of the development environment?" answer
-
-if [ "$(docker ps -a | grep -w $DATABASE_CONTAINER)" ];
-then
-    while true; do
-        read -p "There has been detected a container with the same name: $DATABASE_CONTAINER. Do you wish to remove it and proceed with the new installation?" answer
-        case $answer in
-            [Yy]* )
-                # Remove eboa database container if it already exists
-                docker stop $DATABASE_CONTAINER
-                docker rm $DATABASE_CONTAINER
-                break;;
-            [Nn]* ) exit;;
-            * ) read -p "Please answer Y or y for yes or N or n for no: " answer;;
-        esac
-    done
-fi
 
 if [ "$(docker ps -a | grep -w $APP_CONTAINER)" ];
 then
@@ -201,7 +197,7 @@ then
                 # Remove app image and container if it already exists
                 docker stop $APP_CONTAINER
                 docker rm $APP_CONTAINER
-                docker rmi $(docker images boa_dev -q)
+                docker rmi $(docker images boa -q)
 
                 break;;
             [Nn]* ) exit;;
@@ -211,34 +207,20 @@ then
 fi
 
 ######
-# Create network
+# Generate BOA packages
 ######
-docker network inspect $DOCKER_NETWORK &>/dev/null || docker network create --driver bridge $DOCKER_NETWORK
+TMP_DIR=`mktemp -d`
+$PATH_TO_VBOA/generate_boa_packages.sh $PATH_TO_EBOA_CALL $PATH_TO_VBOA_CALL $PATH_TO_DOCKERFILE_PKG_CALL $APP_CALL -o $TMP_DIR $PATH_TO_TAILORED_CALL
 
-######
-# Create database container
-######
-# Execute container
-docker run --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -d mdillon/postgis
+# Build image
+docker build --build-arg FLASK_APP=$APP -t boa:$VERSION -t boa:latest -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 
-######
-# Create APP container
-######
-find $PATH_TO_VBOA -name *pyc -delete
-find $PATH_TO_EBOA -name *pyc -delete
+# Create container
 if [ "$PATH_TO_TAILORED" != "" ];
 then
-    find $PATH_TO_TAILORED -name *pyc -delete
-fi
-
-docker build --build-arg FLASK_APP=$APP -t boa_dev -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
-
-# Initialize the eboa database
-if [ "$PATH_TO_TAILORED" != "" ];
-then
-    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_dev
+    docker run -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP -v $TMP_DIR:/boa_packages boa:$VERSION
 else
-    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_dev
+    docker run -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $TMP_DIR:/boa_packages boa:$VERSION
 fi
 
 # Copy configurations
@@ -261,47 +243,20 @@ done
 
 # Generate the python archive
 docker exec -it $APP_CONTAINER bash -c "pip3 install --upgrade pip"
-docker exec -it $APP_CONTAINER bash -c "pip3 install -e '/eboa/src[tests]'"
-docker exec -it $APP_CONTAINER bash -c "pip3 install -e '/vboa/src[tests]'"
-if [ "$PATH_TO_TAILORED" != "" ];
-then
-    docker exec -it $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
-fi
-
-# Change port and address configuration of the eboa defined by the postgis container
-docker exec -it $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
-
-# Execute flask server
-docker exec -d -it $APP_CONTAINER bash -c "flask run --host=0.0.0.0 -p 5000"
-
-# Install web packages
-docker exec -it $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
+docker exec -it $APP_CONTAINER bash -c "pip3 install /boa_packages/eboa*"
+docker exec -it $APP_CONTAINER bash -c "pip3 install /boa_packages/vboa*"
+docker exec -it $APP_CONTAINER bash -c "pip3 install /boa_packages/*"
 
 # Install scripts
-docker exec -it $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
+docker exec -it $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do cp $script /scripts/`basename $script`; done'
+docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py'
+docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py'
 
-# Link datamodel
-docker exec -it $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/eboa_data_model.sql /datamodel/'
+# Copy datamodel
+docker exec -it $APP_CONTAINER bash -c 'cp /eboa/datamodel/eboa_data_model.sql /datamodel'
 
-# Initialize the EBOA database inside the postgis-database container
-while true
-do
-    echo "Trying to initialize database..."
-    docker exec -it $APP_CONTAINER bash -c "/eboa/src/scripts/init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/eboa_data_model.sql" > /dev/null
-    status=$?
-    if [ $status -ne 0 ]
-    then
-        echo "Server is not ready yet..."
-        # Wait for the server to be initialize
-        sleep 1
-    else
-        echo "Database has been initialized..."
-        break
-    fi
-done
-
-# Listen for changes on the web packages
-docker exec -d -it $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run watch"
+# Copy schemas
+docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/schemas/* /schemas'
 
 # Install orc
 # Enable collection rh-ruby25
@@ -312,9 +267,15 @@ docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /
 docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
 docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
 
-# Initialize the ORC DDBB
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; minArcDB --create-tables"
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcManageDB --create-tables"
+# Docker commit and save image
+docker commit $APP_CONTAINER boa:$VERSION
+docker commit $APP_CONTAINER boa:latest
+docker save boa > $TMP_DIR/boa.tar
 
-# Execute the ORC server
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcBolg -c start"
+echo "BOA image exported in: "$TMP_DIR/boa.tar
+
+echo "Removing temporal docker container and image"
+
+docker stop $APP_CONTAINER
+docker rm $APP_CONTAINER
+docker rmi -f $(docker images boa -q)

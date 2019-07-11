@@ -23,7 +23,8 @@ RUN yum install -y postgresql \
     sqlite-devel \
     which \
     p7zip \
-    unzip
+    unzip \
+    less
 
 RUN yum install -y rh-ruby25 \
     rh-ruby25-rubygem-bundler \
@@ -41,9 +42,10 @@ RUN pip3 install pytest-cov \
 RUN mkdir /log
 RUN mkdir /scripts
 RUN mkdir /resources_path
-RUN mkdir /orc_packages
+RUN mkdir /datamodel
 
 # Create folders for ORC
+RUN mkdir /orc_packages
 RUN mkdir /orc_config
 RUN mkdir /minarc_root
 RUN mkdir /inputs
