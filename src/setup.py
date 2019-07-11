@@ -14,6 +14,7 @@ setup(name="vboa",
       author="Daniel Brosnan",
       author_email="daniel.brosnan@deimos-space.com",
       packages=find_packages(),
+      include_package_data=True,
       python_requires='>=3',
       install_requires=[
           "eboa",
