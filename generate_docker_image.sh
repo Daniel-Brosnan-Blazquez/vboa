@@ -7,7 +7,7 @@
 # module boa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-c orc_tailoring_configuration_path] [-l version]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-x orc_configuration_path] [-l version] [-g export_docker_image]"
 
 ########
 # Initialization
@@ -19,8 +19,9 @@ PATH_TO_DOCKERFILE="Dockerfile"
 APP="vboa"
 PATH_TO_ORC=""
 VERSION="0.1.0"
+EXPORT_DOCKER_IMAGE="NO"
 
-while getopts e:v:d:p:t:a:o:c:x:p:l: option
+while getopts e:v:d:p:t:a:o:c:x:p:l:g option
 do
     case "${option}"
         in
@@ -34,6 +35,7 @@ do
         c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG}; PATH_TO_BOA_TAILORING_CONFIGURATION_CALL="-c ${OPTARG}";;
         x) PATH_TO_ORC_CONFIGURATION=${OPTARG}; PATH_TO_ORC_CONFIGURATION_CALL="-x ${OPTARG}";;
         l) VERSION=${OPTARG};;
+        g) EXPORT_DOCKER_IMAGE="YES";;
         ?) echo -e $USAGE
             exit -1
     esac
@@ -267,15 +269,18 @@ docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /
 docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
 docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
 
-# Docker commit and save image
-docker commit $APP_CONTAINER boa:$VERSION
-docker commit $APP_CONTAINER boa:latest
-docker save boa > $TMP_DIR/boa.tar
+if [ "$EXPORT_DOCKER_IMAGE" == "YES" ];
+then
+   # Docker commit and save image
+   docker commit $APP_CONTAINER boa:$VERSION
+   docker commit $APP_CONTAINER boa:latest
+   docker save boa > $TMP_DIR/boa.tar
 
-echo "BOA image exported in: "$TMP_DIR/boa.tar
+   echo "BOA image exported in: "$TMP_DIR/boa.tar
 
-echo "Removing temporal docker container and image"
+   echo "Removing temporal docker container and image"
 
-docker stop $APP_CONTAINER
-docker rm $APP_CONTAINER
-docker rmi -f $(docker images boa -q)
+   docker stop $APP_CONTAINER
+   docker rm $APP_CONTAINER
+   docker rmi -f $(docker images boa -q)
+fi
