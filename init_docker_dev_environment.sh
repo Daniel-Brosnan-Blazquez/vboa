@@ -219,7 +219,8 @@ docker network inspect $DOCKER_NETWORK &>/dev/null || docker network create --dr
 # Create database container
 ######
 # Execute container
-docker run --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -d mdillon/postgis
+# Check configuration of postgis/postgres with -> psql -U postgres -> show all;
+docker run --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -d mdillon/postgis -c 'max_connections=1000' -c 'max_locks_per_transaction=1000'
 
 ######
 # Create APP container
