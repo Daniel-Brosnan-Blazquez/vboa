@@ -28,6 +28,7 @@ def create_app():
     Create and configure an instance of the Flask application.
     """
     app = Flask(__name__, instance_relative_config=True)
+    app.jinja_env.add_extension('jinja2.ext.do')
     app.config.from_mapping(
         SECRET_KEY=b'\xca+-\x9b\xcek.\x9fkM \xea\x8d\x1c\x99&'
     )
@@ -62,7 +63,7 @@ def create_app():
                 value = values[0]
             else:
                 value = "N/A"
-            # end if                
+            # end if
             if not value in result:
                 result[value] = []
             # end if
@@ -111,17 +112,17 @@ def create_app():
 
     @app.template_filter()
     def get_value_key(dict, key):
-        
+
         return dict[key]
 
     @app.template_filter()
     def mean(list_of_items):
-        
+
         return numpy.mean(list_of_items)
 
     @app.template_test()
     def match(item, matching_text):
-        
+
         return re.match(matching_text, item)
 
     return app
