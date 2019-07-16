@@ -48,8 +48,8 @@ class TestAnnotationsTab(unittest.TestCase):
     options.add_argument('--no-sandbox')
     options.add_argument('window-size=1920,1080')
     driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)    
-    
+    driver.implicitly_wait(5)
+
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -231,24 +231,22 @@ class TestAnnotationsTab(unittest.TestCase):
 
         annotation = self.session.query(Annotation).all()[0]
 
-        assert self.driver.execute_script('return annotations_geometries;') == {
-            "annotations_geometries":[{
-                "id": str(annotation.annotation_uuid),
-                "annotation_cnf":{
+        assert self.driver.execute_script('return annotations_geometries;') == [{
+            "id": str(annotation.annotation_uuid),
+            "annotation_cnf":{
                     "name": "NAME_1",
-                    "system": "SYSTEM",
-                    "description": "None"
-                },
-                "explicit_reference": str(annotation.explicitRef.explicit_ref),
-                "ingestion_time": annotation.ingestion_time.isoformat().replace("T"," "),
-                "source": "source_1.xml",
-                "geometries": [
-                    {
-                        "value": "POLYGON ((27.5923694065675 28.6897912912051, 27.8617502445779 28.6464983273278, 27.7690524083984 28.2803979779816, 27.4991925556512 28.322475522552, 27.5923694065675 28.6897912912051))",
-                        "name": "GEOMETRY"
-                    }
-                ]
-            }]}
+                    "system": "SYSTEM"
+            },
+            "explicit_reference": str(annotation.explicitRef.explicit_ref),
+            "ingestion_time": annotation.ingestion_time.isoformat().replace("T"," "),
+            "source": "source_1.xml",
+            "geometries": [
+                {
+                    "value": "POLYGON ((27.5923694065675 28.6897912912051, 27.8617502445779 28.6464983273278, 27.7690524083984 28.2803979779816, 27.4991925556512 28.322475522552, 27.5923694065675 28.6897912912051))",
+                    "name": "GEOMETRY"
+                }
+            ]
+        }]
 
         assert condition is True
 
@@ -383,7 +381,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -409,7 +407,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("source_1.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -560,7 +558,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("EXPLICIT_REFERENCE_2")
         inputElement.send_keys(Keys.RETURN)
         # Click on query button
@@ -590,7 +588,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("EXPLICIT_REFERENCE")
         inputElement.send_keys(Keys.RETURN)
 
@@ -736,7 +734,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -762,7 +760,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("NAME_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -913,7 +911,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -939,7 +937,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 

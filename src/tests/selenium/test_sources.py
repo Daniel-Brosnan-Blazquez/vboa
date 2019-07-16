@@ -46,8 +46,8 @@ class TestSourcesTab(unittest.TestCase):
     options.add_argument('--no-sandbox')
     options.add_argument('window-size=1920,1080')
     driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)    
-    
+    driver.implicitly_wait(5)
+
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -68,7 +68,7 @@ class TestSourcesTab(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         self.driver.quit()
-        
+
     def test_sources_query_no_filter_no_graphs(self):
 
         # Insert data
@@ -247,8 +247,7 @@ class TestSourcesTab(unittest.TestCase):
 
         source = self.session.query(Source).all()[0]
 
-        assert self.driver.execute_script('return sources;') == {
-            "sources":[{
+        assert self.driver.execute_script('return sources;') == [{
                 "id": str(source.source_uuid),
                 "name": "source_1.xml",
                 "dim_signature": "DIM_SIGNATURE_1",
@@ -260,9 +259,7 @@ class TestSourcesTab(unittest.TestCase):
                 "ingestion_duration": str(source.ingestion_duration),
                 "generation_time": "2018-07-05 02:07:03",
                 "number_of_events": "0"
-                }
-                ]
-            }
+                }]
 
         validity_timeline = self.driver.find_element_by_id("sources-nav-validity-timeline")
 
@@ -396,7 +393,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("sources-source-names-in-text").find_elements_by_xpath("option")) == 3
-                
+
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
         inputElement.click()
@@ -425,7 +422,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("sources-source-names-in-text").find_elements_by_xpath("option")) == 3
-                
+
         inputElement.send_keys("source_3.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -553,7 +550,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("sources-processors-in-text").find_elements_by_xpath("option")) == 2
-                
+
         inputElement.send_keys("exec")
         inputElement.send_keys(Keys.RETURN)
 
@@ -579,7 +576,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("sources-processors-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("exec_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -707,7 +704,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("sources-dim-signatures-in-text").find_elements_by_xpath("option")) == 3
-                
+
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
         inputElement.click()
@@ -736,7 +733,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("sources-dim-signatures-in-text").find_elements_by_xpath("option")) == 3
-                
+
         inputElement.send_keys("DIM_SIGNATURE_3")
         inputElement.send_keys(Keys.RETURN)
 
@@ -1372,8 +1369,8 @@ class TestSourcesTab(unittest.TestCase):
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
 
-        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 14
-        
+        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 16
+
         inputElement.send_keys("OK")
         inputElement.send_keys(Keys.RETURN)
 
@@ -1399,8 +1396,8 @@ class TestSourcesTab(unittest.TestCase):
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
 
-        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 14
-                
+        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 16
+
         inputElement.send_keys("OK")
         inputElement.send_keys(Keys.RETURN)
 

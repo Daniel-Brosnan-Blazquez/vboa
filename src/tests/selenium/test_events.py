@@ -46,8 +46,8 @@ class TestEventsTab(unittest.TestCase):
     options.add_argument('--no-sandbox')
     options.add_argument('window-size=1920,1080')
     driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)    
-    
+    driver.implicitly_wait(5)
+
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -229,18 +229,18 @@ class TestEventsTab(unittest.TestCase):
 
         event = self.session.query(Event).all()[0]
 
-        assert self.driver.execute_script('return events;') == {
-            "events":[{
-                "id": str(event.event_uuid),
-                "gauge":{
-                    "name": "GAUGE_NAME",
-                    "system": "GAUGE_SYSTEM"
-                },
-                "start": "2018-06-05 04:07:03",
-                "stop": "2018-06-05 06:07:36",
-                "source": "source.xml"
-                }]
-            }
+        assert self.driver.execute_script('return events;') == [{
+            "explicit_reference": 'EXPLICIT_REFERENCE_EVENT',
+            "id": str(event.event_uuid),
+            "gauge":{
+                "name": "GAUGE_NAME",
+                "system": "GAUGE_SYSTEM"
+            },
+            "start": "2018-06-05 04:07:03",
+            "stop": "2018-06-05 06:07:36",
+            "source": "source.xml",
+            "ingestion_time": event.ingestion_time.isoformat().replace("T"," ")
+            }]
 
         return condition
 
@@ -363,7 +363,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("source_1.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -389,7 +389,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
 
@@ -528,7 +528,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -554,7 +554,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("EXPLICIT_REFERENCE_EVENT_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -697,7 +697,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("EVENT_KEY_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -724,7 +724,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("EVENT_KEY")
         inputElement.send_keys(Keys.RETURN)
 
@@ -892,7 +892,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-gauge-names-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -1035,7 +1035,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("GAUGE_SYSTEM_2")
         inputElement.send_keys(Keys.RETURN)
 
@@ -1062,7 +1062,7 @@ class TestEventsTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 

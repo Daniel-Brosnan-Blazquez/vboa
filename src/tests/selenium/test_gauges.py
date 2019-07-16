@@ -46,8 +46,8 @@ class TestGaugesTab(unittest.TestCase):
     options.add_argument('--no-sandbox')
     options.add_argument('window-size=1920,1080')
     driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)    
-    
+    driver.implicitly_wait(5)
+
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -200,18 +200,16 @@ class TestGaugesTab(unittest.TestCase):
 
         dim_signature = self.session.query(DimSignature).all()[0]
 
-        assert self.driver.execute_script('return gauges;') == {
-            "gauges":[{
-                "id": str(gauge.gauge_uuid),
-                "name": "GAUGE_NAME",
-                "system": "GAUGE_SYSTEM",
-                "dim_signature_uuid": str(dim_signature.dim_signature_uuid),
-                "dim_signature_name": "DIM_SIGNATURE",
-                "gauges_linking": [],
-                "gauges_linked": []
-                }
-                ]
-            }
+        assert self.driver.execute_script('return gauges;') == [{
+            "description": '',
+            "id": str(gauge.gauge_uuid),
+            "name": "GAUGE_NAME",
+            "system": "GAUGE_SYSTEM",
+            "dim_signature_uuid": str(dim_signature.dim_signature_uuid),
+            "dim_signature_name": "DIM_SIGNATURE",
+            "gauges_linking": [],
+            "gauges_linked": []
+        }]
 
         network = self.driver.find_element_by_id("gauges-nav-network")
 
@@ -344,7 +342,7 @@ class TestGaugesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("gauges-gauge-names-in-text").find_elements_by_xpath("option")) == 3
-        
+
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
         inputElement.click()
@@ -374,7 +372,7 @@ class TestGaugesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("gauges-gauge-names-in-text").find_elements_by_xpath("option")) == 3
-        
+
         inputElement.send_keys("GAUGE_NAME_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -517,7 +515,7 @@ class TestGaugesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("gauges-gauge-system-in-text").find_elements_by_xpath("option")) == 3
-        
+
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
         inputElement.click()
@@ -547,7 +545,7 @@ class TestGaugesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("gauges-gauge-system-in-text").find_elements_by_xpath("option")) == 3
-        
+
         inputElement.send_keys("GAUGE_SYSTEM_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -689,7 +687,7 @@ class TestGaugesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
 
@@ -715,7 +713,7 @@ class TestGaugesTab(unittest.TestCase):
         inputElement.click()
 
         assert len(self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_elements_by_xpath("option")) == 2
-        
+
         inputElement.send_keys("DIM_SIGNATURE_2")
         inputElement.send_keys(Keys.RETURN)
 
