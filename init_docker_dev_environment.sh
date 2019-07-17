@@ -304,6 +304,19 @@ done
 # Listen for changes on the web packages
 docker exec -d -it $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run watch"
 
+# Install cron activities
+echo "Installing cron activities"
+docker exec -d -it $APP_CONTAINER bash -c "cp /eboa/src/cron/boa_cron /etc/cron.d/"
+if [ "$PATH_TO_TAILORED" != "" ] && [ -f "$PATH_TO_TAILORED/src/cron/boa_cron" ];
+then
+    docker exec -d -it $APP_CONTAINER bash -c "cp /$APP/src/cron/boa_cron /etc/cron.d/"
+fi
+
+# Copy cron to crontab
+docker exec -d -it $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
+
+echo "Cron activities installed"
+
 # Install orc
 # Enable collection rh-ruby25
 docker exec -it $APP_CONTAINER bash -c 'echo "#!/bin/bash
