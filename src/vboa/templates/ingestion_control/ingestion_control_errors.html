@@ -10,3 +10,17 @@
 {% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|sort(attribute="reception_time", reverse=True)|list %}
 {% include "ingestion_control/ingestion_control_errors_content.html" %}
 {% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  {% if sliding_window %}
+  var parameters = {
+  "window_delay": "{{ sliding_window['window_delay'] }}",
+  "window_size": "{{ sliding_window['window_size'] }}",
+  "template": "errors",
+  }
+  var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
+  vboa.update_view(parameters, repeat_cycle, "/ingestion_control/sliding_ingestion_control_parameters");
+  {% endif %}
+</script>
+{% endblock %}

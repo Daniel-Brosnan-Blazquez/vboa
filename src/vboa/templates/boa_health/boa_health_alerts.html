@@ -11,3 +11,17 @@
 {% set alerts = health_events_sorted|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% include "boa_health/boa_health_alerts_content.html" %}
 {% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  {% if sliding_window %}
+  var parameters = {
+  "window_delay": "{{ sliding_window['window_delay'] }}",
+  "window_size": "{{ sliding_window['window_size'] }}",
+  "template": "alerts",
+  }
+  var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
+  vboa.update_view(parameters, repeat_cycle, "/health/sliding_health_parameters");
+  {% endif %}
+</script>
+{% endblock %}
