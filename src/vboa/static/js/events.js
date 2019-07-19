@@ -150,13 +150,17 @@ export function prepare_events_data_for_timeline(events, items, groups){
     }
 
     for (const event of events){
-        items.push({
+        var item = {
             id: event["id"],
             group: event["timeline"] + "_" + event["group"],
             start: event["start"],
             end: event["stop"],
             tooltip: event["tooltip"]
-        })
+        }
+        if ("className" in event){
+            item["className"] = event["className"]
+        }
+        items.push(item)
     }
 
 };
@@ -208,13 +212,16 @@ export function prepare_events_geometries_for_map(events_geometries, polygons){
     for (const event_geometries of events_geometries){
         var i = 0;
         for (const geometry of event_geometries["geometries"]){
-            polygons.push({"polygon": geometry["value"],
+            var polygon = {"polygon": geometry["value"],
                            "id": event_geometries["id"] + "_" + i,
-                           "tooltip": event_geometries["tooltip"]})
+                           "tooltip": event_geometries["tooltip"]};
+            if ("style" in event_geometries){
+                polygon["style"] = event_geometries["style"]
+            }
+            polygons.push(polygon)
             i = i + 1;
         }
     }
-
 }
 
 /*

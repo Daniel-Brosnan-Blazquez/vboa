@@ -8,6 +8,7 @@ import {fromLonLat} from 'ol/proj';
 import MousePosition from 'ol/control/MousePosition.js';
 import {createStringXY} from 'ol/coordinate.js';
 import {defaults as defaultControls} from 'ol/control.js';
+import {Fill, Stroke, Style} from 'ol/style.js';
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
@@ -155,7 +156,31 @@ export function display_map(dom_id, polygons){
             featureProjection: 'EPSG:3857'
         });
         feature.setId(polygon["id"])
-        feature.setProperties({"tooltip": polygon["tooltip"]})        
+        feature.setProperties({"tooltip": polygon["tooltip"]})
+        if ("style" in polygon){
+            var stroke_color = "blue"
+            if ("stroke_color" in polygon["style"]){
+                stroke_color = polygon["style"]["stroke_color"];
+            }
+            var stroke_width = 1
+            if ("stroke_width" in polygon["style"]){
+                stroke_width = polygon["style"]["stroke_width"];
+            }
+            var fill_color = "rgba(0, 0, 255, 0.1)"
+            if ("fill_color" in polygon["style"]){
+                fill_color = polygon["style"]["fill_color"];
+            }
+            var style = new Style({
+                stroke: new Stroke({
+                    color: stroke_color,
+                    width: stroke_width
+                }),
+                fill: new Fill({
+                    color: fill_color
+                })
+            });
+            feature.setStyle(style);
+        }
         features.push(feature);
     }
     

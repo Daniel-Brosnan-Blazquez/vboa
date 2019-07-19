@@ -18,6 +18,53 @@
     color: red;
 }
 
+/* Bold colors */
+.bold-green {
+    color: green;
+    font-weight: bold
+}
+.bold-blue {
+    color: blue;
+    font-weight: bold
+}
+.bold-yellow {
+    color: yellow;
+    font-weight: bold
+}
+.bold-pink {
+    color: pink;
+    font-weight: bold
+}
+.bold-brown {
+    color: brown;
+    font-weight: bold
+}
+.bold-red {
+    color: red;
+    font-weight: bold
+}
+
+/* Fill Colours */
+/* Bold colors */
+.background-green {
+    background: green;
+}
+.background-blue {
+    background: blue;
+}
+.background-yellow {
+    background: yellow;
+}
+.background-pink {
+    background: pink;
+}
+.background-brown {
+    background: brown;
+}
+.background-red {
+    background: red;
+}
+
 /* Static table */
 .table-static {
     width:1px;
