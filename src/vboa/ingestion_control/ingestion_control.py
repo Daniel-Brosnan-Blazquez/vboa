@@ -198,6 +198,9 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
         kwargs["reception_time_filters"] = [{"date": stop_filter["date"], "op": stop_filter["operator"]}]
     # end if
 
+    # Avoid showing the sources related to the ingestion of health data
+    kwargs["dim_signatures"] = {"filter": ["BOA_HEALTH"], "op": "notin"}
+    
     # This is here because it seems that the ORM is caching values and does not show the updates.
     # expunge_all removes all objects related to the session
     query.session.expunge_all()
