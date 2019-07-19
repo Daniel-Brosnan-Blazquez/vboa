@@ -157,10 +157,6 @@ else
     docker run -it --name $PKG_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_OUTPUT:/output boa_pkg
 fi
 
-echo "Installing the web packages"
-# Generate the Webpack code
-docker exec -it $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
-
 echo "Generating BOA packages"
 # Generate the python archive
 docker exec -it $PKG_CONTAINER bash -c "cd /eboa/src; python3 setup.py sdist -d /output/"
