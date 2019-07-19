@@ -54,6 +54,20 @@ def create_app():
             return False
 
     @app.template_filter()
+    def reject_events_with_link_name(list_of_events, link_name):
+        """Convert a string to all caps."""
+        result = [event for event in list_of_events if len([link for link in event.eventLinks if link.name == link_name]) == 0]
+        
+        return result
+
+    @app.template_filter()
+    def filter_events_by_text_value(list_of_events, name, filter):
+        """Convert a string to all caps."""
+        result = [event for event in list_of_events if len([value.value for value in event.eventTexts if value.name == name and value.value == filter]) > 0]
+        
+        return result
+
+    @app.template_filter()
     def events_group_by_text_value(list_of_events, name):
         """Convert a string to all caps."""
         result = {}
