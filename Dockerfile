@@ -70,3 +70,6 @@ ENV ORC_DATABASE_NAME /orc/orc_inventory
 ENV ORC_DB_ADAPTER sqlite3
 ENV ORC_DATABASE_USER root
 ENV ORC_DATABASE_PASSWORD 1mysql
+
+# Copy the environment variables to a file for later use of cron
+RUN declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /container.env
