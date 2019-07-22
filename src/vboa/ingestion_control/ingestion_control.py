@@ -21,6 +21,9 @@ from eboa.engine.query import Query
 import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
 
+# Import SQLAlchemy exceptions
+from sqlalchemy.orm.exc import DetachedInstanceError
+
 bp = Blueprint("ingestion_control", __name__, url_prefix="/ingestion_control")
 query = Query()
 
@@ -213,5 +216,18 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     if template_name != None:
         template = "ingestion_control/ingestion_control_" + template_name + ".html"
     # end if
+
+    template_generated = False
+    i = 0
+    while not template_generated and i < 3:
+        try:
+            template = render_template(template, sources=sources, request=request, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window)
+            template_generated = True
+        except DetachedInstanceError:
+            # This error could occur due to a race condition accessing to removed information. 3 retries
+            template_generated = False
+        # end try
+        i += 1
+    # end while
     
-    return render_template(template, sources=sources, request=request, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window)
+    return template
