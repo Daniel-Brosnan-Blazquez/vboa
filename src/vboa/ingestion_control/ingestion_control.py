@@ -218,10 +218,12 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     # end if
 
     template_generated = False
+    # This template must be an error template
+    returned_template = ""
     i = 0
     while not template_generated and i < 3:
         try:
-            template = render_template(template, sources=sources, request=request, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window)
+            returned_template = render_template(template, sources=sources, request=request, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window)
             template_generated = True
         except DetachedInstanceError:
             # This error could occur due to a race condition accessing to removed information. 3 retries
@@ -230,4 +232,4 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
         i += 1
     # end while
     
-    return template
+    return returned_template
