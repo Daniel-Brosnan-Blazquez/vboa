@@ -7,7 +7,7 @@
 {% with template = "?template=alerts" %}
 {% include "ingestion_control/ingestion_control_query.html" %}
 {% endwith %}
-{% set alerts = health_events_sorted|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% include "ingestion_control/ingestion_control_alerts_content.html" %}
 {% endblock %}
 {% block scripts %}
