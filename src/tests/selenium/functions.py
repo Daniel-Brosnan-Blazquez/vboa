@@ -18,11 +18,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
-
+from selenium.common.exceptions import ElementClickInterceptedException
 
 def goToTab(driver,tab_name):
     tab = driver.find_element_by_link_text(tab_name)
-    tab.click()
+    click(tab)
 
 def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool, value_operator, row):
 
@@ -58,8 +58,8 @@ def fill_ingestion_time(driver, wait, tab, value_value, value_operator, row):
     operator.select_by_visible_text(value_operator)
 
     value = ingestion_time_div.find_element_by_id("ingestion-time-text")
-    value.click()
-    value.click()
+    click(value)
+    click(value)
     value.send_keys(value_value)
 
 def fill_generation_time(driver, wait, tab, value_value, value_operator, row):
@@ -73,8 +73,8 @@ def fill_generation_time(driver, wait, tab, value_value, value_operator, row):
     operator.select_by_visible_text(value_operator)
 
     value = generation_time_div.find_element_by_id("generation-duration-text")
-    value.click()
-    value.click()
+    click(value)
+    click(value)
     value.send_keys(value_value)
 
 def fill_ingestion_duration(driver, wait, tab, value_value, value_operator, row):
@@ -88,8 +88,8 @@ def fill_ingestion_duration(driver, wait, tab, value_value, value_operator, row)
     operator.select_by_visible_text(value_operator)
 
     value = generation_time_div.find_element_by_id("ingestion-duration-text")
-    value.click()
-    value.click()
+    click(value)
+    click(value)
     value.send_keys(value_value)
 
 def fill_period(driver, wait, tab, row, start_value = None, start_operator = None, end_value = None, end_operator = None):
@@ -100,8 +100,8 @@ def fill_period(driver, wait, tab, row, start_value = None, start_operator = Non
         period_div = driver.find_element_by_id("more-start-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
     if start_value is not None:
         start = period_div.find_element_by_id("start-input")
-        start.click()
-        start.click()
+        click(start)
+        click(start)
         start.send_keys(start_value)
 
         start_op = Select(period_div.find_element_by_id("start-operator"))
@@ -109,8 +109,8 @@ def fill_period(driver, wait, tab, row, start_value = None, start_operator = Non
 
     if end_value is not None:
         end = period_div.find_element_by_id("stop-input")
-        end.click()
-        end.click()
+        click(end)
+        click(end)
         end.send_keys(end_value)
 
         end_op = Select(period_div.find_element_by_id("stop-operator"))
@@ -125,8 +125,8 @@ def fill_validity_period(driver, wait, tab, row, start_value = None, start_opera
 
     if start_value is not None:
         start = period_div.find_element_by_id("start-input")
-        start.click()
-        start.click()
+        click(start)
+        click(start)
         start.send_keys(start_value)
 
         start_op = Select(period_div.find_element_by_id("start-operator"))
@@ -134,8 +134,8 @@ def fill_validity_period(driver, wait, tab, row, start_value = None, start_opera
 
     if end_value is not None:
         end = period_div.find_element_by_id("stop-input")
-        end.click()
-        end.click()
+        click(end)
+        click(end)
         end.send_keys(end_value)
 
         end_op = Select(period_div.find_element_by_id("stop-operator"))
@@ -146,7 +146,7 @@ def click_no_graphs_events(driver):
     #Disable show timeline
     timeline_button = driver.find_element_by_id("events-show-timeline")
     if timeline_button.find_element_by_xpath('input').is_selected():
-        timeline_button.click()
+        click(timeline_button)
     #end if
 
 def click_no_graphs_annotations(driver):
@@ -154,7 +154,7 @@ def click_no_graphs_annotations(driver):
     #Disable show map
     map_button = driver.find_element_by_id("annotations-show-map")
     if map_button.find_element_by_xpath('input').is_selected():
-        map_button.click()
+        click(map_button)
     #end if
 
 def click_no_graphs_sources(driver):
@@ -163,31 +163,31 @@ def click_no_graphs_sources(driver):
     validity_timeline_button = driver.find_element_by_id("sources-show-validity-timeline")
     #driver.execute_script("arguments[0].scrollIntoView();", validity_timeline_button)
     if validity_timeline_button.find_element_by_xpath('input').is_selected():
-        validity_timeline_button.click()
+        click(validity_timeline_button)
     #end if
 
     #Click on show map
     gen2ing_timeline_button = driver.find_element_by_id("sources-show-generation-to-ingestion-timeline")
     if gen2ing_timeline_button.find_element_by_xpath('input').is_selected():
-        gen2ing_timeline_button.click()
+        click(gen2ing_timeline_button)
     #end if
 
     #Click on show map
     number_events_per_source_button = driver.find_element_by_id("sources-show-number-events-xy")
     if number_events_per_source_button.find_element_by_xpath('input').is_selected():
-        number_events_per_source_button.click()
+        click(number_events_per_source_button)
     #end if
 
     #Click on show map
     ingestion_duration_button = driver.find_element_by_id("sources-show-ingestion-duration-xy")
     if ingestion_duration_button.find_element_by_xpath('input').is_selected():
-        ingestion_duration_button.click()
+        click(ingestion_duration_button)
     #end if
 
     #Click on show map
     gen2ing_times_button = driver.find_element_by_id("sources-show-generation-time-to-ingestion-time-xy")
     if gen2ing_times_button.find_element_by_xpath('input').is_selected():
-        gen2ing_times_button.click()
+        click(gen2ing_times_button)
     #end if
 
 def click_no_graphs_gauges(driver):
@@ -195,5 +195,23 @@ def click_no_graphs_gauges(driver):
     #Disable show map
     network_button = driver.find_element_by_id("gauges-show-network")
     if network_button.find_element_by_xpath('input').is_selected():
-        network_button.click()
+        click(network_button)
     #end if
+
+def click(element):
+
+    done = False
+    retries = 0
+    while not done:
+        try:
+            element.click()
+            done = True
+        except ElementClickInterceptedException as e:
+            if retries < 5:
+                retries += 1
+                pass
+            else:
+                raise e
+            # end if
+        # end try
+    # end while

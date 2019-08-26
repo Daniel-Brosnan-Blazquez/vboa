@@ -108,10 +108,10 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -209,6 +209,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Click on show validity_timeline
@@ -242,7 +243,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         source = self.session.query(Source).all()[0]
@@ -338,6 +338,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_like input
@@ -345,7 +346,6 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys("source_2.xml")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -360,6 +360,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_like input
@@ -372,7 +373,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -386,6 +386,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
@@ -401,7 +402,6 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -415,6 +415,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
@@ -432,7 +433,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -495,6 +495,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_like input
@@ -502,7 +503,6 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys("exec_2")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -517,6 +517,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_like input
@@ -529,7 +530,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -543,6 +543,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
@@ -555,7 +556,6 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -569,6 +569,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
@@ -586,7 +587,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -649,6 +649,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_like input
@@ -656,7 +657,6 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -671,6 +671,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_like input
@@ -683,7 +684,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -697,6 +697,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
@@ -712,7 +713,6 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -726,6 +726,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
@@ -743,7 +744,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -806,12 +806,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, "2018-06-05T03:00:00", "==","2018-06-05T04:00:00", "==")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -826,12 +826,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T03:00:00", start_operator = ">=")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -846,12 +846,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, end_value = "2018-06-05T04:00:00", end_operator = "!=")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -866,15 +866,15 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
         self.driver.find_element_by_id("sources-add-validity-start-validity-stop").click()
-#        wait.until(EC.visibility_of_element_located((By.ID,"more-validity-start-validity-stop-query-sources")))
+
         functions.fill_validity_period(self.driver, wait, "sources", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -889,6 +889,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
@@ -896,7 +897,6 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_validity_period(self.driver, wait, "sources", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -930,16 +930,17 @@ class TestSourcesTab(unittest.TestCase):
 
         wait = WebDriverWait(self.driver,5);
 
+        ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "==", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -949,17 +950,39 @@ class TestSourcesTab(unittest.TestCase):
 
         assert number_of_elements == 1 and empty_element is False
 
+        ## == and < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "==", 1)
+        self.driver.find_element_by_id("sources-add-ingestion-time").click()
+        functions.fill_ingestion_time(self.driver, wait,"sources", "9999-01-01T00:00:00", "<", 2)
+
+        # Click on query button
+        submit_button.click()
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+        
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources",ingestion_time, ">", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -974,12 +997,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, ">=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -994,12 +1017,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "<", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1014,12 +1037,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "<=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1034,12 +1057,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "!=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1075,12 +1098,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "==", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1095,12 +1118,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1115,12 +1138,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1135,12 +1158,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1155,12 +1178,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1175,12 +1198,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "!=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1218,12 +1241,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "==", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1238,12 +1261,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, ">", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1258,12 +1281,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, ">=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1278,12 +1301,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "<", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1298,12 +1321,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "<=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1318,12 +1341,12 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "!=", 1)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generated
@@ -1363,19 +1386,19 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the status_in input
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
 
-        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 16
+        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 20
 
         inputElement.send_keys("OK")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
@@ -1390,13 +1413,14 @@ class TestSourcesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the status_in input
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
         inputElement.click()
 
-        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 16
+        assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 20
 
         inputElement.send_keys("OK")
         inputElement.send_keys(Keys.RETURN)
@@ -1407,7 +1431,6 @@ class TestSourcesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         submit_button.click()
 
         # Check table generatedd
