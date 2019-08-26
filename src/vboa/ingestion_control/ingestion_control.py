@@ -192,14 +192,10 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     kwargs = {}
 
     # Start filter
-    if start_filter:
-        kwargs["reception_time_filters"] = [{"date": start_filter["date"], "op": start_filter["operator"]}]
-    # end if
+    kwargs["reception_time_filters"] = [{"date": start_filter["date"], "op": start_filter["operator"]}]
     
     # Stop filter
-    if stop_filter:
-        kwargs["reception_time_filters"] = [{"date": stop_filter["date"], "op": stop_filter["operator"]}]
-    # end if
+    kwargs["reception_time_filters"].append({"date": stop_filter["date"], "op": stop_filter["operator"]})
 
     # Avoid showing the sources related to the ingestion of health data
     kwargs["dim_signatures"] = {"filter": ["BOA_HEALTH"], "op": "notin"}
