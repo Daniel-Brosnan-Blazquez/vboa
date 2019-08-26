@@ -188,7 +188,7 @@ These are the configuration options that will be applied to initialize the envir
 - PATH_TO_ORC_CONFIGURATION: $PATH_TO_ORC_CONFIGURATION
 - VERSION: $VERSION
 
-Do you wish to proceed with the initialization of the development environment?" answer
+Do you wish to proceed with the generation of the docker image?" answer
 
 if [ "$(docker ps -a | grep -w $APP_CONTAINER)" ];
 then
