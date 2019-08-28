@@ -189,7 +189,7 @@ class TestGaugesTab(unittest.TestCase):
         # Click on show network
         networkButton = self.driver.find_element_by_id("gauges-show-network")
         if not networkButton.find_element_by_xpath('input').is_selected():
-            functions.click(networkButton)
+            functions.select_checkbox(networkButton)
         #end if
 
         # Click on query button
@@ -316,7 +316,7 @@ class TestGaugesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("gauges-gauge-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -378,7 +378,7 @@ class TestGaugesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("gauges-gauge-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
@@ -489,7 +489,7 @@ class TestGaugesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("gauges-gauge-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -551,7 +551,7 @@ class TestGaugesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("gauges-gauge-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
@@ -662,7 +662,7 @@ class TestGaugesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("gauges-dim-signatures-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -719,7 +719,7 @@ class TestGaugesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("gauges-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button

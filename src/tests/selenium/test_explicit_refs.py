@@ -244,7 +244,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-explicit-refs-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -300,7 +300,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -396,7 +396,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("EXPL_GROUP_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-groups-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -449,7 +449,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-groups-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -547,7 +547,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("source_1.xml")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-sources-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -599,7 +599,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-sources-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -704,7 +704,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("EVENT_KEY_1")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-keys-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -759,7 +759,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-keys-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -864,7 +864,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("GAUGE_NAME_1")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-names-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -917,7 +917,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-gauge-names-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1022,7 +1022,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("GAUGE_SYSTEM_1")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-system-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1075,7 +1075,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-gauge-system-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1938,7 +1938,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("NAME_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-names-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1992,7 +1992,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-annotation-names-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2107,7 +2107,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("SYSTEM_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-system-like-checkbox")
-        functions.click(not_like_button)
+        functions.select_checkbox(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2162,7 +2162,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-annotation-system-in-checkbox")
-        functions.click(not_in_button)
+        functions.select_checkbox(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))

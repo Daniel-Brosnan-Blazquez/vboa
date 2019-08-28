@@ -216,7 +216,7 @@ class TestAnnotationsTab(unittest.TestCase):
         # Click on show map
         mapButton = self.driver.find_element_by_id("annotations-show-map")
         if not mapButton.find_element_by_xpath('input').is_selected():
-            functions.click(mapButton)
+            functions.select_checkbox(mapButton)
         #end if
 
         # Click on query button
@@ -356,7 +356,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-sources-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -413,7 +413,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query butto
@@ -533,7 +533,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-explicit-refs-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -580,7 +580,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-explicit-refs-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Fill the explicit_ref_in input
@@ -709,7 +709,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-annotation-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -766,7 +766,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
@@ -886,7 +886,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-annotation-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -943,7 +943,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button

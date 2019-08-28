@@ -209,7 +209,7 @@ class TestDimSignaturesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("dim-signatures-dim-signature-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -267,7 +267,7 @@ class TestDimSignaturesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("dim-signatures-dim-signature-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button

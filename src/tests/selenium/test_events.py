@@ -213,7 +213,7 @@ class TestEventsTab(unittest.TestCase):
         # Click on show map
         timelineButton = self.driver.find_element_by_id("events-show-timeline")
         if not timelineButton.find_element_by_xpath("input").is_selected():
-            functions.click(timelineButton)
+            functions.select_checkbox(timelineButton)
         # end if
 
 
@@ -338,7 +338,7 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-sources-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         # end if
 
         # Click on query button
@@ -395,7 +395,7 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button
@@ -503,7 +503,7 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-explicit-refs-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         # end if
 
         # Click on query button
@@ -560,7 +560,7 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-explicit-refs-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button
@@ -671,7 +671,7 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-event-keys-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         # end if
 
         # Click on query button
@@ -730,7 +730,7 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-event-keys-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button
@@ -840,7 +840,7 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-gauge-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         # end if
 
         # Click on query button
@@ -898,7 +898,7 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-gauge-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button
@@ -1009,7 +1009,7 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-gauge-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         # end if
 
         # Click on query button
@@ -1068,7 +1068,7 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-gauge-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button

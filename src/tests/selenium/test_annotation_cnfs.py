@@ -254,7 +254,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotation-cnfs-annotation-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-                    functions.click(notLikeButton)
+                    functions.select_checkbox(notLikeButton)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
@@ -308,7 +308,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
@@ -425,7 +425,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotation-cnfs-annotation-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
@@ -478,7 +478,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotation-cnfs-annotation-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
@@ -608,7 +608,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotation-cnfs-dim-signature-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -666,7 +666,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotation-cnfs-dim-signature-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
