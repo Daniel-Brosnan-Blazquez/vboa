@@ -215,31 +215,31 @@ class TestSourcesTab(unittest.TestCase):
         # Click on show validity_timeline
         validity_timeline_button = self.driver.find_element_by_id("sources-show-validity-timeline")
         if not validity_timeline_button.find_element_by_xpath('input').is_selected():
-            functions.click(validity_timeline_button)
+            functions.select_checkbox(validity_timeline_button)
         #end if
 
         # Click on show gen2ing_timeline
         gen2ing_timeline_button = self.driver.find_element_by_id("sources-show-generation-to-ingestion-timeline")
         if not gen2ing_timeline_button.find_element_by_xpath('input').is_selected():
-            functions.click(gen2ing_timeline_button)
+            functions.select_checkbox(gen2ing_timeline_button)
         #end if
 
         # Click on show number_events_per_source
         number_events_per_source_button = self.driver.find_element_by_id("sources-show-number-events-xy")
         if not number_events_per_source_button.find_element_by_xpath('input').is_selected():
-            functions.click(number_events_per_source_button)
+            functions.select_checkbox(number_events_per_source_button)
         #end if
 
         # Click on show ingestion_duration
         ingestion_duration_button = self.driver.find_element_by_id("sources-show-ingestion-duration-xy")
         if not ingestion_duration_button.find_element_by_xpath('input').is_selected():
-            functions.click(ingestion_duration_button)
+            functions.select_checkbox(ingestion_duration_button)
         #end if
 
         # Click on show gen2ing_times
         gen2ing_times_button = self.driver.find_element_by_id("sources-show-generation-time-to-ingestion-time-xy")
         if not gen2ing_times_button.find_element_by_xpath('input').is_selected():
-            functions.click(gen2ing_times_button)
+            functions.select_checkbox(gen2ing_times_button)
         #end if
 
         # Click on query button
@@ -369,7 +369,7 @@ class TestSourcesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("sources-source-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -429,7 +429,7 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-source-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
@@ -526,7 +526,7 @@ class TestSourcesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("sources-processors-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -583,7 +583,7 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-processors-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
@@ -680,7 +680,7 @@ class TestSourcesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("sources-dim-signatures-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.click(notLikeButton)
+            functions.select_checkbox(notLikeButton)
         #end if
 
         # Click on query button
@@ -740,7 +740,7 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
@@ -1427,7 +1427,7 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-statuses-initial-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            functions.click(notInButton)
+            functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
