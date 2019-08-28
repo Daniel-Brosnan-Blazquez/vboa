@@ -84,18 +84,6 @@ class TestSourcesTab(unittest.TestCase):
                            "generation_time": "2018-07-05T02:07:03",
                            "validity_start": "2018-06-05T02:07:03",
                            "validity_stop": "2018-06-05T08:07:36"}
-            },{
-            "mode": "insert",
-            "dim_signature": {
-                  "name": "DIM_SIGNATURE_2",
-                  "exec": "exec",
-                  "version": "1.0"
-            },
-            "source":  {"name": "source_2.xml",
-                        "reception_time": "2018-07-05T02:07:03",
-                           "generation_time": "2018-07-05T14:14:14",
-                           "validity_start": "2018-06-05T14:14:14",
-                           "validity_stop": "2018-06-06T11:57:17"}
             }]
         }
 
@@ -117,8 +105,9 @@ class TestSourcesTab(unittest.TestCase):
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
         number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
-        assert number_of_elements == 2
+        assert number_of_elements == 1 and empty_element is False
 
         # Check name
         name = sources_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
