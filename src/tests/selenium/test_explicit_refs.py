@@ -47,8 +47,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
     options.add_argument('--no-sandbox')
     options.add_argument('window-size=1920,1080')
     driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)    
-    
+    driver.implicitly_wait(5)
+
     def setUp(self):
         # Create the engine to manage the data
         self.engine_eboa = Engine()
@@ -125,7 +125,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -225,7 +225,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -244,11 +244,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-explicit-refs-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -264,19 +264,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the explicit_ref_in input
         input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
-        
+
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_1")
         input_element.send_keys(Keys.RETURN)
-        input_element.click()
+        functions.click(input_element)
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_3")
         input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -292,19 +292,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the explicit_ref_in input
         input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
-                
+
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -377,7 +377,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -396,11 +396,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("EXPL_GROUP_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-groups-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -416,16 +416,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the group_in input
         input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
-        
+
         input_element.send_keys("EXPL_GROUP_1")
         input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -441,19 +441,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the group_in input
         input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
-        
+
         input_element.send_keys("EXPL_GROUP_2")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-groups-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -528,7 +528,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -547,11 +547,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("source_1.xml")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-sources-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -566,16 +566,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the source_in input
         input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
-        
+
         input_element.send_keys("source_1.xml")
         input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -591,19 +591,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the source_in input
         input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
-                
+
         input_element.send_keys("source_2.xml")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-sources-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -685,7 +685,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -704,11 +704,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("EVENT_KEY_1")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-keys-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -724,18 +724,18 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
-        
+
         input_element.send_keys("EVENT_KEY_2")
         input_element.send_keys(Keys.RETURN)
-        input_element.click()
+        functions.click(input_element)
         input_element.send_keys("EVENT_KEY_3")
         input_element.send_keys(Keys.RETURN)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -751,19 +751,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
-        
+
         input_element.send_keys("EVENT_KEY_1")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-keys-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -845,7 +845,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -864,11 +864,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("GAUGE_NAME_1")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-names-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -884,16 +884,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
-        
+
         input_element.send_keys("GAUGE_NAME_2")
         input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -909,19 +909,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
-                
+
         input_element.send_keys("GAUGE_NAME_1")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-gauge-names-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1003,7 +1003,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1022,11 +1022,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("GAUGE_SYSTEM_1")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-system-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1042,16 +1042,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the gauge_system_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-                
+
         input_element.send_keys("GAUGE_SYSTEM_2")
         input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1067,19 +1067,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the gauge_system_in input
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-                
+
         input_element.send_keys("GAUGE_SYSTEM_1")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-gauge-system-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1141,7 +1141,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1159,7 +1159,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -1218,7 +1218,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1234,7 +1234,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1249,7 +1249,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1263,7 +1263,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1279,7 +1279,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1294,7 +1294,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1310,7 +1310,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1326,7 +1326,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1341,7 +1341,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1355,7 +1355,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1372,7 +1372,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1388,7 +1388,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1402,7 +1402,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1419,7 +1419,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1433,7 +1433,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1493,7 +1493,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "==", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1509,7 +1509,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", False, "==",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1524,7 +1524,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, ">",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1538,7 +1538,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1554,7 +1554,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, ">",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1569,7 +1569,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1585,7 +1585,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1601,7 +1601,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, ">=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1616,7 +1616,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "<",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1630,7 +1630,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, "<",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1644,7 +1644,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, "<", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1661,7 +1661,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1677,7 +1677,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, "<=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1691,7 +1691,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1708,7 +1708,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "!=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
@@ -1722,7 +1722,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, "!=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1822,12 +1822,12 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         functions.fill_value(self.driver, wait, "explicit-refs-events", "text", "text_name_1", "text_value_1", True, "==", 1)
-        self.driver.find_element_by_id("explicit-refs-events-add-value").click()
+        functions.click(self.driver.find_element_by_id("explicit-refs-events-add-value"))
         functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "1.4", True, "==", 2)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1919,7 +1919,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1938,11 +1938,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("NAME_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-names-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1958,16 +1958,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the annotation_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-        
+
         input_element.send_keys("NAME_1")
         input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -1984,19 +1984,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the annotation_name_in input
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-        
+
         input_element.send_keys("NAME_2")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-annotation-names-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2088,7 +2088,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2107,11 +2107,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element.send_keys("SYSTEM_2")
 
         not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-system-like-checkbox")
-        not_like_button.click()
+        functions.click(not_like_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2128,16 +2128,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # find the element that's name attribute is gauge_system_in
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-                
+
         input_element.send_keys("SYSTEM_1")
         input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2154,19 +2154,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # find the element that's name attribute is gauge_system_in
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        input_element.click()
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-                
+
         input_element.send_keys("SYSTEM_2")
         input_element.send_keys(Keys.RETURN)
 
         not_in_button = self.driver.find_element_by_id("explicit-refs-annotation-system-in-checkbox")
-        not_in_button.click()
+        functions.click(not_in_button)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generate
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2213,7 +2213,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2231,7 +2231,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2248,7 +2248,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2266,7 +2266,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2283,7 +2283,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2301,7 +2301,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2401,7 +2401,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2419,7 +2419,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2477,7 +2477,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2494,7 +2494,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2511,7 +2511,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2527,7 +2527,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2544,7 +2544,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2561,7 +2561,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2578,7 +2578,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2595,7 +2595,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2612,7 +2612,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2628,7 +2628,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2644,7 +2644,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2662,7 +2662,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2679,7 +2679,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2695,7 +2695,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2713,7 +2713,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2729,7 +2729,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2746,7 +2746,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2804,7 +2804,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2821,7 +2821,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2838,7 +2838,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2854,7 +2854,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2871,7 +2871,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2888,7 +2888,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2905,7 +2905,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2922,7 +2922,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2939,7 +2939,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2955,7 +2955,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -2971,7 +2971,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -2989,7 +2989,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3006,7 +3006,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -3022,7 +3022,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3040,7 +3040,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
@@ -3056,7 +3056,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3073,7 +3073,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3174,12 +3174,12 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         functions.fill_value(self.driver, wait, "explicit-refs-annotations", "text", "text_name_1", "text_value_1", True, "==", 1)
-        self.driver.find_element_by_id("explicit-refs-annotations-add-value").click()
+        functions.click(self.driver.find_element_by_id("explicit-refs-annotations-add-value"))
         functions.fill_value(self.driver,wait,"explicit-refs-annotations", "double", "double_name_1", "1.4", True, "==", 2)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3266,7 +3266,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3284,7 +3284,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3302,7 +3302,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3317,12 +3317,12 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         functions.fill_period(self.driver, wait, "explicit-refs-events", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
-        self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value").click()
+        functions.click(self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value"))
         functions.fill_period(self.driver, wait, "explicit-refs-events", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
@@ -3337,12 +3337,12 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         functions.fill_period(self.driver, wait, "explicit-refs-events", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value").click()
+        functions.click(self.driver.find_element_by_id("explicit-refs-events-start-stop-add-value"))
         functions.fill_period(self.driver, wait, "explicit-refs-events", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))

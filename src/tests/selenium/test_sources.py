@@ -112,7 +112,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -215,35 +215,35 @@ class TestSourcesTab(unittest.TestCase):
         # Click on show validity_timeline
         validity_timeline_button = self.driver.find_element_by_id("sources-show-validity-timeline")
         if not validity_timeline_button.find_element_by_xpath('input').is_selected():
-            validity_timeline_button.click()
+            functions.click(validity_timeline_button)
         #end if
 
         # Click on show gen2ing_timeline
         gen2ing_timeline_button = self.driver.find_element_by_id("sources-show-generation-to-ingestion-timeline")
         if not gen2ing_timeline_button.find_element_by_xpath('input').is_selected():
-            gen2ing_timeline_button.click()
+            functions.click(gen2ing_timeline_button)
         #end if
 
         # Click on show number_events_per_source
         number_events_per_source_button = self.driver.find_element_by_id("sources-show-number-events-xy")
         if not number_events_per_source_button.find_element_by_xpath('input').is_selected():
-            number_events_per_source_button.click()
+            functions.click(number_events_per_source_button)
         #end if
 
         # Click on show ingestion_duration
         ingestion_duration_button = self.driver.find_element_by_id("sources-show-ingestion-duration-xy")
         if not ingestion_duration_button.find_element_by_xpath('input').is_selected():
-            ingestion_duration_button.click()
+            functions.click(ingestion_duration_button)
         #end if
 
         # Click on show gen2ing_times
         gen2ing_times_button = self.driver.find_element_by_id("sources-show-generation-time-to-ingestion-time-xy")
         if not gen2ing_times_button.find_element_by_xpath('input').is_selected():
-            gen2ing_times_button.click()
+            functions.click(gen2ing_times_button)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         source = self.session.query(Source).all()[0]
 
@@ -346,7 +346,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys("source_2.xml")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -369,11 +369,11 @@ class TestSourcesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("sources-source-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -391,18 +391,18 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-source-names-in-text").find_elements_by_xpath("option")) == 3
 
         inputElement.send_keys("source_2.xml")
         inputElement.send_keys(Keys.RETURN)
-        inputElement.click()
+        functions.click(inputElement)
         inputElement.send_keys("source_3.xml")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -420,7 +420,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-source-names-in-text").find_elements_by_xpath("option")) == 3
 
@@ -429,11 +429,11 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-source-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -503,7 +503,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys("exec_2")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -526,11 +526,11 @@ class TestSourcesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("sources-processors-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -548,7 +548,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the processor_in input
         inputElement = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-processors-in-text").find_elements_by_xpath("option")) == 2
 
@@ -556,7 +556,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -574,7 +574,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the processor_in input
         inputElement = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-processors-in-text").find_elements_by_xpath("option")) == 2
 
@@ -583,11 +583,11 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-processors-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -657,7 +657,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -680,11 +680,11 @@ class TestSourcesTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("sources-dim-signatures-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -702,18 +702,18 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-dim-signatures-in-text").find_elements_by_xpath("option")) == 3
 
         inputElement.send_keys("DIM_SIGNATURE_1")
         inputElement.send_keys(Keys.RETURN)
-        inputElement.click()
+        functions.click(inputElement)
         inputElement.send_keys("DIM_SIGNATURE_2")
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -731,7 +731,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the dim_signature_in input
         inputElement = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-dim-signatures-in-text").find_elements_by_xpath("option")) == 3
 
@@ -740,11 +740,11 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -812,7 +812,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_validity_period(self.driver, wait, "sources", 1, "2018-06-05T03:00:00", "==","2018-06-05T04:00:00", "==")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -832,7 +832,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T03:00:00", start_operator = ">=")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -852,7 +852,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_validity_period(self.driver, wait, "sources", 1, end_value = "2018-06-05T04:00:00", end_operator = "!=")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -870,12 +870,12 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
-        self.driver.find_element_by_id("sources-add-validity-start-validity-stop").click()
+        functions.click(self.driver.find_element_by_id("sources-add-validity-start-validity-stop"))
 
         functions.fill_validity_period(self.driver, wait, "sources", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -893,11 +893,11 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        self.driver.find_element_by_id("sources-add-validity-start-validity-stop").click()
+        functions.click(self.driver.find_element_by_id("sources-add-validity-start-validity-stop"))
         functions.fill_validity_period(self.driver, wait, "sources", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -941,7 +941,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "==", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -959,11 +959,11 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "==", 1)
-        self.driver.find_element_by_id("sources-add-ingestion-time").click()
+        functions.click(self.driver.find_element_by_id("sources-add-ingestion-time"))
         functions.fill_ingestion_time(self.driver, wait,"sources", "9999-01-01T00:00:00", "<", 2)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -971,7 +971,7 @@ class TestSourcesTab(unittest.TestCase):
         empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
-        
+
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -983,7 +983,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_time(self.driver, wait,"sources",ingestion_time, ">", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1003,7 +1003,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, ">=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1023,7 +1023,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "<", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1043,7 +1043,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "<=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1063,7 +1063,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "!=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1104,7 +1104,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "==", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1124,7 +1124,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1144,7 +1144,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1164,7 +1164,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1184,7 +1184,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1204,7 +1204,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "!=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1247,7 +1247,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "==", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1267,7 +1267,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, ">", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1287,7 +1287,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, ">=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1307,7 +1307,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "<", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1327,7 +1327,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "<=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1347,7 +1347,7 @@ class TestSourcesTab(unittest.TestCase):
         functions.fill_ingestion_duration(self.driver, wait, "sources", ingestion_duration, "!=", 1)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generated
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1391,7 +1391,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the status_in input
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 20
 
@@ -1399,7 +1399,7 @@ class TestSourcesTab(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
@@ -1418,7 +1418,7 @@ class TestSourcesTab(unittest.TestCase):
 
         # Fill the status_in input
         inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 20
 
@@ -1427,11 +1427,11 @@ class TestSourcesTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("sources-statuses-initial-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Click on query button
-        submit_button.click()
+        functions.click(submit_button)
 
         # Check table generatedd
         sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
