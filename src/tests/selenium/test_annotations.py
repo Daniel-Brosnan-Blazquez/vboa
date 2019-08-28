@@ -125,7 +125,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -216,12 +216,12 @@ class TestAnnotationsTab(unittest.TestCase):
         # Click on show map
         mapButton = self.driver.find_element_by_id("annotations-show-map")
         if not mapButton.find_element_by_xpath('input').is_selected():
-            mapButton.click()
+            functions.click(mapButton)
         #end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         map = self.driver.find_element_by_id("annotations-nav-map")
 
@@ -334,7 +334,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -356,12 +356,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-sources-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         #end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -378,7 +378,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
 
@@ -387,7 +387,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -404,7 +404,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
 
@@ -413,12 +413,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Click on query butto
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -511,7 +511,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -533,12 +533,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-explicit-refs-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         #end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -555,7 +555,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
 
@@ -563,7 +563,7 @@ class TestAnnotationsTab(unittest.TestCase):
         inputElement.send_keys(Keys.RETURN)
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -580,12 +580,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-explicit-refs-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
 
@@ -594,7 +594,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -687,7 +687,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -709,12 +709,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-annotation-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         #end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -731,7 +731,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
 
@@ -740,7 +740,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -757,7 +757,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Fill the annotation_name_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
 
@@ -766,12 +766,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -864,7 +864,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -886,12 +886,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("annotations-annotation-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         #end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -908,7 +908,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
 
@@ -917,7 +917,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -934,7 +934,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # # Fill the annotation_system_in input
         inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
 
@@ -943,12 +943,12 @@ class TestAnnotationsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         #end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1051,7 +1051,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1071,7 +1071,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1131,7 +1131,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1150,7 +1150,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1170,7 +1170,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1189,7 +1189,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1208,7 +1208,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1228,7 +1228,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1247,7 +1247,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1266,7 +1266,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1286,7 +1286,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1305,7 +1305,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1324,7 +1324,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1344,7 +1344,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1363,7 +1363,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1382,7 +1382,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1402,7 +1402,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1421,7 +1421,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1440,7 +1440,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1500,7 +1500,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1518,7 +1518,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1538,7 +1538,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1557,7 +1557,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1576,7 +1576,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1596,7 +1596,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1615,7 +1615,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1634,7 +1634,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1654,7 +1654,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1673,7 +1673,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1692,7 +1692,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1712,7 +1712,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1731,7 +1731,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1750,7 +1750,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1770,7 +1770,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1789,7 +1789,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1808,7 +1808,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1866,7 +1866,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1886,7 +1886,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1906,7 +1906,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1926,7 +1926,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1946,7 +1946,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1966,7 +1966,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -2069,12 +2069,12 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait, "annotations", "text", "textname_1", "textvalue_1", True, "==", 1)
-        self.driver.find_element_by_id("annotations-add-value").click()
+        functions.click(self.driver.find_element_by_id("annotations-add-value"))
         functions.fill_value(self.driver, wait, "annotations", "double", "double_name_1", "1.4", True, "==", 2)
 
         # Click on query butto
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))

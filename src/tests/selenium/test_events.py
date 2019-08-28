@@ -115,7 +115,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -213,13 +213,13 @@ class TestEventsTab(unittest.TestCase):
         # Click on show map
         timelineButton = self.driver.find_element_by_id("events-show-timeline")
         if not timelineButton.find_element_by_xpath("input").is_selected():
-            timelineButton.click()
+            functions.click(timelineButton)
         # end if
 
 
         # Apply filters and click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         timeline = self.driver.find_element_by_id('events-nav-timeline')
 
@@ -316,7 +316,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -338,12 +338,12 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-sources-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -360,7 +360,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
 
@@ -369,7 +369,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -386,7 +386,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the source_in input
         inputElement = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
 
@@ -395,12 +395,12 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -481,7 +481,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -503,12 +503,12 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-explicit-refs-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -525,7 +525,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
 
@@ -534,7 +534,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -551,7 +551,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the explicit_ref_in input
         inputElement = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
 
@@ -560,12 +560,12 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-explicit-refs-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -649,7 +649,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -671,12 +671,12 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-event-keys-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -694,7 +694,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the key_in input
         inputElement = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
 
@@ -703,7 +703,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -721,7 +721,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the key_in input
         inputElement = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
 
@@ -730,12 +730,12 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-event-keys-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -818,7 +818,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -840,12 +840,12 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-gauge-names-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -863,7 +863,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-gauge-names-in-text").find_elements_by_xpath("option")) == 2
         inputElement.send_keys("GAUGE_NAME_2")
@@ -871,7 +871,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -889,7 +889,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the gauge_name_in input
         inputElement = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-gauge-names-in-text").find_elements_by_xpath("option")) == 2
 
@@ -898,12 +898,12 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-gauge-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -987,7 +987,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1009,12 +1009,12 @@ class TestEventsTab(unittest.TestCase):
 
         notLikeButton = self.driver.find_element_by_id("events-gauge-system-like-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
-            notLikeButton.click()
+            functions.click(notLikeButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1032,7 +1032,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
 
@@ -1041,7 +1041,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1059,7 +1059,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Fill the gauge_system_in input
         inputElement = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        inputElement.click()
+        functions.click(inputElement)
 
         assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
 
@@ -1068,12 +1068,12 @@ class TestEventsTab(unittest.TestCase):
 
         notInButton = self.driver.find_element_by_id("events-gauge-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
-            notInButton.click()
+            functions.click(notInButton)
         # end if
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1128,7 +1128,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1148,7 +1148,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1203,7 +1203,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1222,7 +1222,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1242,7 +1242,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1261,7 +1261,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1280,7 +1280,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1300,7 +1300,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1319,7 +1319,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1338,7 +1338,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1358,7 +1358,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1377,7 +1377,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1396,7 +1396,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1416,7 +1416,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1435,7 +1435,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1454,7 +1454,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1473,7 +1473,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1493,7 +1493,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1512,7 +1512,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1568,7 +1568,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1587,7 +1587,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1607,7 +1607,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1626,7 +1626,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1645,7 +1645,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1665,7 +1665,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1684,7 +1684,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1703,7 +1703,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1723,7 +1723,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1742,7 +1742,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1761,7 +1761,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1781,7 +1781,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1800,7 +1800,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1819,7 +1819,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1839,7 +1839,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1858,7 +1858,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1877,7 +1877,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1934,7 +1934,7 @@ class TestEventsTab(unittest.TestCase):
         functions.fill_ingestion_time(self.driver, wait, "events", ingestion_time, "==", 1)
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1954,7 +1954,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1974,7 +1974,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1994,7 +1994,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2014,7 +2014,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2034,7 +2034,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2131,12 +2131,12 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", True, "==", 1)
-        self.driver.find_element_by_id("events-add-value").click()
+        functions.click(self.driver.find_element_by_id("events-add-value"))
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "1.4", True, "==", 2)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2222,7 +2222,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2242,7 +2242,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2262,7 +2262,7 @@ class TestEventsTab(unittest.TestCase):
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2279,12 +2279,12 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
-        self.driver.find_element_by_id("events-add-start-stop").click()
+        functions.click(self.driver.find_element_by_id("events-add-start-stop"))
         functions.fill_period(self.driver, wait, "events", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -2301,12 +2301,12 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        self.driver.find_element_by_id("events-add-start-stop").click()
+        functions.click(self.driver.find_element_by_id("events-add-start-stop"))
         functions.fill_period(self.driver, wait, "events", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        submitButton.click()
+        functions.click(submitButton)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
