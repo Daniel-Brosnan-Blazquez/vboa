@@ -215,3 +215,17 @@ def click(element):
             # end if
         # end try
     # end while
+
+def select_checkbox(element):
+    input = element.find_element_by_xpath("input")
+    state = input.is_selected()
+    retries = 0
+    while state is False:
+        click(element)
+        state = input.is_selected()
+        retries += 1
+        if retries > 5:
+            print("Too many retries on " + element.get_attribute("id"))
+            break
+        #end if
+    #end while
