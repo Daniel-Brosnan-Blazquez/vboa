@@ -8,7 +8,7 @@ import {fromLonLat} from 'ol/proj';
 import MousePosition from 'ol/control/MousePosition.js';
 import {createStringXY} from 'ol/coordinate.js';
 import {defaults as defaultControls} from 'ol/control.js';
-import {Fill, Stroke, Style} from 'ol/style.js';
+import {Fill, Stroke, Style, Text} from 'ol/style.js';
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
@@ -170,6 +170,14 @@ export function display_map(dom_id, polygons){
             if ("fill_color" in polygon["style"]){
                 fill_color = polygon["style"]["fill_color"];
             }
+            var text = ""
+            if ("text" in polygon["style"]){
+                text = polygon["style"]["text"];
+            }
+            var font_text = ""
+            if ("font_text" in polygon["style"]){
+                font_text = polygon["style"]["font_text"];
+            }
             var style = new Style({
                 stroke: new Stroke({
                     color: stroke_color,
@@ -177,6 +185,10 @@ export function display_map(dom_id, polygons){
                 }),
                 fill: new Fill({
                     color: fill_color
+                }),
+                text: new Text({
+                    text: text,
+                    font: font_text
                 })
             });
             feature.setStyle(style);
@@ -189,27 +201,43 @@ export function display_map(dom_id, polygons){
             features: features
         })
     });
+
+    vector.set('name', 'features');
+    
     var mousePositionControl = new MousePosition({
         coordinateFormat: createStringXY(4),
         projection: 'EPSG:4326',
     });
-    
-    var map = new Map({
-        controls: defaultControls().extend([mousePositionControl]),
-        layers: [raster, vector],
-        target: dom_id,
-        view: new View({
-            center: [0, 0],
-            zoom: 2
-        })
-    });
 
-    /**
-     * Add a click handler to the map to render the tooltip.
-     */
-    map.on('singleclick', function(event) {
-        show_map_item_information(event, map, dom_id)
-    });
+    if (document.getElementById(dom_id).data){
+        console.log("updating map")
+        map = document.getElementById(dom_id).data;
+        map.getLayers().forEach(function (layer) {
+            if (layer.get('name') === 'features') {
+                map.removeLayer(layer);
+            }
+        });
+        map.addLayer(vector);
+    }
+    else{
+        var map = new Map({
+            controls: defaultControls().extend([mousePositionControl]),
+            layers: [raster, vector],
+            target: dom_id,
+            view: new View({
+                center: [0, 0],
+                zoom: 2
+            })
+        });
+        document.getElementById(dom_id).data = map;
+    
+        /**
+         * Add a click handler to the map to render the tooltip.
+         */
+        map.on('singleclick', function(event) {
+            show_map_item_information(event, map, dom_id)
+        });
+    }
 }
 
 function show_map_item_information(event, map, dom_id){
