@@ -22,6 +22,7 @@ import * as annotationFunctions from "./annotations.js";
 import * as eventKeyFunctions from "./event_keys.js";
 import * as dimSignatureFunctions from "./dim_signatures.js";
 import * as erFunctions from "./explicit_references.js";
+import * as queryFunctions from "./query.js";
 import * as dates from "./dates.js";
 import * as datatableFunctions from "./datatables.js";
 
@@ -313,5 +314,12 @@ export function create_source_ingestion_duration_xy(sources, dom_id){
 export function create_source_generation_time_to_ingestion_time_xy(sources, dom_id){
 
     sourceFunctions.create_source_generation_time_to_ingestion_time_xy(sources, dom_id);
+
+};
+
+/* Function to provide a way to request information from database from javascript */
+export function request_info(url, callback, parameters){
+
+    queryFunctions.request_info(url, callback, parameters);
 
 };
