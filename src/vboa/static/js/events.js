@@ -20,7 +20,7 @@ function create_event_tooltip_text(event){
         "<tr><td>Ingestion time</td><td>" + event['ingestion_time'] + "</td></tr>" +
         "<tr><td>Links</td><td><a href='/eboa_nav/query-event-links/" + event["id"] + "'><i class='fa fa-link'></i></a></td></tr>" +
         "<tr id='expand-tooltip-values-event-" + event["id"] + "'><td>Values</td><td><i class='fa fa-plus-square green' onclick='" + 'vboa.expand_event_values_in_tooltip("expand-tooltip-values-event-' + event["id"] + '", "' + event["id"] + '")' + "' data-toggle='tooltip' title='Click to show the related values'></i></td></tr>" +
-        "</tr></table>"
+        "</table>"
 };
 
 /* Function to create a network graph for the EBOA navigation view */
