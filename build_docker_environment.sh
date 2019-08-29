@@ -172,14 +172,14 @@ docker network inspect $DOCKER_NETWORK &>/dev/null || docker network create --dr
 ######
 # Execute container
 # Check configuration of postgis/postgres with -> psql -U postgres -> show all;
-docker run --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
+docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
 
 ######
 # Create APP container
 ######
 docker load -i $PATH_TO_DOCKERIMAGE
 
-docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/orc -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/orc -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
 
 # Change port and address configuration of the eboa defined by the postgis container
 docker exec -it $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
