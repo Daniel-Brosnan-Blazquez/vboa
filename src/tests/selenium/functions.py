@@ -18,7 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 
 def goToTab(driver,tab_name):
     tab = driver.find_element_by_link_text(tab_name)
@@ -29,7 +29,22 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool
     if row is 1:
         value_query_div = driver.find_element_by_id(tab + "-value-query-initial")
     else:
-        value_query_div = driver.find_element_by_id("more-value-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        done = False
+        retries = 0
+        while not done:
+            try:
+                value_query_div = driver.find_element_by_id("more-value-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+                done = True
+            except NoSuchElementException as e:
+                if retries < 10:
+                    retries += 1
+                    pass
+                else:
+                    raise e
+                # end if
+            # end try
+        # end while
+    # end if
 
     type = Select(value_query_div.find_element_by_id("value-type"))
     type.select_by_visible_text(value_type)
