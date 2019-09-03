@@ -10,6 +10,7 @@ import "datatables.net-select/js/dataTables.select.js";
 import "jszip/dist/jszip.min.js";
 import "chosen-js/chosen.jquery.min.js";
 import "metismenu/dist/metisMenu.min.js";
+import * as toastr from "toastr/toastr.js";
 import * as olMap from "ol/Map.js";
 import * as olView from "ol/View.js";
 import * as vis from "vis/dist/vis.js";
@@ -39,8 +40,9 @@ import "vis/dist/vis-network.min.css";
 import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
+import "toastr/build/toastr.min.css";
 
-var interval = setInterval(update_clock, 1000);
+setInterval(update_clock, 1000);
 
 /* Set clock */
 function update_clock() {
@@ -61,6 +63,11 @@ jQuery(".chosen-select").chosen({
 $(function() {
     $('#side-menu').metisMenu();
 });
+
+/* Toasts configuration */
+toastr.options.progressBar = true; // Show how long it takes before it expires
+toastr.options.timeOut = 10000; // How long the toast will display without user interaction (milliseconds)
+toastr.options.extendedTimeOut = 10000; // How long the toast will display after a user hovers over it (milliseconds)
 
 /* Update view */
 export function update_view(parameters, repeat_cycle, view){
@@ -321,5 +328,131 @@ export function create_source_generation_time_to_ingestion_time_xy(sources, dom_
 export function request_info(url, callback, parameters){
 
     queryFunctions.request_info(url, callback, parameters);
+
+};
+
+/* Functions for providing management on the BOA processes */
+function handle_return_status(parameters, command_status){
+
+    document.getElementById(parameters["dom_indicator_id"]).className = "circle"
+    if (command_status["return_code"] == 0){
+        var message = parameters["success_message"]
+        if (command_status["output"]){
+            message += "</br>The output of the executed command was:</br>" + command_status["output"]
+        }
+        toastr.success(message)
+    }
+    else{
+        var message = parameters["error_message"]
+        if (command_status["output"] || command_status["error"]){
+            message += "</br>The output of the executed command was:</br>" + command_status["output"] + "</br>The error of the executed command was: " + command_status["error"]
+        }
+        toastr.error(message)
+    }
+}
+
+/***
+ * ORC
+ ***/
+/* Function for switching on/off the ORC */
+export function request_switch_on_off_orc(){
+
+    queryFunctions.request_info("/check-orc-status", switch_on_off_orc, null);
+
+};
+
+function switch_on_off_orc(parameters, orc_status) {
+
+    document.getElementById("orc-indicator").className = "circle loader"
+    if (orc_status["scheduler"]["status"] == "on" && orc_status["ingester"]["status"] == "on"){
+        parameters = {
+            "success_message": "ORC was switched off sucessfully",
+            "error_message": "ORC could not be switched off sucessfully",
+            "dom_indicator_id": "orc-indicator"
+        }
+        queryFunctions.request_info("/switch-off-orc", handle_return_status, parameters);
+    }else{
+        parameters = {
+            "success_message": "ORC was switched on sucessfully",
+            "error_message": "ORC could not be switched on sucessfully",
+            "dom_indicator_id": "orc-indicator"
+        }
+        queryFunctions.request_info("/switch-on-orc", handle_return_status, parameters);
+    }
+    
+};
+
+/* Function to update the status of the orc */
+setInterval(request_and_update_orc_status, 1000);
+
+function request_and_update_orc_status() {
+    
+    queryFunctions.request_info("/check-orc-status", update_orc_status, null);
+    
+};
+
+function update_orc_status(parameters, orc_status) {
+
+    if (! document.getElementById("orc-indicator").className.includes("loader")){
+        if (orc_status["scheduler"]["status"] == "on" && orc_status["ingester"]["status"] == "on"){
+            document.getElementById("orc-indicator").className = "circle green-circle"
+        }else if (orc_status["scheduler"]["status"] == "on" || orc_status["ingester"]["status"] == "on"){
+            document.getElementById("orc-indicator").className = "circle yellow-circle"
+        }else{
+            document.getElementById("orc-indicator").className = "circle red-circle"
+        }
+    }
+    
+};
+
+/***
+ * CRON
+ ***/
+/* Function for switching on/off the CRON */
+export function request_switch_on_off_cron(){
+
+    queryFunctions.request_info("/check-cron-status", switch_on_off_cron, null);
+    
+};
+
+function switch_on_off_cron(parameters, cron_status) {
+
+    document.getElementById("cron-indicator").className = "circle loader"
+    if (cron_status["crond"]["status"] == "on"){
+        parameters = {
+            "success_message": "CRON was switched off sucessfully",
+            "error_message": "CRON could not be switched off sucessfully",
+            "dom_indicator_id": "cron-indicator"
+        }
+        queryFunctions.request_info("/switch-off-cron", handle_return_status, parameters);
+    }else{
+        parameters = {
+            "success_message": "CRON was switched on sucessfully",
+            "error_message": "CRON could not be switched on sucessfully",
+            "dom_indicator_id": "cron-indicator"
+        }
+        queryFunctions.request_info("/switch-on-cron", handle_return_status, parameters);
+    }
+    
+};
+
+/* Function to update the status of the cron */
+setInterval(request_and_update_cron_status, 1000);
+
+function request_and_update_cron_status() {
+    
+    queryFunctions.request_info("/check-cron-status", update_cron_status, null);
+    
+};
+
+function update_cron_status(parameters, cron_status) {
+
+    if (! document.getElementById("cron-indicator").className.includes("loader")){
+        if (cron_status["crond"]["status"] == "on"){
+            document.getElementById("cron-indicator").className = "circle green-circle"
+        }else{
+            document.getElementById("cron-indicator").className = "circle red-circle"
+        }
+    }
 
 };
