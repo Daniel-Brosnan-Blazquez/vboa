@@ -36,7 +36,9 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool
                 value_query_div = driver.find_element_by_id("more-value-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
                 done = True
             except NoSuchElementException as e:
+                time.sleep(0.1)
                 if retries < 10:
+                    print("Retry")
                     retries += 1
                     pass
                 else:
