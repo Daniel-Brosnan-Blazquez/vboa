@@ -109,11 +109,11 @@ def query_events():
         for value_name_like in request.form.getlist("event_value_name_like"):
             if value_name_like != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
-                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
-                                                          "value": {"op": value_operators[i], "value": values[i]}})
+                                                          "value": {"op": value_operators[i], "filter": values[i]}})
                 else:
-                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i]})
             # end if
             i+=1
@@ -321,11 +321,11 @@ def query_annotations():
         for value_name_like in request.form.getlist("annotation_value_name_like"):
             if value_name_like != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
-                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
-                                                          "value": {"op": value_operators[i], "value": values[i]}})
+                                                          "value": {"op": value_operators[i], "filter": values[i]}})
                 else:
-                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i]})
             # end if
             i+=1
@@ -1056,11 +1056,11 @@ def query_ers():
         for value_name_like in request.form.getlist("event_value_name_like"):
             if value_name_like != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
-                    kwargs["event_value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["event_value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
-                                                          "value": {"op": value_operators[i], "value": values[i]}})
+                                                          "value": {"op": value_operators[i], "filter": values[i]}})
                 else:
-                    kwargs["event_value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["event_value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i]})
             # end if
             i+=1
@@ -1145,11 +1145,11 @@ def query_ers():
         for value_name_like in request.form.getlist("annotation_value_name_like"):
             if value_name_like != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
-                    kwargs["annotation_value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["annotation_value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
-                                                          "value": {"op": value_operators[i], "value": values[i]}})
+                                                          "value": {"op": value_operators[i], "filter": values[i]}})
                 else:
-                    kwargs["annotation_value_filters"].append({"name": {"op": value_name_like_ops[i], "str": value_name_like},
+                    kwargs["annotation_value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i]})
             # end if
             i+=1
