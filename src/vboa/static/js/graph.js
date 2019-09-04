@@ -210,7 +210,6 @@ export function display_map(dom_id, polygons){
     });
 
     if (document.getElementById(dom_id).data){
-        console.log("updating map")
         map = document.getElementById(dom_id).data;
         map.getLayers().forEach(function (layer) {
             if (layer.get('name') === 'features') {
