@@ -185,7 +185,7 @@ docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $A
 docker exec -it $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
 
 # Execute flask server
-docker exec -d -it $APP_CONTAINER bash -c "flask run --host=0.0.0.0 -p 5000"
+docker exec -d -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"
 
 echo "
 Docker environment successfully built :-)"
