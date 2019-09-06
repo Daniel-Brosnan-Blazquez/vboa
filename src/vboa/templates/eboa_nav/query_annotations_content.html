@@ -115,6 +115,22 @@
                 <input type="checkbox" name="show_map"><span class="label-text" ><b>Show map</b></span>
               </label>
             </div>
+            <!-- Query restrictions -->
+            <div class="row" id="annotations-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="annotations-order-by">
+                    <option></option>
+                    <option>ingestion_time</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="annotations-limit" value="1000"/>
+              </div>
+            </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="annotations-submit-button">Query</button>
             </div>

@@ -127,6 +127,31 @@
                 <input type="checkbox" id="show-generation-time-to-ingestion-time-xy" name="show_generation_time_to_ingestion_time_xy" checked><span class="label-text"><b>Show generation to ingestion times over time per source</b></span>
               </label>
             </div>
+            <!-- Query restrictions -->
+            <div class="row" id="explicit-refs-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="explicit-refs-order-by">
+                    <option></option>
+                    <option>name</option>
+                    <option>validity_start</option>
+                    <option>validity_stop</option>
+                    <option>reception_time</option>
+                    <option>generation_time</option>
+                    <option>ingestion_time</option>
+                    <option>ingestion_duration</option>
+                    <option>processing_duration</option>
+                    <option>processor</option>
+                    <option>processor_version</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="explicit-refs-limit" value="1000"/>
+              </div>
+            </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="sources-submit-button">Query</button>
             </div>

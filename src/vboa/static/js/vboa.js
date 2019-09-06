@@ -330,6 +330,21 @@ export function request_info(url, callback, parameters){
     queryFunctions.request_info(url, callback, parameters);
 
 };
+/* Function to provide a way to request information from javascript passing json as parameter */
+export function request_info_json(url, callback, json){
+
+    queryFunctions.request_info_json(url, callback, json);
+
+};
+
+/* Function render a received page */
+export function render_page(page){
+
+    document.open();
+    document.write(page);
+    document.close();
+
+};
 
 /* Functions for providing management on the BOA processes */
 function handle_return_status(parameters, command_status){

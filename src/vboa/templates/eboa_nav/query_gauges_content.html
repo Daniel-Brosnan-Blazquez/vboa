@@ -50,6 +50,23 @@
                 <input type="checkbox" name="show_network" ><span class="label-text"><b>Show network of gauges</b></span>
               </label>
             </div>
+            <!-- Query restrictions -->
+            <div class="row" id="gauges-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="gauges-order-by">
+                    <option></option>
+                    <option>name</option>
+                    <option>system</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="gauges-limit" value="1000"/>
+              </div>
+            </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="gauges-submit-button">Query</button>
             </div>
