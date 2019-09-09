@@ -400,9 +400,13 @@ function switch_on_off_orc(parameters, orc_status) {
 /* Function to update the status of the orc */
 setInterval(request_and_update_orc_status, 1000);
 
+request_and_update_orc_status()
+
 function request_and_update_orc_status() {
-    
-    queryFunctions.request_info("/check-orc-status", update_orc_status, null);
+
+    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true"){
+        queryFunctions.request_info("/check-orc-status", update_orc_status, null);
+    }
     
 };
 
@@ -454,9 +458,13 @@ function switch_on_off_cron(parameters, cron_status) {
 /* Function to update the status of the cron */
 setInterval(request_and_update_cron_status, 1000);
 
+request_and_update_cron_status()
+
 function request_and_update_cron_status() {
-    
-    queryFunctions.request_info("/check-cron-status", update_cron_status, null);
+
+    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true"){
+        queryFunctions.request_info("/check-cron-status", update_cron_status, null);
+    }
     
 };
 
