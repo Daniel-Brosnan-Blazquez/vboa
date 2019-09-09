@@ -6,14 +6,14 @@
   <a href="/eboa_nav/query-annotation-cnfs"><p class="fa
   fa-chevron-left"> Back to query annotation configurations</p></a>
 </div>
-{% if filters["limit"] != "" and filters["limit"]|int == annotation_cnfs|length %}
+{% if filters["limit"][0] != "" and filters["limit"][0]|int == annotation_cnfs|length %}
 <div class="panel panel-yellow">
   <div class="panel-heading">
     The number of requested elements is higher than the limit of the query, you can navigate through all the list using the following links:
   </div>
-  {% if filters["offset"]|int == 0 %}
+  {% if filters["offset"][0]|int == 0 %}
   {% set filters_to_forward = filters.copy() %}
-  {% do filters_to_forward.__setitem__("offset", filters_to_forward["offset"]|int + filters_to_forward["limit"]|int) %}
+  {% do filters_to_forward.__setitem__("offset", filters_to_forward["offset"][0]|int + filters_to_forward["limit"][0]|int) %}
   <div class="panel-body" style="text-align:center">
     <a href="#" onclick='vboa.request_info_json("/eboa_nav/query-annotation-cnfs-pages", vboa.render_page, {{ filters_to_forward|tojson }})'>Next >></a>
   </div>
@@ -21,20 +21,20 @@
   <div class="panel-body" style="text-align:center">
     {% set filters_to_forward_prev = filters.copy() %}
     {% set filters_to_forward_next = filters.copy() %}
-    {% do filters_to_forward_prev.__setitem__("offset", filters_to_forward_prev["offset"]|int - filters_to_forward_prev["limit"]|int) %}
-    {% do filters_to_forward_next.__setitem__("offset", filters_to_forward_next["offset"]|int + filters_to_forward_next["limit"]|int) %}
+    {% do filters_to_forward_prev.__setitem__("offset", filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int) %}
+    {% do filters_to_forward_next.__setitem__("offset", filters_to_forward_next["offset"][0]|int + filters_to_forward_next["limit"][0]|int) %}
     <a href="#" onclick='vboa.request_info_json("/eboa_nav/query-annotation-cnfs-pages", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a><p style="display: inline"> | </p><a href="#" onclick='vboa.request_info_json("/eboa_nav/query-annotation-cnfs-pages", vboa.render_page, {{ filters_to_forward_next|tojson }})'>Next >></a>
   </div>
   {% endif %}
 </div>
-{% elif filters["offset"]|int > 0 and annotation_cnfs|length < filters["limit"]|int %}
+{% elif filters["offset"][0]|int > 0 and annotation_cnfs|length < filters["limit"][0]|int %}
 <div class="panel panel-yellow">
   <div class="panel-heading">
     All the elements have been reviewed, you can go to the previous pages:
   </div>
   <div class="panel-body" style="text-align:center">
     {% set filters_to_forward_prev = filters.copy() %}
-    {% do filters_to_forward_prev.__setitem__("offset", filters_to_forward_prev["offset"]|int - filters_to_forward_prev["limit"]|int) %}
+    {% do filters_to_forward_prev.__setitem__("offset", filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int) %}
     <a href="#" onclick='vboa.request_info_json("/eboa_nav/query-annotation-cnfs-pages", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a>
   </div>
 </div>

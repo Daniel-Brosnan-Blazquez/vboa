@@ -36,8 +36,8 @@ def query_events_and_render():
     """
     current_app.logger.debug("Query events and render")
     if request.method == "POST":
-        filters = request.form.copy()
-        filters["offset"] = ""
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
 
         events = query_events(filters)
         show = define_what_to_show_events(filters)
@@ -107,36 +107,36 @@ def query_events(filters):
 
     kwargs = {}
 
-    if filters["key_like"] != "":
+    if filters["key_like"][0] != "":
         op="notlike"
         if not "key_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["keys"] = {"filter": filters["key_like"], "op": op}
+        kwargs["keys"] = {"filter": filters["key_like"][0], "op": op}
     # end if
-    elif "keys" in filters and filters["keys"] != "":
+    elif "keys" in filters and filters["keys"][0] != "":
         op="notin"
         if not "key_notin_check" in filters:
             op="in"
         # end if
         kwargs["keys"] = {"filter": [], "op": op}
         i = 0
-        for key in filters.getlist("keys"):
+        for key in filters["keys"]:
             kwargs["keys"]["filter"].append(key)
             i+=1
         # end for
     # end if
 
-    if filters["event_value_name_like"] != "":
-        value_operators = filters.getlist("event_value_operator")
-        value_types = filters.getlist("event_value_type")
-        values = filters.getlist("event_value")
-        value_name_like_ops = filters.getlist("event_value_name_like_op")
+    if filters["event_value_name_like"][0] != "":
+        value_operators = filters["event_value_operator"]
+        value_types = filters["event_value_type"]
+        values = filters["event_value"]
+        value_name_like_ops = filters["event_value_name_like_op"]
         kwargs["value_filters"] = []
         i = 0
-        for value_name_like in filters.getlist("event_value_name_like"):
-            if value_name_like != "":
-                if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
+        for value_name_like in filters["event_value_name_like"]:
+            if value_name_like[0] != "":
+                if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
                                                           "value": {"op": value_operators[i], "filter": values[i]}})
@@ -148,134 +148,134 @@ def query_events(filters):
         # end for
     # end if
 
-    if filters["source_like"] != "":
+    if filters["source_like"][0] != "":
         op="notlike"
         if not "source_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["sources"] = {"filter": filters["source_like"], "op": op}
+        kwargs["sources"] = {"filter": filters["source_like"][0], "op": op}
     # end if
-    elif "sources" in filters and filters["sources"] != "":
+    elif "sources" in filters and filters["sources"][0] != "":
         op="notin"
         if not "source_notin_check" in filters:
             op="in"
         # end if
         kwargs["sources"] = {"filter": [], "op": op}
         i = 0
-        for source in filters.getlist("sources"):
+        for source in filters["sources"]:
             kwargs["sources"]["filter"].append(source)
             i+=1
         # end for
     # end if
-    if filters["er_like"] != "":
+    if filters["er_like"][0] != "":
         op="notlike"
         if not "er_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["explicit_refs"] = {"filter": filters["er_like"], "op": op}
+        kwargs["explicit_refs"] = {"filter": filters["er_like"][0], "op": op}
     # end if
-    elif "ers" in filters and filters["ers"] != "":
+    elif "ers" in filters and filters["ers"][0] != "":
         op="notin"
         if not "er_notin_check" in filters:
             op="in"
         # end if
         kwargs["explicit_refs"] = {"filter": [], "op": op}
         i = 0
-        for er in filters.getlist("ers"):
+        for er in filters["ers"]:
             kwargs["explicit_refs"]["filter"].append(er)
             i+=1
         # end for
     # end if
-    if filters["gauge_name_like"] != "":
+    if filters["gauge_name_like"][0] != "":
         op="notlike"
         if not "gauge_name_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["gauge_names"] = {"filter": filters["gauge_name_like"], "op": op}
+        kwargs["gauge_names"] = {"filter": filters["gauge_name_like"][0], "op": op}
     # end if
-    elif "gauge_names" in filters and filters["gauge_names"] != "":
+    elif "gauge_names" in filters and filters["gauge_names"][0] != "":
         op="notin"
         if not "gauge_name_notin_check" in filters:
             op="in"
         # end if
         kwargs["gauge_names"] = {"filter": [], "op": op}
         i = 0
-        for gauge_name in filters.getlist("gauge_names"):
+        for gauge_name in filters["gauge_names"]:
             kwargs["gauge_names"]["filter"].append(gauge_name)
             i+=1
         # end for
     # end if
-    if filters["gauge_system_like"] != "":
+    if filters["gauge_system_like"][0] != "":
         op="notlike"
         if not "gauge_system_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["gauge_systems"] = {"filter": filters["gauge_system_like"], "op": op}
+        kwargs["gauge_systems"] = {"filter": filters["gauge_system_like"][0], "op": op}
     # end if
-    elif "gauge_systems" in filters and filters["gauge_systems"] != "":
+    elif "gauge_systems" in filters and filters["gauge_systems"][0] != "":
         op="notin"
         if not "gauge_system_notin_check" in filters:
             op="in"
         # end if
         kwargs["gauge_systems"] = {"filter": [], "op": op}
         i = 0
-        for gauge_system in filters.getlist("gauge_systems"):
+        for gauge_system in filters["gauge_systems"]:
             kwargs["gauge_systems"]["filter"].append(gauge_system)
             i+=1
         # end for
     # end if
-    if filters["start"] != "":
+    if filters["start"][0] != "":
         kwargs["start_filters"] = []
         i = 0
-        operators = filters.getlist("start_operator")
-        for start in filters.getlist("start"):
+        operators = filters["start_operator"]
+        for start in filters["start"]:
             kwargs["start_filters"].append({"date": start, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["stop"] != "":
+    if filters["stop"][0] != "":
         kwargs["stop_filters"] = []
         i = 0
-        operators = filters.getlist("stop_operator")
-        for stop in filters.getlist("stop"):
+        operators = filters["stop_operator"]
+        for stop in filters["stop"]:
             kwargs["stop_filters"].append({"date": stop, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["ingestion_time"] != "":
+    if filters["ingestion_time"][0] != "":
         kwargs["ingestion_time_filters"] = []
         i = 0
-        operators = filters.getlist("ingestion_time_operator")
-        for ingestion_time in filters.getlist("ingestion_time"):
+        operators = filters["ingestion_time_operator"]
+        for ingestion_time in filters["ingestion_time"]:
             kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["event_duration"] != "":
+    if filters["event_duration"][0] != "":
         kwargs["duration_filters"] = []
         i = 0
-        operators = filters.getlist("event_duration_operator")
-        for event_duration in filters.getlist("event_duration"):
+        operators = filters["event_duration_operator"]
+        for event_duration in filters["event_duration"]:
             kwargs["duration_filters"].append({"float": float(event_duration), "op": operators[i]})
             i+=1
         # end for
     # end if
 
     # Query restrictions
-    if filters["order_by"] != "":
+    if filters["order_by"][0] != "":
         descending = True
         if not "order_descending" in filters:
             descending = False
         # end if
-        kwargs["order_by"] = {"field": filters["order_by"], "descending": descending}
+        kwargs["order_by"] = {"field": filters["order_by"][0], "descending": descending}
     # end if
 
-    if filters["limit"] != "":
-        kwargs["limit"] = filters["limit"]
+    if filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
     # end if
 
-    if filters["offset"] != "":
-        kwargs["offset"] = filters["offset"]
+    if filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
     # end if
 
     events = query.get_events(**kwargs)
@@ -319,8 +319,8 @@ def query_annotations_and_render():
     """
     current_app.logger.debug("Query annotations and render")
     if request.method == "POST":
-        filters = request.form.copy()
-        filters["offset"] = ""
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
 
         annotations = query_annotations(filters)
         show = define_what_to_show_annotations(filters)
@@ -385,16 +385,16 @@ def query_annotations(filters):
 
     kwargs = {}
 
-    if filters["annotation_value_name_like"] != "":
-        value_operators = filters.getlist("annotation_value_operator")
-        value_types = filters.getlist("annotation_value_type")
-        values = filters.getlist("annotation_value")
-        value_name_like_ops = filters.getlist("annotation_value_name_like_op")
+    if filters["annotation_value_name_like"][0] != "":
+        value_operators = filters["annotation_value_operator"]
+        value_types = filters["annotation_value_type"]
+        values = filters["annotation_value"]
+        value_name_like_ops = filters["annotation_value_name_like_op"]
         kwargs["value_filters"] = []
         i = 0
-        for value_name_like in filters.getlist("annotation_value_name_like"):
-            if value_name_like != "":
-                if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
+        for value_name_like in filters["annotation_value_name_like"]:
+            if value_name_like[0] != "":
+                if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
                                                           "value": {"op": value_operators[i], "filter": values[i]}})
@@ -406,107 +406,107 @@ def query_annotations(filters):
         # end for
     # end if
 
-    if filters["source_like"] != "":
+    if filters["source_like"][0] != "":
         op="notlike"
         if not "source_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["sources"] = {"filter": filters["source_like"], "op": op}
+        kwargs["sources"] = {"filter": filters["source_like"][0], "op": op}
     # end if
-    elif "sources" in filters and filters["sources"] != "":
+    elif "sources" in filters and filters["sources"][0] != "":
         op="notin"
         if not "source_notin_check" in filters:
             op="in"
         # end if
         kwargs["sources"] = {"filter": [], "op": op}
         i = 0
-        for source in filters.getlist("sources"):
+        for source in filters["sources"]:
             kwargs["sources"]["filter"].append(source)
             i+=1
         # end for
     # end if
-    if filters["er_like"] != "":
+    if filters["er_like"][0] != "":
         op="notlike"
         if not "er_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["explicit_refs"] = {"filter": filters["er_like"], "op": op}
+        kwargs["explicit_refs"] = {"filter": filters["er_like"][0], "op": op}
     # end if
-    elif "ers" in filters and filters["ers"] != "":
+    elif "ers" in filters and filters["ers"][0] != "":
         op="notin"
         if not "er_notin_check" in filters:
             op="in"
         # end if
         kwargs["explicit_refs"] = {"filter": [], "op": op}
         i = 0
-        for er in filters.getlist("ers"):
+        for er in filters["ers"]:
             kwargs["explicit_refs"]["filter"].append(er)
             i+=1
         # end for
     # end if
-    if filters["annotation_name_like"] != "":
+    if filters["annotation_name_like"][0] != "":
         op="notlike"
         if not "annotation_name_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["annotation_cnf_names"] = {"filter": filters["annotation_name_like"], "op": op}
+        kwargs["annotation_cnf_names"] = {"filter": filters["annotation_name_like"][0], "op": op}
     # end if
-    elif "annotation_names" in filters and filters["annotation_names"] != "":
+    elif "annotation_names" in filters and filters["annotation_names"][0] != "":
         op="notin"
         if not "annotation_name_notin_check" in filters:
             op="in"
         # end if
         kwargs["annotation_cnf_names"] = {"filter": [], "op": op}
         i = 0
-        for annotation_name in filters.getlist("annotation_names"):
+        for annotation_name in filters["annotation_names"]:
             kwargs["annotation_cnf_names"]["filter"].append(annotation_name)
             i+=1
         # end for
     # end if
-    if filters["annotation_system_like"] != "":
+    if filters["annotation_system_like"][0] != "":
         op="notlike"
         if not "annotation_system_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["annotation_cnf_systems"] = {"filter": filters["annotation_system_like"], "op": op}
+        kwargs["annotation_cnf_systems"] = {"filter": filters["annotation_system_like"][0], "op": op}
     # end if
-    elif "annotation_systems" in filters and filters["annotation_systems"] != "":
+    elif "annotation_systems" in filters and filters["annotation_systems"][0] != "":
         op="notin"
         if not "annotation_system_notin_check" in filters:
             op="in"
         # end if
         kwargs["annotation_cnf_systems"] = {"filter": [], "op": op}
         i = 0
-        for annotation_system in filters.getlist("annotation_systems"):
+        for annotation_system in filters["annotation_systems"]:
             kwargs["annotation_cnf_systems"]["filter"].append(annotation_system)
             i+=1
         # end for
     # end if
-    if filters["ingestion_time"] != "":
+    if filters["ingestion_time"][0] != "":
         kwargs["ingestion_time_filters"] = []
         i = 0
-        operators = filters.getlist("ingestion_time_operator")
-        for ingestion_time in filters.getlist("ingestion_time"):
+        operators = filters["ingestion_time_operator"]
+        for ingestion_time in filters["ingestion_time"]:
             kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
             i+=1
         # end for
     # end if
 
     # Query restrictions
-    if filters["order_by"] != "":
+    if filters["order_by"][0] != "":
         descending = True
         if not "order_descending" in filters:
             descending = False
         # end if
-        kwargs["order_by"] = {"field": filters["order_by"], "descending": descending}
+        kwargs["order_by"] = {"field": filters["order_by"][0], "descending": descending}
     # end if
 
-    if filters["limit"] != "":
-        kwargs["limit"] = filters["limit"]
+    if filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
     # end if
 
-    if filters["offset"] != "":
-        kwargs["offset"] = filters["offset"]
+    if filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
     # end if
 
     annotations = query.get_annotations(**kwargs)
@@ -530,8 +530,8 @@ def query_sources_and_render():
     """
     current_app.logger.debug("Query sources and render")
     if request.method == "POST":
-        filters = request.form.copy()
-        filters["offset"] = ""
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
 
         sources = query_sources(filters)
         show = define_what_to_show_sources(filters)
@@ -588,134 +588,134 @@ def query_sources(filters):
     """
     current_app.logger.debug("Query sources")
     kwargs = {}
-    if filters["source_like"] != "":
+    if filters["source_like"][0] != "":
         op="notlike"
         if not "source_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["names"] = {"filter": filters["source_like"], "op": op}
+        kwargs["names"] = {"filter": filters["source_like"][0], "op": op}
     # end if
-    elif "sources" in filters and filters["sources"] != "":
+    elif "sources" in filters and filters["sources"][0] != "":
         op="notin"
         if not "source_notin_check" in filters:
             op="in"
         # end if
         kwargs["names"] = {"filter": [], "op": op}
         i = 0
-        for source in filters.getlist("sources"):
+        for source in filters["sources"]:
             kwargs["names"]["filter"].append(source)
             i+=1
         # end for
     # end if
-    if filters["dim_signature_like"] != "":
+    if filters["dim_signature_like"][0] != "":
         op="notlike"
         if not "dim_signature_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"][0], "op": op}
     # end if
-    elif "dim_signatures" in filters and filters["dim_signatures"] != "":
+    elif "dim_signatures" in filters and filters["dim_signatures"][0] != "":
         op="notin"
         if not "dim_signature_notin_check" in filters:
             op="in"
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for dim_signature in filters.getlist("dim_signatures"):
+        for dim_signature in filters["dim_signatures"]:
             kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
-    if filters["validity_start"] != "":
+    if filters["validity_start"][0] != "":
         kwargs["validity_start_filters"] = []
         i = 0
-        operators = filters.getlist("validity_start_operator")
-        for start in filters.getlist("validity_start"):
+        operators = filters["validity_start_operator"]
+        for start in filters["validity_start"]:
             kwargs["validity_start_filters"].append({"date": start, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["validity_stop"] != "":
+    if filters["validity_stop"][0] != "":
         kwargs["validity_stop_filters"] = []
         i = 0
-        operators = filters.getlist("validity_stop_operator")
-        for stop in filters.getlist("validity_stop"):
+        operators = filters["validity_stop_operator"]
+        for stop in filters["validity_stop"]:
             kwargs["validity_stop_filters"].append({"date": stop, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["ingestion_time"] != "":
+    if filters["ingestion_time"][0] != "":
         kwargs["ingestion_time_filters"] = []
         i = 0
-        operators = filters.getlist("ingestion_time_operator")
-        for ingestion_time in filters.getlist("ingestion_time"):
+        operators = filters["ingestion_time_operator"]
+        for ingestion_time in filters["ingestion_time"]:
             kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["ingestion_duration"] != "":
+    if filters["ingestion_duration"][0] != "":
         kwargs["ingestion_duration_filters"] = []
         i = 0
-        operators = filters.getlist("ingestion_duration_operator")
-        for ingestion_duration in filters.getlist("ingestion_duration"):
+        operators = filters["ingestion_duration_operator"]
+        for ingestion_duration in filters["ingestion_duration"]:
             kwargs["ingestion_duration_filters"].append({"float": float(ingestion_duration), "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["generation_time"] != "":
+    if filters["generation_time"][0] != "":
         kwargs["generation_time_filters"] = []
         i = 0
-        operators = filters.getlist("generation_time_operator")
-        for generation_time in filters.getlist("generation_time"):
+        operators = filters["generation_time_operator"]
+        for generation_time in filters["generation_time"]:
             kwargs["generation_time_filters"].append({"date": generation_time, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["processor_like"] != "":
+    if filters["processor_like"][0] != "":
         op="notlike"
         if not "processor_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["processors"] = {"filter": filters["processor_like"], "op": op}
+        kwargs["processors"] = {"filter": filters["processor_like"][0], "op": op}
     # end if
-    elif "processors" in filters and filters["processors"] != "":
+    elif "processors" in filters and filters["processors"][0] != "":
         op="notin"
         if not "processor_notin_check" in filters:
             op="in"
         # end if
         kwargs["processors"] = {"filter": [], "op": op}
         i = 0
-        for processor in filters.getlist("processors"):
+        for processor in filters["processors"]:
             kwargs["processors"]["filter"].append(processor)
             i+=1
         # end for
     # end if
 
-    if filters["source_validity_duration"] != "":
+    if filters["source_validity_duration"][0] != "":
         kwargs["validity_duration_filters"] = []
         i = 0
-        operators = filters.getlist("source_validity_duration_operator")
-        for source_validity_duration in filters.getlist("source_validity_duration"):
+        operators = filters["source_validity_duration_operator"]
+        for source_validity_duration in filters["source_validity_duration"]:
             kwargs["validity_duration_filters"].append({"float": float(source_validity_duration), "op": operators[i]})
             i+=1
         # end for
     # end if
 
     # Query restrictions
-    if filters["order_by"] != "":
+    if filters["order_by"][0] != "":
         descending = True
         if not "order_descending" in filters:
             descending = False
         # end if
-        kwargs["order_by"] = {"field": filters["order_by"], "descending": descending}
+        kwargs["order_by"] = {"field": filters["order_by"][0], "descending": descending}
     # end if
 
-    if filters["limit"] != "":
-        kwargs["limit"] = filters["limit"]
+    if filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
     # end if
 
-    if filters["offset"] != "":
-        kwargs["offset"] = filters["offset"]
+    if filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
     # end if
 
     sources = query.get_sources(**kwargs)
@@ -775,8 +775,8 @@ def query_gauges_and_render():
     """
     current_app.logger.debug("Query gauges and render")
     if request.method == "POST":
-        filters = request.form.copy()
-        filters["offset"] = ""
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
         gauges = query_gauges(filters)
 
         show = define_what_to_show_gauges(filters)
@@ -915,79 +915,79 @@ def query_gauges(filters):
     """
     current_app.logger.debug("Query gauges")
     kwargs = {}
-    if filters["gauge_name_like"] != "":
+    if filters["gauge_name_like"][0] != "":
         op="notlike"
         if not "gauge_name_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["names"] = {"filter": filters["gauge_name_like"], "op": op}
+        kwargs["names"] = {"filter": filters["gauge_name_like"][0], "op": op}
     # end if
-    elif "gauge_names" in filters and filters["gauge_names"] != "":
+    elif "gauge_names" in filters and filters["gauge_names"][0] != "":
         op="notin"
         if not "gauge_name_notin_check" in filters:
             op="in"
         # end if
         kwargs["names"] = {"filter": [], "op": op}
         i = 0
-        for gauge_name in filters.getlist("gauge_names"):
+        for gauge_name in filters["gauge_names"]:
             kwargs["names"]["filter"].append(gauge_name)
             i+=1
         # end for
     # end if
-    if filters["gauge_system_like"] != "":
+    if filters["gauge_system_like"][0] != "":
         op="notlike"
         if not "gauge_system_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["systems"] = {"filter": filters["gauge_system_like"], "op": op}
+        kwargs["systems"] = {"filter": filters["gauge_system_like"][0], "op": op}
     # end if
-    elif "gauge_systems" in filters and filters["gauge_systems"] != "":
+    elif "gauge_systems" in filters and filters["gauge_systems"][0] != "":
         op="notin"
         if not "gauge_system_notin_check" in filters:
             op="in"
         # end if
         kwargs["systems"] = {"filter": [], "op": op}
         i = 0
-        for gauge_system in filters.getlist("gauge_systems"):
+        for gauge_system in filters["gauge_systems"]:
             kwargs["systems"]["filter"].append(gauge_system)
             i+=1
         # end for
     # end if
-    if filters["dim_signature_like"] != "":
+    if filters["dim_signature_like"][0] != "":
         op="notlike"
         if not "dim_signature_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"][0], "op": op}
     # end if
-    elif "dim_signatures" in filters and filters["dim_signatures"] != "":
+    elif "dim_signatures" in filters and filters["dim_signatures"][0] != "":
         op="notin"
         if not "dim_signature_notin_check" in filters:
             op="in"
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for dim_signature in filters.getlist("dim_signatures"):
+        for dim_signature in filters["dim_signatures"]:
             kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
 
     # Query restrictions
-    if filters["order_by"] != "":
+    if filters["order_by"][0] != "":
         descending = True
         if not "order_descending" in filters:
             descending = False
         # end if
-        kwargs["order_by"] = {"field": filters["order_by"], "descending": descending}
+        kwargs["order_by"] = {"field": filters["order_by"][0], "descending": descending}
     # end if
 
-    if filters["limit"] != "":
-        kwargs["limit"] = filters["limit"]
+    if filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
     # end if
 
-    if filters["offset"] != "":
-        kwargs["offset"] = filters["offset"]
+    if filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
     # end if
 
     gauges = query.get_gauges(**kwargs)
@@ -1011,8 +1011,8 @@ def query_annotation_cnfs_and_render():
     """
     current_app.logger.debug("Query annotation configurations and render")
     if request.method == "POST":
-        filters = request.form.copy()
-        filters["offset"] = ""
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
         annotation_cnfs = query_annotation_cnfs(filters)
 
         return render_template("eboa_nav/annotation_cnfs_nav.html", annotation_cnfs=annotation_cnfs, filters=filters)
@@ -1047,79 +1047,79 @@ def query_annotation_cnfs(filters):
     """
     current_app.logger.debug("Query annotation configurations")
     kwargs = {}
-    if filters["annotation_name_like"] != "":
+    if filters["annotation_name_like"][0] != "":
         op="notlike"
         if not "annotation_name_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["names"] = {"filter": filters["annotation_name_like"], "op": op}
+        kwargs["names"] = {"filter": filters["annotation_name_like"][0], "op": op}
     # end if
-    elif "annotation_names" in filters and filters["annotation_names"] != "":
+    elif "annotation_names" in filters and filters["annotation_names"][0] != "":
         op="notin"
         if not "annotation_name_notin_check" in filters:
             op="in"
         # end if
         kwargs["names"] = {"filter": [], "op": op}
         i = 0
-        for annotation_name in filters.getlist("annotation_names"):
+        for annotation_name in filters["annotation_names"]:
             kwargs["names"]["filter"].append(annotation_name)
             i+=1
         # end for
     # end if
-    if filters["annotation_system_like"] != "":
+    if filters["annotation_system_like"][0] != "":
         op="notlike"
         if not "annotation_system_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["systems"] = {"filter": filters["annotation_system_like"], "op": op}
+        kwargs["systems"] = {"filter": filters["annotation_system_like"][0], "op": op}
     # end if
-    elif "annotation_systems" in filters and filters["annotation_systems"] != "":
+    elif "annotation_systems" in filters and filters["annotation_systems"][0] != "":
         op="notin"
         if not "annotation_system_notin_check" in filters:
             op="in"
         # end if
         kwargs["systems"] = {"filter": [], "op": op}
         i = 0
-        for annotation_system in filters.getlist("annotation_systems"):
+        for annotation_system in filters["annotation_systems"]:
             kwargs["systems"]["filter"].append(annotation_system)
             i+=1
         # end for
     # end if
-    if filters["dim_signature_like"] != "":
+    if filters["dim_signature_like"][0] != "":
         op="notlike"
         if not "dim_signature_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"][0], "op": op}
     # end if
-    elif "dim_signatures" in filters and filters["dim_signatures"] != "":
+    elif "dim_signatures" in filters and filters["dim_signatures"][0] != "":
         op="notin"
         if not "dim_signature_notin_check" in filters:
             op="in"
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for dim_signature in filters.getlist("dim_signatures"):
+        for dim_signature in filters["dim_signatures"]:
             kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
 
     # Query restrictions
-    if filters["order_by"] != "":
+    if filters["order_by"][0] != "":
         descending = True
         if not "order_descending" in filters:
             descending = False
         # end if
-        kwargs["order_by"] = {"field": filters["order_by"], "descending": descending}
+        kwargs["order_by"] = {"field": filters["order_by"][0], "descending": descending}
     # end if
 
-    if filters["limit"] != "":
-        kwargs["limit"] = filters["limit"]
+    if filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
     # end if
 
-    if filters["offset"] != "":
-        kwargs["offset"] = filters["offset"]
+    if filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
     # end if
 
     annotation_cnfs = query.get_annotation_cnfs(**kwargs)
@@ -1153,8 +1153,8 @@ def query_ers_and_render():
     """
     current_app.logger.debug("Query explicit references and render")
     if request.method == "POST":
-        filters = request.form.copy()
-        filters["offset"] = ""
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
         ers = query_ers(filters)
 
         return render_template("eboa_nav/explicit_references_nav.html", ers=ers, filters=filters)
@@ -1179,68 +1179,68 @@ def query_ers(filters):
     current_app.logger.debug("Query explicit references")
 
     kwargs = {}
-    if filters["er_like"] != "":
+    if filters["er_like"][0] != "":
         op="notlike"
         if not "er_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["explicit_refs"] = {"filter": filters["er_like"], "op": op}
+        kwargs["explicit_refs"] = {"filter": filters["er_like"][0], "op": op}
     # end if
-    elif "ers" in filters and filters["ers"] != "":
+    elif "ers" in filters and filters["ers"][0] != "":
         op="notin"
         if not "er_notin_check" in filters:
             op="in"
         # end if
         kwargs["explicit_refs"] = {"filter": [], "op": op}
         i = 0
-        for er in filters.getlist("ers"):
+        for er in filters["ers"]:
             kwargs["explicit_refs"]["filter"].append(er)
             i+=1
         # end for
     # end if
-    if filters["group_like"] != "":
+    if filters["group_like"][0] != "":
         op="notlike"
         if not "group_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["groups"] = {"filter": filters["group_like"], "op": op}
+        kwargs["groups"] = {"filter": filters["group_like"][0], "op": op}
     # end if
-    elif "groups" in filters and filters["groups"] != "":
+    elif "groups" in filters and filters["groups"][0] != "":
         op="notin"
         if not "group_notin_check" in filters:
             op="in"
         # end if
         kwargs["groups"] = {"filter": [], "op": op}
         i = 0
-        for group in filters.getlist("groups"):
+        for group in filters["groups"]:
             kwargs["groups"]["filter"].append(group)
             i+=1
         # end for
     # end if
-    if filters["source_like"] != "":
+    if filters["source_like"][0] != "":
         op="notlike"
         if not "source_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["sources"] = {"filter": filters["source_like"], "op": op}
+        kwargs["sources"] = {"filter": filters["source_like"][0], "op": op}
     # end if
-    elif "sources" in filters and filters["sources"] != "":
+    elif "sources" in filters and filters["sources"][0] != "":
         op="notin"
         if not "source_notin_check" in filters:
             op="in"
         # end if
         kwargs["sources"] = {"filter": [], "op": op}
         i = 0
-        for source in filters.getlist("sources"):
+        for source in filters["sources"]:
             kwargs["sources"]["filter"].append(source)
             i+=1
         # end for
     # end if
-    if filters["ingestion_time"] != "":
+    if filters["ingestion_time"][0] != "":
         kwargs["explicit_ref_ingestion_time_filters"] = []
         i = 0
-        operators = filters.getlist("ingestion_time_operator")
-        for ingestion_time in filters.getlist("ingestion_time"):
+        operators = filters["ingestion_time_operator"]
+        for ingestion_time in filters["ingestion_time"]:
             kwargs["explicit_ref_ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
             i+=1
         # end for
@@ -1249,35 +1249,35 @@ def query_ers(filters):
     ####
     # Event filters
     ####
-    if filters["key_like"] != "":
+    if filters["key_like"][0] != "":
         op="notlike"
         if not "key_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["keys"] = {"filter": filters["key_like"], "op": op}
+        kwargs["keys"] = {"filter": filters["key_like"][0], "op": op}
     # end if
-    elif "keys" in filters and filters["keys"] != "":
+    elif "keys" in filters and filters["keys"][0] != "":
         op="notin"
         if not "key_notin_check" in filters:
             op="in"
         # end if
         kwargs["keys"] = {"filter": [], "op": op}
         i = 0
-        for key in filters.getlist("keys"):
+        for key in filters["keys"]:
             kwargs["keys"]["filter"].append(key)
             i+=1
         # end for
     # end if
-    if filters["event_value_name_like"] != "":
-        value_operators = filters.getlist("event_value_operator")
-        value_types = filters.getlist("event_value_type")
-        values = filters.getlist("event_value")
-        value_name_like_ops = filters.getlist("event_value_name_like_op")
+    if filters["event_value_name_like"][0] != "":
+        value_operators = filters["event_value_operator"]
+        value_types = filters["event_value_type"]
+        values = filters["event_value"]
+        value_name_like_ops = filters["event_value_name_like_op"]
         kwargs["event_value_filters"] = []
         i = 0
-        for value_name_like in filters.getlist("event_value_name_like"):
-            if value_name_like != "":
-                if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
+        for value_name_like in filters["event_value_name_like"]:
+            if value_name_like[0] != "":
+                if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["event_value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
                                                           "value": {"op": value_operators[i], "filter": values[i]}})
@@ -1288,67 +1288,67 @@ def query_ers(filters):
             i+=1
         # end for
     # end if
-    if filters["gauge_name_like"] != "":
+    if filters["gauge_name_like"][0] != "":
         op="notlike"
         if not "gauge_name_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["gauge_names"] = {"filter": filters["gauge_name_like"], "op": op}
+        kwargs["gauge_names"] = {"filter": filters["gauge_name_like"][0], "op": op}
     # end if
-    elif "gauge_names" in filters and filters["gauge_names"] != "":
+    elif "gauge_names" in filters and filters["gauge_names"][0] != "":
         op="notin"
         if not "gauge_name_notin_check" in filters:
             op="in"
         # end if
         kwargs["gauge_names"] = {"filter": [], "op": op}
         i = 0
-        for gauge_name in filters.getlist("gauge_names"):
+        for gauge_name in filters["gauge_names"]:
             kwargs["gauge_names"]["filter"].append(gauge_name)
             i+=1
         # end for
     # end if
-    if filters["gauge_system_like"] != "":
+    if filters["gauge_system_like"][0] != "":
         op="notlike"
         if not "gauge_system_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["gauge_systems"] = {"filter": filters["gauge_system_like"], "op": op}
+        kwargs["gauge_systems"] = {"filter": filters["gauge_system_like"][0], "op": op}
     # end if
-    elif "gauge_systems" in filters and filters["gauge_systems"] != "":
+    elif "gauge_systems" in filters and filters["gauge_systems"][0] != "":
         op="notin"
         if not "gauge_system_notin_check" in filters:
             op="in"
         # end if
         kwargs["gauge_systems"] = {"filter": [], "op": op}
         i = 0
-        for gauge_system in filters.getlist("gauge_systems"):
+        for gauge_system in filters["gauge_systems"]:
             kwargs["gauge_systems"]["filter"].append(gauge_system)
             i+=1
         # end for
     # end if
-    if filters["start"] != "":
+    if filters["start"][0] != "":
         kwargs["start_filters"] = []
         i = 0
-        operators = filters.getlist("start_operator")
-        for start in filters.getlist("start"):
+        operators = filters["start_operator"]
+        for start in filters["start"]:
             kwargs["start_filters"].append({"date": start, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["stop"] != "":
+    if filters["stop"][0] != "":
         kwargs["stop_filters"] = []
         i = 0
-        operators = filters.getlist("stop_operator")
-        for stop in filters.getlist("stop"):
+        operators = filters["stop_operator"]
+        for stop in filters["stop"]:
             kwargs["stop_filters"].append({"date": stop, "op": operators[i]})
             i+=1
         # end for
     # end if
-    if filters["event_duration"] != "":
+    if filters["event_duration"][0] != "":
         kwargs["duration_filters"] = []
         i = 0
-        operators = filters.getlist("event_duration_operator")
-        for event_duration in filters.getlist("event_duration"):
+        operators = filters["event_duration_operator"]
+        for event_duration in filters["event_duration"]:
             kwargs["duration_filters"].append({"float": float(event_duration), "op": operators[i]})
             i+=1
         # end for
@@ -1357,16 +1357,16 @@ def query_ers(filters):
     ####
     # Annotation filters
     ####
-    if filters["annotation_value_name_like"] != "":
-        value_operators = filters.getlist("annotation_value_operator")
-        value_types = filters.getlist("annotation_value_type")
-        values = filters.getlist("annotation_value")
-        value_name_like_ops = filters.getlist("annotation_value_name_like_op")
+    if filters["annotation_value_name_like"][0] != "":
+        value_operators = filters["annotation_value_operator"]
+        value_types = filters["annotation_value_type"]
+        values = filters["annotation_value"]
+        value_name_like_ops = filters["annotation_value_name_like_op"]
         kwargs["annotation_value_filters"] = []
         i = 0
-        for value_name_like in filters.getlist("annotation_value_name_like"):
-            if value_name_like != "":
-                if (values[i] == "" and value_types[i] == "text") or (values[i] != "" and value_types[i] != "object"):
+        for value_name_like in filters["annotation_value_name_like"]:
+            if value_name_like[0] != "":
+                if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["annotation_value_filters"].append({"name": {"op": value_name_like_ops[i], "filter": value_name_like},
                                                           "type": value_types[i],
                                                           "value": {"op": value_operators[i], "filter": values[i]}})
@@ -1377,60 +1377,60 @@ def query_ers(filters):
             i+=1
         # end for
     # end if
-    if filters["annotation_name_like"] != "":
+    if filters["annotation_name_like"][0] != "":
         op="notlike"
         if not "annotation_name_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["annotation_cnf_names"] = {"filter": filters["annotation_name_like"], "op": op}
+        kwargs["annotation_cnf_names"] = {"filter": filters["annotation_name_like"][0], "op": op}
     # end if
-    elif "annotation_names" in filters and filters["annotation_names"] != "":
+    elif "annotation_names" in filters and filters["annotation_names"][0] != "":
         op="notin"
         if not "annotation_name_notin_check" in filters:
             op="in"
         # end if
         kwargs["annotation_cnf_names"] = {"filter": [], "op": op}
         i = 0
-        for annotation_name in filters.getlist("annotation_names"):
+        for annotation_name in filters["annotation_names"]:
             kwargs["annotation_cnf_names"]["filter"].append(annotation_name)
             i+=1
         # end for
     # end if
-    if filters["annotation_system_like"] != "":
+    if filters["annotation_system_like"][0] != "":
         op="notlike"
         if not "annotation_system_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["annotation_cnf_systems"] = {"filter": filters["annotation_system_like"], "op": op}
+        kwargs["annotation_cnf_systems"] = {"filter": filters["annotation_system_like"][0], "op": op}
     # end if
-    elif "annotation_systems" in filters and filters["annotation_systems"] != "":
+    elif "annotation_systems" in filters and filters["annotation_systems"][0] != "":
         op="notin"
         if not "annotation_system_notin_check" in filters:
             op="in"
         # end if
         kwargs["annotation_cnf_systems"] = {"filter": [], "op": op}
         i = 0
-        for annotation_system in filters.getlist("annotation_systems"):
+        for annotation_system in filters["annotation_systems"]:
             kwargs["annotation_cnf_systems"]["filter"].append(annotation_system)
             i+=1
         # end for
     # end if
 
     # Query restrictions
-    if filters["order_by"] != "":
+    if filters["order_by"][0] != "":
         descending = True
         if not "order_descending" in filters:
             descending = False
         # end if
-        kwargs["order_by"] = {"field": filters["order_by"], "descending": descending}
+        kwargs["order_by"] = {"field": filters["order_by"][0], "descending": descending}
     # end if
 
-    if filters["limit"] != "":
-        kwargs["limit"] = filters["limit"]
+    if filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
     # end if
 
-    if filters["offset"] != "":
-        kwargs["offset"] = filters["offset"]
+    if filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
     # end if
 
     ers = query.get_explicit_refs(**kwargs)
@@ -1464,8 +1464,8 @@ def query_dim_signatures_and_render():
     """
     current_app.logger.debug("Query DIM signatures and render")
     if request.method == "POST":
-        filters = request.form.copy()
-        filters["offset"] = ""
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
         dim_signatures = query_dim_signatures(filters)
 
         return render_template("eboa_nav/dim_signatures_nav.html", dim_signatures=dim_signatures, filters=filters)
@@ -1491,41 +1491,41 @@ def query_dim_signatures(filters):
     """
     current_app.logger.debug("Query DIM signatures")
     kwargs = {}
-    if filters["dim_signature_like"] != "":
+    if filters["dim_signature_like"][0] != "":
         op="notlike"
         if not "dim_signature_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"], "op": op}
+        kwargs["dim_signatures"] = {"filter": filters["dim_signature_like"][0], "op": op}
     # end if
-    elif "dim_signatures" in filters and filters["dim_signatures"] != "":
+    elif "dim_signatures" in filters and filters["dim_signatures"][0] != "":
         op="notin"
         if not "dim_signature_notin_check" in filters:
             op="in"
         # end if
         kwargs["dim_signatures"] = {"filter": [], "op": op}
         i = 0
-        for dim_signature in filters.getlist("dim_signatures"):
+        for dim_signature in filters["dim_signatures"]:
             kwargs["dim_signatures"]["filter"].append(dim_signature)
             i+=1
         # end for
     # end if
 
     # Query restrictions
-    if filters["order_by"] != "":
+    if filters["order_by"][0] != "":
         descending = True
         if not "order_descending" in filters:
             descending = False
         # end if
-        kwargs["order_by"] = {"field": filters["order_by"], "descending": descending}
+        kwargs["order_by"] = {"field": filters["order_by"][0], "descending": descending}
     # end if
 
-    if filters["limit"] != "":
-        kwargs["limit"] = filters["limit"]
+    if filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
     # end if
 
-    if filters["offset"] != "":
-        kwargs["offset"] = filters["offset"]
+    if filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
     # end if
 
     dim_signatures = query.get_dim_signatures(**kwargs)
