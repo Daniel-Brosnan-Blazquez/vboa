@@ -91,13 +91,16 @@ def query_events_by_er(er):
     show = {}
     show["timeline"]=True
     show["map"]=True
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
 
     events = query.get_events(explicit_refs={"filter": [er], "op": "in"})
 
     events_geometries = []
     events_geometries = [{"event": event, "geometries": engine.geometries_to_wkt(event.eventGeometries)} for event in events if len(event.eventGeometries) > 0]
 
-    return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show)
+    return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show, filters=filters)
 
 def query_events(filters):
     """
@@ -370,12 +373,15 @@ def query_annotations_by_er(er):
     current_app.logger.debug("Query annotations by explicit reference")
     show = {}
     show["map"]=True
-
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
     annotations = query.get_annotations(explicit_refs={"filter": [er], "op": "in"})
 
     annotations_geometries = [{"annotation": annotation, "geometries": engine.geometries_to_wkt(annotation.annotationGeometries)} for annotation in annotations if len(annotation.annotationGeometries) > 0]
 
-    return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show)
+    return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show, filters=filters)
 
 def query_annotations(filters):
     """
@@ -729,7 +735,18 @@ def query_source(source_uuid):
     """
     current_app.logger.debug("Query source")
     source = query.get_sources(source_uuids={"filter": [source_uuid], "op": "in"})
-    return render_template("eboa_nav/sources_nav.html", sources=source)
+    show = {}
+    show["validity_timeline"]=True
+    show["generation_to_ingestion_timeline"]=True
+    show["number_events_xy"]=True
+    show["ingestion_duration_xy"]=True
+    show["generation_time_to_ingestion_time_xy"]=True
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/sources_nav.html", sources=source, show=show, filters=filters)
 
 @bp.route("/query-sources-by-dim/<uuid:dim_signature_uuid>")
 def query_sources_by_dim(dim_signature_uuid):
@@ -738,7 +755,18 @@ def query_sources_by_dim(dim_signature_uuid):
     """
     current_app.logger.debug("Query sources by DIM signature")
     sources = query.get_sources(dim_signature_uuids={"filter": [dim_signature_uuid], "op": "in"})
-    return render_template("eboa_nav/sources_nav.html", sources=sources)
+    show = {}
+    show["validity_timeline"]=True
+    show["generation_to_ingestion_timeline"]=True
+    show["number_events_xy"]=True
+    show["ingestion_duration_xy"]=True
+    show["generation_time_to_ingestion_time_xy"]=True
+
+    filters = {}    
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/sources_nav.html", sources=sources, show=show, filters=filters)
 
 @bp.route("/query-jsonify-sources")
 def query_jsonify_sources():
@@ -830,9 +858,14 @@ def query_gauges_by_dim(dim_signature_uuid):
     gauges = query.get_gauges(dim_signature_uuids={"filter": [dim_signature_uuid], "op": "in"})
     show = {}
     show["network"]=True
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
     links = query_linked_gauges(gauges)
 
-    return render_template("eboa_nav/gauges_nav.html", gauges=gauges, links=links, show=show)
+    return render_template("eboa_nav/gauges_nav.html", gauges=gauges, links=links, show=show, filters=filters)
 
 def register_gauge_node (links, gauge, registered_gauges):
     """
@@ -1039,7 +1072,11 @@ def query_annotation_cnfs_by_dim(dim_signature_uuid):
     current_app.logger.debug("Query annotation configurations by DIM signature")
     annotation_cnfs = query.get_annotation_cnfs(dim_signature_uuids={"filter": [dim_signature_uuid], "op": "in"})
 
-    return render_template("eboa_nav/annotation_cnfs_nav.html", annotation_cnfs=annotation_cnfs)
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/annotation_cnfs_nav.html", annotation_cnfs=annotation_cnfs, filters=filters)
 
 def query_annotation_cnfs(filters):
     """
