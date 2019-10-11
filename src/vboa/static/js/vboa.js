@@ -16,6 +16,7 @@ import * as olView from "ol/View.js";
 import * as vis from "vis/dist/vis.js";
 import * as graph from "./graph.js";
 import * as sourceFunctions from "./sources.js";
+import * as reportFunctions from "./reports.js";
 import * as gaugeFunctions from "./gauges.js";
 import * as annotationCnfsFunctions from "./annotation_confs.js";
 import * as eventFunctions from "./events.js";
@@ -110,6 +111,14 @@ export function add_source_validity_duration(dom_id){
     dates.add_source_validity_duration(dom_id);
 }
 
+export function add_report_validity_duration(dom_id){
+    dates.add_report_validity_duration(dom_id);
+}
+
+export function add_triggering_time(dom_id){
+    dates.add_triggering_time(dom_id);
+}
+
 /* Functions to add more filters by values for events and annotations */
 export function add_value_query_events(dom_id){
     eventFunctions.add_value_query(dom_id);
@@ -137,6 +146,11 @@ export function expand_source_statuses(dom_id, source_uuid){
     sourceFunctions.expand_source_statuses(dom_id, source_uuid);
 }
 
+/* Function to expand the reports associated to a report */
+export function expand_report_statuses(dom_id, report_uuid){
+    reportFunctions.expand_report_statuses(dom_id, report_uuid);
+}
+
 /* Associate datetimepicker functionality */
 jQuery(function () {
     dates.activate_datetimepicker();
@@ -158,11 +172,16 @@ jQuery(function() {
 /* Functions to be called just once to fill the options with values from the database */
 
 /* Fill sources */
-
 jQuery(".query-sources").one("focusin", sourceFunctions.fill_sources);
 
 /* Fill processing statuses */
 jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
+
+/* Fill reports */
+jQuery(".query-reports").one("focusin", reportFunctions.fill_reports);
+
+/* Fill source statuses */
+jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
 
 /* Fill gauges */
 jQuery(".query-gauges").one("focusin", gaugeFunctions.fill_gauges);
@@ -321,6 +340,24 @@ export function create_source_ingestion_duration_xy(sources, dom_id){
 export function create_source_generation_time_to_ingestion_time_xy(sources, dom_id){
 
     sourceFunctions.create_source_generation_time_to_ingestion_time_xy(sources, dom_id);
+
+};
+
+/*
+* REPORTS *
+*/
+
+/* Function to show a timeline of validities for the reports */
+export function create_report_validity_timeline(reports, dom_id){
+
+    reportFunctions.create_report_validity_timeline(reports, dom_id);
+
+};
+
+/* Function to show an X-time graph with the generation duration per report */
+export function create_report_generation_duration_xy(reports, dom_id){
+
+    reportFunctions.create_report_generation_duration_xy(reports, dom_id);
 
 };
 

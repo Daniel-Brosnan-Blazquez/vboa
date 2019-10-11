@@ -16,6 +16,11 @@ export function interval_to_seconds(interval){
     return (elements[0]) * 60 * 60 + (elements[1]) * 60 + elements[2];
 }
 
+export function interval_to_minutes(interval){
+    const elements = interval.split(":");
+    return (elements[0]) * 60 + (elements[1]) + elements[2] / 60;
+}
+
 /* Function to add more start and stop selectors when commanded */
 export function add_start_stop(dom_id){
     
@@ -76,10 +81,30 @@ export function add_source_validity_duration(dom_id){
 
 };
 
-/* Function to add more ingestion time selectors when commanded */
+/* Function to add more generation time selectors when commanded */
 export function add_generation_time(dom_id){
     
     jQuery.get("/static/html/more_generation_time.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+    
+    react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to add more report validity duration selectors when commanded */
+export function add_report_validity_duration(dom_id){
+    
+    jQuery.get("/static/html/more_report_validity_duration.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+
+};
+
+/* Function to add more triggering time selectors when commanded */
+export function add_triggering_time(dom_id){
+    
+    jQuery.get("/static/html/more_triggering_time.html", function (data){
         jQuery("#" + dom_id).append(data);
     });
     

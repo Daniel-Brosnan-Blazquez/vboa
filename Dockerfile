@@ -37,6 +37,7 @@ RUN mkdir /scripts
 RUN mkdir /resources_path
 RUN mkdir /orc_packages
 RUN mkdir /schemas
+RUN mkdir /rboa_archive
 
 # Create folders for ORC
 RUN mkdir /orc_config
@@ -53,6 +54,7 @@ ENV FLASK_ENV development
 ENV LC_ALL en_US.utf-8
 ENV LANG en_US.utf-8
 ENV PATH="${PATH}:/scripts"
+ENV RBOA_ARCHIVE_PATH="/rboa_archive"
 
 # expose port
 EXPOSE 5000

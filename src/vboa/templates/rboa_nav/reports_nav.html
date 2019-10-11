@@ -144,5 +144,14 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
+      {% with reports=reports %}
+      {% include "graphs/reports_to_json.js" %}
+      {% endwith %}
+      {% if not show or show["validity_timeline"] %}
+      vboa.create_report_validity_timeline(reports, "reports-nav-validity-timeline");
+      {% endif %}
+      {% if not show or show["generation_duration_xy"] %}
+      vboa.create_report_generation_duration_xy(reports, "reports-nav-generation-duration-xy");
+      {% endif %}
     </script>
 {% endblock %}

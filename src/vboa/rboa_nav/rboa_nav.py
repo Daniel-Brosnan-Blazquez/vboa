@@ -17,7 +17,7 @@ from flask import jsonify
 
 # Import eboa utilities
 from eboa.engine.query import Query
-import eboa.engine.engine as eboa_engine
+import rboa.engine.engine as rboa_engine
 from eboa.engine.engine import Engine
 
 # Import auxiliary functions
@@ -176,7 +176,7 @@ def query_reports(filters):
         i = 0
         operators = filters["report_validity_duration_operator"]
         for report_validity_duration in filters["report_validity_duration"]:
-            kwargs["validity_duration_filters"].append({"float": float(report_validity_duration), "op": operators[i]})
+            kwargs["validity_duration_filters"].append({"float": float(report_validity_duration)*24*60*60, "op": operators[i]})
             i+=1
         # end for
     # end if
@@ -264,3 +264,31 @@ def query_report_by_name(report_name):
     p = open("/rboa_archive/2018/07/05/report.html", "r")
     html = p.read()
     return html
+
+@bp.route("/query-jsonify-reports")
+def query_jsonify_reports():
+    """
+    Query all the reports.
+    """
+    current_app.logger.debug("Query report")
+    reports = query.get_reports()
+    jsonified_reports = [report.jsonify() for report in reports]
+    return jsonify(jsonified_reports)
+
+@bp.route("/query-jsonify-report-statuses/<uuid:report_uuid>")
+def query_jsonify_report_statuses(report_uuid):
+    """
+    Query statuses related to the report with the corresponding received UUID.
+    """
+    current_app.logger.debug("Query statuses corresponding to the report with the specified UUID " + str(report_uuid))
+    reports = query.get_reports(report_uuids = {"filter": [report_uuid], "op": "in"})
+    jsonified_statuses = [report_status.jsonify() for report in reports for report_status in report.statuses]
+    return jsonify(jsonified_statuses)
+
+@bp.route("/get-report-status")
+def get_report_status():
+    """
+    Get the report statuses defined in the RBOA component.
+    """
+    current_app.logger.debug("Get report statuses")
+    return jsonify(rboa_engine.exit_codes)
