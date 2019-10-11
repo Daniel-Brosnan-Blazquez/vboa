@@ -17,6 +17,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 # Import contents
 from vboa import panel
 from vboa.eboa_nav import eboa_nav
+from vboa.rboa_nav import rboa_nav
 from vboa.boa_health import boa_health
 from vboa.ingestion_control import ingestion_control
 
@@ -35,6 +36,7 @@ def create_app():
 
     app.register_blueprint(panel.bp)
     app.register_blueprint(eboa_nav.bp)
+    app.register_blueprint(rboa_nav.bp)
     app.register_blueprint(boa_health.bp)
     app.register_blueprint(ingestion_control.bp)
 

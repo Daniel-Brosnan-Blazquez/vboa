@@ -1,0 +1,148 @@
+{% extends "rboa_nav/rboa_nav.html" %}
+{% block li_active_reports %}class="active"{% endblock %}
+{% block div_active_reports %}active{% endblock %}
+{% block reports_nav_content %}
+<div>
+  <a href="/rboa_nav/query-reports"><p class="fa fa-chevron-left"> Back to query reports</p></a>
+</div>
+{% if filters["limit"][0] != "" and filters["limit"][0]|int == reports|length %}
+<div class="panel panel-yellow">
+  <div class="panel-heading">
+    The number of requested elements is higher than the limit of the query, you can navigate through all the list using the following links:
+  </div>
+  {% if filters["offset"][0]|int == 0 %}
+  {% set filters_to_forward = filters.copy() %}
+  {% do filters_to_forward.__setitem__("offset", [filters_to_forward["offset"][0]|int + filters_to_forward["limit"][0]|int]) %}
+  <div class="panel-body" style="text-align:center">
+    <a href="#" onclick='vboa.request_info_json("/rboa_nav/query-reports-pages", vboa.render_page, {{ filters_to_forward|tojson }})'>Next >></a>
+  </div>
+  {% else %}
+  <div class="panel-body" style="text-align:center">
+    {% set filters_to_forward_prev = filters.copy() %}
+    {% set filters_to_forward_next = filters.copy() %}
+    {% do filters_to_forward_prev.__setitem__("offset", [filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int]) %}
+    {% do filters_to_forward_next.__setitem__("offset", [filters_to_forward_next["offset"][0]|int + filters_to_forward_next["limit"][0]|int]) %}
+    <a href="#" onclick='vboa.request_info_json("/rboa_nav/query-reports-pages", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a><p style="display: inline"> | </p><a href="#" onclick='vboa.request_info_json("/rboa_nav/query-reports-pages", vboa.render_page, {{ filters_to_forward_next|tojson }})'>Next >></a>
+  </div>
+  {% endif %}
+</div>
+{% elif filters["offset"][0]|int > 0 and reports|length < filters["limit"][0]|int %}
+<div class="panel panel-yellow">
+  <div class="panel-heading">
+    All the elements have been reviewed, you can go to the previous pages:
+  </div>
+  <div class="panel-body" style="text-align:center">
+    {% set filters_to_forward_prev = filters.copy() %}
+    {% do filters_to_forward_prev.__setitem__("offset", [filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int]) %}
+    <a href="#" onclick='vboa.request_info_json("/rboa_nav/query-reports-pages", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a>
+  </div>
+</div>
+{% endif %}
+<!-- /.panel -->
+<div class="panel panel-green">
+  <div class="panel-heading">
+    Table of reports
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="reports-tables">
+      <thead>
+        <tr>
+          <th></th>          
+          <th>Name</th>
+          <th>Generation mode</th>
+          <th>Validity start</th>
+          <th>Validity stop</th>
+          <th>Validity Duration (s)</th>
+          <th>Generation start</th>
+          <th>Generation stop</th>
+          <th>Generation Duration (s)</th>
+          <th>Report group</th>
+          <th>Generator</th>
+          <th>Version</th>
+          <th>UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <td><i id="expand-report-statuses-{{ report.report_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_report_statuses('expand-report-statuses-{{ report.report_uuid }}', '{{ report.report_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
+          <td><a href="/rboa_nav/query-report/{{ report.report_uuid }}">{{ report.name }}</a></td>
+          <td>{{ report.generation_mode }}</td>
+          <td>{{ report.validity_start }}</td>
+          <td>{{ report.validity_stop }}</td>
+          {% if report.validity_stop and report.validity_start %}
+          <td>{{ ((report.validity_stop - report.validity_start).total_seconds() / 60)|round(3) }}</td>
+          {% else %}
+          <td></td>
+          {% endif %}
+          <td>{{ report.generation_start }}</td>
+          <td>{{ report.generation_stop }}</td>
+          {% if report.generation_stop and report.generation_start %}
+          <td>{{ ((report.generation_stop - report.generation_start).total_seconds() / 60)|round(3) }}</td>
+          {% else %}
+          <td></td>
+          {% endif %}
+          <td>{{ report.reportGroup.name }}</td>
+          <td>{{ report.generator }}</td>
+          <td>{{ report.generator_version }}</td>
+          <td>{{ report.report_uuid }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>          
+          <th>Name</th>
+          <th>Generation mode</th>
+          <th>Validity start</th>
+          <th>Validity stop</th>
+          <th>Validity Duration (s)</th>
+          <th>Generation start</th>
+          <th>Generation stop</th>
+          <th>Generation Duration (s)</th>
+          <th>Report group</th>
+          <th>Generator</th>
+          <th>Version</th>
+          <th>UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% if not show or show["validity_timeline"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Validity timeline of reports
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="reports-nav-validity-timeline">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% if not show or show["generation_duration_xy"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Generation duration over time per report
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="reports-nav-generation-duration-xy">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+    </script>
+{% endblock %}

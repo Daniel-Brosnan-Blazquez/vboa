@@ -9,7 +9,7 @@
     <meta name="author" content="Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>">
     
     <title>VBOA - Visualization tool for Bussiness Operation Analysis</title>
-    
+
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/vboa.css') }}">
 
@@ -73,9 +73,6 @@
                 <!-- /.nav-second-level -->
               </li>
               <li>
-                <a href="/eboa_nav"><i class="fa fa-table fa-fw"></i> EBOA navigation</a>
-              </li>
-              <li>
                 <a href="#"><i class="fa fa-heart-o fa-fw"></i> BOA Health<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                   <li>
@@ -101,6 +98,29 @@
                   </li>
                 </ul>
                 <!-- /.nav-second-level -->
+              </li>
+              <li>
+                <a href="/eboa_nav"><i class="fa fa-table fa-fw"></i> EBOA navigation</a>
+              </li>
+              <li>
+                <a href="/rboa_nav"><i class="fa fa-pie-chart fa-fw"></i> Reporting navigation</a>
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Reporting control<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="/rboa_nav/reporting_triggering"><i class="fa fa-fw fa-play"></i> Execute </a>
+                  </li>
+                  <li>
+                    <a href="/rboa_nav/reporting_control"><i class="fa fa-fw fa-tachometer"></i> Complete view</a>
+                  </li>
+                  <li>
+                    <a href="/rboa_nav/reporting_control?template=errors"><i class="fa fa-fw fa-exclamation-circle"></i> Reporting errors</a>
+                  </li>
+                  <li>
+                    <a href="/rboa_nav/reporting_control?template=alerts"><i class="fa fa-fw fa-exclamation-triangle"></i> Alerts</a>
+                  </li>
+                </ul>
               </li>
               {% block side_panel_plugins %}{% endblock %}
             </ul>

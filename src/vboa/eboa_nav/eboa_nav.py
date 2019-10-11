@@ -541,7 +541,6 @@ def query_sources_and_render():
 
         sources = query_sources(filters)
         show = define_what_to_show_sources(filters)
-        current_app.logger.debug(filters)
         return render_template("eboa_nav/sources_nav.html", sources=sources, show=show, filters=filters)
     # end if
 

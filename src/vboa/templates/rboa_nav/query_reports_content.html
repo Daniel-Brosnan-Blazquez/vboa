@@ -1,0 +1,145 @@
+<div class="col-lg-12" id="nav-reports">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/rboa_nav/query-reports">
+            <div class="row query-reports">
+              <div class="col-xs-3 query-report-names">
+                <label id="reports-report-names-like-checkbox">Name like (<input type="checkbox" name="report_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="report-like-reports" name="report_like" id="reports-report-names-like-text"/>
+                <datalist id="report-like-reports">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-report-names">
+                <label id="reports-report-names-in-checkbox">Names (<input type="checkbox" name="report_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="reports" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-report-names-in-text">
+                </select>
+              </div>
+            </div>
+            <div class="row query-reports">
+              <div class="col-xs-3 query-report-generators">
+                <label id="reports-generators-like-checkbox">Generator like (<input type="checkbox" name="generator_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="generator-like-reports" name="generator_like" id="reports-generators-like-text"/>
+                <datalist id="generator-like-reports">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-report-generators">
+                <label id="reports-generators-in-checkbox">Generators (<input type="checkbox" name="generator_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="generators" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-generators-in-text">
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3 query-report-groups">
+                <label id="reports-report-groups-like-checkbox">Report group like (<input type="checkbox" name="report_group_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="report-group-like-reports" name="report_group_like" id="reports-report-groups-like-text"/>
+                <datalist id="report-group-like-reports">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-report-groups">
+                <label id="reports-report-groups-in-checkbox">Report groups (<input type="checkbox" name="report_group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="report_groups" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-report-groups-in-text">
+                </select>
+              </div>
+            </div>
+            <div class="row" id="reports-validity-start-validity-stop-initial">
+              {% include "eboa_nav/validity_start_validity_stop.html" %}
+              <div>
+                <span onclick="vboa.add_validity_start_validity_stop('more-validity-start-validity-stop-query-reports')" id="reports-add-validity-start-validity-stop">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-validity-start-validity-stop-query-reports">
+            </div>
+            <!-- Validity duration -->
+            <div class="row" id="reports-validity-duration-initial">
+              <div class="col-xs-3">
+                <label>Report validity duration (days)</label>
+                <div>
+                  <input style="float: left; width: 90%" type="text" class="form-control"  name="report_validity_duration"/>
+                  <div style="float: right; width: 10%">
+                    <select class="form-control" style="padding-left: 0" name="report_validity_duration_operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span onclick="vboa.add_report_validity_duration('more-report-validity-duration-query-reports')" id="reports-add-validity-duration">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-report-validity-duration-query-reports">
+            </div>
+            <!-- Triggering time -->
+            <div class="row" id="reports-triggering-time-initial">
+              <div class="col-xs-3">
+                <label>Triggering time</label>
+                <div class="input-group date">
+                  <input type="text" class="form-control"  name="triggering_time" id="triggering-time-text"/>
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                  <div>
+                    <select class="form-control" style="padding-left: 0" name="triggering_time_operator" id="triggering-time-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span onclick="vboa.add_triggering_time('more-triggering-time-query-reports')" id="reports-add-triggering-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-triggering-time-query-reports">
+            </div>
+            <div class="row" id="reports-statuses-initial">
+              <div class="col-xs-3 query-report-statuses">
+                <label id="reports-statuses-initial-checkbox">Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="report_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-statuses-initial-in-text">
+                </select>
+              </div>
+            </div>
+            <!-- Query restrictions -->
+            <div class="row" id="reports-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="reports-order-by">
+                    <option></option>
+                    <option>name</option>
+                    <option>validity_start</option>
+                    <option>validity_stop</option>
+                    <option>triggering_time</option>
+                    <option>generation_start</option>
+                    <option>generation_stop</option>
+                    <option>generation_duration</option>
+                    <option>generator</option>
+                    <option>generator_version</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="reports-limit" value="1000"/>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="reports-submit-button">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
