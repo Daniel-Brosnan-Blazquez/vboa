@@ -25,13 +25,8 @@ from eboa.engine.engine import Engine
 # Import SQLAlchemy exceptions
 from sqlalchemy.orm.exc import DetachedInstanceError
 
-# Import helpers
-from vboa.functions import export_html
-
 bp = Blueprint("ingestion_control", __name__, url_prefix="/ingestion_control")
 query = Query()
-
-version = "1.0"
 
 # Default configuration
 window_delay=0
@@ -235,20 +230,3 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     # end while
     
     return returned_template
-
-def generate_report(app, begin, end, metadata):
-
-    client = app.test_client()
-    response = client.post("/ingestion_control/ingestion_control", data={
-        "start": begin,
-        "stop": end,
-    })
-
-    html_file_path = export_html(response)
-
-    metadata["operations"][0]["report"]["generator"] = os.path.basename(__file__)
-    metadata["operations"][0]["report"]["generator_version"] = version
-    metadata["operations"][0]["report"]["group"] = "INGESTION_CONTROL"
-    metadata["operations"][0]["report"]["group_description"] = "Group of reports dedicated for the monitoring of the ingestion chain"
-
-    return html_file_path

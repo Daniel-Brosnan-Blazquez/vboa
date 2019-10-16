@@ -23,7 +23,6 @@ from eboa.engine.engine import Engine
 
 bp = Blueprint("health", __name__, url_prefix="/health")
 query = Query()
-engine = Engine()
 
 # Default configuration
 window_delay=0
