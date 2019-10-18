@@ -6,7 +6,7 @@ import "datatables/media/js/jquery.dataTables.min.js";
 import "datatables.net/js/jquery.dataTables.min.js";
 import "datatables.net-buttons/js/dataTables.buttons.min.js";
 import "datatables.net-buttons/js/buttons.html5.min.js";
-import "datatables.net-select/js/dataTables.select.js";
+import "datatables.net-select-dt/js/select.dataTables.min.js";
 import "jszip/dist/jszip.min.js";
 import "chosen-js/chosen.jquery.min.js";
 import "metismenu/dist/metisMenu.min.js";
@@ -35,6 +35,7 @@ import "bootstrap-social/bootstrap-social.css";
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap-responsive-tabs/dist/css/bootstrap-responsive-tabs.css";
 import "datatables/media/css/jquery.dataTables.min.css";
+import "datatables.net-select-dt/css/select.dataTables.min.css";
 import "vis/dist/vis.css";
 import "vis/dist/vis-timeline-graph2d.min.css";
 import "vis/dist/vis-network.min.css";
@@ -58,6 +59,11 @@ function update_clock() {
 jQuery(".chosen-select").chosen({
     no_results_text: "Nothing found for the following criteria: ",
     width: "100%"
+});
+
+/* Activate tooltips */
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 /* Manage side menu */
@@ -150,6 +156,9 @@ export function expand_source_statuses(dom_id, source_uuid){
 export function expand_report_statuses(dom_id, report_uuid){
     reportFunctions.expand_report_statuses(dom_id, report_uuid);
 }
+export function submit_request_for_execution(){
+    reportFunctions.submit_request_for_execution();
+}
 
 /* Associate datetimepicker functionality */
 jQuery(function () {
@@ -166,6 +175,10 @@ jQuery(".responsive-tabs").responsiveTabs({
 /* Activate search on every column for datatables */
 jQuery(function() {
     datatableFunctions.activate_search_on_columns();
+});
+/* Activate search and checkboxes on the specified tables */
+jQuery(function() {
+    datatableFunctions.activate_search_and_checkboxes_on_tables();
 });
 
 /* Functions to fill lists of inputs */

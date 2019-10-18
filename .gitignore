@@ -1,0 +1,8 @@
+__pycache__
+*.pyc
+.py*
+.vagrant
+.coverage
+*egg*
+tmp
+log

@@ -2,6 +2,8 @@ import * as dates from "./dates.js";
 import * as graph from "./graph.js";
 import * as query from "./query.js";
 import * as selectorFunctions from "./selectors.js";
+import * as queryFunctions from "./query.js";
+import * as toastr from "toastr/toastr.js";
 
 /*
 * Functions for the RBOA navigation
@@ -252,4 +254,37 @@ function fill_statuses_into_selectors(selectors, statuses){
 
     /* Activate tooltips */
     jQuery("[data-toggle='tooltip']").tooltip();
+}
+
+export function submit_request_for_execution(){
+
+    var form = document.getElementById("execute-reports");
+    var form_data = new FormData(form);
+    
+    var table = jQuery("#generators-table").dataTable();
+
+    table.$(".selected").each(function(){
+        form_data.append("generators", this.id)
+    })
+
+    queryFunctions.request_info_form_data("/rboa_nav/execute-reports", notify_end_of_generation_of_reports, form_data)
+
+    var message = "Reports for the period " + form_data.get("start") + " - " + form_data.get("stop") +  " are going to be generated using the following generators:"
+    for (const generator of form_data.getAll("generators")){
+        message += "</br>- <b>" + generator + "</b>"
+    }
+
+    toastr.success(message)
+    
+}
+
+export function notify_end_of_generation_of_reports(response, form_data){
+
+    var message = "Reports for the period " + form_data.get("start") + " - " + form_data.get("stop") +  " were generated using the following generators:"
+    for (const generator of form_data.getAll("generators")){
+        message += "</br>- <b>" + generator + "</b>"
+    }
+
+    toastr.success(message)
+    return true;
 }

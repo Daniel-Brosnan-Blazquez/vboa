@@ -57,3 +57,70 @@ export function activate_search_on_columns() {
         } );
     })
 };
+
+
+/* Function to activate search and checkboxes on the specified tables */
+export function activate_search_and_checkboxes_on_tables() {
+
+    // DataTable
+    var tables = jQuery(".table-search-checkboxes").each( function (){
+        var table = $(this).DataTable({
+            responsive: true,
+            aLengthMenu: [
+                [10, 25, 50, 100, 200, -1],
+                [10, 25, 50, 100, 200, "All"]
+            ],
+            iDisplayLength: -1,
+            select: true,
+            scrollX: true,
+            // This is to hide the second header set by the scrollX
+            initComplete: function(settings, json) {
+                $('.dataTables_scrollBody thead tr').css({visibility:'collapse'});
+            },
+            scrollY: "500px",
+            /* dom:
+               B: Buttons
+               l: lenght changing input control
+               f: filtering input
+               t: table
+               i: summary information
+             */
+            dom: 'Blftip',
+            "order": [],
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export excel',
+                    filename: 'Export excel',
+                    exportOptions: {
+                        modifier: {
+                            page: 'all'
+                        }
+                    }
+                },
+            ],
+            columnDefs: [ {
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+            } ],
+            select: {
+                style:    'os',
+                selector: 'td:first-child'
+            },
+            order: [[ 1, 'asc' ]]
+        });
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that.search( this.value ).draw();
+                }
+            } );
+        } );
+        
+    })
+ 
+};

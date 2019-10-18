@@ -1,0 +1,54 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">Report execution</h1>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="row">
+  <form role="form" id="execute-reports" method=post onSubmit="vboa.submit_request_for_execution(); return false;">
+    <div class="panel panel-green">
+      <div class="panel-heading">
+        Table of generators
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+        <table width="100%" class="table-striped table-bordered table-hover table-search-checkboxes" id="generators-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Generator</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for generator in generators %}
+            <tr id="{{ generator['name'] }}">
+              <td id="{{ generator['name'] }}"></td>
+              <td><div style="display: inline-block;" data-toggle="tooltip" data-placement="bottom" title="{{ generator['description'] }}. The generated report will have a name formatted as follows: {{ generator['name_format'] }}">{{ generator["name"] }}</div></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th></th>
+              <th>Generator</th>
+            </tr>
+          </tfoot>          
+        </table>
+      </div>
+      <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+    <div class="row">
+      <div class="col-xs-offset-4">
+        {% include "eboa_nav/start_stop_without_operators_center.html" %}
+      </div>
+    </div>
+    <div align="center">
+      <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="sources-submit-button">Query</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

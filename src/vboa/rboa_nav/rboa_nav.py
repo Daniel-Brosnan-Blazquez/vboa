@@ -9,6 +9,9 @@ module vboa
 import sys
 import json
 import tarfile
+import json
+import shlex
+from subprocess import Popen, PIPE
 
 # Import flask utilities
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
@@ -22,12 +25,17 @@ from eboa.engine.engine import Engine
 
 # Import auxiliary functions
 from rboa.engine.functions import get_rboa_archive_path
+from rboa.triggering.rboa_triggering import get_reporting_conf
 
 archive_path = get_rboa_archive_path()
 
 bp = Blueprint("rboa_nav", __name__, url_prefix="/rboa_nav")
 query = Query()
 engine = Engine()
+
+##############
+# NAVIGATION #
+##############
 
 @bp.route("/", methods=["GET"])
 def navigate():
@@ -292,3 +300,54 @@ def get_report_status():
     """
     current_app.logger.debug("Get report statuses")
     return jsonify(rboa_engine.exit_codes)
+
+#############
+# EXECUTION #
+#############
+
+@bp.route("/reporting_triggering", methods=["GET"])
+def show_execute_reports():
+    """
+    Show the generators of reporting.
+    """
+    current_app.logger.debug("Prepare execution view")
+
+    reporting_xpath = get_reporting_conf()
+    generators = []
+    for generator in reporting_xpath("/reporting_generators/generator"):
+        generators.append({"name": generator.xpath("@name")[0],
+                          "description": generator.xpath("@description")[0],
+                          "name_format": generator.xpath("name_format")[0].text
+        })
+    # end for
+    
+    return render_template("rboa_nav/execute_reports.html", generators=generators)
+
+@bp.route("/execute-reports", methods=["POST"])
+def execute_reports():
+    """
+    Execute selected reports.
+    """
+    current_app.logger.debug("Execute selected reports")
+    filters = json.loads(request.form["json"])
+
+    start = filters["start"][0]
+    stop = filters["stop"][0]
+
+    for generator in filters["generators"]:
+        command = "rboa_triggering.py -g '" + generator + "' -m MANUAL -b '" + start + "' -e '" + stop + "'"
+        command_split = shlex.split(command)
+        program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        output, error = program.communicate()        
+        return_code = program.returncode
+        current_app.logger.debug(command)
+        current_app.logger.debug(output)
+        current_app.logger.debug(error)
+        current_app.logger.debug(return_code)
+        if return_code != 0:
+            current_app.logger.debug("The execution of the command {} has ended unexpectedly with the following error: {}".format(command, str(error)))
+            return ""
+        # end if
+    # end for
+
+    return ""
