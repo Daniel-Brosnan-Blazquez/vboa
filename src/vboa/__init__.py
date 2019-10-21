@@ -21,8 +21,8 @@ from vboa.rboa_nav import rboa_nav
 from vboa.boa_health import boa_health
 from vboa.ingestion_control import ingestion_control
 
-# Import engine
-import eboa.engine.engine as eboa_engine
+# Import alert severity codes
+from eboa.engine.alerts import alert_severity_codes
 
 def create_app():
     """
@@ -123,7 +123,7 @@ def create_app():
 
     @app.template_filter()
     def get_severity_label(severity):
-        severity_labels = [severity_label for severity_label in eboa_engine.alert_severity_codes if eboa_engine.alert_severity_codes[severity_label] == severity]
+        severity_labels = [severity_label for severity_label in alert_severity_codes if alert_severity_codes[severity_label] == severity]
         return severity_labels[0]
 
     @app.template_filter()

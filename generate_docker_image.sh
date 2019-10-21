@@ -251,8 +251,12 @@ docker exec -it $APP_CONTAINER bash -c "pip3 install /boa_packages/*"
 
 # Install scripts
 docker exec -it $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do cp $script /scripts/`basename $script`; done'
+# EBOA ingestion chain
 docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py'
 docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py'
+# RBOA reporting chain 
+docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/rboa/triggering/rboa_triggering.py /scripts/rboa_triggering.py'
+docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py'
 
 # Copy datamodel
 docker exec -it $APP_CONTAINER bash -c 'cp /eboa/datamodel/eboa_data_model.sql /datamodel'

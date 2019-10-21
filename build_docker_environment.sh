@@ -16,10 +16,11 @@ PORT="5000"
 CONTAINERS_LABEL="dev"
 PATH_TO_BOA_INPUTS=""
 PATH_TO_BOA_DDBB=""
+PATH_TO_RBOA_ARCHIVE=""
 PATH_TO_ORC_DDBB=""
 PATH_TO_MINARC_ARCHIVE=""
 
-while getopts d:p:l:i:b:o:m: option
+while getopts d:p:l:i:b:r:o:m: option
 do
     case "${option}"
         in
@@ -28,6 +29,7 @@ do
         l) CONTAINERS_LABEL=${OPTARG};;
         i) PATH_TO_BOA_INPUTS=${OPTARG};;
         b) PATH_TO_BOA_DDBB=${OPTARG};;
+        r) PATH_TO_RBOA_ARCHIVE=${OPTARG};;
         o) PATH_TO_ORC_DDBB=${OPTARG};;
         m) PATH_TO_MINARC_ARCHIVE=${OPTARG};;
         ?) echo -e $USAGE
@@ -80,6 +82,21 @@ then
     exit -1
 fi
 
+# Check that option -r has been specified
+if [ "$PATH_TO_RBOA_ARCHIVE" == "" ];
+then
+    echo "ERROR: The option -r has to be provided"
+    echo $USAGE
+    exit -1
+fi
+
+# Check that the path to the RBOA archive folder exists
+if [ ! -d $PATH_TO_RBOA_ARCHIVE ];
+then
+    echo "ERROR: The directory $PATH_TO_RBOA_ARCHIVE provided does not exist"
+    exit -1
+fi
+
 # Check that option -o has been specified
 if [ "$PATH_TO_ORC_DDBB" == "" ];
 then
@@ -124,6 +141,7 @@ These are the configuration options that will be applied to initialize the envir
 - CONTAINERS_LABEL: $CONTAINERS_LABEL
 - PATH_TO_BOA_INPUTS: $PATH_TO_BOA_INPUTS
 - PATH_TO_BOA_DDBB: $PATH_TO_BOA_DDBB
+- PATH_TO_RBOA_ARCHIVE: $PATH_TO_RBOA_ARCHIVE
 - PATH_TO_ORC_DDBB: $PATH_TO_ORC_DDBB
 - PATH_TO_MINARC_ARCHIVE: $PATH_TO_MINARC_ARCHIVE
 
@@ -179,7 +197,7 @@ docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER 
 ######
 docker load -i $PATH_TO_DOCKERIMAGE
 
-docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/orc -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/orc -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
 
 # Change port and address configuration of the eboa defined by the postgis container
 docker exec -it $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"

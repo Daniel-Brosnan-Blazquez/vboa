@@ -238,8 +238,30 @@ def query_report(report_uuid):
     """
     Query report corresponding to the UUID received.
     """
-    current_app.logger.debug("Query report")
+    current_app.logger.debug("Query report by identifier")
     report = query.get_reports(report_uuids={"filter": [report_uuid], "op": "in"})[0]
+
+    html = retrieve_report_content(report)
+    
+    return html
+
+@bp.route("/query-report-by-name/<string:report_name>", methods=["GET"])
+def query_report_by_name(report_name):
+    """
+    Query report by name
+    """
+    current_app.logger.debug("Query report by name")
+    report = query.get_reports(names={"filter": [report_name], "op": "in"}, order_by={"field": "generation_stop", "descending": True})[0]
+
+    html = retrieve_report_content(report)
+    
+    return html
+
+def retrieve_report_content(report):
+    """
+    Retrieve report from archive
+    """
+    current_app.logger.debug("Retrieve report from archive")
 
     file_path = archive_path + "/" + report.relative_path
 
@@ -261,16 +283,6 @@ def query_report(report_uuid):
         tar.close()
     # end if
     
-    return html
-
-@bp.route("/query-report-by-name/<string:report_name>", methods=["GET"])
-def query_report_by_name(report_name):
-    """
-    Query report by name
-    """
-
-    p = open("/rboa_archive/2018/07/05/report.html", "r")
-    html = p.read()
     return html
 
 @bp.route("/query-jsonify-reports")
@@ -344,10 +356,6 @@ def execute_reports():
         current_app.logger.debug(output)
         current_app.logger.debug(error)
         current_app.logger.debug(return_code)
-        if return_code != 0:
-            current_app.logger.debug("The execution of the command {} has ended unexpectedly with the following error: {}".format(command, str(error)))
-            return ""
-        # end if
     # end for
 
     return ""

@@ -55,6 +55,8 @@ RUN mkdir /inputs
 # Install scripts
 RUN ln -s /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py
 RUN ln -s /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py
+RUN ln -s /eboa/src/rboa/triggering/rboa_triggering.py /scripts/rboa_triggering.py
+RUN ln -s /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py
 
 # Environment Variables for BOA
 ENV EBOA_RESOURCES_PATH /resources_path

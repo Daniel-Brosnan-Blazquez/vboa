@@ -35,15 +35,15 @@ RUN scl enable rh-ruby25 bash
 RUN mkdir /log
 RUN mkdir /scripts
 RUN mkdir /resources_path
-RUN mkdir /orc_packages
+RUN mkdir /datamodel
 RUN mkdir /schemas
 RUN mkdir /rboa_archive
 
 # Create folders for ORC
+RUN mkdir /orc_packages
 RUN mkdir /orc_config
 RUN mkdir /minarc_root
 RUN mkdir /inputs
-RUN mkdir /datamodel
 
 # Environment Variables for BOA
 ENV EBOA_RESOURCES_PATH /resources_path
