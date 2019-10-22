@@ -234,6 +234,10 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     # Set order by reception_time descending
     kwargs["order_by"] = {"field": "reception_time", "descending": True}
 
+    if template_name == "errors":
+        kwargs["ingestion_error"] = {"filter": "true", "op": "=="}
+    # end if
+    
     # This is here because it seems that the ORM is caching values and does not show the updates.
     # expunge_all removes all objects related to the session
     query.session.expunge_all()
