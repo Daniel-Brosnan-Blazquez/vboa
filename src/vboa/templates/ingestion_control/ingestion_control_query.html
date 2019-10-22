@@ -29,6 +29,13 @@
                 <div class="row">
                   {% include "eboa_nav/start_stop_without_operators.html" %}
                 </div>
+                <!-- Limit -->
+                <div class="row">
+                  <div class="col-xs-3">
+                    <label>Limit</label>
+                    <input type="text" class="form-control" style="width: 100%" name="limit" id="ingestion-control-limit" value="100"/>
+                  </div>
+                </div>
                 <div>
                   <button id="query-submit-button" type="submit" class="btn btn-primary" style="margin-top: 12px">Query</button>
                 </div>

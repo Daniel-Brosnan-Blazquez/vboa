@@ -33,34 +33,33 @@ window_delay=0
 window_size=0.25
 repeat_cycle=5
 
-def get_start_stop_filters(window_size):
+def get_start_stop_filters(filters):
 
     start_filter = None
     stop_filter = None
     
     if request.method == "POST":
-
-        if request.form["start"] != "":
+        if filters["start"][0] != "":
             stop_filter = {
-                "date": request.form["start"],
+                "date": filters["start"][0],
                 "operator": ">="
             }
-            if request.form["stop"] == "":
+            if filters["stop"][0] == "":
                 start_filter = {
-                    "date": (parser.parse(request.form["start"]) + datetime.timedelta(days=window_size)).isoformat(),
+                    "date": (parser.parse(filters["start"][0]) + datetime.timedelta(days=window_size)).isoformat(),
                     "operator": "<="
                 }
             # end if            
         # end if
 
-        if request.form["stop"] != "":
+        if filters["stop"][0] != "":
             start_filter = {
-                "date": request.form["stop"],
+                "date": filters["stop"][0],
                 "operator": "<="
             }
-            if request.form["start"] == "":
+            if filters["start"][0] == "":
                 stop_filter = {
-                    "date": (parser.parse(request.form["stop"]) - datetime.timedelta(days=window_size)).isoformat(),
+                    "date": (parser.parse(filters["stop"][0]) - datetime.timedelta(days=window_size)).isoformat(),
                     "operator": ">="
                 }
             # end if
@@ -69,7 +68,6 @@ def get_start_stop_filters(window_size):
     # end if
 
     return start_filter, stop_filter
-
 
 @bp.route("/ingestion_control", methods=["GET", "POST"])
 def show_ingestion_control():
@@ -80,6 +78,13 @@ def show_ingestion_control():
 
     template_name = request.args.get("template")
 
+    filters = {}
+    filters["limit"] = [""]    
+    if request.method == "POST":
+        filters = request.form.to_dict(flat=False).copy()
+    # end if
+    filters["offset"] = [""]
+    
     # Initialize reporting period (now - window_size days, now)
     start_filter = {
         "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
@@ -89,7 +94,7 @@ def show_ingestion_control():
         "date": (datetime.datetime.now() - datetime.timedelta(days=(window_delay+window_size))).isoformat(),
         "operator": ">="
     }
-    start_filter_calculated, stop_filter_calculated = get_start_stop_filters(window_size)
+    start_filter_calculated, stop_filter_calculated = get_start_stop_filters(filters)
     
     if start_filter_calculated != None:
         start_filter = start_filter_calculated
@@ -99,7 +104,24 @@ def show_ingestion_control():
         stop_filter = stop_filter_calculated
     # end if
 
-    return query_sources_and_render(start_filter, stop_filter, template_name = template_name)
+    filters["start"] = [stop_filter["date"]]
+    filters["stop"] = [start_filter["date"]]
+    filters["template_name"] = [template_name]    
+    
+    return query_sources_and_render(start_filter, stop_filter, template_name = template_name, filters = filters)
+
+@bp.route("/ingestion-control-pages", methods=["POST"])
+def query_ingestion_control_pages():
+    """
+    Ingestion control view of the BOA using pages.
+    """
+    current_app.logger.debug("Ingestion control view using pages")
+    filters = json.loads(request.form["json"])
+    start_filter, stop_filter = get_start_stop_filters(filters)
+
+    template_name = filters["template_name"][0]
+    
+    return query_sources_and_render(start_filter, stop_filter, template_name = template_name, filters = filters)
 
 @bp.route("/sliding_ingestion_control_parameters", methods=["GET", "POST"])
 def show_sliding_ingestion_control_parameters():
@@ -188,7 +210,7 @@ def show_sliding_ingestion_control():
 
     return query_sources_and_render(start_filter, stop_filter, sliding_window, template_name = template_name)
 
-def query_sources_and_render(start_filter = None, stop_filter = None, sliding_window = None, template_name = None):
+def query_sources_and_render(start_filter = None, stop_filter = None, sliding_window = None, template_name = None, filters = None):
 
     kwargs = {}
 
@@ -200,7 +222,18 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
 
     # Avoid showing the sources related to the ingestion of health data
     kwargs["dim_signatures"] = {"filter": ["BOA_HEALTH"], "op": "notin"}
-    
+
+    # Set offset and limit for the query
+    if "offset" in filters and filters["offset"][0] != "":
+        kwargs["offset"] = filters["offset"][0]
+    # end if
+    if "limit" in filters and filters["limit"][0] != "":
+        kwargs["limit"] = filters["limit"][0]
+    # end if
+
+    # Set order by reception_time descending
+    kwargs["order_by"] = {"field": "reception_time", "descending": True}
+
     # This is here because it seems that the ORM is caching values and does not show the updates.
     # expunge_all removes all objects related to the session
     query.session.expunge_all()
@@ -213,20 +246,5 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     if template_name != None:
         template = "ingestion_control/ingestion_control_" + template_name + ".html"
     # end if
-
-    template_generated = False
-    # This template must be an error template
-    returned_template = ""
-    i = 0
-    while not template_generated and i < 3:
-        try:
-            returned_template = render_template(template, sources=sources, request=request, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window)
-            template_generated = True
-        except DetachedInstanceError:
-            # This error could occur due to a race condition accessing to removed information. 3 retries
-            template_generated = False
-        # end try
-        i += 1
-    # end while
     
-    return returned_template
+    return render_template(template, sources=sources, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)
