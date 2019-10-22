@@ -5,7 +5,7 @@
 </div>
 <!-- /.row -->
 {% include "ingestion_control/ingestion_control_query.html" %}
-{% if filters and filters["limit"][0] != "" and filters["limit"][0]|int == sources|length %}
+{% if filters and "limit" in filters and filters["limit"][0] != "" and filters["limit"][0]|int == sources|length %}
 <div class="panel panel-yellow">
   <div class="panel-heading">
     The number of requested elements is higher than the limit of the query, you can navigate through all the list using the following links:
@@ -26,7 +26,7 @@
   </div>
   {% endif %}
 </div>
-{% elif filters and filters["offset"][0]|int > 0 and sources|length < filters["limit"][0]|int %}
+{% elif filters and "limit" in filters and filters["offset"][0]|int > 0 and sources|length < filters["limit"][0]|int %}
 <div class="panel panel-yellow">
   <div class="panel-heading">
     All the elements have been reviewed, you can go to the previous pages:
@@ -40,9 +40,9 @@
 {% endif %}
 {% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% include "ingestion_control/ingestion_control_alerts_content.html" %}
-{% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|sort(attribute="reception_time", reverse=True)|list %}
+{% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|list %}
 {% include "ingestion_control/ingestion_control_errors_content.html" %}
-{% set sources_to_be_shown = sources|rejectattr("ingestion_error", "equalto", True)|sort(attribute="reception_time", reverse=True)|list %}
+{% set sources_to_be_shown = sources|rejectattr("ingestion_error", "equalto", True)|list %}
 {% if sources_to_be_shown|length > 0 %}
 <div class="row">
   <div class="panel panel-default">
@@ -65,16 +65,16 @@
             <th>Ingestion progress</th>
             <th>Processor progress</th>
             <th>Ingestion completeness</th>
-            <th>Triggering Duration</th>
-            <th>Ingestion Duration</th>
-            <th>Processing Duration</th>
+            <th>Triggering duration</th>
+            <th>Ingestion duration</th>
+            <th>Processing duration</th>
             <th>Validity start</th>
             <th>Validity stop</th>
             <th>Duration</th>
             <th>Number of events</th>
             <th>Reception time</th>
             <th>Generation time</th>
-            <th>Ingestion Time</th>
+            <th>Ingestion time</th>
             <th>Processor</th>
             <th>Processor version</th>
           </tr>
@@ -127,16 +127,16 @@
             <th>Ingestion progress</th>
             <th>Processor progress</th>
             <th>Ingestion completeness</th>
-            <th>Triggering Duration</th>
-            <th>Ingestion Duration</th>
-            <th>Processing Duration</th>
+            <th>Triggering duration</th>
+            <th>Ingestion duration</th>
+            <th>Processing duration</th>
             <th>Validity start</th>
             <th>Validity stop</th>
             <th>Duration</th>
             <th>Number of events</th>
             <th>Reception time</th>
             <th>Generation time</th>
-            <th>Ingestion Time</th>
+            <th>Ingestion time</th>
             <th>Processor</th>
             <th>Processor version</th>
           </tr>
