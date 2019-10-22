@@ -352,10 +352,6 @@ def execute_reports():
         program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         output, error = program.communicate()        
         return_code = program.returncode
-        current_app.logger.debug(command)
-        current_app.logger.debug(output)
-        current_app.logger.debug(error)
-        current_app.logger.debug(return_code)
     # end for
 
     return ""
