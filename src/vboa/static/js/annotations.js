@@ -15,7 +15,7 @@ function create_annotation_tooltip_text(annotation){
         "<tr><td>Annotation system</td><td>" + annotation['annotation_cnf']['system'] + "</td></tr>" +
         "<tr><td>Source</td><td>" + annotation['source'] + "</td></tr>" +
         "<tr><td>Ingestion time</td><td>" + annotation['ingestion_time'] + "</td></tr>" +
-        "</tr></table>"
+        "</table>"
 };
 
 /* Function to create a network graph for the EBOA navigation view */
