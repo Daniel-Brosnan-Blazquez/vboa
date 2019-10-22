@@ -1,0 +1,26 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Reporting alerts</h1>
+</div>
+<!-- /.row -->
+{% with template = "?template=alerts" %}
+{% include "reporting_control/reporting_control_query.html" %}
+{% endwith %}
+{% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% include "reporting_control/reporting_control_alerts_content.html" %}
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  {% if sliding_window %}
+  var parameters = {
+  "window_delay": "{{ sliding_window['window_delay'] }}",
+  "window_size": "{{ sliding_window['window_size'] }}",
+  "template": "alerts",
+  }
+  var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
+  vboa.update_view(parameters, repeat_cycle, "/reporting_control/sliding_reporting_control_parameters");
+  {% endif %}
+</script>
+{% endblock %}

@@ -20,6 +20,7 @@ from vboa.eboa_nav import eboa_nav
 from vboa.rboa_nav import rboa_nav
 from vboa.boa_health import boa_health
 from vboa.ingestion_control import ingestion_control
+from vboa.reporting_control import reporting_control
 
 # Import alert severity codes
 from eboa.engine.alerts import alert_severity_codes
@@ -39,6 +40,7 @@ def create_app():
     app.register_blueprint(rboa_nav.bp)
     app.register_blueprint(boa_health.bp)
     app.register_blueprint(ingestion_control.bp)
+    app.register_blueprint(reporting_control.bp)
 
     # the toolbar is only enabled in debug mode:
     app.debug = True

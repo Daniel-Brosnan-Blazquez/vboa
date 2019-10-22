@@ -1,0 +1,91 @@
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#query-interface">Query interface <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse" id="query-interface">
+        <ul class="nav nav-tabs responsive-tabs">
+          <li class="active"><a href="#reporting-control-query-window">Query window</a></li>
+          <li><a href="#reporting-control-sliding-window">Sliding window</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="reporting-control-query-window">          
+            <form role="form" method=post action="/reporting_control/reporting_control{{ template }}">
+              <div>
+                <!-- Default values message -->
+                <div class="row">
+                  <br/>
+                  <p style="margin-left:20px">
+                    The default behaviour is: <br/>
+                    start: now - 6 hours <br/>
+                    stop: now <br/>
+                  </p>
+                </div>
+                <br/>
+                <!-- Start and stop -->
+                <div class="row">
+                  {% include "eboa_nav/start_stop_without_operators.html" %}
+                </div>
+                <!-- Limit -->
+                <div class="row">
+                  <div class="col-xs-3">
+                    <label>Limit</label>
+                    <input type="text" class="form-control" style="width: 100%" name="limit" id="reporting-control-limit" value="100"/>
+                  </div>
+                </div>
+                <div>
+                  <button id="query-submit-button" type="submit" class="btn btn-primary" style="margin-top: 12px">Query</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="tab-pane" id="reporting-control-sliding-window">          
+            <form role="form" method=post action="/reporting_control/sliding_reporting_control{{ template }}">
+              <div>
+                <!-- Default values message -->
+                <div class="row">
+                  <br/>
+                  <p style="margin-left:20px">
+                    The default behaviour is: <br/>
+                    window delay: 0 days <br/>
+                    window size: 6 hours <br/>
+                    repeat cycle: 5 minutes <br/>
+                  </p>
+                </div>
+                <br/>
+                <!-- Delay -->
+                <div class="row">
+                  <div class="col-xs-3">
+                    <label>Window delay (days)</label>
+                    <input type="text" class="form-control" name="reporting_control_window_delay" id="reporting-control-window-delay"/>
+                  </div>
+                </div>
+                <!-- Duration -->
+                <div class="row">
+                  <div class="col-xs-3">
+                    <label>Window size (days)</label>
+                    <input type="text" class="form-control" name="reporting_control_window_size" id="reporting-control-window-size"/>
+                  </div>
+                </div>
+                <!-- Repeat cycle (minutes) -->
+                <div class="row">
+                  <div class="col-xs-3">
+                    <label>Repeat cycle (minutes)</label>
+                    <input type="text" class="form-control" name="reporting_control_repeat_cycle" id="reporting-control-repeat-cycle"/>
+                  </div>
+                </div>
+                <div>
+                  <button id="query-submit-button" type="submit" class="btn btn-primary" style="margin-top: 12px">Query</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% include "vboa/header.html" %}

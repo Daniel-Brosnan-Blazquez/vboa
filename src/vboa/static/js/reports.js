@@ -32,6 +32,12 @@ function create_reports_groups_by_report_group(reports){
 function create_report_tooltip_text(report){
     const validity_duration = dates.date_difference_in_m(report["validity_stop"], report["validity_start"])
     const generation_duration = dates.date_difference_in_m(report["generation_stop"], report["generation_start"])
+
+    var generation_error = "<span class='bold-green'>" + report["generation_error"] + "</span>"
+    if (report["generation_error"] == "True"){
+        generation_error = "<span class='bold-red'>" + report["generation_error"] + "</span>"
+    }
+
     return "<table border='1'>" +
         "<tr><td>Report UUID</td><td>" + report["id"] + "</td></tr>" +
         "<tr><td>Name</td><td><a href='/rboa_nav/query-report/" + report["id"] + "'>" + report["name"] + "</a></td></tr>" +
@@ -45,20 +51,28 @@ function create_report_tooltip_text(report){
         "<tr><td>Generation duration</td><td>" + generation_duration + "</td></tr>" +
         "<tr><td>Generator</td><td>" + report["generator"] + "</td></tr>" +
         "<tr><td>Version of generator</td><td>" + report["version"] + "</td></tr>" +
-        "</tr></table>"
+        "<tr><td>Generation error</td><td>" + generation_error + "</td></tr>" +
+        "</table>"
 };
 
 export function create_report_validity_timeline(reports, dom_id){
     const groups = create_reports_groups_by_report_group(reports);
     var items = [];
     for (const report of reports){
-        items.push({
+        var item = {
             id: report["id"],
             group: report["report_group"],
             start: report["validity_start"],
             end: report["validity_stop"],
             tooltip: create_report_tooltip_text(report)
-        })
+        }
+        if ("generation_error" in report && report["generation_error"] == "True"){
+            item["className"] = "background-red"
+        }
+        else{
+            item["className"] = "background-green"
+        }
+        items.push(item)
     }
     graph.display_timeline(dom_id, items, groups);
 

@@ -1,0 +1,118 @@
+{% if reporting_errors|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#ingested-reports-reporting-control">Ingested errors <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="ingested-reports-reporting-control">
+      <div>
+        <h3><u>Table of reporting errors</u></h3>
+      </div>
+      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="ingested-reports-reporting-error-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Report group</th>
+            <th>Generation mode</th>
+            <th>Generation progress</th>
+            <th>Metadata ingestion progress</th>
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Duration (m)</th>
+            <th>Generation start</th>
+            <th>Generation stop</th>
+            <th>Generation duration (m)</th>
+            <th>Metadata ingestion duration (s)</th>
+            <th>Triggering time</th>
+            <th>Generator</th>
+            <th>Version</th>
+            <th>UUID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in reporting_errors %}
+          <tr>
+            <td><i id="expand-report-reporting-error-statuses-{{ report.report_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_report_statuses('expand-report-reporting-error-statuses-{{ report.report_uuid }}', '{{ report.report_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
+            <td><a href="/eboa_nav/query-report/{{ report.report_uuid }}">{{ report.name }}</a></td>
+            <td>{{ report.reportGroup.name }}</td>
+            <td>{{ report.generation_mode }}</td>
+            {% with progress = report.get_generation_progress(), error = True %}
+            {% include "vboa/progress_bar.html" %}
+            {% endwith %}
+            {% with progress = report.get_metadata_ingestion_progress(), error = True %}
+            {% include "vboa/progress_bar.html" %}
+            {% endwith %}
+            {% with date = report.validity_start %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date = report.validity_stop %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date1 = report.validity_start, date2 = report.validity_stop %}
+            {% include "vboa/difference_date_td_value.html" %}
+            {% endwith %}
+            {% with date = report.generation_start %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date = report.generation_stop %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            {% with date1 = report.generation_start, date2 = report.generation_stop %}
+            {% include "vboa/difference_date_td_value.html" %}
+            {% endwith %}
+            <td>{{ report.metadata_ingestion_duration }}</td>
+            {% with date = report.triggering_time %}
+            {% include "vboa/date_td_value.html" %}
+            {% endwith %}
+            <td>{{ report.generator }}</td>
+            <td>{{ report.generator_version }}</td>
+            <td>{{ report.report_uuid }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Report group</th>
+            <th>Generation mode</th>
+            <th>Generation progress</th>
+            <th>Metadata ingestion progress</th>
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Duration (m)</th>
+            <th>Generation start</th>
+            <th>Generation stop</th>
+            <th>Generation duration (m)</th>
+            <th>Metadata ingestion duration (s)</th>
+            <th>Triggering time</th>
+            <th>Generator</th>
+            <th>Version</th>
+            <th>UUID</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#reporting-errors">Reporting errors <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <div class="panel-body panel-collapse collapse" id="reporting-errors">
+      <div>
+        <p id="no-reports-reporting-control" style="text-indent: 1em">There are no reporting errors during the requested period.</p>
+        <br/>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
