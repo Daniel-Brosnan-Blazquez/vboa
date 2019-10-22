@@ -224,10 +224,10 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     kwargs["dim_signatures"] = {"filter": ["BOA_HEALTH"], "op": "notin"}
 
     # Set offset and limit for the query
-    if "offset" in filters and filters["offset"][0] != "":
+    if filters and "offset" in filters and filters["offset"][0] != "":
         kwargs["offset"] = filters["offset"][0]
     # end if
-    if "limit" in filters and filters["limit"][0] != "":
+    if filters and "limit" in filters and filters["limit"][0] != "":
         kwargs["limit"] = filters["limit"][0]
     # end if
 
