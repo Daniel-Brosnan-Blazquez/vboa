@@ -21,7 +21,7 @@
     <!-- /.panel-heading -->
     <div class="panel-body panel-collapse collapse in" id="ingested-sources-ingestion-control">
       <div>
-        <h3><u>Table of sources successfully ingested</u></h3>
+        <h3><u>Table of sources successfully or being ingested</u></h3>
       </div>
       <table width="100%" class="table table-striped table-bordered table-hover table-search" id="ingested-sources-ingestion-control-table">
         <thead>
@@ -129,10 +129,121 @@
   </div>
 </div>
 {% endif %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#graphs-ingestion-control">Detailed graphs of the ingestion control <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    {% if sources|length > 0 %}
+    <div class="panel-body panel-collapse collapse in" id="graphs-ingestion-control">
+      <!-- /.panel-heading -->
+      {% if not show or show["validity_timeline"] %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Validity timeline of sources
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+          <div id="sources-nav-validity-timeline">
+          </div>
+        </div>
+        <!-- /.panel-body -->
+      </div>
+      <!-- /.panel -->
+      {% endif %}
+      {% if not show or show["generation_to_ingestion_timeline"] %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Generation to ingestion timeline of sources
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+          <div id="sources-nav-generation-to-ingestion-timeline">
+          </div>
+        </div>
+        <!-- /.panel-body -->
+      </div>
+      <!-- /.panel -->
+      {% endif %}
+      {% if not show or show["number_events_xy"] %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Number of events over time per source
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+          <div id="sources-nav-number-events-xy">
+          </div>
+        </div>
+        <!-- /.panel-body -->
+      </div>
+      <!-- /.panel -->
+      {% endif %}
+      {% if not show or show["ingestion_duration_xy"] %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Ingestion duration over time per source
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+          <div id="sources-nav-ingestion-duration-xy">
+          </div>
+        </div>
+        <!-- /.panel-body -->
+      </div>
+      <!-- /.panel -->
+      {% endif %}
+      {% if not show or show["generation_time_to_ingestion_time_xy"] %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Difference between the ingestion time and the generation time over time per source
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+          <div id="sources-nav-generation-time-to-ingestion-time-xy">
+          </div>
+        </div>
+        <!-- /.panel-body -->
+      </div>
+      <!-- /.panel -->
+      {% endif %}
+      {% else %}
+      <div class="panel-body panel-collapse collapse" id="ingestion-control-status">
+        <div>
+          <p id="no-sources-no-graphs-ingestion-control" style="text-indent: 1em">There are no sources for showing detailed graphs.</p>
+          <br/>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript">
+  {% if sources|length > 0 %}
+  {% with sources=sources %}
+  {% include "graphs/sources_to_json.js" %}
+  {% endwith %}
+  {% if not show or show["validity_timeline"] %}
+  vboa.create_source_validity_timeline(sources, "sources-nav-validity-timeline");
+  {% endif %}
+  {% if not show or show["generation_to_ingestion_timeline"] %}
+  vboa.create_source_generation_to_ingestion_timeline(sources, "sources-nav-generation-to-ingestion-timeline");
+  {% endif %}
+  {% if not show or show["number_events_xy"] %}
+  vboa.create_source_number_events_xy(sources, "sources-nav-number-events-xy");
+  {% endif %}
+  {% if not show or show["ingestion_duration_xy"] %}
+  vboa.create_source_ingestion_duration_xy(sources, "sources-nav-ingestion-duration-xy");
+  {% endif %}
+  {% if not show or show["generation_time_to_ingestion_time_xy"] %}
+  vboa.create_source_generation_time_to_ingestion_time_xy(sources, "sources-nav-generation-time-to-ingestion-time-xy");
+  {% endif %}
+  {% endif %}
   {% if sliding_window %}
   var parameters = {
   "window_delay": "{{ sliding_window['window_delay'] }}",

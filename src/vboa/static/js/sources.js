@@ -29,6 +29,12 @@ function create_sources_groups_by_dim_signature(sources){
 /* Function to create the text for the tooltip of the source information */
 function create_source_tooltip_text(source){
     const ingestion_minus_generation = dates.date_difference_in_m(source["ingestion_time"], source["generation_time"])
+
+    var ingestion_error = "<span class='bold-green'>" + source["ingestion_error"] + "</span>"
+    if (source["ingestion_error"] == "True"){
+        ingestion_error = "<span class='bold-red'>" + source["ingestion_error"] + "</span>"
+    }
+    
     return "<table border='1'>" +
         "<tr><td>Source UUID</td><td>" + source["id"] + "</td></tr>" +
         "<tr><td>Name</td><td>" + source["name"] + "</td></tr>" +
@@ -42,20 +48,28 @@ function create_source_tooltip_text(source){
         "<tr><td>Ingestion duration</td><td>" + source["ingestion_duration"] + "</td></tr>" +
         "<tr><td>Number of events</td><td>" + source["number_of_events"] + "</td></tr>" +
         "<tr><td>Ingestion time - generation time (m)</td><td>" + ingestion_minus_generation + "</td></tr>" +
-        "</tr></table>"
+        "<tr><td>Ingestion error</td><td>" + ingestion_error + "</td></tr>" +
+        "</table>"
 };
 
 export function create_source_validity_timeline(sources, dom_id){
     const groups = create_sources_groups_by_dim_signature(sources);
     var items = [];
     for (const source of sources){
-        items.push({
+        var item = {
             id: source["id"],
             group: source["dim_signature"],
             start: source["validity_start"],
             end: source["validity_stop"],
             tooltip: create_source_tooltip_text(source)
-        })
+        }
+        if ("ingestion_error" in source && source["ingestion_error"] == "True"){
+            item["className"] = "background-red"
+        }
+        else{
+            item["className"] = "background-green"
+        }
+        items.push(item)
     }
     graph.display_timeline(dom_id, items, groups);
 
@@ -65,13 +79,20 @@ export function create_source_generation_to_ingestion_timeline(sources, dom_id){
     const groups = create_sources_groups_by_dim_signature(sources);
     var items = [];
     for (const source of sources){
-        items.push({
+        var item = {
             id: source["id"],
             group: source["dim_signature"],
             start: source["generation_time"],
             end: source["ingestion_time"],
             tooltip: create_source_tooltip_text(source)
-        })
+        }
+        if ("ingestion_error" in source && source["ingestion_error"] == "True"){
+            item["className"] = "background-red"
+        }
+        else{
+            item["className"] = "background-green"
+        }
+        items.push(item)
     }
     graph.display_timeline(dom_id, items, groups);
 

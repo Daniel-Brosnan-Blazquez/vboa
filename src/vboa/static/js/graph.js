@@ -37,7 +37,7 @@ export function display_timeline(dom_id, items, groups){
 function show_timeline_item_information(params, items, dom_id){
 
     const element_id = params["item"]
-    if (element_id !== undefined){
+    if (element_id != undefined){
         const header_content = "Detailed information for the timeline element: " + element_id;
         const item = items.filter(item => item["id"] == element_id)[0]
         const body_content = item["tooltip"];
@@ -83,7 +83,7 @@ export function display_network(dom_id, nodes, edges, options){
 function show_network_node_information(params, nodes, dom_id){
 
     const element_id = params["nodes"][0];
-    if (element_id !== undefined && nodes.length > 0){
+    if (element_id != undefined && nodes.length > 0){
         const header_content = "Detailed information for the network element: " + element_id;
         const node = nodes.filter(node => node["id"] == element_id)[0]
         const body_content = node["tooltip"];
