@@ -6,8 +6,16 @@ var sources = [
         "dim_signature": "{{ source.dimSignature.dim_signature }}",
         "processor": "{{ source.processor }}",
         "version": "{{ source.processor_version }}",
+        {% if source.validity_start == None %}
+        "validity_start": "{{ source.generation_time }}",
+        {% else %}
         "validity_start": "{{ source.validity_start }}",
+        {% endif %}
+        {% if source.validity_stop == None %}
+        "validity_stop": "{{ source.generation_time }}",
+        {% else %}
         "validity_stop": "{{ source.validity_stop }}",
+        {% endif %}
         {% if source.ingestion_time == None %}
         "ingestion_time": "{{ source.generation_time }}",
         {% else %}
