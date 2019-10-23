@@ -19,7 +19,8 @@ function create_sources_groups_by_dim_signature(sources){
             options: {
                 drawPoints: {
                     style: "circle"
-                }
+                },
+                interpolation: false
             }
         })
     }
@@ -45,7 +46,7 @@ function create_source_tooltip_text(source){
         "<tr><td>Validity stop</td><td>" + source["validity_stop"] + "</td></tr>" +
         "<tr><td>Generation time</td><td>" + source["generation_time"] + "</td></tr>" +
         "<tr><td>Ingestion time</td><td>" + source["ingestion_time"] + "</td></tr>" +
-        "<tr><td>Ingestion duration</td><td>" + source["ingestion_duration"] + "</td></tr>" +
+        "<tr><td>Ingestion duration (hh:mm:ss.000)</td><td>" + source["ingestion_duration"] + "</td></tr>" +
         "<tr><td>Number of events</td><td>" + source["number_of_events"] + "</td></tr>" +
         "<tr><td>Ingestion time - generation time (m)</td><td>" + ingestion_minus_generation + "</td></tr>" +
         "<tr><td>Ingestion error</td><td>" + ingestion_error + "</td></tr>" +
@@ -133,7 +134,7 @@ export function create_source_ingestion_duration_xy(sources, dom_id){
             id: source["id"],
             group: source["dim_signature"],
             x: source["ingestion_time"],
-            y: dates.interval_to_seconds(source["ingestion_duration"]),
+            y: dates.interval_to_minutes(source["ingestion_duration"]),
             tooltip: create_source_tooltip_text(source)
         })
     }
@@ -143,7 +144,7 @@ export function create_source_ingestion_duration_xy(sources, dom_id){
         dataAxis: {
             left: {
                 title: {
-                    text: "Seconds"
+                    text: "Minutes"
                 }
             }
         }

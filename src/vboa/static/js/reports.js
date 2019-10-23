@@ -21,7 +21,8 @@ function create_reports_groups_by_report_group(reports){
             options: {
                 drawPoints: {
                     style: "circle"
-                }
+                },
+                interpolation: false
             }
         })
     }
@@ -45,10 +46,10 @@ function create_report_tooltip_text(report){
         "<tr><td>Report group</td><td>" + report["report_group"] + "</td></tr>" +
         "<tr><td>Validity start</td><td>" + report["validity_start"] + "</td></tr>" +
         "<tr><td>Validity stop</td><td>" + report["validity_stop"] + "</td></tr>" +
-        "<tr><td>Validity duration</td><td>" + validity_duration + "</td></tr>" +
+        "<tr><td>Validity duration (m)</td><td>" + validity_duration + "</td></tr>" +
         "<tr><td>Generation start</td><td>" + report["generation_start"] + "</td></tr>" +
         "<tr><td>Generation stop</td><td>" + report["generation_stop"] + "</td></tr>" +
-        "<tr><td>Generation duration</td><td>" + generation_duration + "</td></tr>" +
+        "<tr><td>Generation duration (m)</td><td>" + generation_duration + "</td></tr>" +
         "<tr><td>Generator</td><td>" + report["generator"] + "</td></tr>" +
         "<tr><td>Version of generator</td><td>" + report["version"] + "</td></tr>" +
         "<tr><td>Generation error</td><td>" + generation_error + "</td></tr>" +
