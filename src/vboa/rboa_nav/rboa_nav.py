@@ -12,6 +12,7 @@ import tarfile
 import json
 import shlex
 from subprocess import Popen, PIPE
+from multiprocessing import Pool
 
 # Import flask utilities
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
@@ -346,12 +347,34 @@ def execute_reports():
     start = filters["start"][0]
     stop = filters["stop"][0]
 
+    parameters = []
     for generator in filters["generators"]:
-        command = "rboa_triggering.py -g '" + generator + "' -m MANUAL -b '" + start + "' -e '" + stop + "'"
-        command_split = shlex.split(command)
-        program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        output, error = program.communicate()        
-        return_code = program.returncode
+        parameters.append({
+            "generator": generator,
+            "start": start,
+            "stop": stop
+        })
     # end for
 
-    return ""
+    # Trigger parallel generation of reports
+    pool = Pool(len(filters["generators"]))
+    try:
+        pool.map(trigger_generator, parameters)
+    finally:
+        pool.close()
+        pool.join()
+    # end try
+    
+    return render_template("rboa_nav/query_reports.html")
+
+# Function to execute the command
+def trigger_generator(parameters):
+    generator = parameters["generator"]
+    start = parameters["start"]
+    stop = parameters["stop"]
+    command = "rboa_triggering.py -g '" + generator + "' -m MANUAL -b '" + start + "' -e '" + stop + "'"
+    command_split = shlex.split(command)
+    program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    output, error = program.communicate()        
+    return_code = program.returncode
+# end for

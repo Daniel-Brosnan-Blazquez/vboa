@@ -281,7 +281,7 @@ export function submit_request_for_execution(){
         form_data.append("generators", this.id)
     })
 
-    queryFunctions.request_info_form_data("/rboa_nav/execute-reports", notify_end_of_generation_of_reports, form_data)
+    queryFunctions.request_info_form_data("/rboa_nav/execute-reports", notify_end_of_triggering_of_reports, form_data)
 
     var message = "Reports for the period " + form_data.get("start") + " - " + form_data.get("stop") +  " are going to be generated using the following generators:"
     for (const generator of form_data.getAll("generators")){
@@ -292,9 +292,9 @@ export function submit_request_for_execution(){
     
 }
 
-export function notify_end_of_generation_of_reports(response, form_data){
+export function notify_end_of_triggering_of_reports(response, form_data){
 
-    var message = "Reports for the period " + form_data.get("start") + " - " + form_data.get("stop") +  " were generated using the following generators:"
+    var message = "Generation of reports for the period " + form_data.get("start") + " - " + form_data.get("stop") +  " has been triggered using the following generators:"
     for (const generator of form_data.getAll("generators")){
         message += "</br>- <b>" + generator + "</b>"
     }
