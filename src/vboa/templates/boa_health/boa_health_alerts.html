@@ -7,8 +7,13 @@
 {% with template = "?template=alerts" %}
 {% include "boa_health/boa_health_query.html" %}
 {% endwith %}
-{% set health_events_sorted = health_events|sort(attribute="start") %}
-{% set alerts = health_events_sorted|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+
+<!-- Pagination -->
+{% with route = "/health/health-pages", elements = health_events, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
+{% set alerts = health_events|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% include "boa_health/boa_health_alerts_content.html" %}
 {% endblock %}
 {% block scripts %}

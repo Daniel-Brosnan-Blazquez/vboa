@@ -4,9 +4,15 @@
   <h1 class="page-header">BOA health monitoring</h1>
 </div>
 <!-- /.row -->
+<!-- Query -->
 {% include "boa_health/boa_health_query.html" %}
-{% set health_events_sorted = health_events|sort(attribute="start") %}
-{% set alerts = health_events_sorted|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+
+<!-- Pagination -->
+{% with route = "/health/health-pages", elements = health_events, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
+{% set alerts = health_events|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% include "boa_health/boa_health_alerts_content.html" %}
 {% if health_events|length > 0 %}
 <div class="row">
@@ -225,15 +231,15 @@
             </tr>
           </thead>
           <tbody>
-            {% set last_event_processes = health_events_sorted[-1].get_structured_values()[0]["values"]|selectattr("name", "match", "information_for_process_.*")|list %}
+            {% set last_event_processes = health_events[0].get_structured_values()[0]["values"]|selectattr("name", "match", "information_for_process_.*")|list %}
             {% for process in last_event_processes %}
             <tr>
               {% for key in ["pid", "ppid", "command", "status", "create_time", "cpu_percentage", "memory_percentage", "number_of_threads", "number_of_fds"] %}
               {% set value = process["values"]|selectattr("name", "equalto", key)|first|get_value_key("value") %}
               <td>{{ value }}</td>
               {% endfor %}
-              <td>{{ health_events_sorted[-1].start.isoformat() }}</td>
-              <td><a href="/eboa_nav/query-event-links/{{ health_events_sorted[-1].event_uuid }}">{{ health_events_sorted[-1].event_uuid }}</a></td>
+              <td>{{ health_events[0].start.isoformat() }}</td>
+              <td><a href="/eboa_nav/query-event-links/{{ health_events[0].event_uuid }}">{{ health_events[0].event_uuid }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
@@ -370,8 +376,7 @@
 {{ super() }}
 <script type="text/javascript">
   {% if health_events|length > 0 %}
-  {% set health_events_sorted = health_events|sort(attribute="start") %}
-  {% with events = health_events_sorted %}
+  {% with events = health_events %}
   {% include "boa_health/js/memory_evolution_xy.js" %}
   {% endwith %}
 
@@ -389,7 +394,7 @@
   
   vboa.display_x_time("health-x-time-memory-evolution", items, groups, options);
 
-  {% with events = health_events_sorted %}
+  {% with events = health_events %}
   {% include "boa_health/js/disks_evolution_xy.js" %}
   {% endwith %}
 
@@ -407,7 +412,7 @@
   
   vboa.display_x_time("health-x-time-disks-evolution", items, groups, options);
 
-  {% with events = health_events_sorted %}
+  {% with events = health_events %}
   {% include "boa_health/js/cpu_evolution_xy.js" %}
   {% endwith %}
 
@@ -425,7 +430,7 @@
   
   vboa.display_x_time("health-x-time-cpu-evolution", items, groups, options);
 
-  {% with events = health_events_sorted %}
+  {% with events = health_events %}
   {% include "boa_health/js/number_of_processes_evolution_xy.js" %}
   {% endwith %}
 
@@ -442,7 +447,7 @@
 
   vboa.display_x_time("health-x-time-number-of-processes-evolution", items, groups, options);
 
-  {% with events = health_events_sorted %}
+  {% with events = health_events %}
   {% include "boa_health/js/connections_to_ddbb_evolution_xy.js" %}
   {% endwith %}
 
@@ -459,7 +464,7 @@
 
   vboa.display_x_time("health-x-time-number-of-connections-to-ddbb", items, groups, options);
 
-  {% with events = health_events_sorted %}
+  {% with events = health_events %}
   {% include "boa_health/js/folders_evolution_xy.js" %}
   {% endwith %}
 

@@ -8,6 +8,12 @@
 {% include "reporting_control/reporting_control_query.html" %}
 {% endwith %}
 {% set reporting_errors = reports|selectattr("generation_error", "equalto", True)|list %}
+
+<!-- Pagination -->
+{% with route = "/reporting_control/reporting-control-pages", elements = reporting_errors, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
 {% include "reporting_control/reporting_control_errors_content.html" %}
 {% endblock %}
 {% block scripts %}

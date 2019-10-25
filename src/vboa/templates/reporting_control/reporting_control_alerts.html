@@ -8,6 +8,12 @@
 {% include "reporting_control/reporting_control_query.html" %}
 {% endwith %}
 {% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+
+<!-- Pagination -->
+{% with route = "/reporting_control/reporting-control-pages", elements = alerts, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
 {% include "reporting_control/reporting_control_alerts_content.html" %}
 {% endblock %}
 {% block scripts %}

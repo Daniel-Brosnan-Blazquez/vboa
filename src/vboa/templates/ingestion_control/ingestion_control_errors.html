@@ -7,7 +7,13 @@
 {% with template = "?template=errors" %}
 {% include "ingestion_control/ingestion_control_query.html" %}
 {% endwith %}
-{% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|sort(attribute="reception_time", reverse=True)|list %}
+{% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|list %}
+
+<!-- Pagination -->
+{% with route = "/ingestion_control/ingestion-control-pages", elements = ingestion_errors, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
 {% include "ingestion_control/ingestion_control_errors_content.html" %}
 {% endblock %}
 {% block scripts %}
