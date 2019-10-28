@@ -57,6 +57,11 @@ def create_app():
         else:
             return False
 
+    @app.template_test()
+    def match(item, matching_text):
+
+        return re.match(matching_text, item)
+
     @app.template_filter()
     def reject_events_with_link_name(list_of_events, link_name):
         """Convert a string to all caps."""
@@ -138,9 +143,12 @@ def create_app():
 
         return numpy.mean(list_of_items)
 
-    @app.template_test()
-    def match(item, matching_text):
-
-        return re.match(matching_text, item)
-
+    @app.template_filter()
+    def sort_lists_by_length(list_of_lists):
+        """Convert a string to all caps."""
+        sorted_list = list_of_lists.copy()
+        sorted_list.sort(key=len)
+        
+        return sorted_list
+    
     return app
