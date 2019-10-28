@@ -5,39 +5,12 @@
 <div>
   <a href="/eboa_nav/query-ers"><p class="fa fa-chevron-left"> Back to query explicit references</p></a>
 </div>
-{% if filters["limit"][0] != "" and filters["limit"][0]|int == ers|length %}
-<div class="panel panel-yellow">
-  <div class="panel-heading">
-    The number of requested elements is higher than the limit of the query, you can navigate through all the list using the following links:
-  </div>
-  {% if filters["offset"][0]|int == 0 %}
-  {% set filters_to_forward = filters.copy() %}
-  {% do filters_to_forward.__setitem__("offset", [filters_to_forward["offset"][0]|int + filters_to_forward["limit"][0]|int]) %}
-  <div class="panel-body" style="text-align:center">
-    <a href="#" onclick='vboa.request_info_json("/eboa_nav/query-ers-pages", vboa.render_page, {{ filters_to_forward|tojson }})'>Next >></a>
-  </div>
-  {% else %}
-  <div class="panel-body" style="text-align:center">
-    {% set filters_to_forward_prev = filters.copy() %}
-    {% set filters_to_forward_next = filters.copy() %}
-    {% do filters_to_forward_prev.__setitem__("offset", [filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int]) %}
-    {% do filters_to_forward_next.__setitem__("offset", [filters_to_forward_next["offset"][0]|int + filters_to_forward_next["limit"][0]|int]) %}
-    <a href="#" onclick='vboa.request_info_json("/eboa_nav/query-ers-pages", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a><p style="display: inline"> | </p><a href="#" onclick='vboa.request_info_json("/eboa_nav/query-ers-pages", vboa.render_page, {{ filters_to_forward_next|tojson }})'>Next >></a>
-  </div>
-  {% endif %}
-</div>
-{% elif filters["offset"][0]|int > 0 and ers|length < filters["limit"][0]|int %}
-<div class="panel panel-yellow">
-  <div class="panel-heading">
-    All the elements have been reviewed, you can go to the previous pages:
-  </div>
-  <div class="panel-body" style="text-align:center">
-    {% set filters_to_forward_prev = filters.copy() %}
-    {% do filters_to_forward_prev.__setitem__("offset", [filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int]) %}
-    <a href="#" onclick='vboa.request_info_json("/eboa_nav/query-ers-pages", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a>
-  </div>
-</div>
-{% endif %}
+
+<!-- Pagination -->
+{% with route = "/eboa_nav/query-ers-pages", elements = ers, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
 <div class="panel panel-default">
   <div class="panel-heading">
     Table of explicit references
