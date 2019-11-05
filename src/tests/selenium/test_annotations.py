@@ -329,8 +329,8 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_like input
-        inputElement = self.driver.find_element_by_id("annotations-sources-like-text")
-        inputElement.send_keys("source_1.xml")
+        input_element = self.driver.find_element_by_id("annotations-source-text")
+        input_element.send_keys("source_1.xml")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -351,10 +351,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_like input
-        inputElement = self.driver.find_element_by_id("annotations-sources-like-text")
-        inputElement.send_keys("source_1.xml")
+        input_element = self.driver.find_element_by_id("annotations-source-text")
+        input_element.send_keys("source_1.xml")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-sources-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-source-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -377,13 +377,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
-        inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("source_2.xml")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("source_2.xml")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -403,13 +403,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
-        inputElement = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("source_1.xml")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("source_1.xml")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("annotations-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -506,8 +506,8 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
-        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-like-text")
-        inputElement.send_keys("EXPLICIT_REFERENCE")
+        input_element = self.driver.find_element_by_id("annotations-explicit-ref-text")
+        input_element.send_keys("EXPLICIT_REFERENCE")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -528,10 +528,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
-        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-like-text")
-        inputElement.send_keys("EXPLICIT_REFERENCE")
+        input_element = self.driver.find_element_by_id("annotations-explicit-ref-text")
+        input_element.send_keys("EXPLICIT_REFERENCE")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-explicit-refs-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-explicit-ref-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -554,13 +554,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_in input
-        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("EXPLICIT_REFERENCE_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("EXPLICIT_REFERENCE_2")
+        input_element.send_keys(Keys.RETURN)
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click(submitButton)
@@ -584,13 +584,13 @@ class TestAnnotationsTab(unittest.TestCase):
         #end if
 
         # Fill the explicit_ref_in input
-        inputElement = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("EXPLICIT_REFERENCE")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("EXPLICIT_REFERENCE")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -682,8 +682,8 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_like input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-names-like-text")
-        inputElement.send_keys("NAME_2")
+        input_element = self.driver.find_element_by_id("annotations-annotation-name-text")
+        input_element.send_keys("NAME_2")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -704,10 +704,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_like input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-names-like-text")
-        inputElement.send_keys("NAME_2")
+        input_element = self.driver.find_element_by_id("annotations-annotation-name-text")
+        input_element.send_keys("NAME_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-annotation-names-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-annotation-name-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -730,13 +730,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_in input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("NAME_1")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("NAME_1")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -756,13 +756,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_in input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("NAME_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("NAME_2")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -859,8 +859,8 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_like input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-system-like-text")
-        inputElement.send_keys("SYSTEM_2")
+        input_element = self.driver.find_element_by_id("annotations-annotation-system-text")
+        input_element.send_keys("SYSTEM_2")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -881,10 +881,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_like input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-system-like-text")
-        inputElement.send_keys("SYSTEM_2")
+        input_element = self.driver.find_element_by_id("annotations-annotation-system-text")
+        input_element.send_keys("SYSTEM_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-annotation-system-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("annotations-annotation-system-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -907,13 +907,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_in input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("SYSTEM_1")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("SYSTEM_1")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -933,13 +933,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # # Fill the annotation_system_in input
-        inputElement = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("SYSTEM_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("SYSTEM_2")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():

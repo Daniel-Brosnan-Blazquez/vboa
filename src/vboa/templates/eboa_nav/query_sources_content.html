@@ -4,42 +4,54 @@
       <div class="row">
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-sources">
-            <div class="row query-sources">
-              <div class="col-xs-3 query-source-names">
-                <label id="sources-source-names-like-checkbox">Name like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="source-like-sources" name="source_like" id="sources-source-names-like-text"/>
-                <datalist id="source-like-sources">
-                </datalist>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>Name</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="source" id="sources-source-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="source_operator" id="sources-source-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-source-names">
+              <div class="col-xs-3">
                 <label id="sources-source-names-in-checkbox">Names (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-source-names-in-text">
-                </select>
-              </div>
-            </div>
-            <div class="row query-sources">
-              <div class="col-xs-3 query-source-processors">
-                <label id="sources-processors-like-checkbox">Processor like (<input type="checkbox" name="processor_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="processor-like-sources" name="processor_like" id="sources-processors-like-text"/>
-                <datalist id="processor-like-sources">
-                </datalist>
-              </div>
-              <div class="col-xs-3 query-source-processors">
-                <label id="sources-processors-in-checkbox">Processors (<input type="checkbox" name="processor_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="processors" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-processors-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'name', 20, 0)" id="sources-source-names-in-text"/><i class="circle"></i>
+                <select name="sources" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-source-names-in-select">
                 </select>
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-3 query-dim-signatures">
-                <label id="sources-dim-signatures-like-checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="dim-signature-like-sources" name="dim_signature_like" id="sources-dim-signatures-like-text"/>
-                <datalist id="dim-signature-like-sources">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Processor</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="processor" id="sources-processor-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="processor_operator" id="sources-processor-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-dim-signatures">
+              <div class="col-xs-3">
+                <label id="sources-processors-in-checkbox">Processors (<input type="checkbox" name="processor_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'processor', 20, 0)" id="sources-processors-in-text"/><i class="circle"></i>
+                <select name="processors" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-processors-in-select">
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>DIM signature</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="dim_signature" id="sources-dim-signature-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="dim_signature_operator" id="sources-dim-signature-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-xs-3">
                 <label id="sources-dim-signatures-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-dim-signatures-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-dim-signatures', 'dim_signature', 20, 0)" id="sources-dim-signatures-in-text"/><i class="circle"></i>
+                <select name="dim_signatures" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-dim-signatures-in-select">
                 </select>
               </div>
             </div>

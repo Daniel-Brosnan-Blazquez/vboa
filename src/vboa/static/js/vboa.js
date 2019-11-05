@@ -27,6 +27,7 @@ import * as erFunctions from "./explicit_references.js";
 import * as queryFunctions from "./query.js";
 import * as dates from "./dates.js";
 import * as datatableFunctions from "./datatables.js";
+import * as selectorFunctions from "./selectors.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -160,6 +161,13 @@ export function submit_request_for_execution(){
     reportFunctions.submit_request_for_execution();
 }
 
+/* Function to fill searched elements into a selector */
+export function fill_elements_into_selector(input_node, route, field_name, limit, offset){
+
+    selectorFunctions.fill_elements_into_selector(input_node, route, field_name, limit, offset);
+
+};
+
 /* Associate datetimepicker functionality */
 jQuery(function () {
     dates.activate_datetimepicker();
@@ -180,39 +188,6 @@ jQuery(function() {
 jQuery(function() {
     datatableFunctions.activate_search_and_checkboxes_on_tables();
 });
-
-/* Functions to fill lists of inputs */
-/* Functions to be called just once to fill the options with values from the database */
-
-/* Fill sources */
-jQuery(".query-sources").one("focusin", sourceFunctions.fill_sources);
-
-/* Fill processing statuses */
-jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
-
-/* Fill reports */
-jQuery(".query-reports").one("focusin", reportFunctions.fill_reports);
-
-/* Fill source statuses */
-jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
-
-/* Fill gauges */
-jQuery(".query-gauges").one("focusin", gaugeFunctions.fill_gauges);
-
-/* Fill annotation configurations */
-jQuery(".query-annotation-cnfs").one("focusin", annotationCnfsFunctions.fill_annotation_cnfs);
-
-/* Fill explicit references */
-jQuery(".query-ers").one("focusin", erFunctions.fill_ers);
-
-/* Fill explicit reference groups */
-jQuery(".query-er-groups").one("focusin", erFunctions.fill_er_groups);
-
-/* Fill event keys */
-jQuery(".query-keys").one("focusin", eventKeyFunctions.fill_keys);
-
-/* Fill DIM signatures */
-jQuery(".query-dim-signatures").one("focusin", dimSignatureFunctions.fill_dim_signatures);
 
 /*
 * Graph functions
@@ -320,6 +295,9 @@ export function create_gauge_network(gauges, dom_id){
 * SOURCES *
 */
 
+/* Fill source statuses */
+jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
+
 /* Function to show a timeline of validities for the sources */
 export function create_source_validity_timeline(sources, dom_id){
 
@@ -360,6 +338,9 @@ export function create_source_generation_time_to_ingestion_time_xy(sources, dom_
 * REPORTS *
 */
 
+/* Fill report statuses */
+jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
+
 /* Function to show a timeline of validities for the reports */
 export function create_report_validity_timeline(reports, dom_id){
 
@@ -381,9 +362,9 @@ export function request_info(url, callback, parameters){
 
 };
 /* Function to provide a way to request information from javascript passing json as parameter */
-export function request_info_json(url, callback, json){
+export function request_info_json(url, callback, json, show_loader = false){
 
-    queryFunctions.request_info_json(url, callback, json);
+    queryFunctions.request_info_json(url, callback, json, show_loader);
 
 };
 

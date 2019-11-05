@@ -13,12 +13,11 @@ export function date_difference_in_m(date1, date2){
 
 export function interval_to_seconds(interval){
     const elements = interval.split(":");
-    return (elements[0]) * 60 * 60 + (elements[1]) * 60 + elements[2];
+    return parseInt(elements[0]) * 60 * 60 + parseInt(elements[1]) * 60 + parseInt(elements[2]);
 }
 
 export function interval_to_minutes(interval){
-    const elements = interval.split(":");
-    return (elements[0]) * 60 + (elements[1]) + elements[2] / 60;
+    return interval_to_seconds(interval) / 60;
 }
 
 /* Function to add more start and stop selectors when commanded */

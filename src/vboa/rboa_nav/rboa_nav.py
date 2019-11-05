@@ -101,12 +101,12 @@ def query_reports(filters):
     # Get only generated reports
     kwargs["generated"] = True
     
-    if filters["report_like"][0] != "":
+    if filters["report"][0] != "":
         op="notlike"
         if not "report_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["names"] = {"filter": filters["report_like"][0], "op": op}
+        kwargs["names"] = {"filter": filters["report"][0], "op": filters["report_operator"][0]}
     # end if
     elif "reports" in filters and filters["reports"][0] != "":
         op="notin"
@@ -121,12 +121,12 @@ def query_reports(filters):
         # end for
     # end if
 
-    if filters["report_group_like"][0] != "":
+    if filters["report_group"][0] != "":
         op="notlike"
         if not "report_group_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["report_groups"] = {"filter": filters["report_group_like"][0], "op": op}
+        kwargs["report_groups"] = {"filter": filters["report_group"][0], "op": filters["report_group_operator"][0]}
     # end if
     elif "report_groups" in filters and filters["report_groups"][0] != "":
         op="notin"
@@ -141,12 +141,12 @@ def query_reports(filters):
         # end for
     # end if
 
-    if filters["generator_like"][0] != "":
+    if filters["generator"][0] != "":
         op="notlike"
         if not "generator_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["generators"] = {"filter": filters["generator_like"][0], "op": op}
+        kwargs["generators"] = {"filter": filters["generator"][0], "op": filters["generator_operator"][0]}
     # end if
     elif "generators" in filters and filters["generators"][0] != "":
         op="notin"
@@ -292,9 +292,42 @@ def query_jsonify_reports():
     Query all the reports.
     """
     current_app.logger.debug("Query report")
-    reports = query.get_reports()
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["names"] = {"filter": search, "op": "=="}
+
+    reports = query.get_reports(**kwargs)
     jsonified_reports = [report.jsonify() for report in reports]
     return jsonify(jsonified_reports)
+
+
+@bp.route("/query-jsonify-report-groups")
+def query_jsonify_report_groups():
+    """
+    Query report groups.
+    """
+    current_app.logger.debug("Query report groups")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["names"] = {"filter": "%" + search + "%", "op": "like"}
+
+    report_groups = query.get_report_groups(**kwargs)
+    jsonified_report_groups = [report_group.jsonify() for report_group in report_groups]
+    return jsonify(jsonified_report_groups)
 
 @bp.route("/query-jsonify-report-statuses/<uuid:report_uuid>")
 def query_jsonify_report_statuses(report_uuid):

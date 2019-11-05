@@ -11,9 +11,9 @@
   {% set filters_to_forward = filters.copy() %}
   {% do filters_to_forward.__setitem__("offset", [filters_to_forward["offset"][0]|int + filters_to_forward["limit"][0]|int]) %}
   <div class="panel-body" style="text-align:center">
-    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward|tojson }})'>Next >></a>
+    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward|tojson }}, true)'>Next >></a>
     <br/>
-    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_show_all|tojson }})'>Show all >></a>
+    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_show_all|tojson }}, true)'>Show all >></a>
   </div>
   {% else %}
   <div class="panel-body" style="text-align:center">
@@ -21,9 +21,9 @@
     {% set filters_to_forward_next = filters.copy() %}
     {% do filters_to_forward_prev.__setitem__("offset", [filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int]) %}
     {% do filters_to_forward_next.__setitem__("offset", [filters_to_forward_next["offset"][0]|int + filters_to_forward_next["limit"][0]|int]) %}
-    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a><p style="display: inline"> | </p><a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward_next|tojson }})'>Next >></a>
+    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward_prev|tojson }}, true)'><< Prev</a><p style="display: inline"> | </p><a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward_next|tojson }}, true)'>Next >></a>
     <br/>
-    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_show_all|tojson }})'>Show all >></a>
+    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_show_all|tojson }}, true)'>Show all >></a>
   </div>
   {% endif %}
 </div>
@@ -35,9 +35,9 @@
   <div class="panel-body" style="text-align:center">
     {% set filters_to_forward_prev = filters.copy() %}
     {% do filters_to_forward_prev.__setitem__("offset", [filters_to_forward_prev["offset"][0]|int - filters_to_forward_prev["limit"][0]|int]) %}
-    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward_prev|tojson }})'><< Prev</a>
+    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward_prev|tojson }}, true)'><< Prev</a>
     <br/>
-    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_show_all|tojson }})'>Show all >></a>
+    <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_show_all|tojson }}, true)'>Show all >></a>
   </div>
 </div>
 {% endif %}

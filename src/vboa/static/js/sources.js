@@ -252,67 +252,6 @@ function insert_in_datatable(row, table){
     row.child(table).show();
 }
 
-/* Functions for the query interface */
-export function fill_sources(){
-    const divs = document.getElementsByClassName("query-sources");
-    var source_selectors = []
-    var processor_selectors = []
-    for (const div of divs){
-        const source_divs = div.getElementsByClassName("query-source-names");
-        const processor_divs = div.getElementsByClassName("query-source-processors");
-
-        /* Source */
-        for (const source_div of source_divs){
-            var source_selector = source_div.getElementsByTagName("datalist")[0];
-            if (source_selector == null){
-                source_selector = source_div.getElementsByTagName("select")[0];
-            }
-            /* If the options were already filled exit */
-            if (source_div.getElementsByTagName("option").length != 0){
-                return false
-            }
-            source_selectors.push(source_selector);
-        }
-
-        /* Processor */
-        for (const processor_div of processor_divs){
-            var processor_selector = processor_div.getElementsByTagName("datalist")[0];
-            if (processor_selector == null){
-                processor_selector = processor_div.getElementsByTagName("select")[0];
-            }
-            /* If the options were already filled exit */
-            if (processor_div.getElementsByTagName("option").length != 0){
-                return false
-            }
-            processor_selectors.push(processor_selector);
-        }
-    }
-    var selectors = {
-        "source_selectors": source_selectors,
-        "processor_selectors": processor_selectors
-    }
-    query.request_info("/eboa_nav/query-jsonify-sources", fill_sources_into_selectors, selectors);
-    return true
-}
-
-function fill_sources_into_selectors(selectors, sources){
-
-    var source_names = new Set(sources.map(source => source["name"]))
-    var processors = new Set(sources.map(source => source["processor"]))
-    for (const source of source_names){
-        for (const selector of selectors["source_selectors"]){
-            selectorFunctions.add_option(selector, source);
-        }
-    }
-    for (const processor of processors){
-        for (const selector of selectors["processor_selectors"]){
-            selectorFunctions.add_option(selector, processor);
-        }
-    }
-    /* Update chosen for the multiple input selection */
-    jQuery(".chosen-select").trigger("chosen:updated");
-}
-
 export function fill_statuses(){
     const divs = document.getElementsByClassName("query-source-statuses");
     var selectors = []

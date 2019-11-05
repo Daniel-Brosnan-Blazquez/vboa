@@ -183,8 +183,8 @@ class TestDimSignaturesTab(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("dim-signatures-dim-signature-like-text")
-        inputElement.send_keys("DIM_SIGNATURE_2")
+        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-text")
+        input_element.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
@@ -204,10 +204,10 @@ class TestDimSignaturesTab(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("dim-signatures-dim-signature-like-text")
-        inputElement.send_keys("DIM_SIGNATURE_2")
+        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-text")
+        input_element.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = self.driver.find_element_by_id("dim-signatures-dim-signature-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("dim-signatures-dim-signature-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -229,16 +229,16 @@ class TestDimSignaturesTab(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_elements_by_xpath("option")) == 3
 
-        inputElement.send_keys("DIM_SIGNATURE_1")
-        inputElement.send_keys(Keys.RETURN)
-        functions.click(inputElement)
-        inputElement.send_keys("DIM_SIGNATURE_3")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("DIM_SIGNATURE_1")
+        input_element.send_keys(Keys.RETURN)
+        functions.click(input_element)
+        input_element.send_keys("DIM_SIGNATURE_3")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
@@ -257,13 +257,13 @@ class TestDimSignaturesTab(unittest.TestCase):
         functions.goToTab(self.driver,"DIM Signatures")
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_elements_by_xpath("option")) == 3
 
-        inputElement.send_keys("DIM_SIGNATURE_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("DIM_SIGNATURE_2")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("dim-signatures-dim-signature-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():

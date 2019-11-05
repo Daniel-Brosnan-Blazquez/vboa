@@ -5,57 +5,73 @@
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-annotations">
             <!-- Sources -->
-            <div class="row query-sources">
-              <div class="col-xs-3 query-source-names">
-                <label id="annotations-sources-like-checkbox">Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="source-like-annotations" name="source_like" id="annotations-sources-like-text"/>
-                <datalist id="source-like-annotations">
-                </datalist>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>Source</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="source" id="annotations-source-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="source_operator" id="annotations-source-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-source-names">
+              <div class="col-xs-3">
                 <label id="annotations-sources-in-checkbox">Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-sources-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'name', 20, 0)" id="annotations-sources-in-text"/><i class="circle"></i>
+                <select name="sources" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="annotations-sources-in-select">
                 </select>
               </div>
             </div>
             <!-- Exlicit references -->
             <div class="row">
-              <div class="col-xs-3 query-ers">
-                <label id="annotations-explicit-refs-like-checkbox">Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="er-like-annotations" name="er_like" id="annotations-explicit-refs-like-text"/>
-                <datalist id="er-like-annotations">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Explicit reference</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="er" id="annotations-er-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="er_operator" id="annotations-er-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-ers">
+              <div class="col-xs-3">
                 <label id=annotations-explicit-refs-in-checkbox>Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-explicit-refs-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-ers', 'explicit_ref', 20, 0)" id="annotations-ers-in-text"/><i class="circle"></i>
+                <select name="ers" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="annotations-ers-in-select">
                 </select>
               </div>
             </div>
             <!-- Annotation configurations -->
-            <div class="row  query-annotation-cnfs">
-              <div class="col-xs-3 query-annotation-names">
-                <label id="annotations-annotation-names-like-checkbox">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="annotation-name-like-annotations" name="annotation_name_like" id="annotations-annotation-names-like-text"/>
-                <datalist id="annotation-name-like-annotations">
-                </datalist>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>Annotation name</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="annotation_name" id="annotations-annotation-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_name_operator" id="annotations-annotation-name-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-annotation-systems">
-                <label id="annotations-annotation-system-like-checkbox">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="annotation-system-like-annotations" name="annotation_system_like" id="annotations-annotation-system-like-text"/>
-                <datalist id="annotation-system-like-annotations">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Annotation system</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="annotation_system" id="annotations-annotation-system-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_system_operator" id="annotations-annotation-system-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
             </div>
-            <div class="row query-annotation-cnfs">
-              <div class="col-xs-3 query-annotation-names">
+            <div class="row">
+              <div class="col-xs-3">
                 <label id="annotations-annotation-names-in-checkbox">Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-annotation-names-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-annotation-cnfs-by-name', 'name', 20, 0)" id="annotations-annotation-names-in-text"/><i class="circle"></i>
+                <select name="annotation_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="annotations-annotation-names-in-select">
                 </select>
               </div>
-              <div class="col-xs-3 query-annotation-systems">
+              <div class="col-xs-3">
                 <label id="annotations-annotation-system-in-checkbox">Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-annotation-system-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-annotation-cnfs-by-system', 'system', 20, 0)" id="annotations-annotation-systems-in-text"/><i class="circle"></i>
+                <select name="annotation_systems" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="annotations-annotation-systems-in-select">
                 </select>
               </div>
             </div>
@@ -75,10 +91,9 @@
               <div class="col-xs-3">
                 <label>Value name</label>
                 <div class="input-group" style="width: 100%">
-                  <input class="form-control" style="width: 80%" name="annotation_value_name_like" id="value-name-text"/>
-                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_like_op" id="value-name-option">
-                    <option>like</option>
-                    <option>notlike</option>
+                  <input class="form-control" style="width: 80%" name="annotation_value_name" id="value-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_op" id="value-name-option">
+                    {% include "eboa_nav/operators.html" %}
                   </select>
                 </div>
               </div>

@@ -5,72 +5,92 @@
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-events">
             <!-- Sources -->
-            <div class="row query-sources">
-              <div class="col-xs-3 query-source-names">
-                <label id="events-sources-like-checkbox">Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="source-like-events" name="source_like" id="events-sources-like-text"/>
-                <datalist id="source-like-events">
-                </datalist>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>Source</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="source" id="events-source-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="source_operator" id="events-source-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-source-names">
+              <div class="col-xs-3">
                 <label id="events-sources-in-checkbox">Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1"  id="events-sources-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'name', 20, 0)" id="events-sources-in-text"/><i class="circle"></i>
+                <select name="sources" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-sources-in-select">
                 </select>
               </div>
             </div>
             <!-- Exlicit references -->
             <div class="row">
-              <div class="col-xs-3 query-ers">
-                <label id="events-explicit-refs-like-checkbox">Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="er-like-events" name="er_like" id="events-explicit-refs-like-text"/>
-                <datalist id="er-like-events">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Explicit reference</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="er" id="events-er-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="er_operator" id="events-er-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-ers">
+              <div class="col-xs-3">
                 <label id="events-explicit-refs-in-checkbox">Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="events-explicit-refs-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-ers', 'explicit_ref', 20, 0)" id="events-ers-in-text"/><i class="circle"></i>
+                <select name="ers" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-ers-in-select">
                 </select>
               </div>
             </div>
             <!-- Event keys -->
             <div class="row">
-              <div class="col-xs-3 query-keys">
-                <label id="events-event-keys-like-checkbox">Key like (<input type="checkbox" name="key_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="key-like-events" name="key_like" id="events-event-keys-like-text"/>
-                <datalist id="key-like-events">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Key</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="key" id="events-key-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="key_operator" id="events-key-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-keys">
+              <div class="col-xs-3">
                 <label id="events-event-keys-in-checkbox">Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="events-event-keys-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-keys', 'event_key', 20, 0)" id="events-keys-in-text"/><i class="circle"></i>
+                <select name="keys" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-keys-in-select">
                 </select>
               </div>
             </div>
             <!-- Gauges -->
             <div>
-              <div class="row  query-gauges">
-                <div class="col-xs-3 query-gauge-names">
-                  <label id="events-gauge-names-like-checkbox">Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="gauge-name-like-events" name="gauge_name_like" id="events-gauge-names-like-text"/>
-                  <datalist id="gauge-name-like-events">
-                  </datalist>
+              <div class="row">
+                <div class="col-xs-3">
+                  <label>Gauge name</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="gauge_name" id="events-gauge-name-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="gauge_name_operator" id="events-gauge-name-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
                 </div>
-                <div class="col-xs-3 query-gauge-systems">
-                  <label id="events-gauge-system-like-checkbox">Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="gauge-system-like-events" name="gauge_system_like" id="events-gauge-system-like-text"/>
-                  <datalist id="gauge-system-like-events">
-                  </datalist>
+                <div class="col-xs-3">
+                  <label>Gauge system</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="gauge_system" id="events-gauge-system-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="gauge_system_operator" id="events-gauge-system-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div class="row query-gauges">
-                <div class="col-xs-3 query-gauge-names">
+              <div class="row">
+                <div class="col-xs-3">
                   <label id="events-gauge-names-in-checkbox">Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="events-gauge-names-in-text">
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-name', 'name', 20, 0)" id="events-gauge-names-in-text"/><i class="circle"></i>
+                  <select name="gauge_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-gauge-names-in-select">
                   </select>
                 </div>
-                <div class="col-xs-3 query-gauge-systems">
+                <div class="col-xs-3">
                   <label id="events-gauge-system-in-checkbox">Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="events-gauge-system-in-text">
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-system', 'system', 20, 0)" id="events-gauge-systems-in-text"/><i class="circle"></i>
+                  <select name="gauge_systems" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-gauge-systems-in-select">
                   </select>
                 </div>
               </div>
@@ -91,10 +111,9 @@
               <div class="col-xs-3">
                 <label>Value name</label>
                 <div class="input-group" style="width: 100%">
-                  <input class="form-control" style="width: 80%" name="event_value_name_like" id="value-name-text"/>
-                  <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_name_like_op" id="value-name-option">
-                    <option>like</option>
-                    <option>notlike</option>
+                  <input class="form-control" style="width: 80%" name="event_value_name" id="value-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_name_op" id="value-name-option">
+                    {% include "eboa_nav/operators.html" %}
                   </select>
                 </div>
               </div>

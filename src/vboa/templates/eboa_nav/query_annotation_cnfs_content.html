@@ -5,43 +5,55 @@
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-annotation-cnfs">
             <div>
-              <div class="row  query-annotation-cnfs">
-                <div class="col-xs-3 query-annotation-names">
-                  <label id="annotation-cnfs-annotation-names-like-checkbox">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="annotation-name-like-annotation-cnfs" name="annotation_name_like" id="annotation-cnfs-annotation-names-like-text"/>
-                  <datalist id="annotation-name-like-annotation-cnfs">
-                  </datalist>
+              <div class="row ">
+                <div class="col-xs-3">
+                  <label>Annotation name</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="annotation_name" id="annotation-cnfs-annotation-name-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_name_operator" id="annotation-cnfs-annotation-name-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
                 </div>
-                <div class="col-xs-3 query-annotation-systems">
-                  <label id="annotation-cnfs-annotation-system-like-checkbox">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                  <input class="form-control" list="annotation-system-like-annotation-cnfs" name="annotation_system_like" id="annotation-cnfs-annotation-system-like-text"/>
-                  <datalist id="annotation-system-like-annotation-cnfs">
-                  </datalist>
+                <div class="col-xs-3">
+                  <label>Annotation system</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="annotation_system" id="annotation-cnfs-annotation-system-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_system_operator" id="annotation-cnfs-annotation-system-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div class="row query-annotation-cnfs">
-                <div class="col-xs-3 query-annotation-names">
+              <div class="row">
+                <div class="col-xs-3">
                   <label id="annotation-cnfs-annotation-names-in-checkbox">Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation-cnfs-annotation-names-in-text">
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-annotation-cnfs-by-name', 'name', 20, 0)" id="annotation-cnfs-annotation-names-in-text"/><i class="circle"></i>
+                  <select name="annotation_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="annotation-cnfs-annotation-names-in-select">
                   </select>
                 </div>
-                <div class="col-xs-3 query-annotation-systems">
+                <div class="col-xs-3">
                   <label id="annotation-cnfs-annotation-system-in-checkbox">Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation-cnfs-annotation-system-in-text">
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-annotation-cnfs-by-system', 'system', 20, 0)" id="annotation-cnfs-annotation-systems-in-text"/><i class="circle"></i>
+                  <select name="annotation_systems" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="annotation-cnfs-annotation-systems-in-select">
                   </select>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-3 query-dim-signatures">
-                <label id="annotation-cnfs-dim-signature-like-checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="dim-signature-like-sources" name="dim_signature_like" id="annotation-cnfs-dim-signature-like-text"/>
-                <datalist id="dim-signature-like-sources">
-                </datalist>
+              <div class="col-xs-3">
+                <label>DIM signature</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="dim_signature" id="annotation-cnfs-dim-signature-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="dim_signature_operator" id="annotation-cnfs-dim-signature-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-dim-signatures">
-                <label id="annotation-cnfs-dim-signature-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation-cnfs-dim-signature-in-text">
+              <div class="col-xs-3">
+                <label>DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-dim-signatures', 'dim_signature', 20, 0)" id="annotation-cnfs-dim-signatures-in-select"/><i class="circle"></i>
+                <select name="dim_signatures" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="annotation-cnfs-dim-signatures-in-text">
                 </select>
               </div>
             </div>

@@ -4,42 +4,54 @@
       <div class="row">
         <div class="col-xs-12">
           <form role="form" method=post action="/rboa_nav/query-reports">
-            <div class="row query-reports">
-              <div class="col-xs-3 query-report-names">
-                <label id="reports-report-names-like-checkbox">Name like (<input type="checkbox" name="report_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="report-like-reports" name="report_like" id="reports-report-names-like-text"/>
-                <datalist id="report-like-reports">
-                </datalist>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>Name</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="report" id="reports-report-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="report_operator" id="reports-report-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-report-names">
+              <div class="col-xs-3">
                 <label id="reports-report-names-in-checkbox">Names (<input type="checkbox" name="report_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="reports" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-report-names-in-text">
-                </select>
-              </div>
-            </div>
-            <div class="row query-reports">
-              <div class="col-xs-3 query-report-generators">
-                <label id="reports-generators-like-checkbox">Generator like (<input type="checkbox" name="generator_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="generator-like-reports" name="generator_like" id="reports-generators-like-text"/>
-                <datalist id="generator-like-reports">
-                </datalist>
-              </div>
-              <div class="col-xs-3 query-report-generators">
-                <label id="reports-generators-in-checkbox">Generators (<input type="checkbox" name="generator_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="generators" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-generators-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'name', 20, 0)"/><i class="circle"></i>
+                <select name="reports" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-names-in-text">
                 </select>
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-3 query-report-groups">
-                <label id="reports-report-groups-like-checkbox">Report group like (<input type="checkbox" name="report_group_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="report-group-like-reports" name="report_group_like" id="reports-report-groups-like-text"/>
-                <datalist id="report-group-like-reports">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Generator</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="generator" id="reports-generator-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="generator_operator" id="reports-generator-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-report-groups">
+              <div class="col-xs-3">
+                <label id="reports-generators-in-checkbox">Generators (<input type="checkbox" name="generator_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'generator', 20, 0)"/><i class="circle"></i>
+                <select name="generators" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-generators-in-text">
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>Report group</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="report_group" id="reports-report-group-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="report_group_operator" id="reports-report-group-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-xs-3">
                 <label id="reports-report-groups-in-checkbox">Report groups (<input type="checkbox" name="report_group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="report_groups" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-report-groups-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-report-groups', 'name', 20, 0)"/><i class="circle"></i>
+                <select name="report_groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-groups-in-text">
                 </select>
               </div>
             </div>
@@ -99,7 +111,7 @@
             <div id="more-triggering-time-query-reports">
             </div>
             <div class="row" id="reports-statuses-initial">
-              <div class="col-xs-3 query-report-statuses">
+              <div class="col-xs-3">
                 <label id="reports-statuses-initial-checkbox">Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
                 <select name="report_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-statuses-initial-in-text">
                 </select>

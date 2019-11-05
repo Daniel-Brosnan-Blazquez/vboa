@@ -13,13 +13,22 @@ export function request_info(url, callback, parameters){
 }
 
 /* Function to request information to the EBOA by URL, using json for the parameters */
-export function request_info_json(url, callback, json){
+export function request_info_json(url, callback, json, show_loader = false){
+    if (show_loader == true){
+        var loader = document.getElementById("updating-page");
+        loader.className = "loader-render"
+    }
 
     var xmlhttp = new XMLHttpRequest();
     if (callback){
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                return callback(this.responseText);
+                var returned_value = callback(this.responseText);
+                if (show_loader == true){
+                    var loader = document.getElementById("updating-page");
+                    loader.className = ""
+                }
+                return returned_value
             }
         };
     }

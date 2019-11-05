@@ -220,7 +220,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-explicit-ref-text")
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         # Click on query button
@@ -240,10 +240,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-explicit-ref-text")
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-explicit-refs-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-explicit-ref-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -263,7 +263,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
@@ -291,7 +291,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
@@ -372,7 +372,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the group_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-groups-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-group-text")
         input_element.send_keys("EXPL_GROUP_2")
 
         # Click on query button
@@ -392,10 +392,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the group_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-groups-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-group-text")
         input_element.send_keys("EXPL_GROUP_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-groups-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-group-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -415,7 +415,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the group_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
@@ -440,7 +440,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the group_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
@@ -523,7 +523,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the source_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-sources-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-source-text")
         input_element.send_keys("source_1.xml")
 
         # Click on query button
@@ -543,10 +543,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the source_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-sources-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-source-text")
         input_element.send_keys("source_1.xml")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-sources-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-source-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -565,7 +565,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
@@ -590,7 +590,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
@@ -680,7 +680,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-keys-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-key-text")
         input_element.send_keys("EVENT_KEY_1")
 
         # Click on query button
@@ -700,10 +700,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-keys-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-key-text")
         input_element.send_keys("EVENT_KEY_1")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-keys-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-key-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -723,7 +723,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
@@ -750,7 +750,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
@@ -840,7 +840,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-name-text")
         input_element.send_keys("GAUGE_NAME_1")
 
         # Click on query button
@@ -860,10 +860,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-name-text")
         input_element.send_keys("GAUGE_NAME_1")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-names-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-name-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -883,7 +883,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
@@ -908,7 +908,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
@@ -998,7 +998,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_system_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-text")
         input_element.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
@@ -1018,10 +1018,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_system_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-text")
         input_element.send_keys("GAUGE_SYSTEM_1")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-system-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-system-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -1041,7 +1041,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
@@ -1066,7 +1066,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
@@ -1914,7 +1914,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         # Fill the annotation_name_like input
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-name-text")
         input_element.send_keys("NAME_2")
 
         # Click on query button
@@ -1934,10 +1934,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_name_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-name-text")
         input_element.send_keys("NAME_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-names-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-name-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -1957,7 +1957,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
@@ -1983,7 +1983,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
@@ -2083,7 +2083,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_system_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-text")
         input_element.send_keys("SYSTEM_2")
 
         # Click on query button
@@ -2103,10 +2103,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # find the element that's name attribute is gauge_system_like
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-like-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-text")
         input_element.send_keys("SYSTEM_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-system-like-checkbox")
+        not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-system-checkbox")
         functions.select_checkbox(not_like_button)
 
         # Click on query button
@@ -2127,7 +2127,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # find the element that's name attribute is gauge_system_in
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
@@ -2153,7 +2153,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # find the element that's name attribute is gauge_system_in
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/ul/li/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/input")
         functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2

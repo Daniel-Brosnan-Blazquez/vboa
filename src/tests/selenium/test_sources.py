@@ -331,8 +331,8 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_like input
-        inputElement = self.driver.find_element_by_id("sources-source-names-like-text")
-        inputElement.send_keys("source_2.xml")
+        input_element = self.driver.find_element_by_id("sources-source-name-text")
+        input_element.send_keys("source_2.xml")
 
         # Click on query button
         functions.click(submit_button)
@@ -353,10 +353,10 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_like input
-        inputElement = self.driver.find_element_by_id("sources-source-names-like-text")
-        inputElement.send_keys("source_2.xml")
+        input_element = self.driver.find_element_by_id("sources-source-name-text")
+        input_element.send_keys("source_2.xml")
 
-        notLikeButton = self.driver.find_element_by_id("sources-source-names-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("sources-source-name-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -379,16 +379,16 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
-        inputElement = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-source-names-in-text").find_elements_by_xpath("option")) == 3
 
-        inputElement.send_keys("source_2.xml")
-        inputElement.send_keys(Keys.RETURN)
-        functions.click(inputElement)
-        inputElement.send_keys("source_3.xml")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("source_2.xml")
+        input_element.send_keys(Keys.RETURN)
+        functions.click(input_element)
+        input_element.send_keys("source_3.xml")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         functions.click(submit_button)
@@ -408,13 +408,13 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
-        inputElement = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-source-names-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-source-names-in-text").find_elements_by_xpath("option")) == 3
 
-        inputElement.send_keys("source_3.xml")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("source_3.xml")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("sources-source-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -488,8 +488,8 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_like input
-        inputElement = self.driver.find_element_by_id("sources-processors-like-text")
-        inputElement.send_keys("exec_2")
+        input_element = self.driver.find_element_by_id("sources-processor-text")
+        input_element.send_keys("exec_2")
 
         # Click on query button
         functions.click(submit_button)
@@ -510,10 +510,10 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_like input
-        inputElement = self.driver.find_element_by_id("sources-processors-like-text")
-        inputElement.send_keys("exec_2")
+        input_element = self.driver.find_element_by_id("sources-processor-text")
+        input_element.send_keys("exec_2")
 
-        notLikeButton = self.driver.find_element_by_id("sources-processors-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("sources-processor-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -536,13 +536,13 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
-        inputElement = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-processors-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("exec")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("exec")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         functions.click(submit_button)
@@ -562,13 +562,13 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
-        inputElement = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-processors-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-processors-in-text").find_elements_by_xpath("option")) == 2
 
-        inputElement.send_keys("exec_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("exec_2")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("sources-processors-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -642,8 +642,8 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("sources-dim-signatures-like-text")
-        inputElement.send_keys("DIM_SIGNATURE_2")
+        input_element = self.driver.find_element_by_id("sources-dim-signature-text")
+        input_element.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
         functions.click(submit_button)
@@ -664,10 +664,10 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("sources-dim-signatures-like-text")
-        inputElement.send_keys("DIM_SIGNATURE_2")
+        input_element = self.driver.find_element_by_id("sources-dim-signature-text")
+        input_element.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = self.driver.find_element_by_id("sources-dim-signatures-like-checkbox")
+        notLikeButton = self.driver.find_element_by_id("sources-dim-signature-checkbox")
         if not notLikeButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notLikeButton)
         #end if
@@ -690,16 +690,16 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-dim-signatures-in-text").find_elements_by_xpath("option")) == 3
 
-        inputElement.send_keys("DIM_SIGNATURE_1")
-        inputElement.send_keys(Keys.RETURN)
-        functions.click(inputElement)
-        inputElement.send_keys("DIM_SIGNATURE_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("DIM_SIGNATURE_1")
+        input_element.send_keys(Keys.RETURN)
+        functions.click(input_element)
+        input_element.send_keys("DIM_SIGNATURE_2")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         functions.click(submit_button)
@@ -719,13 +719,13 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-dim-signatures-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-dim-signatures-in-text").find_elements_by_xpath("option")) == 3
 
-        inputElement.send_keys("DIM_SIGNATURE_3")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("DIM_SIGNATURE_3")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("sources-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -1379,13 +1379,13 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the status_in input
-        inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 20
 
-        inputElement.send_keys("OK")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("OK")
+        input_element.send_keys(Keys.RETURN)
 
         # Click on query button
         functions.click(submit_button)
@@ -1406,13 +1406,13 @@ class TestSourcesTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the status_in input
-        inputElement = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
+        input_element = self.driver.find_element_by_id("sources-statuses-initial-in-text").find_element_by_xpath("../div/input")
+        functions.click(input_element)
 
         assert len(self.driver.find_element_by_id("sources-statuses-initial-in-text").find_elements_by_xpath("option")) == 20
 
-        inputElement.send_keys("OK")
-        inputElement.send_keys(Keys.RETURN)
+        input_element.send_keys("OK")
+        input_element.send_keys(Keys.RETURN)
 
         notInButton = self.driver.find_element_by_id("sources-statuses-initial-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():

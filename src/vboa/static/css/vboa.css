@@ -239,13 +239,25 @@ input[type="checkbox"]:disabled + .label-text:before{
     background: blue;
 }
 
-/* Loader */
+/* Loaders */
 .loader {
   border: 1px solid #f3f3f3; /* Light grey */
   border-top: 1px solid #3498db; /* Blue */
   border-radius: 50%;
   width: 12px;
   height: 12px;
+  animation: spin 2s linear infinite;
+}
+.loader-render {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  border: 10px solid #f3f3f3; /* Light grey */
+  border-top: 10px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
   animation: spin 2s linear infinite;
 }
 

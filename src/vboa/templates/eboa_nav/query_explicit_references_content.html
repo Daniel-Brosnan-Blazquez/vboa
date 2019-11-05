@@ -6,43 +6,55 @@
           <form role="form" method=post action="/eboa_nav/query-ers">
             <!-- Exlicit references -->
             <div class="row">
-              <div class="col-xs-3 query-ers">
-                <label id="explicit-refs-explicit-refs-like-checkbox">Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="er-like-ers" name="er_like" id="explicit-refs-explicit-refs-like-text"/>
-                <datalist id="er-like-ers">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Explicit reference</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="er" id="explicit-refs-er-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="er_operator" id="explicit-refs-er-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-ers">
+              <div class="col-xs-3">
                 <label id="explicit-refs-explicit-refs-in-checkbox">Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="explicit-refs-explicit-refs-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-ers', 'explicit_ref', 20, 0)" id="explicit-refs-ers-in-text"/><i class="circle"></i>
+                <select name="ers" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-ers-in-select">
                 </select>
               </div>
             </div>
             <!-- Configuration -->
             <div class="row">
-              <div class="col-xs-3 query-er-groups">
-                <label id="explicit-refs-groups-like-checkbox">Group like (<input type="checkbox" name="group_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="group-like-explicit-reference" name="group_like" id="explicit-refs-groups-like-text"/>
-                <datalist id="group-like-explicit-reference">
-                </datalist>
+              <div class="col-xs-3">
+                <label>Group</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="group" id="explicit-refs-group-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="group_operator" id="explicit-refs-group-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-er-groups">
+              <div class="col-xs-3">
                 <label id="explicit-refs-groups-in-checkbox">Groups (<input type="checkbox" name="group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select id="explicit-refs-groups-in-text" name="groups" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-er-groups', 'name', 20, 0)" id="explicit-refs-er-groups-in-text"/><i class="circle"></i>
+                <select name="groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-er-groups-in-select">
                 </select>
               </div>
             </div>
             <!-- Sources -->
-            <div class="row query-sources">
-              <div class="col-xs-3 query-source-names">
-                <label id="explicit-refs-sources-like-checkbox">Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input id="explicit-refs-sources-like-text" class="form-control" list="source-like-ers" name="source_like"/>
-                <datalist id="source-like-ers">
-                </datalist>
+            <div class="row">
+              <div class="col-xs-3">
+                <label>Source</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="source" id="explicit-refs-source-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="source_operator" id="explicit-refs-source-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-source-names">
+              <div class="col-xs-3">
                 <label id="explicit-refs-sources-in-checkbox">Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select id="explicit-refs-sources-in-text" name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'name', 20, 0)" id="explicit-refs-sources-in-text"/><i class="circle"></i>
+                <select name="sources" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-sources-in-select">
                 </select>
               </div>
             </div>
@@ -53,43 +65,55 @@
                 <div class="panel-body">
                   <!-- Event keys -->
                   <div class="row">
-                    <div class="col-xs-3 query-keys">
-                      <label id="explicit-refs-keys-like-checkbox">Key like (<input type="checkbox" name="key_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                      <input id="explicit-refs-keys-like-text" class="form-control" list="key-like-events" name="key_like"/>
-                      <datalist id="key-like-events">
-                      </datalist>
+                    <div class="col-xs-3">
+                      <label>Key</label>
+                      <div class="input-group" style="width: 100%">
+                        <input class="form-control" style="width: 80%" name="key" id="explicit-refs-key-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="key_operator" id="explicit-refs-key-operator">
+                          {% include "eboa_nav/operators.html" %}
+                        </select>
+                      </div>
                     </div>
-                    <div class="col-xs-3 query-keys">
+                    <div class="col-xs-3">
                       <label id="explicit-refs-keys-in-checkbox">Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                      <select id="explicit-refs-keys-in-text" name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-keys', 'event_key', 20, 0)" id="explicit-refs-keys-in-text"/><i class="circle"></i>
+                      <select name="keys" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-keys-in-select">
                       </select>
                     </div>
                   </div>
                   <!-- Gauges -->
                   <div>
-                    <div class="row  query-gauges">
-                      <div class="col-xs-3 query-gauge-names">
-                        <label id="explicit-refs-gauge-names-like-checkbox">Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                        <input id="explicit-refs-gauge-names-like-text" class="form-control" list="gauge-name-like-events" name="gauge_name_like"/>
-                        <datalist id="gauge-name-like-events">
-                        </datalist>
+                    <div class="row ">
+                      <div class="col-xs-3">
+                        <label>Gauge name</label>
+                        <div class="input-group" style="width: 100%">
+                          <input class="form-control" style="width: 80%" name="gauge_name" id="explicit-refs-gauge-name-text"/>
+                          <select class="form-control" style="padding-left: 0; width: 20%" name="gauge_name_operator" id="explicit-refs-gauge-name-operator">
+                            {% include "eboa_nav/operators.html" %}
+                          </select>
+                        </div>
                       </div>
-                      <div class="col-xs-3 query-gauge-systems">
-                        <label id="explicit-refs-gauge-system-like-checkbox">Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                        <input id="explicit-refs-gauge-system-like-text" class="form-control" list="gauge-system-like-events" name="gauge_system_like"/>
-                        <datalist id="gauge-system-like-events">
-                        </datalist>
+                      <div class="col-xs-3">
+                        <label>Gauge system</label>
+                        <div class="input-group" style="width: 100%">
+                          <input class="form-control" style="width: 80%" name="gauge_system" id="explicit-refs-gauge-system-text"/>
+                          <select class="form-control" style="padding-left: 0; width: 20%" name="gauge_system_operator" id="explicit-refs-gauge-system-operator">
+                            {% include "eboa_nav/operators.html" %}
+                          </select>
+                        </div>
                       </div>
                     </div>
-                    <div class="row query-gauges">
-                      <div class="col-xs-3 query-gauge-names">
+                    <div class="row">
+                      <div class="col-xs-3">
                         <label id="explicit-refs-gauge-names-in-checkbox">Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                        <select id="explicit-refs-gauge-names-in-text" name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-name', 'name', 20, 0)" id="explicit-refs-gauge-names-in-text"/><i class="circle"></i>
+                        <select name="gauge_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-gauge-names-in-select">
                         </select>
                       </div>
-                      <div class="col-xs-3 query-gauge-systems">
+                      <div class="col-xs-3">
                         <label id="explicit-refs-gauge-system-in-checkbox">Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                        <select id="explicit-refs-gauge-system-in-text" name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-system', 'system', 20, 0)" id="explicit-refs-gauge-systems-in-text"/><i class="circle"></i>
+                        <select name="gauge_systems" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-gauge-systems-in-select">
                         </select>
                       </div>
                     </div>
@@ -110,10 +134,9 @@
                     <div class="col-xs-3">
                       <label>Value name</label>
                       <div class="input-group" style="width: 100%">
-                        <input class="form-control" style="width: 80%" name="event_value_name_like" id="value-name-text"/>
-                        <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_name_like_op" id="value-name-option">
-                          <option>like</option>
-                          <option>notlike</option>
+                        <input class="form-control" style="width: 80%" name="event_value_name" id="value-name-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_name_op" id="value-name-option">
+                          {% include "eboa_nav/operators.html" %}
                         </select>
                       </div>
                     </div>
@@ -163,29 +186,37 @@
                 <div class="panel-heading">Specify search by using annotation filters</div>
                 <div class="panel-body">
                   <!-- Annotation configurations -->
-                  <div class="row  query-annotation-cnfs">
-                    <div class="col-xs-3 query-annotation-names">
-                      <label id="explicit-refs-annotation-names-like-checkbox">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                      <input class="form-control" list="annotation-name-like-annotations" name="annotation_name_like" id="explicit-refs-annotation-names-like-text"/>
-                      <datalist id="annotation-name-like-annotations">
-                      </datalist>
+                  <div class="row ">
+                    <div class="col-xs-3">
+                      <label>Annotation name</label>
+                      <div class="input-group" style="width: 100%">
+                        <input class="form-control" style="width: 80%" name="annotation_name" id="explicit-refs-annotation-name-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_name_operator" id="explicit-refs-annotation-name-operator">
+                          {% include "eboa_nav/operators.html" %}
+                        </select>
+                      </div>
                     </div>
-                    <div class="col-xs-3 query-annotation-systems">
-                      <label id="explicit-refs-annotation-system-like-checkbox">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                      <input class="form-control" list="annotation-system-like-annotations" name="annotation_system_like" id="explicit-refs-annotation-system-like-text"/>
-                      <datalist id="annotation-system-like-annotations">
-                      </datalist>
+                    <div class="col-xs-3">
+                      <label>Annotation system</label>
+                      <div class="input-group" style="width: 100%">
+                        <input class="form-control" style="width: 80%" name="annotation_system" id="explicit-refs-annotation-system-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_system_operator" id="explicit-refs-annotation-system-operator">
+                          {% include "eboa_nav/operators.html" %}
+                        </select>
+                      </div>
                     </div>
                   </div>
-                  <div class="row query-annotation-cnfs">
-                    <div class="col-xs-3 query-annotation-names">
+                  <div class="row">
+                    <div class="col-xs-3">
                       <label id="explicit-refs-annotation-names-in-checkbox">Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                      <select id="explicit-refs-annotation-names-in-text" name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-annotation-cnfs-by-name', 'name', 20, 0)" id="explicit-refs-annotation-names-in-text"/><i class="circle"></i>
+                      <select name="annotation_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-annotation-names-in-select">
                       </select>
                     </div>
-                    <div class="col-xs-3 query-annotation-systems">
+                    <div class="col-xs-3">
                       <label id="explicit-refs-annotation-system-in-checkbox">Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                      <select id="explicit-refs-annotation-system-in-text" name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-annotation-cnfs-by-system', 'system', 20, 0)" id="explicit-refs-annotation-systems-in-select"/><i class="circle"></i>
+                      <select name="annotation_systems" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="explicit-refs-annotation-systems-in-text">
                       </select>
                     </div>
                   </div>
@@ -205,10 +236,9 @@
                     <div class="col-xs-3">
                       <label>Value name</label>
                       <div class="input-group" style="width: 100%">
-                        <input class="form-control" style="width: 80%" name="annotation_value_name_like" id="value-name-text"/>
-                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_like_op" id="value-name-option">
-                          <option>like</option>
-                          <option>notlike</option>
+                        <input class="form-control" style="width: 80%" name="annotation_value_name" id="value-name-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_op" id="value-name-option">
+                          {% include "eboa_nav/operators.html" %}
                         </select>
                       </div>
                     </div>

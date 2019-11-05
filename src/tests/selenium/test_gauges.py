@@ -289,8 +289,8 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_like input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-names-like-text")
-        inputElement.send_keys("GAUGE_NAME_1")
+        input_element = self.driver.find_element_by_id("gauges-gauge-name-text")
+        input_element.send_keys("GAUGE_NAME_1")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
@@ -311,13 +311,10 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_like input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-names-like-text")
-        inputElement.send_keys("GAUGE_NAME_1")
+        input_element = self.driver.find_element_by_id("gauges-gauge-name-text")
+        input_element.send_keys("GAUGE_NAME_1")
 
-        notLikeButton = self.driver.find_element_by_id("gauges-gauge-names-like-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
+        Select(self.driver.find_element_by_id("gauges-gauge-name-operator")).select_by_visible_text("notlike")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
@@ -338,17 +335,11 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
-
-        assert len(self.driver.find_element_by_id("gauges-gauge-names-in-text").find_elements_by_xpath("option")) == 3
-
-        inputElement.send_keys("GAUGE_NAME_1")
-        inputElement.send_keys(Keys.RETURN)
-        functions.click(inputElement)
-        inputElement.send_keys("GAUGE_NAME_3")
-        inputElement.send_keys(Keys.RETURN)
-
+        input_element = self.driver.find_element_by_id("gauges-gauge-names-in-text")
+        input_element.send_keys("G")
+        Select(self.driver.find_element_by_id("gauges-gauge-names-in-select")).select_by_visible_text("GAUGE_NAME_1")
+        Select(self.driver.find_element_by_id("gauges-gauge-names-in-select")).select_by_visible_text("GAUGE_NAME_3")
+        
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click(submitButton)
@@ -368,13 +359,9 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-names-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
-
-        assert len(self.driver.find_element_by_id("gauges-gauge-names-in-text").find_elements_by_xpath("option")) == 3
-
-        inputElement.send_keys("GAUGE_NAME_1")
-        inputElement.send_keys(Keys.RETURN)
+        input_element = self.driver.find_element_by_id("gauges-gauge-names-in-text")
+        input_element.send_keys("G")
+        Select(self.driver.find_element_by_id("gauges-gauge-names-in-select")).select_by_visible_text("GAUGE_NAME_1")
 
         notInButton = self.driver.find_element_by_id("gauges-gauge-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -462,8 +449,8 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_like input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-system-like-text")
-        inputElement.send_keys("GAUGE_SYSTEM_1")
+        input_element = self.driver.find_element_by_id("gauges-gauge-system-text")
+        input_element.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
@@ -484,13 +471,10 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_like input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-system-like-text")
-        inputElement.send_keys("GAUGE_SYSTEM_1")
+        input_element = self.driver.find_element_by_id("gauges-gauge-system-text")
+        input_element.send_keys("GAUGE_SYSTEM_1")
 
-        notLikeButton = self.driver.find_element_by_id("gauges-gauge-system-like-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
+        Select(self.driver.find_element_by_id("gauges-gauge-system-operator")).select_by_visible_text("notlike")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
@@ -511,16 +495,10 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
-
-        assert len(self.driver.find_element_by_id("gauges-gauge-system-in-text").find_elements_by_xpath("option")) == 3
-
-        inputElement.send_keys("GAUGE_SYSTEM_1")
-        inputElement.send_keys(Keys.RETURN)
-        functions.click(inputElement)
-        inputElement.send_keys("GAUGE_SYSTEM_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element = self.driver.find_element_by_id("gauges-gauge-systems-in-text")
+        input_element.send_keys("G")
+        Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select")).select_by_visible_text("GAUGE_SYSTEM_1")
+        Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select")).select_by_visible_text("GAUGE_SYSTEM_3")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
@@ -541,14 +519,9 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
-        inputElement = self.driver.find_element_by_id("gauges-gauge-system-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
-
-        assert len(self.driver.find_element_by_id("gauges-gauge-system-in-text").find_elements_by_xpath("option")) == 3
-
-        inputElement.send_keys("GAUGE_SYSTEM_1")
-        inputElement.send_keys(Keys.RETURN)
-
+        input_element = self.driver.find_element_by_id("gauges-gauge-systems-in-text")
+        input_element.send_keys("G")
+        Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select")).select_by_visible_text("GAUGE_SYSTEM_1")
         notInButton = self.driver.find_element_by_id("gauges-gauge-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
@@ -635,8 +608,8 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-like-text")
-        inputElement.send_keys("DIM_SIGNATURE_2")
+        input_element = self.driver.find_element_by_id("gauges-dim-signature-text")
+        input_element.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
@@ -657,14 +630,11 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_like input
-        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-like-text")
-        inputElement.send_keys("DIM_SIGNATURE_2")
+        input_element = self.driver.find_element_by_id("gauges-dim-signature-text")
+        input_element.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = self.driver.find_element_by_id("gauges-dim-signatures-like-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
-
+        Select(self.driver.find_element_by_id("gauges-dim-signature-operator")).select_by_visible_text("notlike")
+        
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click(submitButton)
@@ -683,14 +653,10 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
-
-        assert len(self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_elements_by_xpath("option")) == 2
-
-        inputElement.send_keys("DIM_SIGNATURE_1")
-        inputElement.send_keys(Keys.RETURN)
-
+        input_element = self.driver.find_element_by_id("gauges-dim-signatures-in-text")
+        input_element.send_keys("D")
+        Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select")).select_by_visible_text("DIM_SIGNATURE_1")
+        
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click(submitButton)
@@ -709,13 +675,9 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
-        inputElement = self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_element_by_xpath("../div/ul/li/input")
-        functions.click(inputElement)
-
-        assert len(self.driver.find_element_by_id("gauges-dim-signatures-in-text").find_elements_by_xpath("option")) == 2
-
-        inputElement.send_keys("DIM_SIGNATURE_2")
-        inputElement.send_keys(Keys.RETURN)
+        input_element = self.driver.find_element_by_id("gauges-dim-signatures-in-text")
+        input_element.send_keys("D")
+        Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select")).select_by_visible_text("DIM_SIGNATURE_2")
 
         notInButton = self.driver.find_element_by_id("gauges-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():

@@ -5,15 +5,19 @@
         <div class="col-xs-12">
           <form role="form" method=post action="/eboa_nav/query-dim-signatures">
             <div class="row">
-              <div class="col-xs-3 query-dim-signatures">
-                <label id="dim-signatures-dim-signature-like-checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
-                <input class="form-control" list="dim-signature-like-dims" name="dim_signature_like" id="dim-signatures-dim-signature-like-text"/>
-                <datalist id="dim-signature-like-dims">
-                </datalist>
+              <div class="col-xs-3">
+                <label>DIM signature</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="dim_signature" id="dim-signatures-dim-signature-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="dim_signature_operator" id="dim-signatures-dim-signature-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
+                </div>
               </div>
-              <div class="col-xs-3 query-dim-signatures">
+              <div class="col-xs-3">
                 <label id="dim-signatures-dim-signature-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="dim-signatures-dim-signature-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-dim-signatures', 'dim_signature', 20, 0)" id="dim-signatures-dim-signatures-in-text"/><i class="circle"></i>
+                <select name="dim_signatures" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="dim-signatures-dim-signatures-in-select">
                 </select>
               </div>
             </div>
