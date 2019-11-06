@@ -23,6 +23,8 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Events</th>
+          <th>Annotations</th>
           <th>Validity start</th>
           <th>Validity stop</th>
           <th>Duration (s)</th>
@@ -37,6 +39,8 @@
         {% for source in not_ingested_sources %}
         <tr>
           <td>{{ source.name }}</td>
+          <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ source.validity_start }}</td>
           <td>{{ source.validity_stop }}</td>
           {% if source.validity_stop and source.validity_start %}
@@ -55,6 +59,8 @@
       <tfoot>
         <tr>
           <th>Name</th>
+          <th>Events</th>
+          <th>Annotations</th>          
           <th>Validity start</th>
           <th>Validity stop</th>
           <th>Duration (s)</th>
@@ -81,6 +87,8 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Events</th>
+          <th>Annotations</th>
           <th>Validity start</th>
           <th>Validity stop</th>
           <th>Duration (s)</th>
@@ -97,6 +105,8 @@
         {% for source in sources if source.ingestion_duration %}
         <tr>
           <td>{{ source.name }}</td>
+          <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ source.validity_start }}</td>
           <td>{{ source.validity_stop }}</td>
           <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
@@ -113,6 +123,8 @@
       <tfoot>
         <tr>
           <th>Name</th>
+          <th>Events</th>
+          <th>Annotations</th>          
           <th>Validity start</th>
           <th>Validity stop</th>
           <th>Duration (s)</th>

@@ -38,7 +38,7 @@
           <td>{{ annotation.ingestion_time }}</td>
           {% set source_uuid = annotation.source.source_uuid %}
           <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ annotation.source.name }}</a></td>
-          <td>{{ annotation.explicitRef.explicit_ref }}</td>
+          <td><a href="/eboa_nav/query-er/{{ annotation.explicitRef.explicit_ref_uuid }}">{{ annotation.explicitRef.explicit_ref }}</a></td>
           <td>{{ annotation.annotation_uuid }}</td>
         </tr>
         {% endfor %}
