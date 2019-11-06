@@ -6,7 +6,7 @@ import "datatables/media/js/jquery.dataTables.min.js";
 import "datatables.net/js/jquery.dataTables.min.js";
 import "datatables.net-buttons/js/dataTables.buttons.min.js";
 import "datatables.net-buttons/js/buttons.html5.min.js";
-import "datatables.net-select-dt/js/select.dataTables.min.js";
+import "datatables.net-select/js/dataTables.select.js";
 import "jszip/dist/jszip.min.js";
 import "chosen-js/chosen.jquery.min.js";
 import "metismenu/dist/metisMenu.min.js";
