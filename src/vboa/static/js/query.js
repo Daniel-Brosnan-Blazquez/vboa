@@ -34,8 +34,8 @@ export function request_info_json(url, callback, json, show_loader = false){
     }
     
     xmlhttp.open("POST", url, true);
-    xmlhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-    xmlhttp.send("json=" + JSON.stringify(json));
+    xmlhttp.setRequestHeader('content-type', 'application/json;charset=UTF-8');
+    xmlhttp.send(JSON.stringify(json));
 }
 
 /* Function to request information to the EBOA by URL, using FormData object from javascript for the parameters */
@@ -60,6 +60,6 @@ export function request_info_form_data(url, callback, form_data){
             json[key].push(value);
         }
     });
-    xmlhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-    xmlhttp.send("json=" + JSON.stringify(json));
+    xmlhttp.setRequestHeader('content-type', 'application/json;charset=UTF-8');
+    xmlhttp.send(JSON.stringify(json));
 }

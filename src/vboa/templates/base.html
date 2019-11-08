@@ -19,6 +19,8 @@
   </head>
 
   <body>
+    <div id="boa-html-page" hidden>
+    </div>    
     <div id="updating-page">
     </div>
     <div id="wrapper">
@@ -37,6 +39,11 @@
         </div>
         <div id="time-clock">
         </div>
+        {% block save_page_link %}
+        <div class="nav navbar-text" id="save-page">
+          <button type="button" class="btn btn-primary" onclick="vboa.save_screenshot('SCREENSHOT_PAGE', 'Group for saving screenshots of the web page')">Save screenshot of this page as a report</button>
+        </div>
+        {% endblock %}
         <!-- /.navbar-header -->
         <!-- User menu -->
         <ul class="nav navbar-top-links navbar-right">

@@ -28,6 +28,7 @@ import * as queryFunctions from "./query.js";
 import * as dates from "./dates.js";
 import * as datatableFunctions from "./datatables.js";
 import * as selectorFunctions from "./selectors.js";
+import * as screenshotFunctions from "./screenshots.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -44,6 +45,14 @@ import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
 import "toastr/build/toastr.min.css";
+
+/* Save the very same page in the div with id boa-html-page */
+jQuery(document).ready(function(){
+    var html_content = document.documentElement.innerHTML
+    var html = '<!doctype html>\n<html lang="en">\n' + html_content + "\n</html>"
+    var compressed_html = btoa(html)
+    document.getElementById("boa-html-page").innerHTML = compressed_html
+});
 
 setInterval(update_clock, 1000);
 
@@ -63,19 +72,43 @@ jQuery(".chosen-select").chosen({
 });
 
 /* Activate tooltips */
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
+jQuery(document).ready(function(){
+  jQuery('[data-toggle="tooltip"]').tooltip();
 });
 
 /* Manage side menu */
-$(function() {
-    $('#side-menu').metisMenu();
+jQuery(function() {
+    jQuery('#side-menu').metisMenu();
 });
 
 /* Toasts configuration */
 toastr.options.progressBar = true; // Show how long it takes before it expires
 toastr.options.timeOut = 10000; // How long the toast will display without user interaction (milliseconds)
 toastr.options.extendedTimeOut = 10000; // How long the toast will display after a user hovers over it (milliseconds)
+
+/* Associate datetimepicker functionality */
+jQuery(function () {
+    dates.activate_datetimepicker();
+});
+
+jQuery(".responsive-tabs").responsiveTabs({
+  accordionOn: ['xs', 'sm'] // xs, sm, md, lg
+});
+
+/* 
+* Datatables
+*/
+/* Activate search on every column for datatables */
+jQuery(document).ready(function() {
+    datatableFunctions.activate_search_on_columns();
+});
+/* Activate search and checkboxes on the specified tables */
+jQuery(document).ready(function() {
+    datatableFunctions.activate_search_and_checkboxes_on_tables();
+});
+
+/* Fill source statuses */
+jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
 
 /* Update view */
 export function update_view(parameters, repeat_cycle, view){
@@ -168,27 +201,6 @@ export function fill_elements_into_selector(input_node, route, field_name, limit
 
 };
 
-/* Associate datetimepicker functionality */
-jQuery(function () {
-    dates.activate_datetimepicker();
-});
-
-jQuery(".responsive-tabs").responsiveTabs({
-  accordionOn: ['xs', 'sm'] // xs, sm, md, lg
-});
-
-/* 
-* Datatables
-*/
-/* Activate search on every column for datatables */
-jQuery(function() {
-    datatableFunctions.activate_search_on_columns();
-});
-/* Activate search and checkboxes on the specified tables */
-jQuery(function() {
-    datatableFunctions.activate_search_and_checkboxes_on_tables();
-});
-
 /*
 * Graph functions
 */
@@ -196,7 +208,9 @@ jQuery(function() {
  * attach it and the items to show with corresponding groups */
 export function display_timeline(dom_id, items, groups){
 
-    graph.display_timeline(dom_id, items, groups);
+    jQuery(document).ready(function(){
+        graph.display_timeline(dom_id, items, groups);
+    });        
 
 };
 
@@ -204,7 +218,9 @@ export function display_timeline(dom_id, items, groups){
  * attach it and the nodes to show with the corresponding relations */
 export function display_network(dom_id, nodes, edges){
 
-    graph.display_network(dom_id, nodes, edges);
+    jQuery(document).ready(function(){    
+        graph.display_network(dom_id, nodes, edges);
+    });
 
 };
 
@@ -212,7 +228,9 @@ export function display_network(dom_id, nodes, edges){
  * attach it and the items to show with the corresponding groups */
 export function display_x_time(dom_id, items, groups, options){
 
-    graph.display_x_time(dom_id, items, groups, options);
+    jQuery(document).ready(function(){
+        graph.display_x_time(dom_id, items, groups, options);
+    });
 
 };
 
@@ -220,7 +238,9 @@ export function display_x_time(dom_id, items, groups, options){
  * attach it and the items to show with the corresponding groups */
 export function display_map(dom_id, polygons){
 
-    graph.display_map(dom_id, polygons);
+    jQuery(document).ready(function(){
+        graph.display_map(dom_id, polygons);
+    });
 
 };
 
@@ -251,21 +271,27 @@ export function prepare_events_geometries_for_map(events_geometries, polygons){
 /* Function to show a timeline of events */
 export function create_event_timeline(events, dom_id){
 
-    eventFunctions.create_event_timeline(events, dom_id);
+    jQuery(document).ready(function(){
+        eventFunctions.create_event_timeline(events, dom_id);
+    });
 
 };
 
 /* Function to show a network of events */
 export function create_event_network(events, dom_id){
 
-    eventFunctions.create_event_network(events, dom_id);
+    jQuery(document).ready(function(){
+        eventFunctions.create_event_network(events, dom_id);
+    });
 
 };
 
 /* Function to show a map for events */
 export function create_event_map(geometries, dom_id){
 
-    eventFunctions.create_event_map(geometries, dom_id);
+    jQuery(document).ready(function(){
+        eventFunctions.create_event_map(geometries, dom_id);
+    });
 
 };
 
@@ -276,7 +302,9 @@ export function create_event_map(geometries, dom_id){
 /* Function to show a map for annotations */
 export function create_annotation_map(geometries, dom_id){
 
-    annotationFunctions.create_annotation_map(geometries, dom_id);
+    jQuery(document).ready(function(){
+        annotationFunctions.create_annotation_map(geometries, dom_id);
+    });
 
 };
 
@@ -287,7 +315,9 @@ export function create_annotation_map(geometries, dom_id){
 /* Function to show a network of gauges */
 export function create_gauge_network(gauges, dom_id){
 
-    gaugeFunctions.create_gauge_network(gauges, dom_id);
+    jQuery(document).ready(function(){
+        gaugeFunctions.create_gauge_network(gauges, dom_id);
+    });
 
 };
 
@@ -295,34 +325,39 @@ export function create_gauge_network(gauges, dom_id){
 * SOURCES *
 */
 
-/* Fill source statuses */
-jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
-
 /* Function to show a timeline of validities for the sources */
 export function create_source_validity_timeline(sources, dom_id){
 
-    sourceFunctions.create_source_validity_timeline(sources, dom_id);
+    jQuery(document).ready(function(){
+        sourceFunctions.create_source_validity_timeline(sources, dom_id);
+    });
 
 };
 
 /* Function to show a timeline of validities for the sources */
 export function create_source_generation_to_ingestion_timeline(sources, dom_id){
 
-    sourceFunctions.create_source_generation_to_ingestion_timeline(sources, dom_id);
+    jQuery(document).ready(function(){
+        sourceFunctions.create_source_generation_to_ingestion_timeline(sources, dom_id);
+    });
 
 };
 
 /* Function to show an X-time graph with the number of events per source */
 export function create_source_number_events_xy(sources, dom_id){
 
-    sourceFunctions.create_source_number_events_xy(sources, dom_id);
+    jQuery(document).ready(function(){
+        sourceFunctions.create_source_number_events_xy(sources, dom_id);
+    });
 
 };
 
 /* Function to show an X-time graph with the ingestion duration per source */
 export function create_source_ingestion_duration_xy(sources, dom_id){
 
-    sourceFunctions.create_source_ingestion_duration_xy(sources, dom_id);
+    jQuery(document).ready(function(){
+        sourceFunctions.create_source_ingestion_duration_xy(sources, dom_id);
+    });
 
 };
 
@@ -330,7 +365,9 @@ export function create_source_ingestion_duration_xy(sources, dom_id){
  * ingestion time and the generation time per source */
 export function create_source_generation_time_to_ingestion_time_xy(sources, dom_id){
 
-    sourceFunctions.create_source_generation_time_to_ingestion_time_xy(sources, dom_id);
+    jQuery(document).ready(function(){
+        sourceFunctions.create_source_generation_time_to_ingestion_time_xy(sources, dom_id);
+    });
 
 };
 
@@ -344,14 +381,18 @@ jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
 /* Function to show a timeline of validities for the reports */
 export function create_report_validity_timeline(reports, dom_id){
 
-    reportFunctions.create_report_validity_timeline(reports, dom_id);
+    jQuery(document).ready(function(){
+        reportFunctions.create_report_validity_timeline(reports, dom_id);
+    });
 
 };
 
 /* Function to show an X-time graph with the generation duration per report */
 export function create_report_generation_duration_xy(reports, dom_id){
 
-    reportFunctions.create_report_generation_duration_xy(reports, dom_id);
+    jQuery(document).ready(function(){
+        reportFunctions.create_report_generation_duration_xy(reports, dom_id);
+    });
 
 };
 
@@ -510,3 +551,18 @@ function update_cron_status(parameters, cron_status) {
     }
 
 };
+
+/***
+ * SCREENSHOTS
+ ***/
+export function save_screenshot(report_group, group_description){
+
+    screenshotFunctions.save_screenshot(report_group, group_description);
+    
+}
+
+export function save_screenshot_with_form(report_group, group_description){
+
+    screenshotFunctions.save_screenshot_with_form(report_group, group_description);
+    
+}

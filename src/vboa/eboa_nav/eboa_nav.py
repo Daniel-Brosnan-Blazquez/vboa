@@ -56,7 +56,7 @@ def query_events_pages():
     Query events using pages and render.
     """
     current_app.logger.debug("Query events using pages and render")
-    filters = json.loads(request.form["json"])
+    filters = request.json
     events = query_events(filters)
     show = define_what_to_show_events(filters)
     events_geometries = []
@@ -358,7 +358,7 @@ def query_annotations_pages():
     Query annotations using pages and render.
     """
     current_app.logger.debug("Query annotations using pages and render")
-    filters = json.loads(request.form["json"])
+    filters = request.json
     annotations = query_annotations(filters)
     
     show = define_what_to_show_annotations(filters)
@@ -587,7 +587,7 @@ def query_sources_pages():
     Query sources using pages and render.
     """
     current_app.logger.debug("Query sources using pages and render")
-    filters = json.loads(request.form["json"])
+    filters = request.json
 
     sources = query_sources(filters)
     show = define_what_to_show_sources(filters)
@@ -887,7 +887,7 @@ def query_gauges_pages():
     """
     current_app.logger.debug("Query gauges using pages and render")
 
-    filters = json.loads(request.form["json"])
+    filters = request.json
     gauges = query_gauges(filters)
 
     show = define_what_to_show_gauges(filters)
@@ -1152,7 +1152,7 @@ def query_annotation_cnfs_pages():
     Query annotation configurations using pages and render.
     """
     current_app.logger.debug("Query annotation configurations using pages and render")
-    filters = json.loads(request.form["json"])
+    filters = request.json
     annotation_cnfs = query_annotation_cnfs(filters)
 
     return render_template("eboa_nav/annotation_cnfs_nav.html", annotation_cnfs=annotation_cnfs, filters=filters)
@@ -1340,7 +1340,7 @@ def query_ers_pages():
     Query explicit references using pages and render.
     """
     current_app.logger.debug("Query explicit references using pages and render")
-    filters = json.loads(request.form["json"])
+    filters = request.json
     ers = query_ers(filters)
 
     return render_template("eboa_nav/explicit_references_nav.html", ers=ers, filters=filters)
@@ -1689,7 +1689,7 @@ def query_dim_signatures_pages():
     """
     current_app.logger.debug("Query DIM signatures using pages and render")
 
-    filters = json.loads(request.form["json"])
+    filters = request.json
     dim_signatures = query_dim_signatures(filters)
 
     return render_template("eboa_nav/dim_signatures_nav.html", dim_signatures=dim_signatures, filters=filters)

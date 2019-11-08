@@ -43,7 +43,7 @@ def create_app():
     app.register_blueprint(reporting_control.bp)
 
     # the toolbar is only enabled in debug mode:
-    app.debug = True
+    app.debug = False
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 

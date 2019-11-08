@@ -114,7 +114,7 @@ def query_health_pages():
     Health monitoring view of the BOA using pages.
     """
     current_app.logger.debug("Health monitoring view using pages")
-    filters = json.loads(request.form["json"])
+    filters = request.json
     start_filter, stop_filter = get_start_stop_filters(filters)
 
     template_name = filters["template_name"][0]

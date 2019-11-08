@@ -68,7 +68,7 @@ def query_reports_pages():
     Query reports using pages and render.
     """
     current_app.logger.debug("Query reports using pages and render")
-    filters = json.loads(request.form["json"])
+    filters = request.json
 
     reports = query_reports(filters)
     show = define_what_to_show_reports(filters)
@@ -375,7 +375,7 @@ def execute_reports():
     Execute selected reports.
     """
     current_app.logger.debug("Execute selected reports")
-    filters = json.loads(request.form["json"])
+    filters = request.json
 
     start = filters["start"][0]
     stop = filters["stop"][0]
