@@ -32,8 +32,6 @@ export function fill_elements_into_selector(input_node, route, field_name, limit
     var parameters = {
         "input_node": input_node,
         "selector": selector,
-        "limit": limit,
-        "offset": offset,
         "field_name": field_name
     }
     query.request_info(route + "?search=" + input_node.value + "&limit=" + limit + "&offset=" + offset, do_fill_elements_into_selector, parameters);
@@ -41,16 +39,45 @@ export function fill_elements_into_selector(input_node, route, field_name, limit
     
 }
 
-function do_fill_elements_into_selector(parameters, sources){
+function do_fill_elements_into_selector(parameters, elements){
     
-    var source_names = new Set(sources.map(source => source[parameters["field_name"]]))
-    for (const source of source_names){
-        add_option(parameters["selector"], source);
+    var element_texts = new Set(elements.map(element => element[parameters["field_name"]]))
+    for (const element of element_texts){
+        add_option(parameters["selector"], element);
     }
 
     parameters["selector"].style.display = "block"
 
     var parent_node = parameters["input_node"].parentNode
+    var loader = parent_node.getElementsByClassName("circle")[0];
+    loader.className = "circle"
+    
+}
+
+export function fill_elements_into_selector_no_input(selector, route, search, field_name, limit, offset){
+    
+    var parent_node = selector.parentNode;
+
+    var loader = parent_node.getElementsByClassName("circle")[0];
+    loader.className = "circle loader"
+
+    var parameters = {
+        "selector": selector,
+        "field_name": field_name
+    }
+    query.request_info(route + "?search=" + search + "&limit=" + limit + "&offset=" + offset, do_fill_elements_into_selector_no_input, parameters);
+    return true
+    
+}
+
+function do_fill_elements_into_selector_no_input(parameters, elements){
+    
+    var element_texts = new Set(elements.map(element => element[parameters["field_name"]]))
+    for (const element of element_texts){
+        add_option(parameters["selector"], element);
+    }
+
+    var parent_node = parameters["selector"].parentNode
     var loader = parent_node.getElementsByClassName("circle")[0];
     loader.className = "circle"
     

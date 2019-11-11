@@ -2,7 +2,23 @@
 {% block content %}
 <div class="row">
   <div class="col-lg-12">
-    <h1 class="page-header">Report navigation</h1>
+    <h1 class="page-header">
+      <div>
+        <div style="display:inline">
+          Report navigation
+        </div>
+        {% set button_load_more_query_pages = "Look for more query pages" %}
+        {% set limit = 40 %}        
+        <div style="margin-left:20px; display:inline">
+          <i class="circle"></i><select data-toggle="tooltip" title="Click to search for {{ limit }} maximum stored queries. If you don't find the one you would like, click on '{{ button_load_more_query_pages }}' button" style="font-size:18px" name="source_operator" id="events-source-operator" onclick="vboa.fill_elements_into_selector_no_input(this, '/rboa_nav/query-jsonify-reports-by-report-group', 'RBOA_NAV_QUERY_PAGE', 'name', {{ limit }}, 0)">
+          </select>
+          <button type="button" class="btn btn-success" onclick="vboa.show_selected_report(this)">Load query page</button>
+        </div>
+        <div style="display:inline">
+          <button type="button" class="btn btn-primary" onclick="vboa.request_info_json('/rboa_nav/', vboa.render_page, {report_group: 'RBOA_NAV_QUERY_PAGE'}, true)">{{ button_load_more_query_pages }}</button>
+        </div>
+      </div>
+    </h1>
   </div>
   <!-- /.col-lg-12 -->
 </div>

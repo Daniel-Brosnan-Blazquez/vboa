@@ -303,3 +303,18 @@ export function notify_end_of_triggering_of_reports(response, form_data){
     toastr.success(message)
     return true;
 }
+
+export function show_selected_report(button){
+
+    var parent_node = button.parentNode;
+    var select = parent_node.getElementsByTagName("select")[0];
+
+    if (select.selectedIndex != -1){
+        var selected_option = select.options[select.selectedIndex].value
+        vboa.request_info_no_args("/rboa_nav/query-report-by-name/" + selected_option, vboa.render_page, true)
+    }
+    else{
+        toastr.error("You have to select one option")
+    }
+    
+}

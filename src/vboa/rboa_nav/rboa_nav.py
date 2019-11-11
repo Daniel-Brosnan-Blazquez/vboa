@@ -38,12 +38,17 @@ engine = Engine()
 # NAVIGATION #
 ##############
 
-@bp.route("/", methods=["GET"])
+@bp.route("/", methods=["GET", "POST"])
 def navigate():
     """
     Initial panel for the RBOA navigation functionality.
     """
-    return render_template("rboa_nav/query_reports.html")
+    filters = []
+    if request.method == "POST":
+        filters = request.json
+    # end if
+        
+    return render_template("rboa_nav/query_reports.html", filters = filters)
 
 @bp.route("/query-reports", methods=["GET", "POST"])
 def query_reports_and_render():
@@ -251,8 +256,15 @@ def query_report_by_name(report_name):
     """
     Query report by name
     """
+    kwargs = {}
+    # Get only generated reports
+    kwargs["generated"] = True
+
+    kwargs["names"] = {"filter": [report_name], "op": "in"}
+    kwargs["order_by"] = {"field": "generation_stop", "descending": True}
+
     current_app.logger.debug("Query report by name")
-    report = query.get_reports(names={"filter": [report_name], "op": "in"}, order_by={"field": "generation_stop", "descending": True})[0]
+    report = query.get_reports(**kwargs)[0]
 
     html = retrieve_report_content(report)
     
@@ -264,27 +276,32 @@ def retrieve_report_content(report):
     """
     current_app.logger.debug("Retrieve report from archive")
 
-    file_path = archive_path + "/" + report.relative_path
+    # Check that the relative_path exists
+    if report.relative_path != None:
 
-    if report.compressed:
-        # Get the report inside
-        tar = tarfile.open(file_path, "r")
-        f = tar.extractfile(tar.getnames()[0])
-    else:
-        f = open(file_path, "r")
-    # end if
+        file_path = archive_path + "/" + report.relative_path
 
-    html = f.read()
+        if report.compressed:
+            # Get the report inside
+            tar = tarfile.open(file_path, "r")
+            f = tar.extractfile(tar.getnames()[0])
+        else:
+            f = open(file_path, "r")
+        # end if
 
-    # Close file
-    f.close()
+        html = f.read()
 
-    if report.compressed:
-        # Close tar if the report was compressed
-        tar.close()
-    # end if
+        # Close file
+        f.close()
+
+        if report.compressed:
+            # Close tar if the report was compressed
+            tar.close()
+        # end if
     
-    return html
+        return html
+
+    return render_template("panel/error.html")
 
 @bp.route("/query-jsonify-reports")
 def query_jsonify_reports():
@@ -307,6 +324,26 @@ def query_jsonify_reports():
     jsonified_reports = [report.jsonify() for report in reports]
     return jsonify(jsonified_reports)
 
+@bp.route("/query-jsonify-reports-by-report-group")
+def query_jsonify_reports_by_report_group():
+    """
+    Query all the reports.
+    """
+    current_app.logger.debug("Query report")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["report_groups"] = {"filter": search, "op": "=="}
+
+    reports = query.get_reports(**kwargs)
+    jsonified_reports = [report.jsonify() for report in reports]
+    return jsonify(jsonified_reports)
 
 @bp.route("/query-jsonify-report-groups")
 def query_jsonify_report_groups():

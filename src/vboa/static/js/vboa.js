@@ -201,6 +201,13 @@ export function fill_elements_into_selector(input_node, route, field_name, limit
 
 };
 
+/* Function to fill searched elements into a selector with no input */
+export function fill_elements_into_selector_no_input(selector, route, search, field_name, limit, offset){
+
+    selectorFunctions.fill_elements_into_selector_no_input(selector, route, search, field_name, limit, offset);
+
+};
+
 /*
 * Graph functions
 */
@@ -396,12 +403,31 @@ export function create_report_generation_duration_xy(reports, dom_id){
 
 };
 
+/* Function to show the selected report from a select button combination */
+export function show_selected_report(button){
+
+    reportFunctions.show_selected_report(button);
+
+};
+
+/*
+* QUERY *
+*/
+
 /* Function to provide a way to request information from database from javascript */
 export function request_info(url, callback, parameters){
 
     queryFunctions.request_info(url, callback, parameters);
 
 };
+
+/* Function to provide a way to request information from database from javascript with no parameters */
+export function request_info_no_args(url, callback, show_loader){
+
+    queryFunctions.request_info_no_args(url, callback, show_loader);
+
+};
+
 /* Function to provide a way to request information from javascript passing json as parameter */
 export function request_info_json(url, callback, json, show_loader = false){
 

@@ -12,6 +12,30 @@ export function request_info(url, callback, parameters){
     xmlhttp.send();
 }
 
+/* Function to request information to the EBOA by URL with no parameters */
+export function request_info_no_args(url, callback, show_loader = false){
+    if (show_loader == true){
+        var loader = document.getElementById("updating-page");
+        loader.className = "loader-render"
+    }
+
+    var xmlhttp = new XMLHttpRequest();
+    if (callback){
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var returned_value = callback(this.responseText);
+                if (show_loader == true){
+                    var loader = document.getElementById("updating-page");
+                    loader.className = ""
+                }
+                return returned_value
+            }
+        };
+    }
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
 /* Function to request information to the EBOA by URL, using json for the parameters */
 export function request_info_json(url, callback, json, show_loader = false){
     if (show_loader == true){
