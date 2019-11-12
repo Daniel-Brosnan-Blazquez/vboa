@@ -7,7 +7,7 @@
 # module boa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-x orc_configuration_path] [-l version] [-g export_docker_image]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets -u uid_host_user_to_map [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-x orc_configuration_path] [-l version] [-g export_docker_image]"
 
 ########
 # Initialization
@@ -20,8 +20,9 @@ APP="vboa"
 PATH_TO_ORC=""
 VERSION="0.1.0"
 EXPORT_DOCKER_IMAGE="NO"
+UID_HOST_USER_TO_MAP=""
 
-while getopts e:v:d:p:t:a:o:c:x:p:l:g option
+while getopts e:v:d:p:t:a:o:c:x:p:l:u:g option
 do
     case "${option}"
         in
@@ -35,6 +36,7 @@ do
         c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG}; PATH_TO_BOA_TAILORING_CONFIGURATION_CALL="-c ${OPTARG}";;
         x) PATH_TO_ORC_CONFIGURATION=${OPTARG}; PATH_TO_ORC_CONFIGURATION_CALL="-x ${OPTARG}";;
         l) VERSION=${OPTARG};;
+        u) UID_HOST_USER_TO_MAP=${OPTARG};;        
         g) EXPORT_DOCKER_IMAGE="YES";;
         ?) echo -e $USAGE
             exit -1
@@ -169,6 +171,14 @@ then
     exit -1
 fi
 
+# Check that option -u has been specified
+if [ "$UID_HOST_USER_TO_MAP" == "" ];
+then
+    echo "ERROR: The option -u has to be provided"
+    echo $USAGE
+    exit -1
+fi
+
 EBOA_RESOURCES_PATH="/eboa/src/config"
 APP_CONTAINER="boa_app"
 
@@ -186,6 +196,7 @@ These are the configuration options that will be applied to initialize the envir
 - PATH_TO_ORC: $PATH_TO_ORC
 - PATH_TO_BOA_TAILORING_CONFIGURATION: $PATH_TO_BOA_TAILORING_CONFIGURATION
 - PATH_TO_ORC_CONFIGURATION: $PATH_TO_ORC_CONFIGURATION
+- UID_HOST_USER_TO_MAP: $UID_HOST_USER_TO_MAP
 - VERSION: $VERSION
 
 Do you wish to proceed with the generation of the docker image?" answer
@@ -215,7 +226,7 @@ TMP_DIR=`mktemp -d`
 $PATH_TO_VBOA/generate_boa_packages.sh $PATH_TO_EBOA_CALL $PATH_TO_VBOA_CALL $PATH_TO_DOCKERFILE_PKG_CALL $APP_CALL -o $TMP_DIR $PATH_TO_TAILORED_CALL
 
 # Build image
-docker build --build-arg FLASK_APP=$APP -t boa:$VERSION -t boa:latest -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$UID_HOST_USER_TO_MAP -t boa:$VERSION -t boa:latest -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 
 # Create container
 if [ "$PATH_TO_TAILORED" != "" ];
@@ -244,47 +255,43 @@ do
 done
 
 # Generate the python archive
-docker exec -it $APP_CONTAINER bash -c "pip3 install --upgrade pip"
-docker exec -it $APP_CONTAINER bash -c "pip3 install /boa_packages/eboa*"
-docker exec -it $APP_CONTAINER bash -c "pip3 install /boa_packages/vboa*"
-docker exec -it $APP_CONTAINER bash -c "pip3 install /boa_packages/*"
+docker exec -it -u root $APP_CONTAINER bash -c "pip3 install --upgrade pip"
+docker exec -it -u root $APP_CONTAINER bash -c "pip3 install /boa_packages/eboa*"
+docker exec -it -u root $APP_CONTAINER bash -c "pip3 install /boa_packages/vboa*"
+docker exec -it -u root $APP_CONTAINER bash -c "pip3 install /boa_packages/*"
 
 # Install scripts
-docker exec -it $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do cp $script /scripts/`basename $script`; done'
+docker exec -it -u boa $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do cp $script /scripts/`basename $script`; done'
 # EBOA ingestion chain
-docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py'
-docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py'
 # RBOA reporting chain 
-docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/rboa/triggering/rboa_triggering.py /scripts/rboa_triggering.py'
-docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/rboa/triggering/rboa_triggering.py /scripts/rboa_triggering.py'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py'
 
 # Copy datamodel
-docker exec -it $APP_CONTAINER bash -c 'cp /eboa/datamodel/eboa_data_model.sql /datamodel'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/datamodel/eboa_data_model.sql /datamodel'
 
 # Copy schemas
-docker exec -it $APP_CONTAINER bash -c 'cp /eboa/src/schemas/* /schemas'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/schemas/* /schemas'
 
 # Install cron activities
 echo "Installing cron activities"
-docker exec -d -it $APP_CONTAINER bash -c "cp /eboa/src/cron/boa_cron /etc/cron.d/"
+docker exec -d -it -u root $APP_CONTAINER bash -c "cp /eboa/src/cron/boa_cron /etc/cron.d/"
 if [ "$PATH_TO_TAILORED" != "" ] && [ -f "$PATH_TO_TAILORED/src/cron/boa_cron" ];
 then
-    docker exec -d -it $APP_CONTAINER bash -c "cp /$APP/src/cron/boa_cron /etc/cron.d/"
+    docker exec -d -it -u root $APP_CONTAINER bash -c "cp /$APP/src/cron/boa_cron /etc/cron.d/"
 fi
 
 # Copy cron to crontab
-docker exec -d -it $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
+docker exec -d -it -u root $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
 
 echo "Cron activities installed"
 
 # Install orc
-# Enable collection rh-ruby25
-docker exec -it $APP_CONTAINER bash -c 'echo "#!/bin/bash
-source scl_source enable rh-ruby25
-" > /etc/profile.d/enableruby25.sh'
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; bundle install --gemfile Gemfile"
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; bundle install --gemfile Gemfile"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
 
 if [ "$EXPORT_DOCKER_IMAGE" == "YES" ];
 then

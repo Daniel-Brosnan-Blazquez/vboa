@@ -1,12 +1,17 @@
-# Base the image on centos
-FROM centos
+# Base the image on centos/postgresql-10-centos7
+FROM centos/postgresql-10-centos7
 MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
+ARG UID_HOST_USER
+
+USER root
+
+RUN useradd -o -r -u $UID_HOST_USER boa
 
 RUN yum install -y epel-release
 
-RUN yum install -y postgresql \
+RUN yum install -y postgresql-devel \
     python36 \
     python36-pip \
     python36-tkinter \
@@ -29,8 +34,6 @@ RUN yum install -y rh-ruby25 \
     rh-ruby25-rubygem-bundler \
     rh-ruby25-ruby-devel
 
-RUN scl enable rh-ruby25 bash
-
 # Create folders for BOA
 RUN mkdir /log
 RUN mkdir /scripts
@@ -40,10 +43,16 @@ RUN mkdir /schemas
 RUN mkdir /rboa_archive
 
 # Create folders for ORC
+RUN mkdir /orc
 RUN mkdir /orc_packages
 RUN mkdir /orc_config
 RUN mkdir /minarc_root
 RUN mkdir /inputs
+
+# Change ownership to the boa user
+RUN chown boa /log /scripts /resources_path /datamodel /schemas /rboa_archive /orc_packages /orc_config /minarc_root /inputs /orc
+
+USER boa
 
 # Environment Variables for BOA
 ENV EBOA_RESOURCES_PATH /resources_path
@@ -62,16 +71,21 @@ EXPOSE 5000
 # Environment Variables for ORC
 ENV MINARC_ARCHIVE_ROOT /minarc_root
 ENV MINARC_ARCHIVE_ERROR /minarc_root/.errors
-ENV MINARC_DATABASE_NAME /orc/minarc_inventory
-ENV MINARC_DB_ADAPTER sqlite3
+ENV MINARC_DATABASE_NAME s2boa_orc
+ENV MINARC_DB_ADAPTER postgresql
 ENV MINARC_DATABASE_USER root
 ENV MINARC_DATABASE_PASSWORD 1mysql
 ENV ORC_CONFIG /orc_config
 ENV ORC_TMP /orc/tmp
-ENV ORC_DATABASE_NAME /orc/orc_inventory
-ENV ORC_DB_ADAPTER sqlite3
+ENV ORC_DATABASE_NAME s2boa_orc
+ENV ORC_DB_ADAPTER postgresql
 ENV ORC_DATABASE_USER root
 ENV ORC_DATABASE_PASSWORD 1mysql
+ENV POSTGRESQL_USER root
+ENV POSTGRESQL_PASSWORD pass
+ENV POSTGRESQL_DATABASE default
 
 # Copy the environment variables to a file for later use of cron
-RUN declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /container.env
+RUN declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env
+
+USER postgres

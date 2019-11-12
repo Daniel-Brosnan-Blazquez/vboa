@@ -7,7 +7,7 @@
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -d path_to_docker_image -i path_to_external_inputs_folder -b path_to_boa_ddbb -o path_to_orc_ddbb -m path_to_minarc_archive [-p port] [-l containers_label]"
+USAGE="Usage: `basename $0` -d path_to_docker_image -i path_to_external_inputs_folder -b path_to_boa_ddbb -r path_to_rboa_archive -o path_to_orc_ddbb -m path_to_minarc_archive [-p port] [-l containers_label]"
 
 ########
 # Initialization
@@ -197,13 +197,13 @@ docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER 
 ######
 docker load -i $PATH_TO_DOCKERIMAGE
 
-docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/orc -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/var/lib/pgsql/data -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
 
 # Change port and address configuration of the eboa defined by the postgis container
-docker exec -it $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
+docker exec -it -u boa $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
 
 # Execute flask server
-docker exec -d -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"
+docker exec -d -it -u boa $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"
 
 echo "
 Docker environment successfully built :-)"

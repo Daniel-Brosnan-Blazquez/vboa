@@ -7,7 +7,7 @@
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-x orc_tailoring_configuration_path]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets -u host_user_to_map [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-x orc_tailoring_configuration_path]"
 
 ########
 # Initialization
@@ -20,8 +20,9 @@ PORT="5000"
 CONTAINERS_LABEL="dev"
 APP="vboa"
 PATH_TO_ORC=""
+HOST_USER_TO_MAP=""
 
-while getopts e:v:d:p:t:l:a:o:c:x: option
+while getopts e:v:d:p:t:l:a:o:c:x:u: option
 do
     case "${option}"
         in
@@ -35,6 +36,7 @@ do
         o) PATH_TO_ORC=${OPTARG};;
         c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG};;
         x) PATH_TO_ORC_CONFIGURATION=${OPTARG};;
+        u) HOST_USER_TO_MAP=${OPTARG};;
         ?) echo -e $USAGE
             exit -1
     esac
@@ -153,6 +155,29 @@ then
     exit -1
 fi
 
+# Check that option -u has been specified
+if [ "$HOST_USER_TO_MAP" == "" ];
+then
+    echo "ERROR: The option -u has to be provided"
+    echo $USAGE
+    exit -1
+fi
+
+# Check that the path to the MINARC archive folder exists
+if [ ! id $HOST_USER_TO_MAP >/dev/null 2>&1 ];
+then
+    while true; do
+        read -p "The user $HOST_USER_TO_MAP does not exist. Do you wish to create it and proceed with the new installation?" answer
+        case $answer in
+            [Yy]* )
+                useradd -m $HOST_USER_TO_MAP
+                break;;
+            [Nn]* ) exit;;
+            * ) read -p "Please answer Y or y for yes or N or n for no: " answer;;
+        esac
+    done
+fi
+
 EBOA_RESOURCES_PATH="/eboa/src/config"
 DATABASE_CONTAINER="boa_database_$CONTAINERS_LABEL"
 APP_CONTAINER="boa_app_$CONTAINERS_LABEL"
@@ -173,6 +198,7 @@ These are the configuration options that will be applied to initialize the envir
 - PATH_TO_ORC: $PATH_TO_ORC
 - PATH_TO_BOA_TAILORING_CONFIGURATION: $PATH_TO_BOA_TAILORING_CONFIGURATION
 - PATH_TO_ORC_CONFIGURATION: $PATH_TO_ORC_CONFIGURATION
+- HOST_USER_TO_MAP: $HOST_USER_TO_MAP
 
 Do you wish to proceed with the initialization of the development environment?" answer
 
@@ -232,7 +258,9 @@ then
     find $PATH_TO_TAILORED -name *pyc -delete
 fi
 
-docker build --build-arg FLASK_APP=$APP -t boa_dev -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+HOST_UID_USER_TO_MAP=`id -u $HOST_USER_TO_MAP`
+
+docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP -t boa_dev -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 
 # Initialize the eboa database
 if [ "$PATH_TO_TAILORED" != "" ];
@@ -260,29 +288,34 @@ do
     docker cp $file $APP_CONTAINER:/orc_packages
 done
 
+# Change ownership
+docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /resources_path/*"
+docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /orc_config/*"
+docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /orc_packages//*"
+
 # Generate the python archive
-docker exec -it $APP_CONTAINER bash -c "pip3 install --upgrade pip"
-docker exec -it $APP_CONTAINER bash -c "pip3 install -e '/eboa/src[tests]'"
-docker exec -it $APP_CONTAINER bash -c "pip3 install -e '/vboa/src[tests]'"
+docker exec -it -u root $APP_CONTAINER bash -c "pip3 install --upgrade pip"
+docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e '/eboa/src[tests]'"
+docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e '/vboa/src[tests]'"
 if [ "$PATH_TO_TAILORED" != "" ];
 then
-    docker exec -it $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
+    docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
 fi
 
 # Change port and address configuration of the eboa defined by the postgis container
-docker exec -it $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
 
 # Execute flask server
-docker exec -d -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"
+docker exec -d -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"
 
 # Install web packages
-docker exec -it $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
+docker exec -it -u root $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
 
 # Install scripts
-docker exec -it $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
 
 # Link datamodel
-docker exec -it $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/eboa_data_model.sql /datamodel/'
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/eboa_data_model.sql /datamodel/'
 
 # Initialize the EBOA database inside the postgis-database container
 while true
@@ -302,33 +335,30 @@ do
 done
 
 # Listen for changes on the web packages
-docker exec -d -it $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run watch"
+docker exec -d -it -u root $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run watch"
 
 # Install cron activities
 echo "Installing cron activities"
-docker exec -d -it $APP_CONTAINER bash -c "cp /eboa/src/cron/boa_cron /etc/cron.d/"
+docker exec -d -it -u root $APP_CONTAINER bash -c "cp /eboa/src/cron/boa_cron /etc/cron.d/"
 if [ "$PATH_TO_TAILORED" != "" ] && [ -f "$PATH_TO_TAILORED/src/cron/boa_cron" ];
 then
-    docker exec -d -it $APP_CONTAINER bash -c "cp /$APP/src/cron/boa_cron /etc/cron.d/"
+    docker exec -d -it -u root $APP_CONTAINER bash -c "cp /$APP/src/cron/boa_cron /etc/cron.d/"
 fi
 
 # Copy cron to crontab
-docker exec -d -it $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
+docker exec -d -it -u root $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
 
 echo "Cron activities installed"
 
 # Install orc
-# Enable collection rh-ruby25
-docker exec -it $APP_CONTAINER bash -c 'echo "#!/bin/bash
-source scl_source enable rh-ruby25
-" > /etc/profile.d/enableruby25.sh'
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; bundle install --gemfile Gemfile"
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; bundle install --gemfile Gemfile"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
 
 # Initialize the ORC DDBB
+docker exec -it -u root $APP_CONTAINER bash -c "createdb s2boa_orc"
 docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; minArcDB --create-tables"
 docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcManageDB --create-tables"
 
 # Execute the ORC server
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcBolg -c start"
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcBolg -c start"
