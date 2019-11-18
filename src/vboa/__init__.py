@@ -11,7 +11,7 @@ import numpy
 import re
 
 # Import flask utilities
-from flask import Flask, current_app
+from flask import Flask, current_app, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 
 # Import contents
@@ -49,6 +49,19 @@ def create_app():
 
     toolbar = DebugToolbarExtension(app)
 
+    # Error handeling
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template("panel/error.html"), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template("panel/error.html"), 500
+
+    @app.errorhandler(403)
+    def page_forbidden(e):
+        return render_template("panel/error.html"), 403
+    
     @app.template_test()
     def has_value(values, name, value):
         filtered_values = [available_value for available_value in values if available_value.name == name and available_value.value == value]

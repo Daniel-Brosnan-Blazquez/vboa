@@ -10,6 +10,8 @@
     
     <title>VBOA - Visualization tool for Bussiness Operation Analysis</title>
 
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/boa_favicon_16x18.png') }}"/>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/vboa.css') }}">
 
@@ -35,7 +37,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">VBOA 0.1.0</a>
+          <div  class="navbar-brand">
+            <div style="display:inline"><a href="{{ url_for('static', filename='images/boa_favicon.png') }}"><img src="{{ url_for('static', filename='images/boa_favicon_40x45.png') }}"/></a></div>
+            <div style="display:inline"><a href="/">VBOA 0.1.0</a></div>
+          </div>
         </div>
         <div id="time-clock">
         </div>
