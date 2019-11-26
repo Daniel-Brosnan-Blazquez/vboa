@@ -2,3 +2,4 @@ graft vboa/templates
 graft vboa/static/dist
 graft vboa/static/css
 graft vboa/static/html
+graft vboa/static/images
