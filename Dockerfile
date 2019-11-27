@@ -7,7 +7,7 @@ ARG UID_HOST_USER
 
 USER root
 
-RUN useradd -o -r -u $UID_HOST_USER boa
+RUN useradd -m -o -r -u $UID_HOST_USER boa
 
 RUN yum install -y epel-release
 
