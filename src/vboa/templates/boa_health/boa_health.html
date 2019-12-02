@@ -231,7 +231,7 @@
             </tr>
           </thead>
           <tbody>
-            {% set last_event_processes = health_events[0].get_structured_values()[0]["values"]|selectattr("name", "match", "information_for_process_.*")|list %}
+            {% set last_event_processes = health_events[0].get_structured_values()|selectattr("name", "match", "information_for_process_.*")|list %}
             {% for process in last_event_processes %}
             <tr>
               {% for key in ["pid", "ppid", "command", "status", "create_time", "cpu_percentage", "memory_percentage", "number_of_threads", "number_of_fds"] %}
