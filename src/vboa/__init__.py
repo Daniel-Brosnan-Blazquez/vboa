@@ -108,6 +108,36 @@ def create_app():
         return result
 
     @app.template_filter()
+    def events_group_by_ref_group(list_of_events):
+        """Convert a string to all caps."""
+        result = {}
+        groups = [event.explicitRef.group.name for event in list_of_events]
+        unique_groups = sorted(set(groups))
+        for group in unique_groups:
+            result[group] = [event for event in list_of_events if event.explicitRef.group.name == group]
+        # end for
+        return result
+
+    @app.template_filter()    
+    def refs_get_first_annotation(list_of_refs, name = None, system = None):
+        """Convert a string to all caps."""
+        result = []
+        for ref in list_of_refs:
+            if name and system:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name and annotation.annotationCnf.system == system]
+            elif name:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name]
+            elif system:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.system == system]
+            else:
+                annotations = ref.annotations
+            # end if
+            result.append(annotations[0])
+        # end for
+        
+        return result
+
+    @app.template_filter()
     def filter_events_by_text_values(list_of_events, name, values):
         """Convert a string to all caps."""
         result = []
