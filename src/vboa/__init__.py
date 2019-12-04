@@ -170,7 +170,9 @@ def create_app():
             else:
                 annotations = ref.annotations
             # end if
-            result.append(annotations[0])
+            if len(annotations) > 0:
+                result.append(annotations[0])
+            # end if
         # end for
         
         return result
