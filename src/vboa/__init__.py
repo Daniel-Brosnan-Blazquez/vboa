@@ -118,6 +118,44 @@ def create_app():
         # end for
         return result
 
+
+    @app.template_filter()
+    def events_group_by_ref_annotation(list_of_events, value_name, value_type, name = None, system = None):
+        """Group events by a value of an annotation associated to its explicit reference."""
+        result = {}
+        if value_type == "boolean":
+            value_type_qualifier = "annotationBooleans"
+        elif value_type == "double":
+            value_type_qualifier = "annotationDoubles"
+        elif value_type == "timestamp":
+            value_type_qualifier = "annotationTimestamps"
+        elif value_type == "geometry":
+            value_type_qualifier = "annotationGeometries"
+        else:
+            value_type_qualifier = "annotationTexts"
+        # end if
+        if name and system:
+            annotations = [annotation for event in list_of_events for annotation in event.explicitRef.annotations if annotation.annotationCnf.name == name and annotation.annotationCnf.system == system]
+        elif name:
+            annotations = [annotation for event in list_of_events for annotation in event.explicitRef.annotations if annotation.annotationCnf.name == name]
+        elif system:
+            annotations = [annotation for event in list_of_events for annotation in event.explicitRef.annotations for event in list_of_events if annotation.annotationCnf.system == system]
+        else:
+            groups = []
+        # end if
+        groups = [value.value for annotation in annotations for value in eval("annotation." + value_type_qualifier) if value.name == value_name]
+        unique_groups = sorted(set(groups))
+        for group in unique_groups:
+            if name and system:
+                result[group] = set([event for event in list_of_events for annotation in event.explicitRef.annotations for value in eval("annotation." + value_type_qualifier) if value.value == group and annotation.annotationCnf.name == name and annotation.annotationCnf.system == system])
+            elif name:
+                result[group] = set([event for event in list_of_events for annotation in event.explicitRef.annotations for value in eval("annotation." + value_type_qualifier) if value.value == group and annotation.annotationCnf.name == name])
+            elif system:
+                result[group] = set([event for event in list_of_events for annotation in event.explicitRef.annotations for value in eval("annotation." + value_type_qualifier) if value.value == group and annotation.annotationCnf.system == system])
+            # end if
+        # end for
+        return result
+
     @app.template_filter()    
     def refs_get_first_annotation(list_of_refs, name = None, system = None):
         """Convert a string to all caps."""
