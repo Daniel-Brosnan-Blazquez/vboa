@@ -9,11 +9,11 @@ var events = [
         "x": "{{ event.start.isoformat() }}",
         "y": "{{ usage_percentage }}",
         "tooltip": "<table border='1'>" +
-            "<tr><td>Group</td><td>{{ usage }}</td>" +
-            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td>" +
-            "<tr><td>Value</td><td>{{ usage_percentage|round(3) }}</td>" +
-            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td>' +
-            "</tr></table>"
+            "<tr><td>Group</td><td>{{ usage }}</td></tr>" +
+            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td></tr>" +
+            "<tr><td>Value</td><td>{{ usage_percentage|round(3) }}</td></tr>" +
+            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td></tr>' +
+            "</table>"
     },
     {% endfor %}
     {% endfor %}

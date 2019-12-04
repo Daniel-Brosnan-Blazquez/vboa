@@ -12,11 +12,11 @@ var events = [
         "x": "{{ event.start.isoformat() }}",
         "y": "{{ memory_usage }}",
         "tooltip": "<table border='1'>" +
-            "<tr><td>Group</td><td>Memory usage</td>" +
-            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td>" +
-            "<tr><td>Value</td><td>{{ memory_usage|round(3) }}</td>" +
-            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td>' +
-            "</tr></table>"
+            "<tr><td>Group</td><td>Memory usage</td></tr>" +
+            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td></tr>" +
+            "<tr><td>Value</td><td>{{ memory_usage|round(3) }}</td></tr>" +
+            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td></tr>' +
+            "</table>"
     },
     {
         "id": "{{ event.event_uuid }}-memory-buffers",
@@ -24,11 +24,11 @@ var events = [
         "x": "{{ event.start.isoformat() }}",
         "y": "{{ memory_buffers_percentage }}",
         "tooltip": "<table border='1'>" +
-            "<tr><td>Group</td><td>Memory buffers</td>" +
-            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td>" +
-            "<tr><td>Value</td><td>{{ memory_buffers_percentage|round(3) }}</td>" +
-            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td>' +
-            "</tr></table>"
+            "<tr><td>Group</td><td>Memory buffers</td></tr>" +
+            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td></tr>" +
+            "<tr><td>Value</td><td>{{ memory_buffers_percentage|round(3) }}</td></tr>" +
+            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td></tr>' +
+            "</table>"
     },
     {
         "id": "{{ event.event_uuid }}-memory-cached",
@@ -36,11 +36,11 @@ var events = [
         "x": "{{ event.start.isoformat() }}",
         "y": "{{ memory_cached_percentage }}",
         "tooltip": "<table border='1'>" +
-            "<tr><td>Group</td><td>Memory cached</td>" +
-            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td>" +
-            "<tr><td>Value</td><td>{{ memory_cached_percentage|round(3) }}</td>" +
-            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td>' +
-            "</tr></table>"
+            "<tr><td>Group</td><td>Memory cached</td></tr>" +
+            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td></tr>" +
+            "<tr><td>Value</td><td>{{ memory_cached_percentage|round(3) }}</td></tr>" +
+            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td></tr>' +
+            "</table>"
     },
     {
         "id": "{{ event.event_uuid }}-swap-usage",
@@ -48,11 +48,11 @@ var events = [
         "x": "{{ event.start.isoformat() }}",
         "y": "{{ swap_usage }}",
         "tooltip": "<table border='1'>" +
-            "<tr><td>Group</td><td>Swap usage</td>" +
-            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td>" +
-            "<tr><td>Value</td><td>{{ swap_usage|round(3) }}</td>" +
-            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td>' +
-            "</tr></table>"
+            "<tr><td>Group</td><td>Swap usage</td></tr>" +
+            "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td></tr>" +
+            "<tr><td>Value</td><td>{{ swap_usage|round(3) }}</td></tr>" +
+            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td></tr>' +
+            "</table>"
     },
     {% endfor %}
 ]
