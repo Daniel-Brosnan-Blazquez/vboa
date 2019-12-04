@@ -22,6 +22,9 @@ from vboa.boa_health import boa_health
 from vboa.ingestion_control import ingestion_control
 from vboa.reporting_control import reporting_control
 
+# Import ingestion functions
+import eboa.ingestion.functions as ingestion_functions
+
 # Import alert severity codes
 from eboa.engine.alerts import alert_severity_codes
 
@@ -233,5 +236,25 @@ def create_app():
         sorted_list.sort(key=len)
         
         return sorted_list
+
+    ###
+    # Date operations
+    ###
+    @app.template_filter()
+    def convert_eboa_events_to_date_segments(list_of_events):
+        """Convert list of events to date segments."""
+        
+        return ingestion_functions.convert_eboa_events_to_date_segments(list_of_events)
+
+    @app.template_filter()
+    def merge_timeline(timeline):
+        
+        return ingestion_functions.merge_timeline(timeline)
+
+    @app.template_filter()
+    def get_timeline_duration_segments(timeline):
+        
+        return ingestion_functions.get_timeline_duration(timeline)
+
     
     return app
