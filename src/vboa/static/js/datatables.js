@@ -1,6 +1,7 @@
 
 /* Function to activate the search on every column */
 export function activate_search_on_columns() {
+
     // Setup - add a text input to each footer cell
     jQuery(".table tfoot th").each( function () {
         var title = $(this).text();
@@ -61,6 +62,12 @@ export function activate_search_on_columns() {
 
 /* Function to activate search and checkboxes on the specified tables */
 export function activate_search_and_checkboxes_on_tables() {
+
+    // Setup - add a text input to each footer cell
+    jQuery(".table-search-checkboxes tfoot th").each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
 
     // DataTable
     var tables = jQuery(".table-search-checkboxes").each( function (){
