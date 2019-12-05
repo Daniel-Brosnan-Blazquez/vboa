@@ -24,10 +24,12 @@ export function create_annotation_map(annotations_geometries, dom_id){
     var polygons = [];
 
     for (const annotation_geometries of annotations_geometries){
+        var i = 0;
         for (const geometry of annotation_geometries["geometries"]){
             polygons.push({"polygon": geometry["value"],
-                           "id": annotation_geometries["id"],
+                           "id": annotation_geometries["id"] + "_" + i,
                            "tooltip": create_annotation_tooltip_text(annotation_geometries)})
+            i = i + 1;
         }
     }
     

@@ -14,7 +14,7 @@ var annotations_geometries = [
             {
                 "value": "{{ geometry['value'] }}",
                 "name": "{{ geometry['name'] }}"
-            }
+            },
             {% endfor %}
         ]
     },
