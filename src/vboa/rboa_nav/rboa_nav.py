@@ -247,7 +247,7 @@ def query_report(report_uuid):
     current_app.logger.debug("Query report by identifier")
     reports = query.get_reports(report_uuids={"filter": [report_uuid], "op": "in"})
     if len(reports) > 0:
-        report = [0]
+        report = reports[0]
     else:
         return render_template("panel/error.html"), 403
     # end if
