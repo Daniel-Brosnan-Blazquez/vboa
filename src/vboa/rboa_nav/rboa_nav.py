@@ -245,7 +245,12 @@ def query_report(report_uuid):
     Query report corresponding to the UUID received.
     """
     current_app.logger.debug("Query report by identifier")
-    report = query.get_reports(report_uuids={"filter": [report_uuid], "op": "in"})[0]
+    reports = query.get_reports(report_uuids={"filter": [report_uuid], "op": "in"})
+    if len(reports) > 0:
+        report = [0]
+    else:
+        return render_template("panel/error.html"), 403
+    # end if
 
     html = retrieve_report_content(report)
     
