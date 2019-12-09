@@ -534,21 +534,18 @@ export function request_switch_on_off_cron(){
 
 function switch_on_off_cron(parameters, cron_status) {
 
-    document.getElementById("cron-indicator").className = "circle loader"
     if (cron_status["crond"]["status"] == "on"){
-        parameters = {
-            "success_message": "CRON was switched off sucessfully",
-            "error_message": "CRON could not be switched off sucessfully",
-            "dom_indicator_id": "cron-indicator"
-        }
-        queryFunctions.request_info("/switch-off-cron", handle_return_status, parameters);
+
+        // Cron needs to be managed by the root user
+        toastr.warning("You have no permissions for switching this process off." + 
+                       "</br>Access with user root and perform a kill operation to the crond process")
+        
     }else{
-        parameters = {
-            "success_message": "CRON was switched on sucessfully",
-            "error_message": "CRON could not be switched on sucessfully",
-            "dom_indicator_id": "cron-indicator"
-        }
-        queryFunctions.request_info("/switch-on-cron", handle_return_status, parameters);
+
+        // Cron needs to be managed by the root user
+        toastr.warning("You have no permissions for switching this process on." + 
+                       "</br>Access with user root and execute 'crond' process")
+
     }
     
 };

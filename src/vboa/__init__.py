@@ -21,6 +21,7 @@ from vboa.rboa_nav import rboa_nav
 from vboa.boa_health import boa_health
 from vboa.ingestion_control import ingestion_control
 from vboa.reporting_control import reporting_control
+from vboa.boa_scheduler import boa_scheduler
 
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
@@ -44,6 +45,7 @@ def create_app():
     app.register_blueprint(boa_health.bp)
     app.register_blueprint(ingestion_control.bp)
     app.register_blueprint(reporting_control.bp)
+    app.register_blueprint(boa_scheduler.bp)
 
     # the toolbar is only enabled in debug mode:
     app.debug = False

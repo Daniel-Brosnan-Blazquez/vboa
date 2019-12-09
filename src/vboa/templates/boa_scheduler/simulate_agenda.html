@@ -1,0 +1,241 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">
+      <div>
+        <div style="display:inline">
+          Agenda simulation
+      </div>
+    </h1>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <!-- /.col-lg-6 (nested) -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#scheduler-t0">Scheduler T0 <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse" id="scheduler-t0">
+      <div class="row row2">
+        <p>
+          <b>The following time shows T0 time (time when the agenda will start deriving triggering times)</b>:
+        </p>
+        <table align="left" class="table table-striped table-bordered table-hover table-static" id="scheduler-t0-details">
+          <tr>
+            <th>T0 (UTC)</th>
+            <td>{{ t0 }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if tasks|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#listing-tasks-sboa">Tasks in the agenda <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="listing-tasks-sboa">
+      <div>
+        <h3><u>Table of tasks in the scheduler agenda</u></h3>
+      </div>
+      <p>
+        <b>The following table shows the tasks configured in the stored agenda</b>:
+      </p>
+      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="table-tasks-sboa-table">
+        <thead>
+          <tr>
+            <th>Rule name</th>
+            <th>Task name</th>
+            <th>Command</th>
+            <th>Periodicity</th>
+            <th>Window delay</th>
+            <th>Window size</th>
+            <th>Triggering time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks %}
+          <tr>
+            <td>{{ task["rule_name"] }}</td>
+            <td>{{ task["name"] }}</td>
+            <td>{{ task["command"] }}</td>
+            <td>{{ task["periodicity"] }}</td>
+            <td>{{ task["window_delay"] }}</td>
+            <td>{{ task["window_size"] }}</td>
+            <td>{{ task["triggering_time"].isoformat() }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Rule name</th>
+            <th>Task name</th>
+            <th>Command</th>
+            <th>Periodicity</th>
+            <th>Window delay</th>
+            <th>Window size</th>
+            <th>Triggering time</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#no-tasks-sboa">Tasks in the agenda <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <div class="panel-body panel-collapse collapse" id="no-tasks-sboa">
+      <div>
+          <p id="no-sources-ingestion-control" style="text-indent: 1em">There are no tasks configured in the agenda.</p>
+        <br/>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if simulated_tasks|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#listing-simulated-tasks-sboa">Simulated tasks for the next {{ simulation_size }} days from T0 <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="listing-simulated-tasks-sboa">
+      <div>
+        <h3><u>Table of tasks in the scheduler agenda</u></h3>
+      </div>
+      <p>
+        <b>The following table shows the tasks configured in the stored agenda</b>:
+      </p>
+      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="table-simulated-tasks-sboa-table">
+        <thead>
+          <tr>
+            <th>Rule name</th>
+            <th>Task name</th>
+            <th>Command</th>
+            <th>Periodicity</th>
+            <th>Window delay</th>
+            <th>Window size</th>
+            <th>Triggering time</th>
+            <th>Start coverage</th>
+            <th>Stop coverage</th>            
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in simulated_tasks %}
+          <tr>
+            <td>{{ task["rule_name"] }}</td>
+            <td>{{ task["name"] }}</td>
+            <td>{{ task["command"] }}</td>
+            <td>{{ task["periodicity"] }}</td>
+            <td>{{ task["window_delay"] }}</td>
+            <td>{{ task["window_size"] }}</td>
+            <td>{{ task["triggering_time"].isoformat() }}</td>
+            <td>{{ task["start_coverage"].isoformat() }}</td>
+            <td>{{ task["stop_coverage"].isoformat() }}</td>            
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Rule name</th>
+            <th>Task name</th>
+            <th>Command</th>
+            <th>Periodicity</th>
+            <th>Window delay</th>
+            <th>Window size</th>
+            <th>Triggering time</th>
+            <th>Start coverage</th>
+            <th>Stop coverage</th>            
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#no-simulated-tasks-sboa">Tasks in the agenda <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <div class="panel-body panel-collapse collapse" id="no-simulated-tasks-sboa">
+      <div>
+          <p id="no-sources-ingestion-control" style="text-indent: 1em">There are no tasks configured in the agenda.</p>
+        <br/>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if tasks|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#timeline-tasks-sboa">Timeline with the simulated tasks for the next {{ simulation_size }} days from T0  <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    {% if tasks|length > 0 %}
+    <div class="panel-body panel-collapse collapse in" id="timeline-tasks-sboa">
+      <!-- /.panel-heading -->
+      <p>
+        <b>The following timeline shows the simulation of the configured tasks in the stored agenda for the  next {{ simulation_size }} days from T0</b>:
+      </p>
+      <div id="tasks-timeline">
+      </div>
+    </div>
+    {% else %}
+    <div>
+      <br/>
+      <p id="timeline-tasks-sboa-no-tasks" style="text-indent: 1em">There are no datastrips acquired during the requested period.</p>
+      <br/>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+
+  {% if simulated_tasks|length > 0 %}
+  {% with tasks = simulated_tasks %}
+  {% include "boa_scheduler/tasks_to_timeline.js" %}
+  {% endwith %}
+
+  var groups = [];
+  var items = [];
+
+  vboa.prepare_events_data_for_timeline(tasks, items, groups);
+  vboa.display_timeline("tasks-timeline", items, groups);
+  {% endif %}  
+</script>
+{% endblock %}
