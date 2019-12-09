@@ -49,9 +49,35 @@ def simulate():
     Panel for the BOA scheduler simulation functionality.
     """
 
+    t0 = datetime.datetime.now().date()
+
+    list_tasks, simulated_tasks = generate_task_lists(t0)
+    
+    return render_template("boa_scheduler/simulate_agenda.html", tasks = list_tasks, t0 = t0, simulated_tasks = simulated_tasks, simulation_size = simulation_size)
+
+@bp.route("/simulate/<string:t0>", methods=["GET"])
+def simulate_with_t0(t0):
+    """
+    Panel for the BOA scheduler simulation functionality.
+    """
+
+    try:
+        parser.parse(t0)
+    except:
+        return render_template("panel/error.html")
+    # end try
+    
+    list_tasks, simulated_tasks = generate_task_lists(parser.parse(t0).date())
+    
+    return render_template("boa_scheduler/simulate_agenda.html", tasks = list_tasks, t0 = parser.parse(t0).date(), simulated_tasks = simulated_tasks, simulation_size = simulation_size)
+
+def generate_task_lists(t0):
+    """
+    Method to obtain the agenda and simulate the execution following the simulation size
+    """
+    
     list_rules = []
     list_tasks = []
-    t0 = datetime.datetime.now().date()
     engine.generate_rules_and_tasks(list_rules, list_tasks, t0 = t0)
 
     for task in list_tasks:
@@ -89,4 +115,20 @@ def simulate():
             })
     # end for
 
-    return render_template("boa_scheduler/simulate_agenda.html", tasks = list_tasks, t0 = t0, simulated_tasks = simulated_tasks, simulation_size = simulation_size)
+    return list_tasks, simulated_tasks
+
+@bp.route("/load-agenda/<string:t0>", methods=["GET"])
+def load_agenda(t0):
+    """
+    Route for loading the agenda.
+    """
+
+    try:
+        parser.parse(t0)
+    except:
+        return jsonify({"status": -1, "message": "The T0 value {} is not a valid date".format(t0)})
+    # end try
+    
+    returned_status = engine.insert_configuration(parser.parse(t0).date())
+    
+    return jsonify(returned_status)

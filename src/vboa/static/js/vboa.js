@@ -589,3 +589,19 @@ export function save_screenshot_with_form(report_group, group_description){
     screenshotFunctions.save_screenshot_with_form(report_group, group_description);
     
 }
+
+/***
+ * SCHEDULER
+ ***/
+export function handle_sboa_return_status(status){
+
+    var json_status = JSON.parse(status)
+    
+    if (json_status["status"] == 0){
+        toastr.success(json_status["message"])
+    }
+    else{
+        toastr.error(json_status["message"])        
+    }
+
+}

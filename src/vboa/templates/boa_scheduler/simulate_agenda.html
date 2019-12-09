@@ -5,7 +5,7 @@
     <h1 class="page-header">
       <div>
         <div style="display:inline">
-          Agenda simulation
+          Agenda simulation for the next {{ simulation_size }} days from T0
       </div>
     </h1>
   </div>
@@ -13,30 +13,35 @@
 </div>
 <!-- /.row -->
 
+
+<!-- T0 -->
 <div class="row">
-  <!-- /.col-lg-6 (nested) -->
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#scheduler-t0">Scheduler T0 <span class="fa fa-angle-double-down"></span></a>
-      </h3>
-    </div>
-    <!-- /.panel-heading -->
-    <div class="panel-body panel-collapse collapse" id="scheduler-t0">
-      <div class="row row2">
-        <p>
-          <b>The following time shows T0 time (time when the agenda will start deriving triggering times)</b>:
-        </p>
-        <table align="left" class="table table-striped table-bordered table-hover table-static" id="scheduler-t0-details">
-          <tr>
-            <th>T0 (UTC)</th>
-            <td>{{ t0 }}</td>
-          </tr>
-        </table>
+  <div class="col-xs-offset-5">
+    <div class="col-xs-4">
+      <label>T0 (starting time for deriving triggering times)</label>
+      <div class="input-group date">
+        <input type="text" class="form-control" name="t0" id="t0-input" value="{{ t0 }}"/>
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
       </div>
     </div>
   </div>
+</div>    
+</br>
+
+<!-- Buttons -->
+<div class="row" align="center">
+  <div style="margin-left:20px; display:inline">
+    <button type="button" class="btn btn-success" onclick="vboa.request_info_no_args('/sboa/simulate/' + document.getElementById('t0-input').value, vboa.render_page, true)">Simulate agenda</button>
+  </div>
+  <div style="display:inline">
+    <button type="button" class="btn btn-primary" onclick="vboa.request_info_no_args('/sboa/load-agenda/' + document.getElementById('t0-input').value, vboa.handle_sboa_return_status)">Load agenda</button>
+  </div>
 </div>
+
+</br>
+</br>
 
 {% if tasks|length > 0 %}
 <div class="row">
@@ -219,7 +224,8 @@
   </div>
 </div>
 {% endif %}
-
+</br>
+</br>
 {% endblock %}
 
 {% block scripts %}
