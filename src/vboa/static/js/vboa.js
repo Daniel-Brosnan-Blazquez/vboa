@@ -498,11 +498,11 @@ function switch_on_off_orc(parameters, orc_status) {
 /* Function to update the status of the orc */
 setInterval(request_and_update_orc_status, 1000);
 
-request_and_update_orc_status()
+request_and_update_orc_status(true)
 
-function request_and_update_orc_status() {
+function request_and_update_orc_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true"){
+    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
         queryFunctions.request_info("/check-orc-status", update_orc_status, null);
     }
     
@@ -553,11 +553,11 @@ function switch_on_off_cron(parameters, cron_status) {
 /* Function to update the status of the cron */
 setInterval(request_and_update_cron_status, 1000);
 
-request_and_update_cron_status()
+request_and_update_cron_status(true)
 
-function request_and_update_cron_status() {
+function request_and_update_cron_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true"){
+    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
         queryFunctions.request_info("/check-cron-status", update_cron_status, null);
     }
     
@@ -605,3 +605,56 @@ export function handle_sboa_return_status(status){
     }
 
 }
+
+/* Function for switching on/off the Scheduler */
+export function request_switch_on_off_scheduler(){
+
+    queryFunctions.request_info("/check-scheduler-status", switch_on_off_scheduler, null);
+
+};
+
+function switch_on_off_scheduler(parameters, scheduler_status) {
+
+    document.getElementById("sboa-indicator").className = "circle loader"
+    if (scheduler_status["status"] == "on"){
+        parameters = {
+            "success_message": "Scheduler was switched off sucessfully",
+            "error_message": "Scheduler could not be switched off sucessfully",
+            "dom_indicator_id": "sboa-indicator"
+        }
+        queryFunctions.request_info("/switch-off-scheduler", handle_return_status, parameters);
+    }else{
+        parameters = {
+            "success_message": "Scheduler was switched on sucessfully",
+            "error_message": "Scheduler could not be switched on sucessfully",
+            "dom_indicator_id": "sboa-indicator"
+        }
+        queryFunctions.request_info("/switch-on-scheduler", handle_return_status, parameters);
+    }
+    
+};
+
+/* Function to update the status of the scheduler */
+setInterval(request_and_update_scheduler_status, 1000);
+
+request_and_update_scheduler_status(true)
+
+function request_and_update_scheduler_status(first = false) {
+
+    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
+        queryFunctions.request_info("/check-scheduler-status", update_scheduler_status, null);
+    }
+    
+};
+
+function update_scheduler_status(parameters, scheduler_status) {
+
+    if (! document.getElementById("sboa-indicator").className.includes("loader")){
+        if (scheduler_status["status"] == "on"){
+            document.getElementById("sboa-indicator").className = "circle green-circle"
+        }else{
+            document.getElementById("sboa-indicator").className = "circle red-circle"
+        }
+    }
+    
+};

@@ -13,6 +13,9 @@ import json
 from tempfile import mkstemp
 import datetime
 
+# Import BOA scheduler
+import sboa.scheduler.boa_scheduler as boa_scheduler
+
 # Import flask utilities
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 
@@ -58,6 +61,9 @@ def execute_command(command):
 
     return command_status
 
+###
+# ORC
+###
 @bp.route('/check-orc-status')
 def check_orc_status():
     """
@@ -106,6 +112,9 @@ def switch_off_orc():
     
     return jsonify(command_status)
 
+###
+# CRON
+###
 @bp.route('/check-cron-status')
 def check_cron_status():
     """
@@ -147,6 +156,44 @@ def switch_off_cron():
     
     return jsonify(command_status)
 
+###
+# Schduler
+###
+@bp.route('/check-scheduler-status')
+def check_scheduler_status():
+    """
+    Check scheduler status.
+    """
+
+    return jsonify(boa_scheduler.status_scheduler())
+
+@bp.route('/switch-on-scheduler')
+def switch_on_scheduler():
+    """
+    Switch on scheduler.
+    """
+    
+    command = "boa_scheduler.py -c start -o"
+
+    command_status = execute_command(command)
+    
+    return jsonify(command_status)
+
+@bp.route('/switch-off-scheduler')
+def switch_off_scheduler():
+    """
+    Switch off scheduler.
+    """
+    
+    command = "boa_scheduler.py -c stop -o"
+
+    command_status = execute_command(command)
+    
+    return jsonify(command_status)
+
+###
+# Screnshots
+###
 @bp.route('/save-screenshot', methods=["POST"])
 def save_screenshot():
     """

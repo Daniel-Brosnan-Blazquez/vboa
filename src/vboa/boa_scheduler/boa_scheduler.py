@@ -86,7 +86,7 @@ def generate_task_lists(t0):
         task["periodicity"] = rules[0]["periodicity"]
         task["window_delay"] = rules[0]["window_delay"]
         task["window_size"] = rules[0]["window_size"]
-        task["triggering_time"] = parser.parse(rules[0]["triggering_time"])
+        task["triggering_time"] = parser.parse(task["triggering_time"])
     # end for
 
     simulated_tasks = []
