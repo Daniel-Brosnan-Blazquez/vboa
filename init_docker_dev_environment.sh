@@ -314,8 +314,9 @@ docker exec -it -u root $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/stat
 # Install scripts
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
 
-# Link datamodel
+# Link datamodels
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/eboa_data_model.sql /datamodel/'
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/sboa_data_model.sql /datamodel/'
 
 # Initialize the EBOA database inside the postgis-database container
 while true
