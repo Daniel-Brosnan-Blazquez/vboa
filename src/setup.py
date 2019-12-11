@@ -19,7 +19,8 @@ setup(name="vboa",
       install_requires=[
           "eboa",
           "Flask",
-          "Flask-DebugToolbar"
+          "Flask-DebugToolbar",
+          "gunicorn"
       ],
       extras_require={
           "tests" :[
