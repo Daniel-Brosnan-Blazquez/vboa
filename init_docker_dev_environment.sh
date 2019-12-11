@@ -321,7 +321,7 @@ docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamod
 # Initialize the EBOA database inside the postgis-database container
 while true
 do
-    echo "Trying to initialize database..."
+    echo "Trying to initialize BOA engine database..."
     docker exec -it $APP_CONTAINER bash -c "/eboa/src/scripts/init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/eboa_data_model.sql" > /dev/null
     status=$?
     if [ $status -ne 0 ]
@@ -330,13 +330,28 @@ do
         # Wait for the server to be initialize
         sleep 1
     else
-        echo "Database has been initialized..."
+        echo "Database for the BOA engine has been initialized..."
         break
     fi
 done
 
-# Initialize the SBOA database
-docker exec -it -u root $APP_CONTAINER bash -c "sboa_init.py"
+# Initialize the SBOA database inside the postgis-database container
+while true
+do
+    echo "Trying to initialize BOA scheduler database..."
+    docker exec -it $APP_CONTAINER bash -c "/eboa/src/scripts/sboa_init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/sboa_data_model.sql" > /dev/null
+    status=$?
+    if [ $status -ne 0 ]
+    then
+        echo "Server is not ready yet..."
+        # Wait for the server to be initialize
+        sleep 1
+    else
+        echo "Database for the BOA scheduler has been initialized..."
+        break
+    fi
+done
+
 
 # Listen for changes on the web packages
 docker exec -d -it -u root $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run watch"
