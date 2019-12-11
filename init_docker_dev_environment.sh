@@ -304,6 +304,7 @@ fi
 
 # Change port and address configuration of the eboa defined by the postgis container
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/sboa_datamodel.json"
 
 # Execute flask server
 docker exec -d -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"
@@ -322,7 +323,7 @@ docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamod
 while true
 do
     echo "Trying to initialize BOA engine database..."
-    docker exec -it $APP_CONTAINER bash -c "/eboa/src/scripts/init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/eboa_data_model.sql" > /dev/null
+    docker exec -it -u root $APP_CONTAINER bash -c "/eboa/src/scripts/init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/eboa_data_model.sql" > /dev/null
     status=$?
     if [ $status -ne 0 ]
     then
@@ -338,8 +339,8 @@ done
 # Initialize the SBOA database inside the postgis-database container
 while true
 do
-    echo "Trying to initialize BOA scheduler database..."
-    docker exec -it $APP_CONTAINER bash -c "/eboa/src/scripts/sboa_init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/sboa_data_model.sql" > /dev/null
+    echo "Trying to initialize SBOA scheduler database..."
+    docker exec -it -u root $APP_CONTAINER bash -c "/eboa/src/scripts/sboa_init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/sboa_data_model.sql" > /dev/null
     status=$?
     if [ $status -ne 0 ]
     then
