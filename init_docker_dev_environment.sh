@@ -335,6 +335,9 @@ do
     fi
 done
 
+# Initialize the SBOA database
+docker exec -it -u root $APP_CONTAINER bash -c "sboa_init.py"
+
 # Listen for changes on the web packages
 docker exec -d -it -u root $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run watch"
 
