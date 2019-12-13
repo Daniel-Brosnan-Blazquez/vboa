@@ -68,7 +68,7 @@ RUN ln -s /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py
 RUN ln -s /eboa/src/rboa/triggering/rboa_triggering.py /scripts/rboa_triggering.py
 RUN ln -s /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py
 RUN ln -s /eboa/src/sboa/scheduler/boa_scheduler.py /scripts/boa_scheduler.py
-RUN ln -s /eboa/src/sboa/scheduler/boa_execute_task.py /scripts/boa_execute_task.py
+RUN ln -s /eboa/src/sboa/scheduler/boa_execute_triggering.py /scripts/boa_execute_triggering.py
 
 # Environment Variables for BOA
 ENV EBOA_RESOURCES_PATH /resources_path

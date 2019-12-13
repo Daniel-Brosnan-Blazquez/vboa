@@ -270,7 +270,7 @@ docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/rboa/triggering/rboa
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py'
 # SBOA scheduler chain 
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/sboa/scheduler/boa_scheduler.py /scripts/boa_scheduler.py'
-docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/sboa/scheduler/boa_execute_task.py /scripts/boa_execute_task.py'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/sboa/scheduler/boa_execute_triggering.py /scripts/boa_execute_triggering.py'
 
 # Copy datamodels
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/datamodel/eboa_data_model.sql /datamodel'
