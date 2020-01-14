@@ -53,6 +53,7 @@ function create_report_tooltip_text(report){
         "<tr><td>Generator</td><td>" + report["generator"] + "</td></tr>" +
         "<tr><td>Version of generator</td><td>" + report["version"] + "</td></tr>" +
         "<tr><td>Generation error</td><td>" + generation_error + "</td></tr>" +
+        "<tr><td>Actions</td><td><i id='remove-report-" + report["id"] + "' class='fa fa-trash' onclick='vboa.request_info_json_after_confirmation(\"/rboa_nav/remove_reports\", {reports: [{uuid: \"" + report["id"] + "\", name: \"" + report["name"] + "\"}]}, \"Do you really want to remove the report " + report["name"] + "?\", \"You have cancelled the removal of the report, the report " + report["name"] + " will not be removed.\")' data-toggle='tooltip' title='Click to remove this report'></i></td></tr>" +
         "</table>"
 };
 

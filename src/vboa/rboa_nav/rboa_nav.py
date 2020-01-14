@@ -13,6 +13,7 @@ import json
 import shlex
 from subprocess import Popen, PIPE
 from multiprocessing import Pool
+import os
 
 # Import flask utilities
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
@@ -286,6 +287,10 @@ def retrieve_report_content(report):
 
         file_path = archive_path + "/" + report.relative_path
 
+        if not os.path.isfile(file_path):
+            return render_template("panel/error.html")
+        # end if
+
         if report.compressed:
             # Get the report inside
             tar = tarfile.open(file_path, "r")
@@ -453,3 +458,53 @@ def trigger_generator(parameters):
     output, error = program.communicate()        
     return_code = program.returncode
 # end for
+
+###########
+# ACTIONS #
+###########
+@bp.route("/remove_reports", methods=["POST"])
+def remove_reports():
+    """
+    Remove selected reports.
+    """
+    filters = request.json
+
+    reports = filters["reports"]
+
+    # Trigger parallel generation of reports
+    pool = Pool(len(reports))
+    try:
+        pool.map(remove_report, reports)
+    finally:
+        pool.close()
+        pool.join()
+    # end try
+
+    message = "The following reports have been removed:</br>"
+    for report in reports:
+        message += "- " + report["name"] + "</br>"
+    result = {
+        "status": 0,
+        "message": message
+    }
+
+    return jsonify(result)
+
+# Function to remove a report
+def remove_report(report):
+    report_uuid = report["uuid"]
+    report_db = query.get_reports(report_uuids = {"filter": report_uuid, "op": "=="})[0]
+
+    # Remove physical report
+    if report_db.relative_path != None:
+        file_path = archive_path + "/" + report_db.relative_path
+        try:
+            os.remove(file_path)
+        except FileNotFoundError:
+            pass
+        # end try
+    # end if
+
+    # Remove related content from DDBB
+    query.get_reports(report_uuids = {"filter": report_uuid, "op": "=="}, delete = True)
+# end def

@@ -49,6 +49,7 @@
             <th>Generator</th>
             <th>Version</th>
             <th>UUID</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -89,6 +90,11 @@
             <td>{{ report.generator }}</td>
             <td>{{ report.generator_version }}</td>
             <td>{{ report.report_uuid }}</td>
+            <td>
+              {% with report = report %}
+              {% include "rboa_nav/actions.html" %}
+              {% endwith %}
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -111,6 +117,7 @@
             <th>Generator</th>
             <th>Version</th>
             <th>UUID</th>
+            <th>Actions</th>
           </tr>
         </tfoot>
       </table>

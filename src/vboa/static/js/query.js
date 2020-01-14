@@ -1,3 +1,5 @@
+import * as toastr from "toastr/toastr.js";
+
 /* Function to request information to the EBOA by URL */
 export function request_info(url, callback, parameters){
     var xmlhttp = new XMLHttpRequest();
@@ -60,6 +62,31 @@ export function request_info_json(url, callback, json, show_loader = false){
     xmlhttp.open("POST", url, true);
     xmlhttp.setRequestHeader('content-type', 'application/json;charset=UTF-8');
     xmlhttp.send(JSON.stringify(json));
+}
+
+/* Function to request information to the EBOA by URL, using json for the parameters after asking for confirmation */
+export function request_info_json_after_confirmation(url, json, confirmation_message, cancel_message, show_loader = false){
+
+    var confirmed = confirm(confirmation_message);
+    if (confirmed){
+        request_info_json(url, notify_end_of_request, json, show_loader)
+    }else{
+        toastr.warning(cancel_message)
+    }
+}
+
+function notify_end_of_request(response){
+
+    var data = JSON.parse(response)
+    var message = data["message"];
+    var status = data["status"];
+
+    if (status == 0){
+        toastr.success(message)
+    }else{
+        toastr.error(message)
+    }
+    return true;
 }
 
 /* Function to request information to the EBOA by URL, using FormData object from javascript for the parameters */

@@ -435,6 +435,12 @@ export function request_info_json(url, callback, json, show_loader = false){
 
 };
 
+/* Function to request information to the EBOA by URL, using json for the parameters after asking for confirmation */
+export function request_info_json_after_confirmation(url, json, confirmation_message, cancel_message, show_loader = false){
+    queryFunctions.request_info_json_after_confirmation(url, json, confirmation_message, cancel_message, show_loader);
+
+};
+
 /* Function render a received page */
 export function render_page(page){
 
