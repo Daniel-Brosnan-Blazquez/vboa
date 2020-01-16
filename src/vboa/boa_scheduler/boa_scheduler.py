@@ -129,6 +129,6 @@ def load_agenda(t0):
         return jsonify({"status": -1, "message": "The T0 value {} is not a valid date".format(t0)})
     # end try
     
-    returned_status = engine.insert_configuration(parser.parse(t0).date())
+    returned_status = engine.insert_configuration(parser.parse(t0).date(), start_scheduler = True)
     
     return jsonify(returned_status)
