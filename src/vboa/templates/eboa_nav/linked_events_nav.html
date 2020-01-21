@@ -56,11 +56,9 @@
           {% set source_uuid = event.source.source_uuid %}
           <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
           <td>
-            {% set er = "" %}
             {% if event.explicitRef %}
-            {% set er = event.explicitRef.explicit_ref %}
+            <a href="/eboa_nav/query-er/{{ event.explicitRef.explicit_ref_uuid }}">{{ event.explicitRef.explicit_ref }}</a>
             {% endif %}
-            {{ er }}
           </td>
           <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ event.event_uuid }}</td>
