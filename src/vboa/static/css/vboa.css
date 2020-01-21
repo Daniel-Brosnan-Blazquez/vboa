@@ -43,6 +43,10 @@
     color: red;
     font-weight: bold
 }
+.bold-orange {
+    color: orange;
+    font-weight: bold
+}
 
 /* Fill Colours */
 /* Bold colors */
@@ -63,6 +67,9 @@
 }
 .background-red {
     background: red;
+}
+.background-orange {
+    background: orange;
 }
 
 /* Static table */
