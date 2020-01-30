@@ -204,7 +204,7 @@ docker exec -it -u boa $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host
 docker exec -it -u boa $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/sboa_datamodel.json"
 
 # Execute web server
-docker exec -d -it -u boa $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; gunicorn -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app -D --log-file /log/web_server"
+docker exec -d -it -u boa $APP_CONTAINER bash -c 'source scl_source enable rh-ruby25; gunicorn -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app -D --log-file /log/web_server'
 
 echo "
 Docker environment successfully built :-)"
