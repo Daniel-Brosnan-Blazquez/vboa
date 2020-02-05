@@ -28,7 +28,9 @@ RUN yum install -y postgresql-devel \
     p7zip \
     unzip \
     less \
-    cronie
+    cronie \
+    libcurl \
+    libcurl-devel
 
 RUN yum install -y rh-ruby25 \
     rh-ruby25-rubygem-bundler \
