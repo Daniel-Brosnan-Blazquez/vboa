@@ -27,7 +27,6 @@ def generate_report(begin, end, metadata):
 
     html_file_path = export_html(response)
 
-    metadata["operations"][0]["report"]["generator"] = os.path.basename(__file__)
     metadata["operations"][0]["report"]["generator_version"] = version
     metadata["operations"][0]["report"]["group"] = "BOA_HEALTH"
     metadata["operations"][0]["report"]["group_description"] = "Group of reports dedicated for the monitoring of the health of the docker container hosting the BOA"

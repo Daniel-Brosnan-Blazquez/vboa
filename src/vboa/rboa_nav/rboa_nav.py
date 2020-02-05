@@ -462,6 +462,7 @@ def trigger_generator(parameters):
 ###########
 # ACTIONS #
 ###########
+## Remove reports
 @bp.route("/remove_reports", methods=["POST"])
 def remove_reports():
     """
@@ -507,4 +508,49 @@ def remove_report(report):
 
     # Remove related content from DDBB
     query.get_reports(report_uuids = {"filter": report_uuid, "op": "=="}, delete = True)
+# end def
+
+## Re-generate reports
+@bp.route("/re_generate_reports", methods=["POST"])
+def re_generate_reports():
+    """
+    Re-generate selected reports.
+    """
+    filters = request.json
+
+    reports = filters["reports"]
+
+    # Trigger parallel generation of reports
+    pool = Pool(len(reports))
+    try:
+        pool.map(re_generate_report, reports)
+    finally:
+        pool.close()
+        pool.join()
+    # end try
+
+    message = "The following reports have been re-generated:</br>"
+    for report in reports:
+        message += "- " + report["name"] + "</br>"
+    result = {
+        "status": 0,
+        "message": message
+    }
+
+    return jsonify(result)
+
+# Function to re-generate a report
+def re_generate_report(report):
+    report_uuid = report["uuid"]
+    report_db = query.get_reports(report_uuids = {"filter": report_uuid, "op": "=="})[0]
+
+    # Remove physical report
+    if report_db != None:
+        parameters = {
+            "generator": report_db.generator,
+            "start": report_db.validity_start.isoformat(),
+            "stop": report_db.validity_stop.isoformat()
+        }
+        trigger_generator(parameters)
+    # end if
 # end def
