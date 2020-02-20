@@ -74,11 +74,13 @@ def create_app():
             return True
         else:
             return False
+        # end if
 
     @app.template_test()
     def match(item, matching_text):
 
-        return re.match(matching_text, item)
+        matching_text_formatted = "^" + matching_text + "$"
+        return re.match(matching_text_formatted, item)
 
     @app.template_filter()
     def reject_events_with_link_name(list_of_events, link_name):
@@ -88,11 +90,47 @@ def create_app():
         return result
 
     @app.template_filter()
-    def filter_events_by_text_value(list_of_events, name, filter):
+    def filter_events_with_link_name(list_of_events, link_name):
         """Convert a string to all caps."""
-        result = [event for event in list_of_events if len([value.value for value in event.eventTexts if value.name == name and value.value == filter]) > 0]
+        result = [event for event in list_of_events if len([link for link in event.eventLinks if link.name == link_name]) > 0]
         
         return result
+
+    @app.template_filter()
+    def filter_events_by_text_value(list_of_events, name, filter):
+        """Convert a string to all caps."""
+        result = [event for event in list_of_events if len([value for value in event.eventTexts if value.name == name and value.value == filter]) > 0]
+        
+        return result
+
+    @app.template_filter()
+    def filter_annotations(list_of_annotations, annotation_name, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [annotation for annotation in list_of_annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None)]
+        
+        return result
+
+    @app.template_filter()
+    def filter_annotations_by_text_value(list_of_annotations, name, filter):
+        """Convert a string to all caps."""
+        result = [annotation for annotation in list_of_annotations if len([value for value in annotation.annotationTexts if value.name == name and value.value == filter]) > 0]
+        
+        return result
+
+    @app.template_filter()
+    def filter_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [reference for reference in list_of_references for annotation in reference.annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and len([value for value in annotation.annotationTexts if value.name == value_name and value.value == filter]) > 0]
+        
+        return result
+
+    @app.template_filter()
+    def reject_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [reference for reference in list_of_references if len([annotation for annotation in reference.annotations if len([value for value in annotation.annotationTexts if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and value.name == value_name and value.value == filter]) > 0]) == 0]
+
+        return result
+
 
     @app.template_filter()
     def events_group_by_text_value(list_of_events, name):
@@ -253,6 +291,11 @@ def create_app():
         
         return ingestion_functions.merge_timeline(timeline)
 
+    @app.template_filter()
+    def intersect_timelines(timeline1, timeline2):
+        
+        return ingestion_functions.intersect_timelines(timeline1, timeline2)
+    
     @app.template_filter()
     def get_timeline_duration_segments(timeline):
         
