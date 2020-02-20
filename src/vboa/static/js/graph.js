@@ -1,4 +1,5 @@
 import * as vis from "vis/dist/vis.min.js";
+import * as chartjs from "chart.js/dist/Chart.js";
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import WKT from 'ol/format/WKT.js';
@@ -9,6 +10,94 @@ import MousePosition from 'ol/control/MousePosition.js';
 import {createStringXY} from 'ol/coordinate.js';
 import {defaults as defaultControls} from 'ol/control.js';
 import {Fill, Stroke, Style, Text} from 'ol/style.js';
+
+
+/* Function to display a pie chart given the id of the DOM where to
+ * attach it and the items to show */
+export function display_pie(dom_id, data, options){
+
+    /* create timeline */
+    var container = document.getElementById(dom_id);
+
+    if (options == undefined){
+        var options = {
+            responsive: true,
+            maintainAspectRatio: true,
+            legend: {
+                display: false
+            },
+            plugins: {
+                labels: [
+                    {render: 'label',
+                     position: 'outside',
+                     fontSize: 14,
+                     fontStyle: "bold",
+                     fontColor: "black"},
+                    {render: 'percentage',
+                     fontSize: 14,
+                     fontStyle: "bold",
+                     fontColor: "white"}]
+            }
+        }
+    }
+    
+    if (options == undefined){    
+        var pie_chart = new chartjs.Chart(container, {
+            type: 'pie',
+            data: data
+        });
+    }else{
+        var pie_chart = new chartjs.Chart(container, {
+            type: 'pie',
+            data: data,
+            options: options
+        });
+    }
+
+};
+
+/* Function to display a bar chart given the id of the DOM where to
+ * attach it and the items to show with corresponding groups */
+export function display_bar_time(dom_id, items, groups, options){
+
+    /* create timeline */
+    const container = document.getElementById(dom_id);
+    if (options == undefined){
+        const options = {
+            style: "bar",
+            barChart: {width:50, align:'center', sideBySide:true},
+        };
+    }
+    
+    const bar = new vis.Graph2d(container, new vis.DataSet(items), new vis.DataSet(groups), options);
+
+    bar.on("click", function (params) {
+        show_bar_item_information(params, items, dom_id)
+    });
+
+};
+
+function show_bar_item_information(params, items, dom_id){
+
+    const time_margin = 5;
+
+    var left_time = new Date(params["time"]);
+    left_time.setSeconds(left_time.getSeconds() - time_margin);
+    var right_time = new Date(params["time"])
+    right_time.setSeconds(right_time.getSeconds() + time_margin);
+    const y = params["value"][0]
+    const matched_items = items.filter(item => new Date(item["x"]) >= left_time && new Date(item["x"]) <= right_time)
+    for (const matched_item of matched_items){
+        const element_id = matched_item["id"]
+        const header_content = "Detailed information for the BAR element: " + element_id;
+        const item = items.filter(item => item["id"] == element_id)[0]
+        const body_content = item["tooltip"];
+        const x = params["x"];
+        const y = params["y"];
+        const div = create_div(dom_id, element_id, header_content, body_content, x, y)
+        drag_element(div)
+    }
+}
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */

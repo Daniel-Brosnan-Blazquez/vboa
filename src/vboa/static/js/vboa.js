@@ -14,6 +14,8 @@ import * as toastr from "toastr/toastr.js";
 import * as olMap from "ol/Map.js";
 import * as olView from "ol/View.js";
 import * as vis from "vis/dist/vis.js";
+import * as chartjs from "chart.js/dist/Chart.js";
+import "chartjs-plugin-labels/build/chartjs-plugin-labels.min.js";
 import * as graph from "./graph.js";
 import * as sourceFunctions from "./sources.js";
 import * as reportFunctions from "./reports.js";
@@ -41,6 +43,7 @@ import "datatables.net-select-dt/css/select.dataTables.min.css";
 import "vis/dist/vis.css";
 import "vis/dist/vis-timeline-graph2d.min.css";
 import "vis/dist/vis-network.min.css";
+import "chart.js/dist/Chart.min.css";
 import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
@@ -211,6 +214,26 @@ export function fill_elements_into_selector_no_input(selector, route, search, fi
 /*
 * Graph functions
 */
+/* Function to display a pie chart given the id of the DOM where to
+ * attach it and the items to show */
+export function display_pie(dom_id, data, options){
+
+    jQuery(document).ready(function(){
+        graph.display_pie(dom_id, data, options);
+    });        
+
+};
+
+/* Function to display a bar graph given the id of the DOM where to
+ * attach it and the items to show with corresponding groups */
+export function display_bar_time(dom_id, items, groups, height){
+
+    jQuery(document).ready(function(){
+        graph.display_bar_time(dom_id, items, groups, height);
+    });        
+
+};
+
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
 export function display_timeline(dom_id, items, groups){
@@ -255,6 +278,12 @@ export function display_map(dom_id, polygons){
 * EVENTS *
 */
 
+/* Function to show a bar graph of events */
+export function prepare_events_data_for_bar(events, items, groups){
+
+    eventFunctions.prepare_events_data_for_bar(events, items, groups);
+
+};
 /* Function to show a timeline of events */
 export function prepare_events_data_for_timeline(events, items, groups){
 

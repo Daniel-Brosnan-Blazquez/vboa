@@ -129,6 +129,31 @@ export function create_event_map(events_geometries, dom_id){
 /*
 * Functions to build the needed structures for the graph library (data is already formated by the calling module)
 
+/* Function to prepare data from events for a bar graph given the events to be displayed */
+export function prepare_events_data_for_bar(events, items, groups){
+
+    var event_groups = new Set(events.map(event => event["group"]))
+
+    for (const group of event_groups){
+        groups.push({
+            id: group,
+            content: group,
+        })
+    }
+
+    for (const event of events){
+        var item = {
+            id: event["id"],
+            group: event["group"],
+            x: event["x"],
+            y: event["y"],
+            tooltip: event["tooltip"]
+        }
+        items.push(item)
+    }
+
+};
+
 /* Function to prepare data from events for a timeline given the events to be displayed */
 export function prepare_events_data_for_timeline(events, items, groups){
 
