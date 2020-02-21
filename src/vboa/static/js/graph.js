@@ -1,4 +1,6 @@
-import * as vis from "vis/dist/vis.min.js";
+import * as vis_data from "vis-data/dist/umd.js";
+import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
+import * as vis_timeline_graph2d from "vis-timeline/standalone/umd/vis-timeline-graph2d.js";
 import * as chartjs from "chart.js/dist/Chart.js";
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
@@ -68,8 +70,8 @@ export function display_bar_time(dom_id, items, groups, options){
             barChart: {width:50, align:'center', sideBySide:true},
         };
     }
-    
-    const bar = new vis.Graph2d(container, new vis.DataSet(items), new vis.DataSet(groups), options);
+
+    const bar = new vis_timeline_graph2d.Graph2d(container, items, groups, options);
 
     bar.on("click", function (params) {
         show_bar_item_information(params, items, dom_id)
@@ -92,8 +94,9 @@ function show_bar_item_information(params, items, dom_id){
         const header_content = "Detailed information for the BAR element: " + element_id;
         const item = items.filter(item => item["id"] == element_id)[0]
         const body_content = item["tooltip"];
-        const x = params["x"];
-        const y = params["y"];
+        const x = params["pageX"];
+        const y = params["pageY"];
+
         const div = create_div(dom_id, element_id, header_content, body_content, x, y)
         drag_element(div)
     }
@@ -115,7 +118,7 @@ export function display_timeline(dom_id, items, groups){
         }
     };
     
-    const timeline = new vis.Timeline(container, new vis.DataSet(items), new vis.DataSet(groups), options);
+    const timeline = new vis_timeline_graph2d.Timeline(container, items, groups, options);
 
     timeline.on("click", function (params) {
         show_timeline_item_information(params, items, dom_id)
@@ -146,8 +149,8 @@ export function display_network(dom_id, nodes, edges, options){
     const container = document.getElementById(dom_id);
 
     const data = {
-        nodes: new vis.DataSet(nodes),
-        edges: new vis.DataSet(edges)
+        nodes: nodes,
+        edges: edges
     };
     
     if (options == undefined){
@@ -161,7 +164,7 @@ export function display_network(dom_id, nodes, edges, options){
             interaction:{hover:true}
         };
     }
-    const network = new vis.Network(container, data, options);
+    const network = new vis_network.Network(container, data, options);
 
     network.on("click", function (params) {
         show_network_node_information(params, nodes, dom_id)
@@ -197,7 +200,7 @@ export function display_x_time(dom_id, items, groups, options){
         };
     }
     
-    const x_time = new vis.Graph2d(container, new vis.DataSet(items), new vis.DataSet(groups), options);
+    const x_time = new vis_timeline_graph2d.Graph2d(container, items, groups, options);
 
     x_time.on("click", function (params) {
         show_x_time_item_information(params, items, dom_id)
@@ -346,7 +349,7 @@ function show_map_item_information(event, map, dom_id){
 
 function create_div(dom_id, element_id, header_content, body_content, x, y){
 
-    const container = document.getElementById(dom_id);
+    const container = document.getElementById("boa-body");
 
     // Create div
     const div = document.createElement("div");
