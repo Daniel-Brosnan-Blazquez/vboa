@@ -82,11 +82,13 @@ export function create_event_timeline(events, dom_id){
         groups.push({
             id: gauge_system,
             content: gauge_system,
+            treeLevel: 1,
             nestedGroups: Array.from(associated_gauges)
         })
         for (const associated_gauge of associated_gauges){
             groups.push({
                 id: associated_gauge,
+                treeLevel: 2,
                 content: associated_gauge
             })
         }
@@ -164,11 +166,13 @@ export function prepare_events_data_for_timeline(events, items, groups){
         groups.push({
             id: group,
             content: group,
+            treeLevel: 1,
             nestedGroups: Array.from(several_associated_timeliness)
         })
         for (const associated_timeliness of several_associated_timeliness){
             groups.push({
                 id: associated_timeliness,
+                treeLevel: 2,
                 content: associated_timeliness
             })
         }

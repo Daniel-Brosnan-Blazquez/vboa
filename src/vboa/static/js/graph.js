@@ -115,9 +115,10 @@ export function display_timeline(dom_id, items, groups){
             item : {
                 horizontal : -1
             }
-        }
+        },
+        zoomKey: 'ctrlKey',
     };
-    
+
     const timeline = new vis_timeline_graph2d.Timeline(container, items, groups, options);
 
     timeline.on("click", function (params) {
