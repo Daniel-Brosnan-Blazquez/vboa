@@ -1,3 +1,4 @@
+import * as moment from "moment/moment";
 import * as vis_data from "vis-data/dist/umd.js";
 import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
 import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
@@ -18,7 +19,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style.js';
  * attach it and the items to show */
 export function display_pie(dom_id, data, options){
 
-    /* create timeline */
+    /* create pie */
     var container = document.getElementById(dom_id);
 
     if (options == undefined){
@@ -62,7 +63,7 @@ export function display_pie(dom_id, data, options){
  * attach it and the items to show with corresponding groups */
 export function display_bar_time(dom_id, items, groups, options){
 
-    /* create timeline */
+    /* create bar */
     const container = document.getElementById(dom_id);
     if (options == undefined){
         const options = {
@@ -73,7 +74,7 @@ export function display_bar_time(dom_id, items, groups, options){
 
     if (options.moment == undefined){
         options.moment = function(date) {
-            return vis_timeline_graph2d.moment(date).utc();
+            return moment(date).utc();
         }
     }
 
@@ -123,7 +124,7 @@ export function display_timeline(dom_id, items, groups){
             }
         },
         moment: function(date) {
-            return vis_timeline_graph2d.moment(date).utc();
+            return moment(date).utc();
         }
     };
 
@@ -211,7 +212,7 @@ export function display_x_time(dom_id, items, groups, options){
 
     if (options.moment == undefined){
         options.moment = function(date) {
-            return vis_timeline_graph2d.moment(date).utc();
+            return moment(date).utc();
         }
     }
     
