@@ -1,6 +1,6 @@
 import * as vis_data from "vis-data/dist/umd.js";
 import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
-import * as vis_timeline_graph2d from "vis-timeline/standalone/umd/vis-timeline-graph2d.js";
+import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
 import * as chartjs from "chart.js/dist/Chart.js";
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
