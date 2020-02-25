@@ -78,17 +78,15 @@ export function create_event_timeline(events, dom_id){
     var gauge_systems = new Set(events.map(event => event["gauge"]["system"]))
 
     for (const gauge_system of gauge_systems){
-        var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"] + "_" + event["gauge"]["system"]))
-        groups.push({
-            id: gauge_system,
-            content: gauge_system,
-            treeLevel: 1,
-            nestedGroups: Array.from(associated_gauges)
-        })
+        if (gauge_system == "None"){
+            var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"]))
+        }else{
+            var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"] + "_" + event["gauge"]["system"]))
+        }
         for (const associated_gauge of associated_gauges){
             groups.push({
                 id: associated_gauge,
-                treeLevel: 2,
+                treeLevel: 1,
                 content: associated_gauge
             })
         }
@@ -98,9 +96,14 @@ export function create_event_timeline(events, dom_id){
 
     for (const event_uuid of unique_event_uuids){
         var event = events.filter(event => event["id"] == event_uuid)[0]
+        if (event["gauge"]["system"] == "None"){
+            var group = event["gauge"]["name"]
+        }else{
+            var group = event["gauge"]["name"] + "_" + event["gauge"]["system"]
+        }
         items.push({
             id: event["id"],
-            group: event["gauge"]["name"] + "_" + event["gauge"]["system"],
+            group: group,
             start: event["start"],
             end: event["stop"],
             tooltip: create_event_tooltip_text(event)
