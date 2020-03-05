@@ -1,4 +1,3 @@
-import * as moment from "moment/moment";
 import * as vis_data from "vis-data/dist/umd.js";
 import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
 import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
@@ -72,12 +71,6 @@ export function display_bar_time(dom_id, items, groups, options){
         };
     }
 
-    if (options.moment == undefined){
-        options.moment = function(date) {
-            return moment(date).utc();
-        }
-    }
-
     const bar = new vis_timeline_graph2d.Graph2d(container, items, groups, options);
 
     bar.on("click", function (params) {
@@ -123,9 +116,6 @@ export function display_timeline(dom_id, items, groups){
                 horizontal : -1
             }
         },
-        moment: function(date) {
-            return moment(date).utc();
-        }
     };
 
     const timeline = new vis_timeline_graph2d.Timeline(container, items, groups, options);
@@ -208,12 +198,6 @@ export function display_x_time(dom_id, items, groups, options){
         options = {
             legend: true
         };
-    }
-
-    if (options.moment == undefined){
-        options.moment = function(date) {
-            return moment(date).utc();
-        }
     }
     
     const x_time = new vis_timeline_graph2d.Graph2d(container, items, groups, options);
