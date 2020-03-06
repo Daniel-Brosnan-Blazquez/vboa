@@ -4,21 +4,24 @@
   <h1 class="page-header">Ingestion alerts</h1>
 </div>
 <!-- /.row -->
-{% with template = "?template=alerts" %}
+{% with template = "?template=alerts_and_errors" %}
 {% include "ingestion_control/ingestion_control_query.html" %}
 {% endwith %}
+{% set ingestion_errors = sources|selectattr("ingestion_error", "equalto", True)|list %}
 {% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 
 <!-- Pagination -->
-{% with route = "/ingestion_control/ingestion-control-pages", elements = alerts, filters = filters %}
+{% with route = "/ingestion_control/ingestion-control-pages", elements = sources, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
-{% with show = {"alerts": True} %}
+{% with show = {"errors": True, "alerts": True} %}
 {% include "ingestion_control/ingestion_control_summary_content.html" %}
 {% endwith %}
 
 {% include "ingestion_control/ingestion_control_alerts_content.html" %}
+
+{% include "ingestion_control/ingestion_control_errors_content.html" %}
 {% endblock %}
 {% block scripts %}
 {{ super() }}

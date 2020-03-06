@@ -14,6 +14,10 @@
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
+{% with show = {"errors": True} %}
+{% include "ingestion_control/ingestion_control_summary_content.html" %}
+{% endwith %}
+
 {% include "ingestion_control/ingestion_control_errors_content.html" %}
 {% endblock %}
 {% block scripts %}

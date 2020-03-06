@@ -77,14 +77,18 @@ def show_ingestion_control():
     current_app.logger.debug("Ingestion control view")
 
     template_name = request.args.get("template")
-
+    
     filters = {}
-    filters["limit"] = ["100"]    
     if request.method == "POST":
         filters = request.form.to_dict(flat=False).copy()
     # end if
+    filters["limit"] = ["100"]
     filters["offset"] = [""]
-    
+
+    if "template" in filters:
+        template_name = filters["template"][0]
+    # end if
+
     # Initialize reporting period (now - window_size days, now)
     start_filter = {
         "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
@@ -231,18 +235,29 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
         kwargs["limit"] = filters["limit"][0]
     # end if
 
-    # Set order by reception_time descending
-    kwargs["order_by"] = {"field": "reception_time", "descending": True}
-
-    if template_name == "errors":
+    if template_name == "alerts":
+        # Obtain source alerts and then the sources
+        source_alerts = query.get_source_alerts(kwargs)
+        sources = query.get_sources(source_uuids = {"filter": [source_alert.source_uuid for source_alert in source_alerts], "op": "in"})
+    elif template_name == "alerts_and_errors":
+        # Obtain source alerts and then the sources
+        source_alerts = query.get_source_alerts(kwargs)
+        sources_from_source_alerts = query.get_sources(source_uuids = {"filter": [source_alert.source_uuid for source_alert in source_alerts], "op": "in"})
         kwargs["ingestion_error"] = {"filter": "true", "op": "=="}
-    # end if
-    
-    # This is here because it seems that the ORM is caching values and does not show the updates.
-    # expunge_all removes all objects related to the session
-    query.session.expunge_all()
-    sources = query.get_sources(**kwargs)
+        sources_from_source_errors = query.get_sources(**kwargs)
 
+        sources = list(set(sources_from_source_alerts + sources_from_source_errors))
+    else:
+        if template_name == "errors":
+            kwargs["ingestion_error"] = {"filter": "true", "op": "=="}
+        # end if
+
+        sources = query.get_sources(**kwargs)
+    # end if
+
+    # Order sources by reception time descending
+    sources.sort(key=lambda x: x.reception_time, reverse = True)
+    
     reporting_start = stop_filter["date"]
     reporting_stop = start_filter["date"]
 
@@ -250,5 +265,5 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     if template_name != None:
         template = "ingestion_control/ingestion_control_" + template_name + ".html"
     # end if
-    
+
     return render_template(template, sources=sources, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)

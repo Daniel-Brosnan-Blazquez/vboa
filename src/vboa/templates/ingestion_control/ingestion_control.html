@@ -16,44 +16,9 @@
 {% set sources_to_be_shown = sources|rejectattr("ingestion_error", "equalto", True)|list %}
 {% set successful_processings = sources|selectattr("ingested", "equalto", True)|list %}
 
-<!-- Summary -->
-<div class="row">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#summary-ingestion-control">Ingestion control summary <span class="fa fa-angle-double-down"></span></a>
-      </h3>
-    </div>
-    <!-- /.panel-heading -->
-    <div class="panel-body panel-collapse collapse in" id="summary-ingestion-control">
-      <!-- Planned playbacks -->
-      <div class="col-xs-3">
-        <div class="panel panel-primary">
-          <div class="panel-heading" align="center" style="font-size: 20px">Number of on-going processings</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: steelblue">{{ sources_to_be_shown|length }}</div>
-        </div>
-      </div>
-      <div class="col-xs-3">
-        <div class="panel panel-success">
-          <div class="panel-heading" align="center" style="font-size: 20px">Number of successful processings</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: green">{{ successful_processings|length }}</div>
-        </div>
-      </div>
-      <div class="col-xs-3">
-        <div class="panel panel-danger">
-          <div class="panel-heading" align="center" style="font-size: 20px">Number of errors</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ ingestion_errors|length }}</div>
-        </div>
-      </div>
-      <div class="col-xs-3">
-        <div class="panel panel-warning">
-          <div class="panel-heading" align="center" style="font-size: 20px">Number of alerts</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: gold">{{ alerts|length }}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{% with show = {"expected": True, "successful": True, "errors": True, "alerts": True} %}
+{% include "ingestion_control/ingestion_control_summary_content.html" %}
+{% endwith %}
 
 {% include "ingestion_control/ingestion_control_alerts_content.html" %}
 {% include "ingestion_control/ingestion_control_errors_content.html" %}
