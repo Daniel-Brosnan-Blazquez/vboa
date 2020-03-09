@@ -795,6 +795,26 @@ def query_source(source_uuid):
     
     return render_template("eboa_nav/sources_nav.html", sources=source, show=show, filters=filters)
 
+@bp.route("/query-sources-by-name/<string:name>")
+def query_sources_by_name(name):
+    """
+    Query sources corresponding to the name received.
+    """
+    current_app.logger.debug("Query sources by name")
+    sources = query.get_sources(names={"filter": name, "op": "=="})
+    show = {}
+    show["validity_timeline"]=True
+    show["generation_to_ingestion_timeline"]=True
+    show["number_events_xy"]=True
+    show["ingestion_duration_xy"]=True
+    show["generation_time_to_ingestion_time_xy"]=True
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/sources_nav.html", sources=sources, show=show, filters=filters)
+
 @bp.route("/query-sources-by-dim/<uuid:dim_signature_uuid>")
 def query_sources_by_dim(dim_signature_uuid):
     """
