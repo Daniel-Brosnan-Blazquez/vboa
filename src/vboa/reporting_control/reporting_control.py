@@ -84,7 +84,11 @@ def show_reporting_control():
         filters = request.form.to_dict(flat=False).copy()
     # end if
     filters["offset"] = [""]
-    
+
+    if "template" in filters:
+        template_name = filters["template"][0]
+    # end if
+
     # Initialize reporting period (now - window_size days, now)
     start_filter = {
         "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
@@ -231,14 +235,28 @@ def query_reports_and_render(start_filter = None, stop_filter = None, sliding_wi
     # Set order by triggering_time descending
     kwargs["order_by"] = {"field": "triggering_time", "descending": True}
 
-    if template_name == "errors":
+    if template_name == "alerts":
+        # Obtain report alerts and then the reports
+        report_alerts = query.get_report_alerts(kwargs)
+        reports = query.get_reports(report_uuids = {"filter": [report_alert.report_uuid for report_alert in report_alerts], "op": "in"})
+    elif template_name == "alerts_and_errors":
+        # Obtain report alerts and then the reports
+        report_alerts = query.get_report_alerts(kwargs)
+        reports_from_report_alerts = query.get_reports(report_uuids = {"filter": [report_alert.report_uuid for report_alert in report_alerts], "op": "in"})
         kwargs["generation_error"] = {"filter": "true", "op": "=="}
+        reports_from_report_errors = query.get_reports(**kwargs)
+
+        reports = list(set(reports_from_report_alerts + reports_from_report_errors))
+    else:
+        if template_name == "errors":
+            kwargs["generation_error"] = {"filter": "true", "op": "=="}
+        # end if
+
+        reports = query.get_reports(**kwargs)
     # end if
 
-    # This is here because it seems that the ORM is caching values and does not show the updates.
-    # expunge_all removes all objects related to the session
-    query.session.expunge_all()
-    reports = query.get_reports(**kwargs)
+    # Order reports by triggering time descending
+    reports.sort(key=lambda x: x.triggering_time, reverse = True)
     
     reporting_start = stop_filter["date"]
     reporting_stop = start_filter["date"]

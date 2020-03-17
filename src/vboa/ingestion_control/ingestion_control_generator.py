@@ -16,7 +16,7 @@ from vboa import create_app
 
 version = "1.0"
 
-def generate_report(begin, end, metadata, parameters):
+def generate_report(begin, end, metadata, parameters = None):
 
     app = create_app()
     client = app.test_client()

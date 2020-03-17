@@ -79,10 +79,10 @@ def show_ingestion_control():
     template_name = request.args.get("template")
     
     filters = {}
+    filters["limit"] = ["100"]
     if request.method == "POST":
         filters = request.form.to_dict(flat=False).copy()
     # end if
-    filters["limit"] = ["100"]
     filters["offset"] = [""]
 
     if "template" in filters:

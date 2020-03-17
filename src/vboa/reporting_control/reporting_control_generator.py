@@ -16,13 +16,22 @@ from vboa import create_app
 
 version = "1.0"
 
-def generate_report(begin, end, metadata):
+def generate_report(begin, end, metadata, parameters = None):
 
     app = create_app()
     client = app.test_client()
+
+    template_name = None
+    if "type" in parameters:
+        if parameters["type"] == "ALERTS_ERRORS":
+            template_name = "alerts_and_errors"
+        # end if
+    # end if
+
     response = client.post("/reporting_control/reporting_control", data={
         "start": begin,
         "stop": end,
+        "template": template_name
     })
 
     html_file_path = export_html(response)
