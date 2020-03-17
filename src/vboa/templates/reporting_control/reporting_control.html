@@ -12,10 +12,17 @@
 {% endwith %}
 
 {% set alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
-{% include "reporting_control/reporting_control_alerts_content.html" %}
 {% set reporting_errors = reports|selectattr("generation_error", "equalto", True)|list %}
-{% include "reporting_control/reporting_control_errors_content.html" %}
 {% set reports_to_be_shown = reports|rejectattr("generation_error", "equalto", True)|list %}
+{% set successful_processings = sources|selectattr("generated", "equalto", True)|list %}
+
+{% with show = {"expected": True, "successful": True, "errors": True, "alerts": True} %}
+{% include "reporting_control/reporting_control_summary_content.html" %}
+{% endwith %}
+
+{% include "reporting_control/reporting_control_alerts_content.html" %}
+{% include "reporting_control/reporting_control_errors_content.html" %}
+
 {% if reports_to_be_shown|length > 0 %}
 <div class="row">
   <div class="panel panel-default">

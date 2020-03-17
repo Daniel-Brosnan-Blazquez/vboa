@@ -1,24 +1,27 @@
 {% extends "panel/index.html" %}
 {% block content %}
 <div class="row">
-  <h1 class="page-header">Reporting alerts</h1>
+  <h1 class="page-header">Reporting alerts and errors</h1>
 </div>
 <!-- /.row -->
-{% with template = "?template=alerts" %}
+{% with template = "?template=alerts_and_errors" %}
 {% include "reporting_control/reporting_control_query.html" %}
 {% endwith %}
+{% set reporting_errors = reports|selectattr("generation_error", "equalto", True)|list %}
 {% set alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 
 <!-- Pagination -->
-{% with route = "/reporting_control/reporting-control-pages", elements = alerts, filters = filters %}
+{% with route = "/reporting_control/reporting-control-pages", elements = reports, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
-{% with show = {"alerts": True} %}
+{% with show = {"errors": True, "alerts": True} %}
 {% include "reporting_control/reporting_control_summary_content.html" %}
 {% endwith %}
 
 {% include "reporting_control/reporting_control_alerts_content.html" %}
+
+{% include "reporting_control/reporting_control_errors_content.html" %}
 {% endblock %}
 {% block scripts %}
 {{ super() }}

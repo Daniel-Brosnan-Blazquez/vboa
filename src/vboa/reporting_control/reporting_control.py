@@ -232,9 +232,6 @@ def query_reports_and_render(start_filter = None, stop_filter = None, sliding_wi
         kwargs["limit"] = filters["limit"][0]
     # end if
 
-    # Set order by triggering_time descending
-    kwargs["order_by"] = {"field": "triggering_time", "descending": True}
-
     if template_name == "alerts":
         # Obtain report alerts and then the reports
         report_alerts = query.get_report_alerts(kwargs)
