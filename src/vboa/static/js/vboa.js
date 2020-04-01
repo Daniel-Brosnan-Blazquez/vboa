@@ -346,6 +346,19 @@ export function create_annotation_map(geometries, dom_id){
 };
 
 /*
+* EXPLICIT REFERENCES *
+*/
+
+/* Function to show a network of explicit references */
+export function create_er_network(ers, dom_id){
+
+    jQuery(document).ready(function(){
+        erFunctions.create_er_network(ers, dom_id);
+    });
+
+};
+
+/*
 * GAUGES *
 */
 

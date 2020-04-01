@@ -1644,6 +1644,25 @@ def query_er(explicit_ref_uuid):
     
     return render_template("eboa_nav/explicit_references_nav.html", ers=er, filters=filters)
 
+@bp.route("/query-er-links/<uuid:explicit_ref_uuid>")
+def query_er_links_and_render(explicit_ref_uuid):
+    """
+    Query explicit references linked to the explicit reference corresponding to the UUID received and render.
+    """
+    current_app.logger.debug("Query explicit reference links and render")
+    links = query_er_links(explicit_ref_uuid)
+    ers = links["prime_explicit_refs"] + [link["explicit_ref"] for link in links["explicit_refs_linking"]] + [link["explicit_ref"] for link in links["linked_explicit_refs"]]
+    return render_template("eboa_nav/linked_explicit_references_nav.html", links=links, ers=ers)
+
+def query_er_links(explicit_ref_uuid):
+    """
+    Query explicit references linked to the explicit reference corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query explicit reference links")
+    links = query.get_linked_explicit_refs_details(explicit_ref_uuid=explicit_ref_uuid, back_ref = True)
+
+    return links
+
 @bp.route("/query-jsonify-ers")
 def query_jsonify_ers():
     """
