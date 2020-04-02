@@ -9,9 +9,15 @@ var ers = [
     {% set er = link["explicit_ref"] %}
     {% set link_name = link["link_name"] %}
     {% endif %}
+    {% if er.group == None %}
+    {% set group = "N/A" %}
+    {% else %}
+    {% set group = er.group.name %}
+    {% endif %}
     {
         "id": "{{ er.explicit_ref_uuid }}",
         "explicit_reference": "{{ er.explicit_ref }}",
+        "group": "{{ group }}",
         "ingestion_time": "{{ er.ingestion_time }}",
         "label": "{{ key }}",
         "link_name": "{{ link_name }}"

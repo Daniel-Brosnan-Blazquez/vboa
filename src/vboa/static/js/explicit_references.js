@@ -71,6 +71,7 @@ function create_er_tooltip_text(er){
     return "<table border='1'>" +
         "<tr><td>UUID</td><td>" + er['id'] + "</td></tr>" +
         "<tr><td>Explicit reference</td><td>" + er['explicit_reference'] + "</td></tr>" +
+        "<tr><td>Group</td><td>" + er["group"] + "</td></tr>" +
         "<tr><td>Ingestion time</td><td>" + er['ingestion_time'] + "</td></tr>" +
         "<tr><td>Events</td><td><a href='/eboa_nav/query-events-by-er/" + er["explicit_reference"] + "'><i class='fa fa-link'></i></a></td></tr>" +
         "<tr><td>Annotations</td><td><a href='/eboa_nav/query-annotations-by-er/" + er["explicit_reference"] + "'><i class='fa fa-link'></i></a></td></tr>" +
@@ -81,7 +82,7 @@ function create_er_tooltip_text(er){
 /* Function to create a network graph for the EBOA navigation view */
 export function create_er_network(linked_ers, dom_id){
     var unique_er_uuids = new Set(linked_ers.map(er => er["id"]));
-    var prime_er_id = linked_ers.filter(er => er["label"] == "prime_ers").map(er => er["id"])[0];
+    var prime_er_id = linked_ers.filter(er => er["label"] == "prime_explicit_refs").map(er => er["id"])[0];
 
     var nodes = []
     var edges = []
@@ -117,7 +118,7 @@ export function create_er_network(linked_ers, dom_id){
             "color": background_color,
             "shape": shape,
             "tooltip": create_er_tooltip_text(associated_ers[0]),
-            "label": "Explicit reference: " + associated_ers[0]['explicit_reference'],
+            "label": "Explicit reference: " + associated_ers[0]["explicit_reference"] + "\nGroup: " + associated_ers[0]["group"],
             "font": {"align": "left"}
         });
     }

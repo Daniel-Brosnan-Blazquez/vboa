@@ -70,7 +70,7 @@ export function create_event_network(linked_events, dom_id){
 
 };
 
-/* Function to create a network graph for the EBOA navigation view */
+/* Function to create a timeline graph for the EBOA navigation view */
 export function create_event_timeline(events, dom_id){
     var groups = [];
     var items = [];
@@ -114,7 +114,7 @@ export function create_event_timeline(events, dom_id){
 
 };
 
-/* Function to create a network graph for the EBOA navigation view */
+/* Function to create a map for the EBOA navigation view */
 export function create_event_map(events_geometries, dom_id){
 
     var polygons = [];
