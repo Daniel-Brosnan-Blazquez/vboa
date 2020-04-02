@@ -236,13 +236,24 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     # end if
 
     if template_name == "alerts":
+        # Set order by ingestion_time descending
+        kwargs["order_by"] = {"field": "ingestion_time", "descending": True}
+
         # Obtain source alerts and then the sources
         source_alerts = query.get_source_alerts(kwargs)
         sources = query.get_sources(source_uuids = {"filter": [source_alert.source_uuid for source_alert in source_alerts], "op": "in"})
     elif template_name == "alerts_and_errors":
+        # Set order by ingestion_time descending
+        kwargs["order_by"] = {"field": "ingestion_time", "descending": True}
+
         # Obtain source alerts and then the sources
         source_alerts = query.get_source_alerts(kwargs)
         sources_from_source_alerts = query.get_sources(source_uuids = {"filter": [source_alert.source_uuid for source_alert in source_alerts], "op": "in"})
+
+        # Set order by ingestion_time descending
+        kwargs["order_by"] = {"field": "reception_time", "descending": True}
+
+        # Obtain sources with errors
         kwargs["ingestion_error"] = {"filter": "true", "op": "=="}
         sources_from_source_errors = query.get_sources(**kwargs)
 
@@ -252,6 +263,8 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
             kwargs["ingestion_error"] = {"filter": "true", "op": "=="}
         # end if
 
+        # Set order by reception_time descending
+        kwargs["order_by"] = {"field": "reception_time", "descending": True}
         sources = query.get_sources(**kwargs)
     # end if
 
