@@ -16,12 +16,12 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 # Import contents
 from vboa import panel
-from vboa.eboa_nav import eboa_nav
-from vboa.rboa_nav import rboa_nav
-from vboa.boa_health import boa_health
-from vboa.ingestion_control import ingestion_control
-from vboa.reporting_control import reporting_control
-from vboa.boa_scheduler import boa_scheduler
+from vboa.views.eboa_nav import eboa_nav
+from vboa.views.rboa_nav import rboa_nav
+from vboa.views.boa_health import boa_health
+from vboa.views.ingestion_control import ingestion_control
+from vboa.views.reporting_control import reporting_control
+from vboa.views.boa_scheduler import boa_scheduler
 
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
