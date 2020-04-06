@@ -246,7 +246,7 @@ docker network inspect $DOCKER_NETWORK &>/dev/null || docker network create --dr
 ######
 # Execute container
 # Check configuration of postgis/postgres with -> psql -U postgres -> show all;
-docker run --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
+docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
 
 ######
 # Create APP container
@@ -265,9 +265,9 @@ docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER
 # Initialize the eboa database
 if [ "$PATH_TO_TAILORED" != "" ];
 then
-    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_dev
+    docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_dev
 else
-    docker run --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_dev
+    docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_dev
 fi
 
 # Copy configurations
