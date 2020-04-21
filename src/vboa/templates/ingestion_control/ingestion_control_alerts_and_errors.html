@@ -30,7 +30,7 @@
   var parameters = {
   "window_delay": "{{ sliding_window['window_delay'] }}",
   "window_size": "{{ sliding_window['window_size'] }}",
-  "template": "alerts",
+  "template": "alerts_and_errors",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
   vboa.update_view(parameters, repeat_cycle, "/ingestion_control/sliding_ingestion_control_parameters");
