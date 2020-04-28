@@ -44,15 +44,15 @@
           <td><i id="expand-report-statuses-{{ report.report_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_report_statuses('expand-report-statuses-{{ report.report_uuid }}', '{{ report.report_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
           <td><a href="/rboa_nav/query-report/{{ report.report_uuid }}">{{ report.name }}</a></td>
           <td>{{ report.generation_mode }}</td>
-          <td>{{ report.validity_start }}</td>
-          <td>{{ report.validity_stop }}</td>
+          <td>{{ report.validity_start.isoformat() }}</td>
+          <td>{{ report.validity_stop.isoformat() }}</td>
           {% if report.validity_stop and report.validity_start %}
           <td>{{ ((report.validity_stop - report.validity_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}
           <td></td>
           {% endif %}
-          <td>{{ report.generation_start }}</td>
-          <td>{{ report.generation_stop }}</td>
+          <td>{{ report.generation_start.isoformat() }}</td>
+          <td>{{ report.generation_stop.isoformat() }}</td>
           {% if report.generation_stop and report.generation_start %}
           <td>{{ ((report.generation_stop - report.generation_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}
@@ -126,15 +126,15 @@
           <td><i id="expand-report-statuses-{{ report.report_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_report_statuses('expand-report-statuses-{{ report.report_uuid }}', '{{ report.report_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
           <td><a href="/rboa_nav/query-report/{{ report.report_uuid }}">{{ report.name }}</a></td>
           <td>{{ report.generation_mode }}</td>
-          <td>{{ report.validity_start }}</td>
-          <td>{{ report.validity_stop }}</td>
+          <td>{{ report.validity_start.isoformat() }}</td>
+          <td>{{ report.validity_stop.isoformat() }}</td>
           {% if report.validity_stop and report.validity_start %}
           <td>{{ ((report.validity_stop - report.validity_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}
           <td></td>
           {% endif %}
-          <td>{{ report.generation_start }}</td>
-          <td>{{ report.generation_stop }}</td>
+          <td>{{ report.generation_start.isoformat() }}</td>
+          <td>{{ report.generation_stop.isoformat() }}</td>
           {% if report.generation_stop and report.generation_start %}
           <td>{{ ((report.generation_stop - report.generation_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}

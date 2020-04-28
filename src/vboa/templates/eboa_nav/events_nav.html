@@ -39,10 +39,10 @@
           <td><i id="expand-values-event-{{ event.event_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-{{ event.event_uuid }}', '{{ event.event_uuid }}')" data-toggle="tooltip" title="Click to show the related values"></i></td>
           <td>{{ event.gauge.name }}</td>
           <td>{{ event.gauge.system }}</td>
-          <td>{{ event.start }}</td>
-          <td>{{ event.stop }}</td>
+          <td>{{ event.start.isoformat() }}</td>
+          <td>{{ event.stop.isoformat() }}</td>
           <td>{{ (event.stop - event.start).total_seconds() }}</td>
-          <td>{{ event.ingestion_time }}</td>
+          <td>{{ event.ingestion_time.isoformat() }}</td>
           {% set source_uuid = event.source.source_uuid %}
           <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
           <td>

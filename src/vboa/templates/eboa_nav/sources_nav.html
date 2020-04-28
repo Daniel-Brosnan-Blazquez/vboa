@@ -41,14 +41,14 @@
           <td>{{ source.name }}</td>
           <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
           <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td>{{ source.validity_start }}</td>
-          <td>{{ source.validity_stop }}</td>
+          <td>{{ source.validity_start.isoformat() }}</td>
+          <td>{{ source.validity_stop.isoformat() }}</td>
           {% if source.validity_stop and source.validity_start %}
           <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
           {% else %}
           <td></td>
           {% endif %}
-          <td>{{ source.generation_time }}</td>
+          <td>{{ source.generation_time.isoformat() }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
           <td>{{ source.processor }}</td>
           <td>{{ source.processor_version }}</td>
@@ -107,11 +107,11 @@
           <td>{{ source.name }}</td>
           <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
           <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td>{{ source.validity_start }}</td>
-          <td>{{ source.validity_stop }}</td>
+          <td>{{ source.validity_start.isoformat() }}</td>
+          <td>{{ source.validity_stop.isoformat() }}</td>
           <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
-          <td>{{ source.generation_time }}</td>
-          <td>{{ source.ingestion_time }}</td>
+          <td>{{ source.generation_time.isoformat() }}</td>
+          <td>{{ source.ingestion_time.isoformat() }}</td>
           <td>{{ source.ingestion_duration }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
           <td>{{ source.processor }}</td>

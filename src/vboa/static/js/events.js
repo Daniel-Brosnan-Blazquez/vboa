@@ -11,12 +11,12 @@ function create_event_tooltip_text(event){
 
     return "<table border='1'>" +
         "<tr><td>UUID</td><td>" + event['id'] + "</td></tr>" +
-        "<tr><td>Explicit reference</td><td>" + event['explicit_reference'] + "</td></tr>" +
+        "<tr><td>Explicit reference</td><td><a href='/eboa_nav/query-er/" + event["explicit_ref_uuid"] + "'>" + event['explicit_reference'] + "</a></td></tr>" +
         "<tr><td>Gauge name</td><td>" + event['gauge']['name'] + "</td></tr>" +
         "<tr><td>Gauge system</td><td>" + event['gauge']['system'] + "</td></tr>" +
         "<tr><td>Start</td><td>" + event["start"] + "</td></tr>" +
         "<tr><td>Stop</td><td>" + event["stop"] + "</td></tr>" +
-        "<tr><td>Source</td><td>" + event['source'] + "</td></tr>" +
+        "<tr><td>Source</td><td><a href='/eboa_nav/query-source/" + event["source_uuid"] + "'>" + event['source'] + "</a></td></tr>" +
         "<tr><td>Ingestion time</td><td>" + event['ingestion_time'] + "</td></tr>" +
         "<tr><td>Links</td><td><a href='/eboa_nav/query-event-links/" + event["id"] + "'><i class='fa fa-link'></i></a></td></tr>" +
         "<tr id='expand-tooltip-values-event-" + event["id"] + "'><td>Values</td><td><i class='fa fa-plus-square green' onclick='" + 'vboa.expand_event_values_in_tooltip("expand-tooltip-values-event-' + event["id"] + '", "' + event["id"] + '")' + "' data-toggle='tooltip' title='Click to show the related values'></i></td></tr>" +
