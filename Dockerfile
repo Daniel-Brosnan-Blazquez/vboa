@@ -11,8 +11,7 @@ RUN useradd -m -o -r -u $UID_HOST_USER boa
 
 RUN yum install -y epel-release
 
-RUN yum install -y postgresql-devel \
-    python36 \
+RUN yum install -y python36 \
     python36-pip \
     python36-tkinter \
     gcc \
@@ -34,7 +33,10 @@ RUN yum install -y postgresql-devel \
 
 RUN yum install -y rh-ruby25 \
     rh-ruby25-rubygem-bundler \
-    rh-ruby25-ruby-devel
+    rh-ruby25-ruby-devel \
+    rh-postgresql10-postgresql-devel
+
+RUN pip3 install wheel
 
 # Create folders for BOA
 RUN mkdir /log

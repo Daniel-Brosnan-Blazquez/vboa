@@ -1,5 +1,5 @@
 # Base the image on centos
-FROM centos
+FROM centos:centos7
 MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
