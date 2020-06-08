@@ -8,7 +8,8 @@ import * as graph from "./graph.js";
 
 /* Function to create the text for the tooltip of the event information */
 function create_event_tooltip_text(event){
-
+    const event_duration = dates.date_difference_in_m(event["stop"], event["start"])
+    
     return "<table border='1'>" +
         "<tr><td>UUID</td><td>" + event['id'] + "</td></tr>" +
         "<tr><td>Explicit reference</td><td><a href='/eboa_nav/query-er/" + event["explicit_ref_uuid"] + "'>" + event['explicit_reference'] + "</a></td></tr>" +
@@ -16,6 +17,7 @@ function create_event_tooltip_text(event){
         "<tr><td>Gauge system</td><td>" + event['gauge']['system'] + "</td></tr>" +
         "<tr><td>Start</td><td>" + event["start"] + "</td></tr>" +
         "<tr><td>Stop</td><td>" + event["stop"] + "</td></tr>" +
+        "<tr><td>Duration (m)</td><td>" + event_duration.toFixed(3) + "</td></tr>" +
         "<tr><td>Source</td><td><a href='/eboa_nav/query-source/" + event["source_uuid"] + "'>" + event['source'] + "</a></td></tr>" +
         "<tr><td>Ingestion time</td><td>" + event['ingestion_time'] + "</td></tr>" +
         "<tr><td>Links</td><td><a href='/eboa_nav/query-event-links/" + event["id"] + "'><i class='fa fa-link'></i></a></td></tr>" +
