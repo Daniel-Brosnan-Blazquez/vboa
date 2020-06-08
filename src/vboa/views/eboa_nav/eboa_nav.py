@@ -1644,6 +1644,20 @@ def query_er(explicit_ref_uuid):
     
     return render_template("eboa_nav/explicit_references_nav.html", ers=er, filters=filters)
 
+@bp.route("/query-er-by-name/<string:name>")
+def query_er_by_name(name):
+    """
+    Query explicit reference corresponding to the name received.
+    """
+    current_app.logger.debug("Query explicit reference by name")
+    er = query.get_explicit_refs(explicit_refs={"filter": name, "op": "=="})
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/explicit_references_nav.html", ers=er, filters=filters)
+
 @bp.route("/query-er-links/<uuid:explicit_ref_uuid>")
 def query_er_links_and_render(explicit_ref_uuid):
     """
