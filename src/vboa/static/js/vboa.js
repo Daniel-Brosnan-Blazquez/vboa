@@ -43,7 +43,7 @@ import "bootstrap-responsive-tabs/dist/css/bootstrap-responsive-tabs.css";
 import "datatables/media/css/jquery.dataTables.min.css";
 import "datatables.net-select-dt/css/select.dataTables.min.css";
 import "vis-timeline/dist/vis-timeline-graph2d.min.css";
-import "vis-network/dist/vis-network.min.css";
+import "vis-network/dist/dist/vis-network.min.css";
 import "chart.js/dist/Chart.min.css";
 import "chosen-js/chosen.min.css";
 import "ol/ol.css";
