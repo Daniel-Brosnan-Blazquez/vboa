@@ -190,7 +190,7 @@ docker network inspect $DOCKER_NETWORK &>/dev/null || docker network create --dr
 ######
 # Execute container
 # Check configuration of postgis/postgres with -> psql -U postgres -> show all;
-docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
+docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000' --restart=always
 
 ######
 # Create APP container
