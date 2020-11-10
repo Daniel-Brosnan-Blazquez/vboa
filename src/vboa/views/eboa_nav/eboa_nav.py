@@ -859,6 +859,30 @@ def query_jsonify_sources():
     jsonified_sources = [source.jsonify() for source in sources]
     return jsonify(jsonified_sources)
 
+@bp.route("/query-jsonify-sources-by-processor")
+def query_jsonify_sources_by_processor():
+    """
+    Query all the sources.
+    """
+
+    current_app.logger.debug("Query source")
+
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["order_by"] = {"field": "reception_time", "descending": True}
+    kwargs["processors"] = {"filter": "%" + search + "%", "op": "like"}
+
+    sources = query.get_sources(**kwargs)
+    jsonified_sources = [source.jsonify() for source in sources]
+    return jsonify(jsonified_sources)
+
 @bp.route("/query-jsonify-source-statuses/<uuid:source_uuid>")
 def query_jsonify_source_statuses(source_uuid):
     """
@@ -1809,7 +1833,7 @@ def query_jsonify_dim_signatures():
     kwargs = {}
     kwargs["limit"] = limit
     kwargs["offset"] = offset
-    kwargs["dim_signatures"] = {"filter": search, "op": "like"}
+    kwargs["dim_signatures"] = {"filter": "%" + search + "%", "op": "like"}
 
     dim_signatures = query.get_dim_signatures(**kwargs)
     jsonified_dim_signatures = [dim_signature.jsonify() for dim_signature in dim_signatures]
