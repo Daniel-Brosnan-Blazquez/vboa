@@ -42,6 +42,28 @@ export function add_validity_start_validity_stop(dom_id){
 
 };
 
+/* Function to add more reported validity start and reported validity stop selectors when commanded */
+export function add_reported_validity_start_reported_validity_stop(dom_id){
+
+    jQuery.get("/static/html/more_reported_validity_start_reported_validity_stop.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+
+    react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to add more reception time selectors when commanded */
+export function add_reception_time(dom_id){
+    
+    jQuery.get("/static/html/more_reception_time.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+    
+    react_activate_datetimepicker(dom_id);
+
+};
+
 /* Function to add more ingestion time selectors when commanded */
 export function add_ingestion_time(dom_id){
     
@@ -50,6 +72,15 @@ export function add_ingestion_time(dom_id){
     });
     
     react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to add more processing duration selectors when commanded */
+export function add_processing_duration(dom_id){
+    
+    jQuery.get("/static/html/more_processing_duration.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
 
 };
 
@@ -84,6 +115,17 @@ export function add_source_validity_duration(dom_id){
 export function add_generation_time(dom_id){
     
     jQuery.get("/static/html/more_generation_time.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+    
+    react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to add more reported generation time selectors when commanded */
+export function add_reported_generation_time(dom_id){
+    
+    jQuery.get("/static/html/more_reported_generation_time.html", function (data){
         jQuery("#" + dom_id).append(data);
     });
     

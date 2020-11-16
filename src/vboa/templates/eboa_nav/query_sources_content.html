@@ -55,6 +55,7 @@
                 </select>
               </div>
             </div>
+            <!-- Validity start/stop -->
             <div class="row" id="sources-validity-start-validity-stop-initial">
               {% include "eboa_nav/validity_start_validity_stop.html" %}
               <div>
@@ -64,6 +65,17 @@
               </div>
             </div>
             <div id="more-validity-start-validity-stop-query-sources">
+            </div>
+            <!-- Reported validity start/stop -->
+            <div class="row" id="sources-reported-validity-start-reported-validity-stop-initial">
+              {% include "eboa_nav/reported_validity_start_reported_validity_stop.html" %}
+              <div>
+                <span onclick="vboa.add_reported_validity_start_reported_validity_stop('more-reported-validity-start-reported-validity-stop-query-sources')" id="sources-add-reported-validity-start-reported-validity-stop">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-reported-validity-start-reported-validity-stop-query-sources">
             </div>
             <!-- Validity duration -->
             <div class="row" id="sources-validity-duration-initial">
@@ -76,6 +88,17 @@
             </div>
             <div id="more-source-validity-duration-query-sources">
             </div>
+            <!-- Reception time -->
+            <div class="row" id="sources-reception-time-initial">
+              {% include "eboa_nav/reception_time.html" %}
+              <div>
+                <span onclick="vboa.add_reception_time('more-reception-time-query-sources')" id="sources-add-reception-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-reception-time-query-sources">
+            </div>
             <!-- Ingestion time -->
             <div class="row" id="sources-ingestion-time-initial">
               {% include "eboa_nav/ingestion_time.html" %}
@@ -87,6 +110,18 @@
             </div>
             <div id="more-ingestion-time-query-sources">
             </div>
+            <!-- Processing duration -->
+            <div class="row" id="sources-processing-duration-initial">
+              {% include "eboa_nav/processing_duration.html" %}
+              <div>
+                <span onclick="vboa.add_processing_duration('more-processing-duration-query-sources')" id="sources-add-processing-duration">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-processing-duration-query-sources">
+            </div>
+            <!-- Ingestion duration -->
             <div class="row" id="sources-ingestion-duration-initial">
               {% include "eboa_nav/ingestion_duration.html" %}
               <div>
@@ -97,6 +132,7 @@
             </div>
             <div id="more-ingestion-duration-query-sources">
             </div>
+            <!-- Generation time -->
             <div class="row" id="sources-generation-time-initial">
               {% include "eboa_nav/generation_time.html" %}
               <div>
@@ -107,6 +143,29 @@
             </div>
             <div id="more-generation-time-query-sources">
             </div>
+            <!-- Reported generation time -->
+            <div class="row" id="sources-reported-generation-time-initial">
+              {% include "eboa_nav/reported_generation_time.html" %}
+              <div>
+                <span onclick="vboa.add_reported_generation_time('more-reported-generation-time-query-sources')" id="sources-add-reported-generation-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-reported-generation-time-query-sources">
+            </div>
+            <!-- Ingestion completeness -->
+            <div class="row" id="sources-ingestion-completeness">
+              <div class="col-xs-3 query-source-statuses">
+                <label>Ingestion completeness</label>
+                <select style="width: 100%" name="ingestion_completeness" id="sources-ingestion-completeness">
+                  <option></option>
+                  <option>true</option>
+                  <option>false</option>
+                </select>
+              </div>
+            </div>
+            <!-- Statuses -->
             <div class="row" id="sources-statuses-initial">
               <div class="col-xs-3 query-source-statuses">
                 <label id="sources-statuses-initial-checkbox">Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
@@ -140,20 +199,23 @@
               </label>
             </div>
             <!-- Query restrictions -->
-            <div class="row" id="explicit-refs-query-restrictions">
+            <div class="row" id="sources-query-restrictions">
               <!-- Order by -->
               <div class="col-xs-3">
                   <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
-                  <select style="width: 100%" name="order_by" id="explicit-refs-order-by">
+                  <select style="width: 100%" name="order_by" id="sources-order-by">
                     <option></option>
                     <option>name</option>
                     <option>validity_start</option>
                     <option>validity_stop</option>
+                    <option>reported_validity_start</option>
+                    <option>reported_validity_stop</option>
                     <option>reception_time</option>
-                    <option>generation_time</option>
                     <option>ingestion_time</option>
-                    <option>ingestion_duration</option>
                     <option>processing_duration</option>
+                    <option>ingestion_duration</option>
+                    <option>generation_time</option>
+                    <option>reported_generation_time</option>
                     <option>processor</option>
                     <option>processor_version</option>
                   </select>
@@ -161,7 +223,7 @@
               <!-- Limit -->
               <div class="col-xs-3">
                 <label>Limit</label>
-                <input type="text" class="form-control" style="width: 100%" name="limit" id="explicit-refs-limit" value="100"/>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="sources-limit" value="100"/>
               </div>
             </div>
             <div>

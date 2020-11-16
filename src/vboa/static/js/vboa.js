@@ -135,8 +135,20 @@ export function add_validity_start_validity_stop(dom_id){
     dates.add_validity_start_validity_stop(dom_id);
 }
 
+export function add_reported_validity_start_reported_validity_stop(dom_id){
+    dates.add_reported_validity_start_reported_validity_stop(dom_id);
+}
+
+export function add_reception_time(dom_id){
+    dates.add_reception_time(dom_id);
+}
+
 export function add_ingestion_time(dom_id){
     dates.add_ingestion_time(dom_id);
+}
+
+export function add_processing_duration(dom_id){
+    dates.add_processing_duration(dom_id);
 }
 
 export function add_ingestion_duration(dom_id){
@@ -145,6 +157,10 @@ export function add_ingestion_duration(dom_id){
 
 export function add_generation_time(dom_id){
     dates.add_generation_time(dom_id);
+}
+
+export function add_reported_generation_time(dom_id){
+    dates.add_reported_generation_time(dom_id);
 }
 
 export function add_event_duration(dom_id){

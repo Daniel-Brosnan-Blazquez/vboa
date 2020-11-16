@@ -8,6 +8,8 @@ module vboa
 # Import python utilities
 import sys
 import json
+from distutils import util
+
 # Import flask utilities
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
 from flask_debugtoolbar import DebugToolbarExtension
@@ -684,12 +686,48 @@ def query_sources(filters):
             i+=1
         # end for
     # end if
+    if filters["reported_validity_start"][0] != "":
+        kwargs["reported_validity_start_filters"] = []
+        i = 0
+        operators = filters["reported_validity_start_operator"]
+        for start in filters["reported_validity_start"]:
+            kwargs["reported_validity_start_filters"].append({"date": start, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if filters["reported_validity_stop"][0] != "":
+        kwargs["reported_validity_stop_filters"] = []
+        i = 0
+        operators = filters["reported_validity_stop_operator"]
+        for stop in filters["reported_validity_stop"]:
+            kwargs["reported_validity_stop_filters"].append({"date": stop, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if filters["reception_time"][0] != "":
+        kwargs["reception_time_filters"] = []
+        i = 0
+        operators = filters["reception_time_operator"]
+        for reception_time in filters["reception_time"]:
+            kwargs["reception_time_filters"].append({"date": reception_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
     if filters["ingestion_time"][0] != "":
         kwargs["ingestion_time_filters"] = []
         i = 0
         operators = filters["ingestion_time_operator"]
         for ingestion_time in filters["ingestion_time"]:
             kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if filters["processing_duration"][0] != "":
+        kwargs["processing_duration_filters"] = []
+        i = 0
+        operators = filters["processing_duration_operator"]
+        for processing_duration in filters["processing_duration"]:
+            kwargs["processing_duration_filters"].append({"float": float(processing_duration), "op": operators[i]})
             i+=1
         # end for
     # end if
@@ -710,6 +748,18 @@ def query_sources(filters):
             kwargs["generation_time_filters"].append({"date": generation_time, "op": operators[i]})
             i+=1
         # end for
+    # end if
+    if filters["reported_generation_time"][0] != "":
+        kwargs["reported_generation_time_filters"] = []
+        i = 0
+        operators = filters["reported_generation_time_operator"]
+        for reported_generation_time in filters["reported_generation_time"]:
+            kwargs["reported_generation_time_filters"].append({"date": reported_generation_time, "op": operators[i]})
+            i+=1
+        # end for
+    # end if
+    if filters["ingestion_completeness"][0] != "":
+        kwargs["ingestion_completeness"] = bool(util.strtobool(filters["ingestion_completeness"][0]))
     # end if
     if filters["processor"][0] != "":
         op="notlike"

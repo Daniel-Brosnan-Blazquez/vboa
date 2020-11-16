@@ -91,10 +91,19 @@
           <th>Annotations</th>
           <th>Validity start</th>
           <th>Validity stop</th>
-          <th>Duration (s)</th>
+          <th>Validity duration (s)</th>
           <th>Generation time</th>
-          <th>Ingestion Time</th>
-          <th>Ingestion Duration</th>
+          <th>Priority</th>
+          <th>Reception time</th>
+          <th>Ingestion time</th>
+          <th>Ingestion duration</th>
+          <th>Processing duration</th>
+          <th>Reported validity start</th>
+          <th>Reported validity stop</th>
+          <th>Reported validity duration (s)</th>
+          <th>Reported generation time</th>
+          <th>Ingestion completeness</th>
+          <th>Ingestion completeness message</th>
           <th>DIM signature</th>
           <th>Processor</th>
           <th>Version</th>
@@ -111,8 +120,17 @@
           <td>{{ source.validity_stop.isoformat() }}</td>
           <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
           <td>{{ source.generation_time.isoformat() }}</td>
+          <td>{{ source.priority }}</td>
+          <td>{{ source.reception_time.isoformat() }}</td>
           <td>{{ source.ingestion_time.isoformat() }}</td>
           <td>{{ source.ingestion_duration }}</td>
+          <td>{{ source.processing_duration }}</td>
+          <td>{{ source.reported_validity_start.isoformat() }}</td>
+          <td>{{ source.reported_validity_stop.isoformat() }}</td>
+          <td>{{ (source.reported_validity_stop - source.reported_validity_start).total_seconds() }}</td>
+          <td>{{ source.reported_generation_time.isoformat() }}</td>
+          <td>{{ source.ingestion_completeness }}</td>
+          <td>{{ source.ingestion_completeness_message }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
           <td>{{ source.processor }}</td>
           <td>{{ source.processor_version }}</td>
@@ -124,13 +142,22 @@
         <tr>
           <th>Name</th>
           <th>Events</th>
-          <th>Annotations</th>          
+          <th>Annotations</th>
           <th>Validity start</th>
           <th>Validity stop</th>
-          <th>Duration (s)</th>
+          <th>Validity duration (s)</th>
           <th>Generation time</th>
-          <th>Ingestion Time</th>
-          <th>Ingestion Duration</th>
+          <th>Priority</th>
+          <th>Reception time</th>
+          <th>Ingestion time</th>
+          <th>Ingestion duration</th>
+          <th>Processing duration</th>
+          <th>Reported validity start</th>
+          <th>Reported validity stop</th>
+          <th>Reported validity duration (s)</th>
+          <th>Reported generation time</th>
+          <th>Ingestion completeness</th>
+          <th>Ingestion completeness message</th>
           <th>DIM signature</th>
           <th>Processor</th>
           <th>Version</th>
