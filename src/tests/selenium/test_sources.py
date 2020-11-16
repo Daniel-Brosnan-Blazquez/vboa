@@ -72,25 +72,28 @@ class TestSourcesTab(unittest.TestCase):
     def test_sources_query_no_filter_no_graphs(self):
 
         # Insert data
-        data = {"operations": [{
-            "mode": "insert",
-            "dim_signature": {
-                  "name": "DIM_SIGNATURE_1",
-                  "exec": "exec",
-                  "version": "1.0"
-            },
-            "source":  {"name": "source_1.xml",
-                        "reception_time": "2018-07-05T02:07:03",
-                           "generation_time": "2018-07-05T02:07:03",
-                           "validity_start": "2018-06-05T02:07:03",
-                           "validity_stop": "2018-06-05T08:07:36"}
-            }]
-        }
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "source.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10,
+                            "ingestion_completeness": {
+                                    "check": "false",
+                                    "message": "MISSING DEPENDENCIES"}
+                }
+        }]}
 
         # Check data is correctly inserted
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
-        wait = WebDriverWait(self.driver,5);
+        
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -112,7 +115,7 @@ class TestSourcesTab(unittest.TestCase):
         # Check name
         name = sources_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
 
-        assert name[0].text == "source_1.xml"
+        assert name[0].text == "source.xml"
 
         # Check validity_start
         validity_start = sources_table.find_elements_by_xpath("tbody/tr[1]/td[4]")
@@ -123,6 +126,7 @@ class TestSourcesTab(unittest.TestCase):
         validity_stop = sources_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
 
         assert validity_stop[0].text == "2018-06-05T08:07:36"
+        
         # Check duration
         duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[6]")
 
@@ -133,33 +137,78 @@ class TestSourcesTab(unittest.TestCase):
 
         assert generation_time[0].text == "2018-07-05T02:07:03"
 
+        #Check priority
+        priority = sources_table.find_elements_by_xpath("tbody/tr[1]/td[8]")
+
+        assert priority[0].text == "10"
+        
+        #Check reception_time
+        reception_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[9]")
+
+        assert reception_time[0].text == self.session.query(Source).all()[0].reception_time.isoformat()
+        
         #Check ingestion_time
-        ingestion_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[8]")
+        ingestion_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[10]")
 
         assert ingestion_time[0].text == self.session.query(Source).all()[0].ingestion_time.isoformat()
 
         # Check ingestion_duration
-        ingestion_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[9]")
+        ingestion_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[11]")
 
         assert re.match(".:..:.........", ingestion_duration[0].text)
 
-        #Check dim_signature
-        dim_signature = sources_table.find_elements_by_xpath("tbody/tr[1]/td[10]")
+        # Check processing_duration
+        processing_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[12]")
 
-        assert dim_signature[0].text == "DIM_SIGNATURE_1"
+        assert processing_duration[0].text == "None"
+
+        # Check reported_validity_start
+        reported_validity_start = sources_table.find_elements_by_xpath("tbody/tr[1]/td[13]")
+
+        assert reported_validity_start[0].text == "2018-06-05T02:07:03"
+
+        # Check reported_validity_stop
+        reported_validity_stop = sources_table.find_elements_by_xpath("tbody/tr[1]/td[14]")
+
+        assert reported_validity_stop[0].text == "2018-06-05T08:07:36"
+        
+        # Check duration
+        duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[15]")
+
+        assert duration[0].text == str((parser.parse(reported_validity_stop[0].text) - parser.parse(reported_validity_start[0].text)).total_seconds())
+
+        #Check reported_generation_time
+        reported_generation_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[16]")
+
+        assert reported_generation_time[0].text == self.session.query(Source).all()[0].reported_generation_time.isoformat()
+        
+        #Check ingestion_completeness
+        ingestion_completeness = sources_table.find_elements_by_xpath("tbody/tr[1]/td[17]")
+
+        assert ingestion_completeness[0].text == "False"
+
+        #Check ingestion_completeness_message
+        ingestion_completeness_message = sources_table.find_elements_by_xpath("tbody/tr[1]/td[18]")
+
+        assert ingestion_completeness_message[0].text == "MISSING DEPENDENCIES"
+        
+        #Check dim_signature
+        dim_signature = sources_table.find_elements_by_xpath("tbody/tr[1]/td[19]")
+
+        assert dim_signature[0].text == "dim_signature"
 
         #Check processor
-        processor = sources_table.find_elements_by_xpath("tbody/tr[1]/td[11]")
+        processor = sources_table.find_elements_by_xpath("tbody/tr[1]/td[20]")
 
         assert processor[0].text == "exec"
 
         #Check version
-        version = sources_table.find_elements_by_xpath("tbody/tr[1]/td[12]")
+        version = sources_table.find_elements_by_xpath("tbody/tr[1]/td[21]")
 
         assert version[0].text == "1.0"
 
         # Check uuid
-        uuid = sources_table.find_elements_by_xpath("tbody/tr[1]/td[13]")
+        uuid = sources_table.find_elements_by_xpath("tbody/tr[1]/td[22]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -186,7 +235,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -305,7 +354,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -463,7 +512,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -617,7 +666,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -775,7 +824,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -904,7 +953,7 @@ class TestSourcesTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Source).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1068,7 +1117,7 @@ class TestSourcesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1077,7 +1126,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "==", 1)
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "==", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1097,7 +1146,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">", 1)
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", ">", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1117,7 +1166,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", ">=", 1)
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", ">=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1137,7 +1186,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<", 1)
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "<", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1157,7 +1206,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "<=", 1)
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "<=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1177,7 +1226,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_generation_time(self.driver, wait,"sources", "2018-07-05T02:07:03", "!=", 1)
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "!=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1210,7 +1259,7 @@ class TestSourcesTab(unittest.TestCase):
 
         ingestion_duration = str(self.session.query(Source).all()[0].ingestion_duration.total_seconds())
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1331,6 +1380,724 @@ class TestSourcesTab(unittest.TestCase):
         empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is True
+
+    def test_sources_query_reported_validity(self):
+
+        data = {"operations": [{
+                "mode": "insert",
+                "dim_signature": {
+                      "name": "DIM_SIGNATURE_1",
+                      "exec": "exec",
+                      "version": "1.0"
+                },
+                "source":  {"name": "source_1.xml",
+                        "reception_time": "2018-07-05T02:07:03",
+                         "generation_time": "2018-07-05T02:07:03",
+                         "validity_start": "2018-06-05T02:00:00",
+                         "validity_stop": "2018-06-05T03:00:00",
+                         "priority": 10,
+                         "ingestion_completeness": {
+                              "check": "false",
+                              "message": "MISSING DEPENDENCIES"}
+                }
+            },{
+                "mode": "insert",
+                "dim_signature": {
+                      "name": "DIM_SIGNATURE_2",
+                      "exec": "exec_2",
+                      "version": "1.0"
+                },
+                "source":  {"name": "source_2.xml",
+                        "reception_time": "2018-07-05T02:07:03",
+                         "generation_time": "2018-07-05T02:07:03",
+                         "validity_start": "2018-06-05T03:00:00",
+                         "validity_stop": "2018-06-05T04:00:00",
+                         "priority": 10,
+                         "ingestion_completeness": {
+                              "check": "false",
+                              "message": "MISSING DEPENDENCIES"}
+                }
+            },{
+                "mode": "insert",
+                "dim_signature": {
+                      "name": "DIM_SIGNATURE_3",
+                      "exec": "exec",
+                      "version": "1.0"
+                },
+                "source":  {"name": "source_3.xml",
+                        "reception_time": "2018-07-05T02:07:03",
+                         "generation_time": "2018-07-05T02:07:03",
+                         "validity_start": "2018-06-05T04:00:00",
+                         "validity_stop": "2018-06-05T05:00:00",
+                         "priority": 10,
+                         "ingestion_completeness": {
+                              "check": "false",
+                              "message": "MISSING DEPENDENCIES"}
+                }
+            }
+        ]}
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 1, "2018-06-05T03:00:00", "==","2018-06-05T04:00:00", "==")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 1, start_value = "2018-06-05T03:00:00", start_operator = ">=")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 2
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 1, end_value = "2018-06-05T04:00:00", end_operator = "!=")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 2
+
+        ## > ## Only Start ## < ## Only Start ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
+        functions.click(self.driver.find_element_by_id("sources-add-reported-validity-start-reported-validity-stop"))
+
+        functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## <= ## Start ## > ## End ## != ## Start ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
+        functions.click(self.driver.find_element_by_id("sources-add-reported-validity-start-reported-validity-stop"))
+        functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 2
+
+    def test_sources_query_reception_time(self):
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "source.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10,
+                            "ingestion_completeness": {
+                                    "check": "false",
+                                    "message": "MISSING DEPENDENCIES"}
+                }
+        }]}
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        reception_time = self.session.query(Source).all()[0].reception_time.isoformat()
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "==", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## == and < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "==", 1)
+        functions.click(self.driver.find_element_by_id("sources-add-reception-time"))
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", "9999-01-01T00:00:00", "<", 2)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, ">", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert empty_element is True
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, ">=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "<", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert empty_element is True
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "<=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "!=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert empty_element is True
+
+    def test_sources_query_processing_duration(self):
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "source.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10,
+                            "ingestion_completeness": {
+                                    "check": "false",
+                                    "message": "MISSING DEPENDENCIES"}
+                }
+        }]}
+
+        # Example value for processing duration field
+        processing_duration = "21633.0"
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data(processing_duration = datetime.timedelta(seconds=float(processing_duration)))[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "==", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, ">", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is True
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, ">=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "<", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is True
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "<=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "!=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is True
+
+    def test_sources_query_reported_generation_time(self):
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "source.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10,
+                            "ingestion_completeness": {
+                                    "check": "false",
+                                    "message": "MISSING DEPENDENCIES"}
+                }
+        }]}
+
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait, "sources", "reported-generation-time", "2018-07-05T02:07:03", "==", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", ">", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is True
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", ">=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "<", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is True
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "<=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "!=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is True
+
+    def test_sources_query_ingestion_completeness(self):
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "source.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10,
+                            "ingestion_completeness": {
+                                    "check": "false",
+                                    "message": "MISSING DEPENDENCIES"}
+                }
+        }]}
+
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_ingestion_completeness(self.driver, wait, "sources", "ingestion-completeness", "")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        # true option
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_ingestion_completeness(self.driver, wait, "sources", "ingestion-completeness", "true")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is True
+
+         # false option
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click_no_graphs_sources(self.driver)
+
+        functions.fill_ingestion_completeness(self.driver, wait, "sources", "ingestion-completeness", "false")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
 
     # def test_sources_query_value_statuses(self):
     #     # Insert data
