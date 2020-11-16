@@ -64,6 +64,28 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool
     value = value_query_div.find_element_by_id("value-value-text")
     value.send_keys(value_value)
 
+def fill_ingestion_completeness(driver, wait, tab, field_name, value):
+
+    ingestion_completeness_div = driver.find_element_by_id(tab + "-" + field_name)
+    
+    option = Select(ingestion_completeness_div.find_element_by_id(tab + "-" + field_name))
+    option.select_by_visible_text(value)
+
+def fill_any_time_or_duration(driver, wait, tab, field_name, value_value, value_operator, row):
+
+    if row is 1:
+        any_time_or_duration = driver.find_element_by_id(tab + "-" + field_name + "-initial")
+    else:
+        any_time_or_duration = driver.find_element_by_id("more-" + field_name + "-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+
+    operator = Select(any_time_or_duration.find_element_by_id(field_name + "-operator"))
+    operator.select_by_visible_text(value_operator)
+
+    value = any_time_or_duration.find_element_by_id(field_name + "-text")
+    click(value)
+    click(value)
+    value.send_keys(value_value)
+
 def fill_ingestion_time(driver, wait, tab, value_value, value_operator, row):
 
     if row is 1:
@@ -156,6 +178,30 @@ def fill_validity_period(driver, wait, tab, row, start_value = None, start_opera
         end.send_keys(end_value)
 
         end_op = Select(period_div.find_element_by_id("stop-operator"))
+        end_op.select_by_visible_text(end_operator)
+
+def fill_any_period(driver, wait, tab, field_name, row, start_value = None, start_operator = None, end_value = None, end_operator = None):
+
+    if row is 1:
+        any_period_div = driver.find_element_by_id(tab + "-" + field_name + "-initial")
+    else:
+        any_period_div = driver.find_element_by_id("more-" + field_name + "-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+    if start_value is not None:
+        start = any_period_div.find_element_by_id("start-input")
+        click(start)
+        click(start)
+        start.send_keys(start_value)
+
+        start_op = Select(any_period_div.find_element_by_id("start-operator"))
+        start_op.select_by_visible_text(start_operator)
+
+    if end_value is not None:
+        end = any_period_div.find_element_by_id("stop-input")
+        click(end)
+        click(end)
+        end.send_keys(end_value)
+
+        end_op = Select(any_period_div.find_element_by_id("stop-operator"))
         end_op.select_by_visible_text(end_operator)
 
 def click_no_graphs_events(driver):
