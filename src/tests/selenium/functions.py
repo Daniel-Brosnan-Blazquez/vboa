@@ -64,14 +64,7 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool
     value = value_query_div.find_element_by_id("value-value-text")
     value.send_keys(value_value)
 
-def fill_ingestion_completeness(driver, wait, tab, field_name, value):
-
-    ingestion_completeness_div = driver.find_element_by_id(tab + "-" + field_name)
-    
-    option = Select(ingestion_completeness_div.find_element_by_id(tab + "-" + field_name))
-    option.select_by_visible_text(value)
-
-def fill_any_time_or_duration(driver, wait, tab, field_name, value_value, value_operator, row):
+def fill_text_operator_with_more_option(driver, wait, tab, field_name, value_value, value_operator, row):
 
     if row is 1:
         any_time_or_duration = driver.find_element_by_id(tab + "-" + field_name + "-initial")
