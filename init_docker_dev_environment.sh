@@ -260,7 +260,7 @@ fi
 
 HOST_UID_USER_TO_MAP=`id -u $HOST_USER_TO_MAP`
 
-docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP -t boa_dev -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+docker build --build-arg DATABASE_CONTAINER=$DATABASE_CONTAINER --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP -t boa_dev -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 
 # Initialize the eboa database
 if [ "$PATH_TO_TAILORED" != "" ];
@@ -301,10 +301,6 @@ if [ "$PATH_TO_TAILORED" != "" ];
 then
     docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
 fi
-
-# Change port and address configuration of the eboa defined by the postgis container
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/sboa_datamodel.json"
 
 # Execute flask server
 docker exec -d -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"

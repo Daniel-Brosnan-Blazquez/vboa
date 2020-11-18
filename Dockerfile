@@ -4,6 +4,7 @@ MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
 ARG UID_HOST_USER
+ARG DATABASE_CONTAINER
 
 USER root
 
@@ -68,6 +69,8 @@ ENV LC_ALL en_US.utf-8
 ENV LANG en_US.utf-8
 ENV PATH="${PATH}:/scripts"
 ENV RBOA_ARCHIVE_PATH="/rboa_archive"
+ENV EBOA_DDBB_HOST $DATABASE_CONTAINER
+ENV SBOA_DDBB_HOST $DATABASE_CONTAINER
 
 # expose port
 EXPOSE 5000
