@@ -215,20 +215,22 @@ class TestSourcesTab(unittest.TestCase):
     def test_sources_query_no_filter_with_graphs(self):
 
         # Insert data
-        data = {"operations": [{
-            "mode": "insert",
-            "dim_signature": {
-                  "name": "DIM_SIGNATURE_1",
-                  "exec": "exec",
-                  "version": "1.0"
-            },
-            "source":  {"name": "source_1.xml",
-                        "reception_time": "2018-07-05T02:07:03",
-                           "generation_time": "2018-07-05T02:07:03",
-                           "validity_start": "2018-06-05T02:07:03",
-                           "validity_stop": "2018-06-05T08:07:36"}
-            }]
-        }
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "source.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10,
+                            "ingestion_completeness": {
+                                    "check": "false",
+                                    "message": "MISSING DEPENDENCIES"}
+                }
+        }]}
 
 
         # Check data is correctly inserted
@@ -281,17 +283,25 @@ class TestSourcesTab(unittest.TestCase):
 
         assert self.driver.execute_script('return sources;') == [{
                 "id": str(source.source_uuid),
-                "name": "source_1.xml",
-                "dim_signature": "DIM_SIGNATURE_1",
+                "name": "source.xml",
+                "dim_signature": "dim_signature",
                 "processor": "exec",
                 "version": "1.0",
                 "validity_start": "2018-06-05T02:07:03",
                 "validity_stop": "2018-06-05T08:07:36",
+                "reported_validity_start": "2018-06-05T02:07:03",
+                "reported_validity_stop": "2018-06-05T08:07:36",
+                "reception_time": source.reception_time.isoformat(),
                 "ingestion_time": source.ingestion_time.isoformat(),
+                "processing_duration": "0:00:00",
                 "ingestion_duration": str(source.ingestion_duration),
-                "ingestion_error": "False",
                 "generation_time": "2018-07-05T02:07:03",
-                "number_of_events": "0"
+                "reported_generation_time": "2018-07-05T02:07:03",
+                "number_of_events": "0",
+                "priority": str(source.priority),
+                "ingestion_completeness": "False",
+                "ingestion_completeness_message": "MISSING DEPENDENCIES",
+                "ingestion_error": "False" 
                 }]
 
         validity_timeline = self.driver.find_element_by_id("sources-nav-validity-timeline")
@@ -1126,7 +1136,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "==", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "==", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1146,7 +1156,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", ">", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", ">", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1166,7 +1176,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", ">=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", ">=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1186,7 +1196,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "<", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "<", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1206,7 +1216,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "<=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "<=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1226,7 +1236,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "!=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "generation-time", "2018-07-05T02:07:03", "!=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1584,7 +1594,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "==", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, "==", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1604,9 +1614,9 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "==", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, "==", 1)
         functions.click(self.driver.find_element_by_id("sources-add-reception-time"))
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", "9999-01-01T00:00:00", "<", 2)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", "9999-01-01T00:00:00", "<", 2)
 
         # Click on query button
         functions.click(submit_button)
@@ -1626,7 +1636,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, ">", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, ">", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1646,7 +1656,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, ">=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, ">=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1666,7 +1676,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "<", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, "<", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1686,7 +1696,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "<=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, "<=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1706,7 +1716,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reception-time", reception_time, "!=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, "!=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1755,7 +1765,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "==", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait, "sources", "processing-duration", processing_duration, "==", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1775,7 +1785,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, ">", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait, "sources", "processing-duration", processing_duration, ">", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1795,7 +1805,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, ">=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait, "sources", "processing-duration", processing_duration, ">=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1815,7 +1825,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "<", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait, "sources", "processing-duration", processing_duration, "<", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1835,7 +1845,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "<=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait, "sources", "processing-duration", processing_duration, "<=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1855,7 +1865,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait, "sources", "processing-duration", processing_duration, "!=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait, "sources", "processing-duration", processing_duration, "!=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1901,7 +1911,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait, "sources", "reported-generation-time", "2018-07-05T02:07:03", "==", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait, "sources", "reported-generation-time", "2018-07-05T02:07:03", "==", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1921,7 +1931,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", ">", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", ">", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1941,7 +1951,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", ">=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", ">=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1961,7 +1971,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "<", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "<", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -1981,7 +1991,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "<=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "<=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -2001,7 +2011,7 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_any_time_or_duration(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "!=", 1)
+        functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reported-generation-time", "2018-07-05T02:07:03", "!=", 1)
 
         # Click on query button
         functions.click(submit_button)
@@ -2047,7 +2057,8 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_ingestion_completeness(self.driver, wait, "sources", "ingestion-completeness", "")
+        option = Select(self.driver.find_element_by_id("sources-ingestion-completeness"))
+        option.select_by_visible_text("")
 
         # Click on query button
         functions.click(submit_button)
@@ -2067,7 +2078,8 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_ingestion_completeness(self.driver, wait, "sources", "ingestion-completeness", "true")
+        option = Select(self.driver.find_element_by_id("sources-ingestion-completeness"))
+        option.select_by_visible_text("true")
 
         # Click on query button
         functions.click(submit_button)
@@ -2087,7 +2099,8 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        functions.fill_ingestion_completeness(self.driver, wait, "sources", "ingestion-completeness", "false")
+        option = Select(self.driver.find_element_by_id("sources-ingestion-completeness"))
+        option.select_by_visible_text("false")
 
         # Click on query button
         functions.click(submit_button)
