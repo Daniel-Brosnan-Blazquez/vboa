@@ -44,10 +44,18 @@ function create_source_tooltip_text(source){
         "<tr><td>Version of processor</td><td>" + source["version"] + "</td></tr>" +
         "<tr><td>Validity start</td><td>" + source["validity_start"] + "</td></tr>" +
         "<tr><td>Validity stop</td><td>" + source["validity_stop"] + "</td></tr>" +
-        "<tr><td>Generation time</td><td>" + source["generation_time"] + "</td></tr>" +
+        "<tr><td>Reported validity start</td><td>" + source["reported_validity_start"] + "</td></tr>" +
+        "<tr><td>Reported validity stop</td><td>" + source["reported_validity_stop"] + "</td></tr>" +
+        "<tr><td>Reception time</td><td>" + source["reception_time"] + "</td></tr>" +
         "<tr><td>Ingestion time</td><td>" + source["ingestion_time"] + "</td></tr>" +
+        "<tr><td>Processing duration (hh:mm:ss.000)</td><td>" + source["processing_duration"] + "</td></tr>" +
         "<tr><td>Ingestion duration (hh:mm:ss.000)</td><td>" + source["ingestion_duration"] + "</td></tr>" +
+        "<tr><td>Generation time</td><td>" + source["generation_time"] + "</td></tr>" +
+        "<tr><td>Reported generation time</td><td>" + source["reported_generation_time"] + "</td></tr>" +
         "<tr><td>Number of events</td><td>" + source["number_of_events"] + "</td></tr>" +
+        "<tr><td>Priority</td><td>" + source["priority"] + "</td></tr>" +
+        "<tr><td>Ingestion completeness</td><td>" + source["ingestion_completeness"] + "</td></tr>" +
+        "<tr><td>Ingestion completeness message</td><td>" + source["ingestion_completeness_message"] + "</td></tr>" +
         "<tr><td>Ingestion time - generation time (m)</td><td>" + ingestion_minus_generation + "</td></tr>" +
         "<tr><td>Ingestion error</td><td>" + ingestion_error + "</td></tr>" +
         "</table>"
@@ -60,8 +68,8 @@ export function create_source_validity_timeline(sources, dom_id){
         var item = {
             id: source["id"],
             group: source["dim_signature"],
-            start: source["validity_start"],
-            end: source["validity_stop"],
+            start: source["reported_validity_start"],
+            end: source["reported_validity_stop"],
             tooltip: create_source_tooltip_text(source)
         }
         if ("ingestion_error" in source && source["ingestion_error"] == "True"){
@@ -83,7 +91,7 @@ export function create_source_generation_to_ingestion_timeline(sources, dom_id){
         var item = {
             id: source["id"],
             group: source["dim_signature"],
-            start: source["generation_time"],
+            start: source["reported_generation_time"],
             end: source["ingestion_time"],
             tooltip: create_source_tooltip_text(source)
         }
@@ -158,7 +166,7 @@ export function create_source_generation_time_to_ingestion_time_xy(sources, dom_
     const groups = create_sources_groups_by_dim_signature(sources);
     var items = [];
     for (const source of sources){
-        const ingestion_minus_generation = dates.date_difference_in_m(source["ingestion_time"], source["generation_time"])
+        const ingestion_minus_generation = dates.date_difference_in_m(source["ingestion_time"], source["reported_generation_time"])
         items.push({
             id: source["id"],
             group: source["dim_signature"],
