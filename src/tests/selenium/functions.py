@@ -24,7 +24,7 @@ def goToTab(driver,tab_name):
     tab = driver.find_element_by_link_text(tab_name)
     click(tab)
 
-def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool, value_operator, row):
+def fill_value(driver, wait, tab, value_type, value_name, value_value, value_name_operator, value_value_operator, row):
 
     if row is 1:
         value_query_div = driver.find_element_by_id(tab + "-value-query-initial")
@@ -48,18 +48,17 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, like_bool
         # end while
     # end if
 
-    type = Select(value_query_div.find_element_by_id("value-type"))
-    type.select_by_visible_text(value_type)
+    type_name = Select(value_query_div.find_element_by_id("value-type"))
+    type_name.select_by_visible_text(value_type)
 
     name = value_query_div.find_element_by_id("value-name-text")
     name.send_keys(value_name)
 
-    name_like = Select(value_query_div.find_element_by_id("value-name-option"))
-    if like_bool is False:
-        name_like.select_by_visible_text("notlike")
+    operator = Select(value_query_div.find_element_by_id("value-name-option"))
+    operator.select_by_visible_text(value_name_operator)
 
     operator = Select(value_query_div.find_element_by_id("value-value-operator"))
-    operator.select_by_visible_text(value_operator)
+    operator.select_by_visible_text(value_value_operator)
 
     value = value_query_div.find_element_by_id("value-value-text")
     value.send_keys(value_value)
