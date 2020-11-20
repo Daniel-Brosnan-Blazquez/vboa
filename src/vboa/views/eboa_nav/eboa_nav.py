@@ -1218,7 +1218,7 @@ def query_jsonify_gauges_by_system():
     kwargs = {}
     kwargs["limit"] = limit
     kwargs["offset"] = offset
-    kwargs["systems"] = {"filter": search, "op": "like"}
+    kwargs["systems"] = {"filter": "%" + search + "%", "op": "like"}
 
     gauges = query.get_gauges(**kwargs)
     jsonified_gauges = [gauge.jsonify() for gauge in gauges]
@@ -1386,7 +1386,7 @@ def query_jsonify_annotation_cnfs_by_system():
     kwargs = {}
     kwargs["limit"] = limit
     kwargs["offset"] = offset
-    kwargs["systems"] = {"filter": search, "op": "like"}
+    kwargs["systems"] = {"filter": "%" + search + "%", "op": "like"}
     
     annotation_cnfs = query.get_annotation_cnfs(**kwargs)
     jsonified_annotation_cnfs = [annotation_cnf.jsonify() for annotation_cnf in annotation_cnfs]
@@ -1407,7 +1407,7 @@ def query_jsonify_keys():
     kwargs = {}
     kwargs["limit"] = limit
     kwargs["offset"] = offset
-    kwargs["keys"] = {"filter": search, "op": "like"}
+    kwargs["keys"] = {"filter": search, "op": "=="}
 
     keys = query.get_event_keys(**kwargs)
     jsonified_keys = [key.jsonify() for key in keys]
