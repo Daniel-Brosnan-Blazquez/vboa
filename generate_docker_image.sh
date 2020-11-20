@@ -279,6 +279,12 @@ docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/datamodel/sboa_data_mode
 # Copy schemas
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/schemas/* /schemas'
 
+# Specify the ID of the HEAD versions used for EBOA, VBOA and the tailored BOA
+HEAD_ID_EBOA=`git -C $PATH_TO_EBOA rev-parse HEAD`
+HEAD_ID_VBOA=`git -C $PATH_TO_VBOA rev-parse HEAD`
+HEAD_ID_TAILORED=`git -C $PATH_TO_TAILORED rev-parse HEAD`
+docker exec -it -u boa $APP_CONTAINER bash -c "echo -e 'HEAD_ID_EBOA=$HEAD_ID_EBOA\nHEAD_ID_VBOA=$HEAD_ID_VBOA\nHEAD_ID_TAILORED=$HEAD_ID_TAILORED' > /resources_path/boa_package_versions"
+
 # Install cron activities
 echo "Installing cron activities"
 docker exec -d -it -u root $APP_CONTAINER bash -c "cp /eboa/src/cron/boa_cron /etc/cron.d/"

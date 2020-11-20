@@ -60,6 +60,20 @@ jQuery(document).ready(function(){
 
 setInterval(update_clock, 1000);
 
+/* Hide service processes status after 60 seconds */
+jQuery(document).ready(function(){
+    jQuery('#boa-management-menu').click(function(){
+        setTimeout(function () {
+            // Remove attribute aria-expanded of the link element
+            var a = document.getElementById("boa-management-menu")
+            document.getElementById("boa-management-menu").removeAttributeNode(a.getAttributeNode("aria-expanded"));
+            // Remove collapse content
+            document.getElementById("boa-management-menu-li").classList.remove("mm-active");
+            document.getElementById("boa-management-menu-ul").classList.remove("mm-show");
+        }, 60000);
+    });
+});
+
 /* Set clock */
 function update_clock() {
     var date = new Date();
@@ -82,7 +96,7 @@ jQuery(document).ready(function(){
 
 /* Manage side menu */
 jQuery(function() {
-    jQuery('#side-menu').metisMenu();
+    jQuery('#left-side-menu').metisMenu();
 });
 
 /* Toasts configuration */
@@ -561,7 +575,7 @@ function switch_on_off_orc(parameters, orc_status) {
 };
 
 /* Function to update the status of the orc */
-setInterval(request_and_update_orc_status, 1000);
+setInterval(request_and_update_orc_status, 3000);
 
 request_and_update_orc_status(true)
 
@@ -616,7 +630,7 @@ function switch_on_off_cron(parameters, cron_status) {
 };
 
 /* Function to update the status of the cron */
-setInterval(request_and_update_cron_status, 1000);
+setInterval(request_and_update_cron_status, 3000);
 
 request_and_update_cron_status(true)
 
@@ -700,7 +714,7 @@ function switch_on_off_scheduler(parameters, scheduler_status) {
 };
 
 /* Function to update the status of the scheduler */
-setInterval(request_and_update_scheduler_status, 1000);
+setInterval(request_and_update_scheduler_status, 3000);
 
 request_and_update_scheduler_status(true)
 

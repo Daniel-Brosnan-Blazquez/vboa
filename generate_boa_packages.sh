@@ -160,6 +160,10 @@ fi
 echo "Generating BOA packages"
 # Generate the python archive
 docker exec -it $PKG_CONTAINER bash -c "cd /eboa/src; python3 setup.py sdist -d /output/"
+
+# Generate the javascript and css necessary for VBOA
+docker exec -it $PKG_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
+docker exec -it $PKG_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
 docker exec -it $PKG_CONTAINER bash -c "cd /vboa/src; python3 setup.py sdist -d /output/"
 if [ "$PATH_TO_TAILORED" != "" ];
 then

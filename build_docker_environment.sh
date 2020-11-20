@@ -197,11 +197,7 @@ docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER 
 ######
 docker load -i $PATH_TO_DOCKERIMAGE
 
-docker run --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/var/lib/pgsql/data -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
-
-# Change port and address configuration of the eboa defined by the postgis container
-docker exec -it -u boa $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/datamodel.json"
-docker exec -it -u boa $APP_CONTAINER bash -c "sed -i 's/\"host\".*\".*\"/\"host\": \"$DATABASE_CONTAINER\"/' /resources_path/sboa_datamodel.json"
+docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_ORC_DDBB:/var/lib/pgsql/data -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
 
 # Execute web server
 docker exec -d -it -u boa $APP_CONTAINER bash -c 'source scl_source enable rh-ruby25; gunicorn -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app -D --log-file /log/web_server'
