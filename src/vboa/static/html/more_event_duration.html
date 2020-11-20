@@ -2,15 +2,17 @@
   <div class="col-xs-3">
     <label>Event duration (seconds)</label>
     <div>
-      <input style="float: left; width: 90%" type="text" class="form-control"  name="event_duration" id="event-duration-input"/>
-      <div style="float: right; width: 10%">
+      <input style="float: left; width: 80%" type="text" class="form-control"  name="event_duration" id="event-duration-input"/>
+      <div style="float: right; width: 20%">
         <select class="form-control" style="padding-left: 0" name="event_duration_operator" id="event-duration-operator">
           <option>==</option>
           <option>></option>
           <option>>=</option>
           <option><</option>
-                     <option><=</option>
+          <option><=</option>
           <option>!=</option>
+          <option>like</option>
+          <option>notlike</option>
         </select>
       </div>
     </div>
