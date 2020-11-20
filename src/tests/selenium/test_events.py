@@ -17,7 +17,7 @@ import tests.selenium.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
@@ -136,12 +136,12 @@ class TestEventsTab(unittest.TestCase):
         # Check start
         start_date = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[4]")
 
-        assert start_date[0].text == "2018-06-05 04:07:03"
+        assert start_date[0].text == "2018-06-05T04:07:03"
 
         # Check stop
         stop_date = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[5]")
 
-        assert stop_date[0].text == "2018-06-05 06:07:36"
+        assert stop_date[0].text == "2018-06-05T06:07:36"
 
         # Check duration
         duration = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[6]")
@@ -151,7 +151,7 @@ class TestEventsTab(unittest.TestCase):
         # Check ingestion_time
         ingestion_time = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[7]")
 
-        assert re.match("....-..-.. ..:..:...*", ingestion_time[0].text)
+        assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
 
         #Check source
         source = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[8]")
@@ -169,11 +169,6 @@ class TestEventsTab(unittest.TestCase):
         assert re.match("........-....-....-....-............", uuid[0].text)
 
     def test_events_query_no_filter_with_timeline(self):
-
-        screenshot_path = os.path.dirname(os.path.abspath(__file__)) + "/screenshots/events/"
-
-        if not os.path.exists(screenshot_path):
-            os.makedirs(screenshot_path)
 
         # Insert data
         data = {"operations": [{
@@ -216,30 +211,29 @@ class TestEventsTab(unittest.TestCase):
             functions.select_checkbox(timelineButton)
         # end if
 
-
         # Apply filters and click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click(submitButton)
 
         timeline = self.driver.find_element_by_id('events-nav-timeline')
 
-        timeline.screenshot(screenshot_path + "timeline_events_screenshot.png")
-
         condition = timeline.is_displayed()
 
         event = self.session.query(Event).all()[0]
 
         assert self.driver.execute_script('return events;') == [{
-            "explicit_reference": 'EXPLICIT_REFERENCE_EVENT',
             "id": str(event.event_uuid),
             "gauge":{
                 "name": "GAUGE_NAME",
                 "system": "GAUGE_SYSTEM"
             },
-            "start": "2018-06-05 04:07:03",
-            "stop": "2018-06-05 06:07:36",
+            "explicit_reference": 'EXPLICIT_REFERENCE_EVENT',
+            "explicit_ref_uuid": str(event.explicit_ref_uuid),
+            "ingestion_time": event.ingestion_time.isoformat(),
             "source": "source.xml",
-            "ingestion_time": event.ingestion_time.isoformat().replace("T"," ")
+            "source_uuid": str(event.source_uuid),
+            "start": "2018-06-05T04:07:03",
+            "stop": "2018-06-05T06:07:36",
             }]
 
         return condition
@@ -301,7 +295,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -330,20 +324,18 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
-        # Fill the source_like input
+        # Fill the source input
         input_element = self.driver.find_element_by_id("events-source-text")
         input_element.send_keys("source_2.xml")
 
-        notLikeButton = self.driver.find_element_by_id("events-source-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        # end if
+        menu = Select(self.driver.find_element_by_id("events-source-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -356,20 +348,21 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-sources-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("source_1.xml")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("events-sources-in-select"))
+        options.select_by_visible_text("source_1.xml")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -382,16 +375,18 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("events-sources-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-sources-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-sources-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("source_2.xml")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("events-sources-in-select"))
+        options.select_by_visible_text("source_2.xml")
 
         notInButton = self.driver.find_element_by_id("events-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -399,8 +394,7 @@ class TestEventsTab(unittest.TestCase):
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -466,7 +460,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -476,7 +470,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("events-explicit-ref-text")
+        input_element = self.driver.find_element_by_id("events-er-text")
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         # Click on query button
@@ -495,20 +489,18 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
-        # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("events-explicit-ref-text")
+        # Fill the explicit reference input
+        input_element = self.driver.find_element_by_id("events-er-text")
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
-        notLikeButton = self.driver.find_element_by_id("events-explicit-ref-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        # end if
+        menu = Select(self.driver.find_element_by_id("events-er-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -521,20 +513,21 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
-        # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/input")
+        # Fill the explicit_reference_in input
+        input_element = self.driver.find_element_by_id("events-ers-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("events-ers-in-select"))
+        options.select_by_visible_text("EXPLICIT_REFERENCE_EVENT_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -547,25 +540,26 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("events-explicit-refs-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-ers-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        notInButton = self.driver.find_element_by_id("events-explicit-refs-in-checkbox")
+        options = Select(self.driver.find_element_by_id("events-ers-in-select"))
+        options.select_by_visible_text("EXPLICIT_REFERENCE_EVENT_2")
+
+        notInButton = self.driver.find_element_by_id("events-ers-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -634,7 +628,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -644,7 +638,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the key_like input
-        input_element = self.driver.find_element_by_id("events-event-key-text")
+        input_element = self.driver.find_element_by_id("events-key-text")
         input_element.send_keys("EVENT_KEY")
 
         # Click on query button
@@ -663,20 +657,18 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
-        # Fill the key_like input
-        input_element = self.driver.find_element_by_id("events-event-key-text")
+        # Fill the key input
+        input_element = self.driver.find_element_by_id("events-key-text")
         input_element.send_keys("EVENT_KEY")
 
-        notLikeButton = self.driver.find_element_by_id("events-event-key-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        # end if
+        menu = Select(self.driver.find_element_by_id("events-key-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -690,20 +682,21 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the key_in input
-        input_element = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-keys-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("EVENT_KEY_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("events-keys-in-select"))
+        options.select_by_visible_text("EVENT_KEY_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -712,30 +705,31 @@ class TestEventsTab(unittest.TestCase):
 
         assert number_of_elements == 1 and empty_element is False
 
-        ## Not In ##
+       ## Not In ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the key_in input
-        input_element = self.driver.find_element_by_id("events-event-keys-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-keys-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-event-keys-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("EVENT_KEY")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        notInButton = self.driver.find_element_by_id("events-event-keys-in-checkbox")
+        options = Select(self.driver.find_element_by_id("events-keys-in-select"))
+        options.select_by_visible_text("EVENT_KEY")
+
+        notInButton = self.driver.find_element_by_id("events-keys-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -803,7 +797,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -832,20 +826,18 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
-        # Fill the gauge_name_like input
+        # Fill the gauge name input
         input_element = self.driver.find_element_by_id("events-gauge-name-text")
         input_element.send_keys("GAUGE_NAME_1")
 
-        notLikeButton = self.driver.find_element_by_id("events-gauge-name-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        # end if
+        menu = Select(self.driver.find_element_by_id("events-gauge-name-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -859,19 +851,21 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-gauge-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-gauge-names-in-text").find_elements_by_xpath("option")) == 2
         input_element.send_keys("GAUGE_NAME_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("events-gauge-names-in-select"))
+        options.select_by_visible_text("GAUGE_NAME_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -885,16 +879,18 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("events-gauge-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-gauge-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-gauge-names-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("GAUGE_NAME_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("events-gauge-names-in-select"))
+        options.select_by_visible_text("GAUGE_NAME_1")
 
         notInButton = self.driver.find_element_by_id("events-gauge-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -902,8 +898,7 @@ class TestEventsTab(unittest.TestCase):
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -972,7 +967,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1001,20 +996,18 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
-        # Fill the gauge_system_like input
+        # Fill the gauge system input
         input_element = self.driver.find_element_by_id("events-gauge-system-text")
         input_element.send_keys("GAUGE_SYSTEM_1")
 
-        notLikeButton = self.driver.find_element_by_id("events-gauge-system-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        # end if
+        menu = Select(self.driver.find_element_by_id("events-gauge-system-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1028,20 +1021,21 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-gauge-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("GAUGE_SYSTEM_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("events-gauge-systems-in-select"))
+        options.select_by_visible_text("GAUGE_SYSTEM_2")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1055,30 +1049,32 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("events-gauge-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("events-gauge-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("events-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("GAUGE_SYSTEM_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        notInButton = self.driver.find_element_by_id("events-gauge-system-in-checkbox")
+        options = Select(self.driver.find_element_by_id("events-gauge-systems-in-select"))
+        options.select_by_visible_text("GAUGE_SYSTEM_1")
+
+        notInButton = self.driver.find_element_by_id("events-gauge-systems-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
         number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        
         assert number_of_elements == 2
 
     def test_events_query_value_text(self):
@@ -1115,7 +1111,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1124,7 +1120,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", True, "==", 1)
+        functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1142,13 +1138,14 @@ class TestEventsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_2", False, "==", 1)
+        functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_2", "!=", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
@@ -1190,7 +1187,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1199,7 +1196,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1218,7 +1215,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1238,7 +1235,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1257,7 +1254,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1276,7 +1273,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1296,7 +1293,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1315,7 +1312,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1334,7 +1331,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1354,7 +1351,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1373,7 +1370,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1392,7 +1389,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1412,7 +1409,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1431,7 +1428,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1450,7 +1447,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1469,7 +1466,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1489,7 +1486,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1508,7 +1505,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1555,7 +1552,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1564,7 +1561,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "==", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1583,7 +1580,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", False, "==", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", "!=", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1603,7 +1600,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, ">", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1622,7 +1619,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, ">", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1641,7 +1638,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, ">", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1661,7 +1658,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1680,7 +1677,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1699,7 +1696,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1719,7 +1716,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "<", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1738,7 +1735,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, "<", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1757,7 +1754,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, "<", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1777,7 +1774,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1796,7 +1793,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1815,7 +1812,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1835,7 +1832,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.5", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1854,7 +1851,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.25", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1873,7 +1870,7 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "3.75", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -1922,7 +1919,7 @@ class TestEventsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Event).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2122,7 +2119,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2130,9 +2127,9 @@ class TestEventsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
 
-        functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", True, "==", 1)
+        functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", "==", "==", 1)
         functions.click(self.driver.find_element_by_id("events-add-value"))
-        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "1.4", True, "==", 2)
+        functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "1.4", "==", "==", 2)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
@@ -2209,7 +2206,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ## Full period##
         self.driver.get("http://localhost:5000/eboa_nav/")
