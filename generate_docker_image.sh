@@ -226,7 +226,7 @@ TMP_DIR=`mktemp -d`
 $PATH_TO_VBOA/generate_boa_packages.sh $PATH_TO_EBOA_CALL $PATH_TO_VBOA_CALL $PATH_TO_DOCKERFILE_PKG_CALL $APP_CALL -o $TMP_DIR $PATH_TO_TAILORED_CALL
 
 # Build image
-docker build --build-arg DATABASE_CONTAINER=$DATABASE_CONTAINER --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$UID_HOST_USER_TO_MAP -t boa:$VERSION -t boa:latest -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$UID_HOST_USER_TO_MAP -t boa:$VERSION -t boa:latest -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 
 # Create container
 if [ "$PATH_TO_TAILORED" != "" ];
