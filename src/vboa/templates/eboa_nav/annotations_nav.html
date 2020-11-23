@@ -35,7 +35,7 @@
           <td><i id="expand-values-annotation-{{ annotation.annotation_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_annotation_values('expand-values-annotation-{{ annotation.annotation_uuid }}', '{{ annotation.annotation_uuid }}')" data-toggle="tooltip" title="Click to show the related values"></i></td>
           <td>{{ annotation.annotationCnf.name }}</td>
           <td>{{ annotation.annotationCnf.system }}</td>
-          <td>{{ annotation.ingestion_time }}</td>
+          <td>{{ annotation.ingestion_time.isoformat() }}</td>
           {% set source_uuid = annotation.source.source_uuid %}
           <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ annotation.source.name }}</a></td>
           <td><a href="/eboa_nav/query-er/{{ annotation.explicitRef.explicit_ref_uuid }}">{{ annotation.explicitRef.explicit_ref }}</a></td>
