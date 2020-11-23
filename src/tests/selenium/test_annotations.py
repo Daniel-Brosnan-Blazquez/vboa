@@ -16,7 +16,7 @@ import tests.selenium.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
@@ -37,9 +37,6 @@ from eboa.datamodel.gauges import Gauge
 from eboa.datamodel.sources import Source, SourceStatus
 from eboa.datamodel.explicit_refs import ExplicitRef, ExplicitRefGrp, ExplicitRefLink
 from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText, AnnotationDouble, AnnotationObject, AnnotationGeometry, AnnotationBoolean, AnnotationTimestamp
-
-from vboa.eboa_nav import eboa_nav
-
 
 class TestAnnotationsTab(unittest.TestCase):
 
@@ -115,7 +112,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -134,41 +131,36 @@ class TestAnnotationsTab(unittest.TestCase):
         assert number_of_elements == 2
 
         # Check annotation_name
-        annotation_name = annotations_table.find_elements_by_xpath("tbody/tr[1]/td[2]")
+        annotation_name = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[2]")
 
         assert annotation_name[0].text == "NAME_1"
 
         # Check annotation_system
-        gauge_system = annotations_table.find_elements_by_xpath("tbody/tr[1]/td[3]")
+        gauge_system = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[3]")
 
         assert gauge_system[0].text == "SYSTEM"
 
         # Check ingestion_time
-        ingestion_time = annotations_table.find_elements_by_xpath("tbody/tr[1]/td[4]")
+        ingestion_time = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[4]")
 
-        assert re.match("....-..-.. ..:..:...*", ingestion_time[0].text)
+        assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
 
         # Check source
-        source = annotations_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
+        source = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[5]")
 
         assert source[0].text == "source.xml"
 
         # Check explicit_ref
-        explicit_ref = annotations_table.find_elements_by_xpath("tbody/tr[1]/td[6]")
+        explicit_ref = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[6]")
 
         assert explicit_ref[0].text == "EXPLICIT_REFERENCE"
 
         # Check uuid
-        uuid = annotations_table.find_elements_by_xpath("tbody/tr[1]/td[7]")
+        uuid = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[7]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
     def test_annotations_query_no_filter_with_map(self):
-
-        screenshot_path = os.path.dirname(os.path.abspath(__file__)) + "/screenshots/annotations/"
-
-        if not os.path.exists(screenshot_path):
-            os.makedirs(screenshot_path)
 
         # Insert data
         data = {"operations": [{
@@ -205,7 +197,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -224,8 +216,6 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         map = self.driver.find_element_by_id("annotations-nav-map")
-
-        map.screenshot(screenshot_path + "map_screenshot.png")
 
         condition = map.is_displayed()
 
@@ -319,7 +309,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -348,20 +338,18 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_like input
         input_element = self.driver.find_element_by_id("annotations-source-text")
         input_element.send_keys("source_1.xml")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-source-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
+        menu = Select(self.driver.find_element_by_id("annotations-source-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -374,20 +362,21 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("annotations-sources-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("source_2.xml")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-sources-in-select"))
+        options.select_by_visible_text("source_2.xml")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -400,25 +389,26 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("annotations-sources-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("annotations-sources-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("annotations-sources-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("source_1.xml")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-sources-in-select"))
+        options.select_by_visible_text("source_1.xml")
 
         notInButton = self.driver.find_element_by_id("annotations-sources-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
 
-        # Click on query butto
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        # Click on query button
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -496,7 +486,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -506,7 +496,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("annotations-explicit-ref-text")
+        input_element = self.driver.find_element_by_id("annotations-er-text")
         input_element.send_keys("EXPLICIT_REFERENCE")
 
         # Click on query button
@@ -525,20 +515,18 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("annotations-explicit-ref-text")
+        input_element = self.driver.find_element_by_id("annotations-er-text")
         input_element.send_keys("EXPLICIT_REFERENCE")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-explicit-ref-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
+        menu = Select(self.driver.find_element_by_id("annotations-er-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -551,19 +539,21 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("annotations-ers-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("EXPLICIT_REFERENCE_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-ers-in-select"))
+        options.select_by_visible_text("EXPLICIT_REFERENCE_2")
+        
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -576,25 +566,26 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
-        notInButton = self.driver.find_element_by_id("annotations-explicit-refs-in-checkbox")
+        # Fill the explicit_ref_in input
+        input_element = self.driver.find_element_by_id("annotations-ers-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("EXPLICIT_REFERENCE")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-ers-in-select"))
+        options.select_by_visible_text("EXPLICIT_REFERENCE")
+
+        notInButton = self.driver.find_element_by_id("annotations-ers-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
 
-        # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_element_by_xpath("../div/input")
-        functions.click(input_element)
-
-        assert len(self.driver.find_element_by_id("annotations-explicit-refs-in-text").find_elements_by_xpath("option")) == 2
-
-        input_element.send_keys("EXPLICIT_REFERENCE")
-        input_element.send_keys(Keys.RETURN)
-
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -672,7 +663,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -701,20 +692,18 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_like input
         input_element = self.driver.find_element_by_id("annotations-annotation-name-text")
         input_element.send_keys("NAME_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-annotation-name-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
+        menu = Select(self.driver.find_element_by_id("annotations-annotation-name-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -727,20 +716,21 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("NAME_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-annotation-names-in-select"))
+        options.select_by_visible_text("NAME_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -753,16 +743,18 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("annotations-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("NAME_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-annotation-names-in-select"))
+        options.select_by_visible_text("NAME_2")
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -770,8 +762,7 @@ class TestAnnotationsTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -849,7 +840,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -878,20 +869,18 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_like input
         input_element = self.driver.find_element_by_id("annotations-annotation-system-text")
         input_element.send_keys("SYSTEM_2")
 
-        notLikeButton = self.driver.find_element_by_id("annotations-annotation-system-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
+        menu = Select(self.driver.find_element_by_id("annotations-annotation-system-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -904,20 +893,21 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("annotations-annotation-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("SYSTEM_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-annotation-systems-in-select"))
+        options.select_by_visible_text("SYSTEM_1")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -930,25 +920,26 @@ class TestAnnotationsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
 
         # # Fill the annotation_system_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("annotations-annotation-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("annotations-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("SYSTEM_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("annotations-annotation-systems-in-select"))
+        options.select_by_visible_text("SYSTEM_2")
 
         notInButton = self.driver.find_element_by_id("annotations-annotation-system-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
 
-        # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
-        functions.click(submitButton)
+       # Click on query button
+        functions.click(submit_button)
 
         # Check table generated
         annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
@@ -1038,7 +1029,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1047,7 +1038,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_1", True, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_1", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1060,14 +1051,14 @@ class TestAnnotationsTab(unittest.TestCase):
 
         assert number_of_elements == 1 and empty_element is False
 
-        ## Not like ##
+        ## != ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_2", False, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "text", "textname_1", "textvalue_2", "!=", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1118,7 +1109,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1127,7 +1118,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1146,7 +1137,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1166,7 +1157,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1185,7 +1176,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1204,7 +1195,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1224,7 +1215,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1243,7 +1234,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1262,7 +1253,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1282,7 +1273,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1301,7 +1292,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1320,7 +1311,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1340,7 +1331,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1359,7 +1350,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1378,7 +1369,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1398,7 +1389,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1417,7 +1408,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1436,7 +1427,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1487,7 +1478,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1496,7 +1487,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", "==", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1514,7 +1505,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", False, "==", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", "!=", "==", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1534,7 +1525,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, ">", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1553,7 +1544,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, ">", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1572,7 +1563,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, ">", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", "==", ">", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1592,7 +1583,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1611,7 +1602,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1630,7 +1621,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", "==", ">=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1650,7 +1641,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "<", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1669,7 +1660,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "<", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1688,7 +1679,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "<", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", "==", "<", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1708,7 +1699,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1727,7 +1718,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1746,7 +1737,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", "==", "<=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1766,7 +1757,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.5", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1785,7 +1776,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.25", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1804,7 +1795,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"annotations", "double", "double_name_1", "3.75", "==", "!=", 1)
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
@@ -1853,7 +1844,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Annotation).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2060,7 +2051,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2068,9 +2059,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
 
-        functions.fill_value(self.driver, wait, "annotations", "text", "textname_1", "textvalue_1", True, "==", 1)
+        functions.fill_value(self.driver, wait, "annotations", "text", "textname_1", "textvalue_1", "==", "==", 1)
         functions.click(self.driver.find_element_by_id("annotations-add-value"))
-        functions.fill_value(self.driver, wait, "annotations", "double", "double_name_1", "1.4", True, "==", 2)
+        functions.fill_value(self.driver, wait, "annotations", "double", "double_name_1", "1.4", "==", "==", 2)
 
         # Click on query butto
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
