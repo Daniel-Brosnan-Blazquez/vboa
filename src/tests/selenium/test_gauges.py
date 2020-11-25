@@ -124,32 +124,26 @@ class TestGaugesTab(unittest.TestCase):
         assert number_of_elements == 2
 
         # Check gauge_name
-        gauge_name = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
+        gauge_name = gauges_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[1]")
 
         assert gauge_name[0].text == "GAUGE_NAME"
 
         # Check gauge_system
-        gauge_system = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[2]")
+        gauge_system = gauges_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[2]")
 
         assert gauge_system[0].text == "GAUGE_SYSTEM"
 
         #Check dim_signature
-        dim_signature = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[3]")
+        dim_signature = gauges_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[3]")
 
         assert dim_signature[0].text == "DIM_SIGNATURE"
 
         # Check uuid
-        uuid = gauges_table.find_elements_by_xpath("tbody/tr[1]/td[4]")
+        uuid = gauges_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[4]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
     def test_gauges_no_filter_with_network(self):
-
-        screenshot_path = os.path.dirname(os.path.abspath(__file__)) + "/screenshots/gauges/"
-
-        if not os.path.exists(screenshot_path):
-            os.makedirs(screenshot_path)
-        #end if
 
         # Insert data
         data = {"operations": [{
@@ -178,7 +172,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -212,8 +206,6 @@ class TestGaugesTab(unittest.TestCase):
         }]
 
         network = self.driver.find_element_by_id("gauges-nav-network")
-
-        network.screenshot(screenshot_path + "network_of_gauges_screenshot.png")
 
         condition = network.is_displayed()
 
@@ -279,7 +271,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -308,17 +300,18 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_like input
         input_element = self.driver.find_element_by_id("gauges-gauge-name-text")
         input_element.send_keys("GAUGE_NAME_1")
 
-        Select(self.driver.find_element_by_id("gauges-gauge-name-operator")).select_by_visible_text("notlike")
+        menu = Select(self.driver.find_element_by_id("gauges-gauge-name-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -332,17 +325,22 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("gauges-gauge-names-in-text")
-        input_element.send_keys("G")
-        Select(self.driver.find_element_by_id("gauges-gauge-names-in-select")).select_by_visible_text("GAUGE_NAME_1")
-        Select(self.driver.find_element_by_id("gauges-gauge-names-in-select")).select_by_visible_text("GAUGE_NAME_3")
+        functions.click(input_element)
         
+        input_element.send_keys("G")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("gauges-gauge-names-in-select"))
+        options.select_by_visible_text("GAUGE_NAME_1")
+        options.select_by_visible_text("GAUGE_NAME_3")
+
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -356,12 +354,18 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
         input_element = self.driver.find_element_by_id("gauges-gauge-names-in-text")
+        functions.click(input_element)
+        
         input_element.send_keys("G")
-        Select(self.driver.find_element_by_id("gauges-gauge-names-in-select")).select_by_visible_text("GAUGE_NAME_1")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+        
+        options = Select(self.driver.find_element_by_id("gauges-gauge-names-in-select"))
+        options.select_by_visible_text("GAUGE_NAME_1")
 
         notInButton = self.driver.find_element_by_id("gauges-gauge-names-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
@@ -369,8 +373,7 @@ class TestGaugesTab(unittest.TestCase):
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -439,7 +442,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -468,17 +471,18 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_like input
         input_element = self.driver.find_element_by_id("gauges-gauge-system-text")
         input_element.send_keys("GAUGE_SYSTEM_1")
 
-        Select(self.driver.find_element_by_id("gauges-gauge-system-operator")).select_by_visible_text("notlike")
+        menu = Select(self.driver.find_element_by_id("gauges-gauge-system-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -492,17 +496,22 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
         input_element = self.driver.find_element_by_id("gauges-gauge-systems-in-text")
+        functions.click(input_element)
+        
         input_element.send_keys("G")
-        Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select")).select_by_visible_text("GAUGE_SYSTEM_1")
-        Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select")).select_by_visible_text("GAUGE_SYSTEM_3")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+        
+        options = Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select"))
+        options.select_by_visible_text("GAUGE_SYSTEM_1")
+        options.select_by_visible_text("GAUGE_SYSTEM_3")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -516,20 +525,26 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
         input_element = self.driver.find_element_by_id("gauges-gauge-systems-in-text")
+        functions.click(input_element)
+        
         input_element.send_keys("G")
-        Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select")).select_by_visible_text("GAUGE_SYSTEM_1")
-        notInButton = self.driver.find_element_by_id("gauges-gauge-system-in-checkbox")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select"))
+        options.select_by_visible_text("GAUGE_SYSTEM_1")
+        
+        notInButton = self.driver.find_element_by_id("gauges-gauge-systems-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -598,7 +613,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -627,17 +642,18 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_like input
         input_element = self.driver.find_element_by_id("gauges-dim-signature-text")
         input_element.send_keys("DIM_SIGNATURE_2")
 
-        Select(self.driver.find_element_by_id("gauges-dim-signature-operator")).select_by_visible_text("notlike")
+        menu = Select(self.driver.find_element_by_id("gauges-dim-signature-operator"))
+        menu.select_by_visible_text("notlike")
         
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -650,16 +666,21 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
         input_element = self.driver.find_element_by_id("gauges-dim-signatures-in-text")
+        functions.click(input_element)
+ 
         input_element.send_keys("D")
-        Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select")).select_by_visible_text("DIM_SIGNATURE_1")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select"))
+        options.select_by_visible_text("DIM_SIGNATURE_1")
         
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
@@ -672,21 +693,26 @@ class TestGaugesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Gauges")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
         input_element = self.driver.find_element_by_id("gauges-dim-signatures-in-text")
+        functions.click(input_element)
+        
         input_element.send_keys("D")
-        Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select")).select_by_visible_text("DIM_SIGNATURE_2")
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
+        options = Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select"))
+        options.select_by_visible_text("DIM_SIGNATURE_2")
+        
         notInButton = self.driver.find_element_by_id("gauges-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))

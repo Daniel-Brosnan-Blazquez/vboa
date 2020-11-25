@@ -933,7 +933,7 @@ class TestAnnotationsTab(unittest.TestCase):
         options = Select(self.driver.find_element_by_id("annotations-annotation-systems-in-select"))
         options.select_by_visible_text("SYSTEM_2")
 
-        notInButton = self.driver.find_element_by_id("annotations-annotation-system-in-checkbox")
+        notInButton = self.driver.find_element_by_id("annotations-annotation-systems-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if

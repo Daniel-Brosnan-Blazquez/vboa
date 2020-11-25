@@ -16,7 +16,7 @@ import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
@@ -116,7 +116,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -134,22 +134,22 @@ class TestExplicitReferencesTab(unittest.TestCase):
         assert number_of_elements == 2
 
         # Check explicit reference
-        explicit_reference_1 = explicit_refs_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
+        explicit_reference_1 = explicit_refs_table.find_elements_by_xpath("tbody/tr[td[text() = 'EXPLICIT_REFERENCE']]/td[1]")
 
         assert explicit_reference_1[0].text == "EXPLICIT_REFERENCE"
 
         # Check group
-        group = explicit_refs_table.find_elements_by_xpath("tbody/tr[1]/td[2]")
+        group = explicit_refs_table.find_elements_by_xpath("tbody/tr[td[text() = 'EXPLICIT_REFERENCE']]/td[2]")
 
         assert group[0].text == "EXPLICIT_REFERENCE_GROUP"
 
         # Check group
-        ingestion_time = explicit_refs_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
+        ingestion_time = explicit_refs_table.find_elements_by_xpath("tbody/tr[td[text() = 'EXPLICIT_REFERENCE']]/td[5]")
 
         assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
 
         # Check uuid
-        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[1]/td[7]")
+        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[td[text() = 'EXPLICIT_REFERENCE']]/td[7]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -211,7 +211,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -220,7 +220,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-ref-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-er-text")
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         # Click on query button
@@ -240,11 +240,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-ref-text")
+        input_element = self.driver.find_element_by_id("explicit-refs-er-text")
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-explicit-ref-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-er-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -263,16 +263,18 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-ers-in-text")
         functions.click(input_element)
-
-        assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
 
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_1")
-        input_element.send_keys(Keys.RETURN)
-        functions.click(input_element)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+        input_element.clear()
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_3")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-ers-in-select"))
+        options.select_by_visible_text("EXPLICIT_REFERENCE_EVENT_1")
+        options.select_by_visible_text("EXPLICIT_REFERENCE_EVENT_3")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -291,16 +293,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-ers-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-explicit-refs-in-text").find_elements_by_xpath("option")) == 3
-
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-explicit-refs-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-ers-in-select"))
+        options.select_by_visible_text("EXPLICIT_REFERENCE_EVENT_2")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-ers-in-checkbox")        
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -363,7 +368,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -395,8 +400,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element = self.driver.find_element_by_id("explicit-refs-group-text")
         input_element.send_keys("EXPL_GROUP_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-group-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-group-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -415,13 +420,14 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the group_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("EXPL_GROUP_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-groups-in-select"))
+        options.select_by_visible_text("EXPL_GROUP_1")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -440,16 +446,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the group_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-groups-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-groups-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("EXPL_GROUP_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-groups-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-groups-in-select"))
+        options.select_by_visible_text("EXPL_GROUP_2")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-groups-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -514,7 +523,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -546,8 +555,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element = self.driver.find_element_by_id("explicit-refs-source-text")
         input_element.send_keys("source_1.xml")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-source-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-source-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -565,13 +574,14 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("source_1.xml")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-sources-in-select"))
+        options.select_by_visible_text("source_1.xml")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -590,16 +600,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-sources-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-sources-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("source_2.xml")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-sources-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-sources-in-select"))
+        options.select_by_visible_text("source_2.xml")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-sources-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -671,7 +684,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -703,8 +716,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element = self.driver.find_element_by_id("explicit-refs-key-text")
         input_element.send_keys("EVENT_KEY_1")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-key-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-key-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -723,16 +736,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text")
         functions.click(input_element)
-
-        assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
 
         input_element.send_keys("EVENT_KEY_2")
-        input_element.send_keys(Keys.RETURN)
-        functions.click(input_element)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+        input_element.clear()
         input_element.send_keys("EVENT_KEY_3")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-keys-in-select"))
+        options.select_by_visible_text("EVENT_KEY_2")
+        options.select_by_visible_text("EVENT_KEY_3")
+
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -750,16 +766,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-keys-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-keys-in-text").find_elements_by_xpath("option")) == 3
-
         input_element.send_keys("EVENT_KEY_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-keys-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-keys-in-select"))
+        options.select_by_visible_text("EVENT_KEY_1")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-keys-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -831,7 +850,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -863,8 +882,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-name-text")
         input_element.send_keys("GAUGE_NAME_1")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-name-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-gauge-name-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -883,13 +902,14 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("GAUGE_NAME_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-gauge-names-in-select"))
+        options.select_by_visible_text("GAUGE_NAME_2")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -908,16 +928,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-gauge-names-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("GAUGE_NAME_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-gauge-names-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-gauge-names-in-select"))
+        options.select_by_visible_text("GAUGE_NAME_1")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-gauge-names-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -989,7 +1012,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1021,8 +1044,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-text")
         input_element.send_keys("GAUGE_SYSTEM_1")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-gauge-system-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-gauge-system-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1041,13 +1064,14 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("GAUGE_SYSTEM_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-gauge-systems-in-select"))
+        options.select_by_visible_text("GAUGE_SYSTEM_2")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1066,16 +1090,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-gauge-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-gauge-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("GAUGE_SYSTEM_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-gauge-system-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-gauge-systems-in-select"))
+        options.select_by_visible_text("GAUGE_SYSTEM_1")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-gauge-systems-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1129,7 +1156,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1137,7 +1164,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "text", "textname_1", "textvalue_1", True, "==", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "text", "textname_1", "textvalue_1", "==", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1149,13 +1176,13 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-        ## Not Like ##
+        ## != ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "text", "textname_1", "textvalue_1", False, "==", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "text", "textname_1", "textvalue_1", "!=", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1206,7 +1233,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1214,7 +1241,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1231,7 +1258,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "==",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1246,7 +1273,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1260,7 +1287,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1276,7 +1303,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1291,7 +1318,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1307,7 +1334,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1323,7 +1350,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1338,7 +1365,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1352,7 +1379,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1369,7 +1396,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1385,7 +1412,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "<=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1399,7 +1426,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1416,7 +1443,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "!=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1430,7 +1457,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "!=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1482,7 +1509,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1490,7 +1517,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "==", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", "==", "==", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1506,7 +1533,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", False, "==",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", "!=", "==",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1521,7 +1548,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, ">",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", "==", ">",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1535,7 +1562,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, ">", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", "==", ">", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1551,7 +1578,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, ">",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", "==", ">",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1566,7 +1593,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", "==", ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1582,7 +1609,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, ">=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", "==", ">=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1598,7 +1625,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, ">=",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", "==", ">=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1613,7 +1640,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "<",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", "==", "<",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1627,7 +1654,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, "<",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", "==", "<",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1641,7 +1668,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, "<", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", "==", "<", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1658,7 +1685,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", "==", "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1674,7 +1701,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, "<=",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", "==", "<=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1688,7 +1715,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", True, "<=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.75", "==", "<=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1705,7 +1732,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", True, "!=",1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.5", "==", "!=",1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1719,7 +1746,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", True, "!=", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "3.25", "==", "!=", 1)
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
@@ -1814,16 +1841,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "text", "text_name_1", "text_value_1", True, "==", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "text", "text_name_1", "text_value_1", "==", "==", 1)
         functions.click(self.driver.find_element_by_id("explicit-refs-events-add-value"))
-        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "1.4", True, "==", 2)
+        functions.fill_value(self.driver, wait, "explicit-refs-events", "double", "double_name_1", "1.4", "==", "==", 2)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1904,7 +1931,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1937,8 +1964,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-name-text")
         input_element.send_keys("NAME_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-name-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-annotation-name-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1957,13 +1984,14 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("NAME_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-annotation-names-in-select"))
+        options.select_by_visible_text("NAME_1")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -1983,16 +2011,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-names-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-annotation-names-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("NAME_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-annotation-names-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-annotation-names-in-select"))
+        options.select_by_visible_text("NAME_2")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-annotation-names-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2074,7 +2105,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2106,8 +2137,8 @@ class TestExplicitReferencesTab(unittest.TestCase):
         input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-text")
         input_element.send_keys("SYSTEM_2")
 
-        not_like_button = self.driver.find_element_by_id("explicit-refs-annotation-system-checkbox")
-        functions.select_checkbox(not_like_button)
+        menu = Select(self.driver.find_element_by_id("explicit-refs-annotation-system-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2127,13 +2158,14 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # find the element that's name attribute is gauge_system_in
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("SYSTEM_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("explicit-refs-annotation-systems-in-select"))
+        options.select_by_visible_text("SYSTEM_1")
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2153,16 +2185,19 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # find the element that's name attribute is gauge_system_in
-        input_element = self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("explicit-refs-annotation-systems-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("explicit-refs-annotation-system-in-text").find_elements_by_xpath("option")) == 2
-
         input_element.send_keys("SYSTEM_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        not_in_button = self.driver.find_element_by_id("explicit-refs-annotation-system-in-checkbox")
-        functions.select_checkbox(not_in_button)
+        options = Select(self.driver.find_element_by_id("explicit-refs-annotation-systems-in-select"))
+        options.select_by_visible_text("SYSTEM_2")
+
+        notInButton = self.driver.find_element_by_id("explicit-refs-annotation-systems-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        #end if
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2201,7 +2236,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         ingestion_time = self.session.query(ExplicitRef).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2389,7 +2424,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2397,7 +2432,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "text", "text_name_1", "text_value_1", True, "==", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "text", "text_name_1", "text_value_1", "==", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2409,13 +2444,13 @@ class TestExplicitReferencesTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-        ## Not like ##
+        ## != ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "text", "text_name_1", "text_value_2", False, "==", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "text", "text_name_1", "text_value_2", "!=", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2465,7 +2500,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2473,7 +2508,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "==", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2490,7 +2525,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "==", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2507,7 +2542,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2523,7 +2558,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2540,7 +2575,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2557,7 +2592,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", ">=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2574,7 +2609,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", ">=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2591,7 +2626,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", ">=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2608,7 +2643,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2624,7 +2659,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "<", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2640,7 +2675,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2658,7 +2693,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "<=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2675,7 +2710,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "<=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2691,7 +2726,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "<=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2709,7 +2744,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:14", "==", "!=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2725,7 +2760,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:10", "==", "!=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2742,7 +2777,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "timestamp", "timestamp_name_1", "2019-04-26T14:14:20", "==", "!=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2792,7 +2827,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2800,7 +2835,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", True, "==", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", "==", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2817,7 +2852,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", False, "==", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", "!=", "==", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2834,7 +2869,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", True, ">", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", "==", ">", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2850,7 +2885,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", True, ">", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", "==", ">", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2867,7 +2902,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", True, ">", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", "==", ">", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2884,7 +2919,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", "==", ">=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2901,7 +2936,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", "==", ">=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2918,7 +2953,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", True, ">=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", "==", ">=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2935,7 +2970,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", True, "<", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", "==", "<", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2951,7 +2986,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", True, "<", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", "==", "<", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2967,7 +3002,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", True, "<", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", "==", "<", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -2985,7 +3020,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", "==", "<=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -3002,7 +3037,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", "==", "<=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -3018,7 +3053,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", True, "<=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", "==", "<=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -3036,7 +3071,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.5", "==", "!=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -3052,7 +3087,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.25", "==", "!=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -3069,7 +3104,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", True, "!=", 1)
+        functions.fill_value(self.driver, wait,"explicit-refs-annotations", "double", "double_name_1", "3.75", "==", "!=", 1)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -3166,16 +3201,16 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Explicit references")
 
-        functions.fill_value(self.driver, wait, "explicit-refs-annotations", "text", "text_name_1", "text_value_1", True, "==", 1)
+        functions.fill_value(self.driver, wait, "explicit-refs-annotations", "text", "text_name_1", "text_value_1", "==", "==", 1)
         functions.click(self.driver.find_element_by_id("explicit-refs-annotations-add-value"))
-        functions.fill_value(self.driver,wait,"explicit-refs-annotations", "double", "double_name_1", "1.4", True, "==", 2)
+        functions.fill_value(self.driver,wait,"explicit-refs-annotations", "double", "double_name_1", "1.4", "==", "==", 2)
 
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
@@ -3254,7 +3289,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## == ## Full period##
         self.driver.get("http://localhost:5000/eboa_nav/")

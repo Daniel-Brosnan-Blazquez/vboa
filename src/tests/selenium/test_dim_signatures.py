@@ -16,7 +16,7 @@ import tests.selenium.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
@@ -103,7 +103,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -121,10 +121,12 @@ class TestDimSignaturesTab(unittest.TestCase):
         assert number_of_elements == 2
 
         # Check dim_signature
-        name = dim_signatures_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
+        dim_signature = dim_signatures_table.find_elements_by_xpath("tbody/tr[td[text() = 'DIM_SIGNATURE_1']]/td[1]")
+
+        assert dim_signature[0].text == "DIM_SIGNATURE_1"
 
         # Check uuid
-        uuid = dim_signatures_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
+        uuid = dim_signatures_table.find_elements_by_xpath("tbody/tr[td[text() = 'DIM_SIGNATURE_1']]/td[5]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -174,7 +176,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -202,19 +204,17 @@ class TestDimSignaturesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"DIM Signatures")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_like input
         input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-text")
         input_element.send_keys("DIM_SIGNATURE_2")
 
-        notLikeButton = self.driver.find_element_by_id("dim-signatures-dim-signature-checkbox")
-        if not notLikeButton.find_element_by_xpath("input").is_selected():
-            functions.select_checkbox(notLikeButton)
-        #end if
+        menu = Select(self.driver.find_element_by_id("dim-signatures-dim-signature-operator"))
+        menu.select_by_visible_text("notlike")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim-signatures-table")))
@@ -227,22 +227,24 @@ class TestDimSignaturesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"DIM Signatures")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("dim-signatures-dim-signatures-in-text")
         functions.click(input_element)
-
-        assert len(self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_elements_by_xpath("option")) == 3
 
         input_element.send_keys("DIM_SIGNATURE_1")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
         functions.click(input_element)
         input_element.send_keys("DIM_SIGNATURE_3")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("dim-signatures-dim-signatures-in-select"))
+        options.select_by_visible_text("DIM_SIGNATURE_1")
+        options.select_by_visible_text("DIM_SIGNATURE_3")
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generated
         dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim-signatures-table")))
@@ -255,24 +257,25 @@ class TestDimSignaturesTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"DIM Signatures")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_element_by_xpath("../div/input")
+        input_element = self.driver.find_element_by_id("dim-signatures-dim-signatures-in-text")
         functions.click(input_element)
 
-        assert len(self.driver.find_element_by_id("dim-signatures-dim-signature-in-text").find_elements_by_xpath("option")) == 3
-
         input_element.send_keys("DIM_SIGNATURE_2")
-        input_element.send_keys(Keys.RETURN)
+        input_element.send_keys(Keys.LEFT_SHIFT)
 
-        notInButton = self.driver.find_element_by_id("dim-signatures-dim-signature-in-checkbox")
+        options = Select(self.driver.find_element_by_id("dim-signatures-dim-signatures-in-select"))
+        options.select_by_visible_text("DIM_SIGNATURE_2")
+
+        notInButton = self.driver.find_element_by_id("dim-signatures-dim-signatures-in-checkbox")
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
 
         # Click on query button
-        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
-        functions.click(submitButton)
+        functions.click(submit_button)
 
         # Check table generate
         dim_signatures_table = wait.until(EC.visibility_of_element_located((By.ID,"dim-signatures-table")))
