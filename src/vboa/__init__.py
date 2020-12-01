@@ -9,6 +9,7 @@ module vboa
 import os
 import numpy
 import re
+import itertools
 
 # Import flask utilities
 from flask import Flask, current_app, render_template
@@ -276,6 +277,24 @@ def create_app():
         sorted_list.sort(key=len)
         
         return sorted_list
+
+    @app.template_filter()
+    def group_by_substring(list_of_items, attribute, substring_start, substring_stop):
+        """Group by the substring of an attribute of every item."""
+        sorted_list = list_of_items.copy()
+        sorted_list.sort(key=lambda x: eval("x." + attribute))
+        iter_groups = itertools.groupby(sorted_list, lambda y: eval("y." + attribute + "[" + substring_start + ":" + substring_stop + "]"))
+
+        groups = []
+        for key, group in iter_groups:
+            group_elements = []
+            for item in group:
+                group_elements.append(item)
+            # end for
+            groups.append((key, group_elements))
+        # end for
+
+        return groups
 
     ###
     # Date operations

@@ -187,6 +187,7 @@ export function prepare_events_data_for_timeline(events, items, groups){
         var item = {
             id: event["id"],
             group: event["timeline"] + "_" + event["group"],
+            content: event["content"],
             start: event["start"],
             end: event["stop"],
             tooltip: event["tooltip"]

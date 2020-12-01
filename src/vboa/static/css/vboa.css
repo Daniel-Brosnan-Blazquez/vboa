@@ -71,6 +71,27 @@
 .background-orange {
     background: orange;
 }
+.background-light-green {
+    background: lightgreen;
+}
+.background-light-blue {
+    background: lightblue;
+}
+.background-light-yellow {
+    background: gold;
+}
+.background-light-pink {
+    background: lightpink;
+}
+.background-light-brown {
+    background: burlywood;
+}
+.background-light-red {
+    background: lightcoral;
+}
+.background-light-orange {
+    background: coral;
+}
 
 /* Static table */
 .table-static {
