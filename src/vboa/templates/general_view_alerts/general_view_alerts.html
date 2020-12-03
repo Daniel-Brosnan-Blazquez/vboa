@@ -1,0 +1,42 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">General view of alerts</h1>
+</div>
+<!-- /.row -->
+{% include "general_view_alerts/general_view_alerts_query.html" %}
+
+<!-- Pagination -->
+{% with route = "/general_view_alerts/general-view-alerts-pages", elements = sources, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
+{% set sources_alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set events_alerts = events|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set annotations_alerts = annotations|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set reports_alerts = annotations|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set ers_alerts = ers|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+
+{% with show = {"sources": True, "events": True, "annotations": True, "reports": True, "ers": True} %}
+{% include "general_view_alerts/general_view_alerts_summary_content.html" %}
+{% endwith %}
+
+{% include "general_view_alerts/general_view_alerts_sources_content.html" %}
+{% include "general_view_alerts/general_view_alerts_events_content.html" %}
+{% include "general_view_alerts/general_view_alerts_annotations_content.html" %}
+{% include "general_view_alerts/general_view_alerts_reports_content.html" %}
+{% include "general_view_alerts/general_view_alerts_explicit_refs_content.html" %}
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  {% if sliding_window %}
+  var parameters = {
+  "window_delay": "{{ sliding_window['window_delay'] }}",
+  "window_size": "{{ sliding_window['window_size'] }}",
+  }
+  var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
+  vboa.update_view(parameters, repeat_cycle, "/general_view_alerts/sliding_general_view_alerts_parameters");
+  {% endif %}
+</script>
+{% endblock %}

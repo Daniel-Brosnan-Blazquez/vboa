@@ -23,6 +23,8 @@ from vboa.views.boa_health import boa_health
 from vboa.views.ingestion_control import ingestion_control
 from vboa.views.reporting_control import reporting_control
 from vboa.views.boa_scheduler import boa_scheduler
+from vboa.views.general_view_alerts import general_view_alerts
+
 
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
@@ -47,6 +49,7 @@ def create_app():
     app.register_blueprint(ingestion_control.bp)
     app.register_blueprint(reporting_control.bp)
     app.register_blueprint(boa_scheduler.bp)
+    app.register_blueprint(general_view_alerts.bp)
 
     # the toolbar is only enabled in debug mode:
     app.debug = False
