@@ -89,7 +89,4 @@ ENV POSTGRESQL_USER root
 ENV POSTGRESQL_PASSWORD pass
 ENV POSTGRESQL_DATABASE default
 
-# Copy the environment variables to a file for later use of cron
-RUN declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env
-
 USER postgres

@@ -190,7 +190,7 @@ docker network inspect $DOCKER_NETWORK &>/dev/null || docker network create --dr
 ######
 # Execute container
 # Check configuration of postgis/postgres with -> psql -U postgres -> show all;
-docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000' --restart=always
+docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data --restart=always -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
 
 ######
 # Create APP container
@@ -201,6 +201,9 @@ docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CON
 
 # Execute web server
 docker exec -d -it -u boa $APP_CONTAINER bash -c 'source scl_source enable rh-ruby25; gunicorn -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app -D --log-file /log/web_server'
+
+# Store environment variables for the usege of cron tasks
+docker exec -d -it -u boa $APP_CONTAINER bash -c "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env"
 
 echo "
 Docker environment successfully built :-)"
