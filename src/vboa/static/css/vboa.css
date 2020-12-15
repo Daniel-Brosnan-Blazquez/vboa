@@ -1,3 +1,7 @@
+div.apply-timeliness-overflow .vis-item .vis-item-overflow {
+  overflow: visible;
+}
+
 /* Severity levels */
 .info-severity {
     color: green;

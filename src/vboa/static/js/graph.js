@@ -104,18 +104,20 @@ function show_bar_item_information(params, items, dom_id){
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
-export function display_timeline(dom_id, items, groups){
+export function display_timeline(dom_id, items, groups, options){
 
     /* create timeline */
     const container = document.getElementById(dom_id);
 
-    const options = {
-        groupOrder: 'content',
-        margin: {
-            item : {
-                horizontal : -1
-            }
-        },
+    if (options == undefined){
+        options = {
+            groupOrder: 'content',
+            margin: {
+                item : {
+                    horizontal : -1
+                }
+            },
+        };
     };
 
     const timeline = new vis_timeline_graph2d.Timeline(container, items, groups, options);

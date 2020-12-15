@@ -282,10 +282,12 @@ def create_app():
         return sorted_list
 
     @app.template_filter()
-    def group_by_substring(list_of_items, attribute, substring_start, substring_stop):
+    def group_by_substring(list_of_items, attribute, substring_start, substring_stop, sort = True):
         """Group by the substring of an attribute of every item."""
         sorted_list = list_of_items.copy()
-        sorted_list.sort(key=lambda x: eval("x." + attribute))
+        if sort:
+            sorted_list.sort(key=lambda x: eval("x." + attribute))
+        # end if
         iter_groups = itertools.groupby(sorted_list, lambda y: eval("y." + attribute + "[" + substring_start + ":" + substring_stop + "]"))
 
         groups = []
@@ -298,6 +300,12 @@ def create_app():
         # end for
 
         return groups
+
+    @app.template_filter()
+    def convert_to_tuple(list_to_covert):
+        """Convert a list to a tuple"""
+        
+        return tuple(list_to_covert)
 
     ###
     # Date operations

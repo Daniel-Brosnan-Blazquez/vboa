@@ -267,10 +267,10 @@ export function display_bar_time(dom_id, items, groups, height){
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
-export function display_timeline(dom_id, items, groups){
+export function display_timeline(dom_id, items, groups, options){
 
     jQuery(document).ready(function(){
-        graph.display_timeline(dom_id, items, groups);
+        graph.display_timeline(dom_id, items, groups, options);
     });        
 
 };
