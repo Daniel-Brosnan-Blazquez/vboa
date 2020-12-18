@@ -1,5 +1,5 @@
-# Base the image on centos/postgresql-10-centos7
-FROM centos/postgresql-10-centos7
+# Base the image on centos7
+FROM centos:centos7
 MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
@@ -34,7 +34,9 @@ RUN yum install -y python36 \
     cronie \
     texlive* \
     libcurl \
-    libcurl-devel
+    libcurl-devel \
+    postgresql-devel \
+    postgresql
 
 RUN yum install -y rh-ruby25 \
     rh-ruby25-rubygem-bundler \
@@ -46,7 +48,9 @@ RUN pip3 install wheel \
     termcolor \
     coverage \
     before_after \
-    Sphinx
+    Sphinx \
+    Flask \
+    gunicorn
     
 # Create folders for BOA
 RUN mkdir /log
@@ -58,12 +62,11 @@ RUN mkdir /rboa_archive
 # Create folders for ORC
 RUN mkdir /orc
 RUN mkdir /orc_packages
-RUN mkdir /orc_config
 RUN mkdir /minarc_root
 RUN mkdir /inputs
 
 # Change ownership to the $HOST_USER
-RUN chown $HOST_USER /log /scripts /resources_path /datamodel /rboa_archive /orc_packages /orc_config /minarc_root /inputs /orc
+RUN chown $HOST_USER /log /scripts /resources_path /datamodel /rboa_archive /orc_packages /minarc_root /inputs /orc
 
 USER $HOST_USER
 
@@ -74,6 +77,8 @@ RUN ln -s /eboa/src/rboa/triggering/rboa_triggering.py /scripts/rboa_triggering.
 RUN ln -s /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py
 RUN ln -s /eboa/src/sboa/scheduler/boa_scheduler.py /scripts/boa_scheduler.py
 RUN ln -s /eboa/src/sboa/scheduler/boa_execute_triggering.py /scripts/boa_execute_triggering.py
+RUN ln -s /vboa/src/scripts/start_flask.sh /scripts/start_flask.sh
+RUN ln -s /vboa/src/scripts/start_gunicorn.sh /scripts/start_gunicorn.sh
 
 # Environment Variables for BOA
 ENV EBOA_RESOURCES_PATH /resources_path
@@ -94,21 +99,17 @@ EXPOSE 5000
 # Environment Variables for ORC
 ENV MINARC_ARCHIVE_ROOT /minarc_root
 ENV MINARC_ARCHIVE_ERROR /minarc_root/.errors
-ENV MINARC_DATABASE_NAME s2boa_orc
+ENV MINARC_DATABASE_NAME minarc_orc_db
 ENV MINARC_DB_ADAPTER postgresql
-ENV MINARC_DATABASE_USER root
-ENV MINARC_DATABASE_PASSWORD 1mysql
-ENV ORC_CONFIG /orc_config
+ENV MINARC_DATABASE_USER minarc_orc
+ENV MINARC_DATABASE_HOST $DATABASE_CONTAINER
 ENV ORC_TMP /orc/tmp
-ENV ORC_DATABASE_NAME s2boa_orc
+ENV ORC_DATABASE_NAME minarc_orc_db
 ENV ORC_DB_ADAPTER postgresql
-ENV ORC_DATABASE_USER root
-ENV ORC_DATABASE_PASSWORD 1mysql
-ENV POSTGRESQL_USER root
-ENV POSTGRESQL_PASSWORD pass
-ENV POSTGRESQL_DATABASE default
+ENV ORC_DATABASE_USER minarc_orc
+ENV ORC_DATABASE_HOST $DATABASE_CONTAINER
 
 # Copy the environment variables to a file for later use of cron
 RUN declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env
 
-USER postgres
+CMD ["/bin/bash", "-c", "/scripts/start_flask.sh"]

@@ -7,7 +7,7 @@
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets -u host_user_to_map [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-x orc_tailoring_configuration_path]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets -u host_user_to_map [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path]"
 
 ########
 # Initialization
@@ -22,7 +22,7 @@ APP="vboa"
 PATH_TO_ORC=""
 HOST_USER_TO_MAP=""
 
-while getopts e:v:d:p:t:l:a:o:c:x:u: option
+while getopts e:v:d:p:t:l:a:o:c:u: option
 do
     case "${option}"
         in
@@ -35,7 +35,6 @@ do
         a) APP=${OPTARG};;
         o) PATH_TO_ORC=${OPTARG};;
         c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG};;
-        x) PATH_TO_ORC_CONFIGURATION=${OPTARG};;
         u) HOST_USER_TO_MAP=${OPTARG};;
         ?) echo -e $USAGE
             exit -1
@@ -108,16 +107,6 @@ then
     echo "ERROR: The directory $PATH_TO_ORC contains more than one orc packet"
     exit -1
 fi
-gemfile_count=$(find $PATH_TO_ORC/ -maxdepth 1 -mindepth 1 -name 'Gemfile' | wc -l)
-if [ $gemfile_count == 0 ];
-then
-    echo "ERROR: The directory $PATH_TO_GEMFILE does not contain a Gemfile file"
-    exit -1
-elif [ $gemfile_count -gt 1 ];
-then
-    echo "ERROR: The directory $PATH_TO_GEMFILE contains more than one Gemfile file"
-    exit -1
-fi
 
 # Check that option -d has been specified
 if [ "$PATH_TO_DOCKERFILE" == "" ];
@@ -145,13 +134,6 @@ fi
 if [ "$PATH_TO_BOA_TAILORING_CONFIGURATION" != "" ] && [ ! -d $PATH_TO_BOA_TAILORING_CONFIGURATION ];
 then
     echo "ERROR: The directory $PATH_TO_BOA_TAILORING_CONFIGURATION provided does not exist"
-    exit -1
-fi
-
-# Check that the path to the orc tailoring congiguration exists
-if [ "$PATH_TO_ORC_CONFIGURATION" != "" ] && [ ! -d $PATH_TO_ORC_CONFIGURATION ];
-then
-    echo "ERROR: The directory $PATH_TO_ORC_CONFIGURATION provided does not exist"
     exit -1
 fi
 
@@ -197,7 +179,6 @@ These are the configuration options that will be applied to initialize the envir
 - APP: $APP
 - PATH_TO_ORC: $PATH_TO_ORC
 - PATH_TO_BOA_TAILORING_CONFIGURATION: $PATH_TO_BOA_TAILORING_CONFIGURATION
-- PATH_TO_ORC_CONFIGURATION: $PATH_TO_ORC_CONFIGURATION
 - HOST_USER_TO_MAP: $HOST_USER_TO_MAP
 
 Do you wish to proceed with the initialization of the development environment?" answer
@@ -279,10 +260,6 @@ for file in $PATH_TO_BOA_TAILORING_CONFIGURATION/*;
 do
     docker cp $file $APP_CONTAINER:/resources_path
 done
-for file in $PATH_TO_ORC_CONFIGURATION/*;
-do
-    docker cp $file $APP_CONTAINER:/orc_config
-done
 for file in $PATH_TO_ORC/*;
 do
     docker cp $file $APP_CONTAINER:/orc_packages
@@ -290,7 +267,6 @@ done
 
 # Change ownership
 docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /resources_path/*"
-docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /orc_config/*"
 docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /orc_packages//*"
 
 # Generate the python archive
@@ -302,8 +278,8 @@ then
     docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
 fi
 
-# Execute flask server
-docker exec -d -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; flask run --host=0.0.0.0 -p 5000"
+# Restart container to make accesible the app to the web server
+docker restart $APP_CONTAINER
 
 # Install web packages
 docker exec -it -u root $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
@@ -314,41 +290,6 @@ docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa
 # Link datamodels
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/eboa_data_model.sql /datamodel/'
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/sboa_data_model.sql /datamodel/'
-
-# Initialize the EBOA database inside the postgis-database container
-while true
-do
-    echo "Trying to initialize BOA engine database..."
-    docker exec -it -u root $APP_CONTAINER bash -c "/eboa/src/scripts/init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/eboa_data_model.sql" > /dev/null
-    status=$?
-    if [ $status -ne 0 ]
-    then
-        echo "Server is not ready yet..."
-        # Wait for the server to be initialize
-        sleep 1
-    else
-        echo "Database for the BOA engine has been initialized..."
-        break
-    fi
-done
-
-# Initialize the SBOA database inside the postgis-database container
-while true
-do
-    echo "Trying to initialize SBOA scheduler database..."
-    docker exec -it -u root $APP_CONTAINER bash -c "/eboa/src/scripts/sboa_init_ddbb.sh -h $DATABASE_CONTAINER -p 5432 -f /eboa/datamodel/sboa_data_model.sql" > /dev/null
-    status=$?
-    if [ $status -ne 0 ]
-    then
-        echo "Server is not ready yet..."
-        # Wait for the server to be initialize
-        sleep 1
-    else
-        echo "Database for the BOA scheduler has been initialized..."
-        break
-    fi
-done
-
 
 # Listen for changes on the web packages
 docker exec -d -it -u root $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run watch"
@@ -367,14 +308,25 @@ docker exec -d -it -u root $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
 echo "Cron activities installed"
 
 # Install orc
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; bundle install --gemfile Gemfile"
 docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
 docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
 
-# Initialize the ORC DDBB
-docker exec -it -u root $APP_CONTAINER bash -c "createdb s2boa_orc"
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; minArcDB --create-tables"
-docker exec -it $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcManageDB --create-tables"
+# Initialize the EBOA database inside the postgis-database container
+while true
+do
+    echo "Trying to initialize EBOA, SBOA, minArc and ORC databases..."
+    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; eboa_init.py -o -s -y"
+    status=$?
+    if [ $status -ne 0 ]
+    then
+        echo "Server is not ready yet..."
+        # Wait for the server to be initialize
+        sleep 1
+    else
+        echo "Databases have been initialized... :D"
+        break
+    fi
+done
 
 # Execute the ORC server
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcBolg -c start"

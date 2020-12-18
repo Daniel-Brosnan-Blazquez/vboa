@@ -7,7 +7,7 @@
 # module boa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets -u uid_host_user_to_map [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-x orc_configuration_path] [-l version] [-g export_docker_image]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets -u uid_host_user_to_map [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-l version] [-g export_docker_image]"
 
 ########
 # Initialization
@@ -22,7 +22,7 @@ VERSION="0.1.0"
 EXPORT_DOCKER_IMAGE="NO"
 UID_HOST_USER_TO_MAP=""
 
-while getopts e:v:d:p:t:a:o:c:x:p:l:u:g option
+while getopts e:v:d:p:t:a:o:c:p:l:u:g option
 do
     case "${option}"
         in
@@ -34,7 +34,6 @@ do
         a) APP=${OPTARG}; APP_CALL="-a ${OPTARG}";;
         o) PATH_TO_ORC=${OPTARG}; PATH_TO_ORC_CALL="-o ${OPTARG}";;
         c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG}; PATH_TO_BOA_TAILORING_CONFIGURATION_CALL="-c ${OPTARG}";;
-        x) PATH_TO_ORC_CONFIGURATION=${OPTARG}; PATH_TO_ORC_CONFIGURATION_CALL="-x ${OPTARG}";;
         l) VERSION=${OPTARG};;
         u) UID_HOST_USER_TO_MAP=${OPTARG};;        
         g) EXPORT_DOCKER_IMAGE="YES";;
@@ -109,16 +108,6 @@ then
     echo "ERROR: The directory $PATH_TO_ORC contains more than one orc packet"
     exit -1
 fi
-gemfile_count=$(find $PATH_TO_ORC/ -maxdepth 1 -name 'Gemfile' | wc -l)
-if [ $gemfile_count == 0 ];
-then
-    echo "ERROR: The directory $PATH_TO_GEMFILE does not contain a Gemfile file"
-    exit -1
-elif [ $gemfile_count -gt 1 ];
-then
-    echo "ERROR: The directory $PATH_TO_GEMFILE contains more than one Gemfile file"
-    exit -1
-fi
 
 # Check that option -d has been specified
 if [ "$PATH_TO_DOCKERFILE" == "" ];
@@ -164,13 +153,6 @@ then
     exit -1
 fi
 
-# Check that the path to the orc tailoring congiguration exists
-if [ "$PATH_TO_ORC_CONFIGURATION" != "" ] && [ ! -d $PATH_TO_ORC_CONFIGURATION ];
-then
-    echo "ERROR: The directory $PATH_TO_ORC_CONFIGURATION provided does not exist"
-    exit -1
-fi
-
 # Check that option -u has been specified
 if [ "$UID_HOST_USER_TO_MAP" == "" ];
 then
@@ -195,7 +177,6 @@ These are the configuration options that will be applied to initialize the envir
 - APP: $APP
 - PATH_TO_ORC: $PATH_TO_ORC
 - PATH_TO_BOA_TAILORING_CONFIGURATION: $PATH_TO_BOA_TAILORING_CONFIGURATION
-- PATH_TO_ORC_CONFIGURATION: $PATH_TO_ORC_CONFIGURATION
 - UID_HOST_USER_TO_MAP: $UID_HOST_USER_TO_MAP
 - VERSION: $VERSION
 
@@ -245,10 +226,6 @@ for file in $PATH_TO_BOA_TAILORING_CONFIGURATION/*;
 do
     docker cp $file $APP_CONTAINER:/resources_path
 done
-for file in $PATH_TO_ORC_CONFIGURATION/*;
-do
-    docker cp $file $APP_CONTAINER:/orc_config
-done
 for file in $PATH_TO_ORC/*;
 do
     docker cp $file $APP_CONTAINER:/orc_packages
@@ -260,7 +237,7 @@ docker exec -it -u root $APP_CONTAINER bash -c "pip3 install /boa_packages/eboa*
 docker exec -it -u root $APP_CONTAINER bash -c "pip3 install /boa_packages/vboa*"
 docker exec -it -u root $APP_CONTAINER bash -c "pip3 install /boa_packages/*"
 
-# Install scripts
+# Install EBOA scripts
 docker exec -it -u boa $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do cp $script /scripts/`basename $script`; done'
 # EBOA ingestion chain
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py'
@@ -271,6 +248,8 @@ docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/rboa/reporting/rboa_
 # SBOA scheduler chain 
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/sboa/scheduler/boa_scheduler.py /scripts/boa_scheduler.py'
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/sboa/scheduler/boa_execute_triggering.py /scripts/boa_execute_triggering.py'
+# Install VBOA scripts
+docker exec -it -u boa $APP_CONTAINER bash -c 'for script in /vboa/src/scripts/*; do cp $script /scripts/`basename $script`; done'
 
 # Copy datamodels
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/datamodel/eboa_data_model.sql /datamodel'
@@ -299,7 +278,6 @@ docker exec -d -it -u root $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
 echo "Cron activities installed"
 
 # Install orc
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; bundle install --gemfile Gemfile"
 docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
 docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
 
