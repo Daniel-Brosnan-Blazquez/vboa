@@ -1,4 +1,12 @@
 {% extends "panel/index.html" %}
+
+{% set sources_alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set events_alerts = events|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set annotations_alerts = annotations|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set reports_alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set ers_alerts = ers|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set alerts = sources_alerts + events_alerts + annotations_alerts + reports_alerts + ers_alerts %}
+
 {% block content %}
 <div class="row">
   <h1 class="page-header">General view of alerts</h1>
@@ -11,25 +19,27 @@
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
-{% set sources_alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
-{% set events_alerts = events|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
-{% set annotations_alerts = annotations|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
-{% set reports_alerts = annotations|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
-{% set ers_alerts = ers|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
-
 {% with show = {"sources": True, "events": True, "annotations": True, "reports": True, "ers": True} %}
 {% include "general_view_alerts/general_view_alerts_summary_content.html" %}
 {% endwith %}
 
+{% include "general_view_alerts/general_view_alerts_timeliness.html" %}
 {% include "general_view_alerts/general_view_alerts_sources_content.html" %}
 {% include "general_view_alerts/general_view_alerts_events_content.html" %}
 {% include "general_view_alerts/general_view_alerts_annotations_content.html" %}
 {% include "general_view_alerts/general_view_alerts_reports_content.html" %}
 {% include "general_view_alerts/general_view_alerts_explicit_refs_content.html" %}
+
 {% endblock %}
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript">
+  {% if alerts|length > 0 %}
+  {% with sources_alerts=sources_alerts, events_alerts=events_alerts, annotations_alerts=annotations_alerts, reports_alerts=reports_alerts, ers_alerts=ers_alerts %}
+  {% include "graphs/alerts_to_json_for_timeline.js" %}
+  {% endwith %}
+  vboa.create_alert_timeline(alerts, "timeline-general-view-alerts");
+  {% endif %}
   {% if sliding_window %}
   var parameters = {
   "window_delay": "{{ sliding_window['window_delay'] }}",

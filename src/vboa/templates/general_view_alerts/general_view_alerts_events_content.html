@@ -1,4 +1,4 @@
-{% if alerts|length > 0 %}
+{% if events_alerts|length > 0 %}
 <div class="row">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -33,18 +33,18 @@
           </tr>
         </thead>
         <tbody>
-          {% for alert in alerts %}
+          {% for alert in events_alerts %}
           <tr>
             {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
             <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
             <td>{{ alert.alertDefinition.group.name }}</td>
             <td>{{ alert.alertDefinition.name }}</td>
-            <td><a href="/eboa_nav/query-sources-by-name/{{ alert.source.name }}">{{ alert.source.name }}</a></td>
+            <td><a href="/eboa_nav/query-sources-by-name/{{ alert.event.source.name }}">{{ alert.event.source.name }}</a></td>
             <td>{{ alert.message }}</td>
             <td>{{ alert.validated }}</td>
             <td>{{ alert.generator }}</td>
             <td>{{ alert.notified }}</td>
-            <td>{{ alert.notification_time }}</td>
+            <td>{{ alert.notification_time.isoformat() }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -73,7 +73,7 @@
         <a data-toggle="collapse" data-parent="#accordion" href="#events-alerts">Events alerts <span class="fa fa-angle-double-down"></span></a>
       </h3>
     </div>
-    <div class="panel-body panel-collapse collapse" id="events-alerts">
+    <div class="panel-body panel-collapse collapse in" id="events-alerts">
       <div>
         <p id="no-general-view-alerts-events-data" style="text-indent: 1em">There are no alerts during the requested period.</p>
         <br/>

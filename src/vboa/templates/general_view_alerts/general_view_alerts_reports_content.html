@@ -39,7 +39,7 @@
             <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
             <td>{{ alert.alertDefinition.group.name }}</td>
             <td>{{ alert.alertDefinition.name }}</td>
-            <td><a href="/eboa_nav/query-sources-by-name/{{ alert.source.name }}">{{ alert.source.name }}</a></td>
+            <td>CHANGE</td>
             <td>{{ alert.message }}</td>
             <td>{{ alert.validated }}</td>
             <td>{{ alert.generator }}</td>
@@ -73,7 +73,7 @@
         <a data-toggle="collapse" data-parent="#accordion" href="#reports-alerts">Reports alerts <span class="fa fa-angle-double-down"></span></a>
       </h3>
     </div>
-    <div class="panel-body panel-collapse collapse" id="reports-alerts">
+    <div class="panel-body panel-collapse collapse in" id="reports-alerts">
       <div>
         <p id="no-general-view-alerts-reports-data" style="text-indent: 1em">There are no alerts during the requested period.</p>
         <br/>

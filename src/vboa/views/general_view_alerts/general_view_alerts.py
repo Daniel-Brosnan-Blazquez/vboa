@@ -204,14 +204,13 @@ def show_sliding_general_view_alerts():
 
 def query_and_render(start_filter = None, stop_filter = None, sliding_window = None, filters = None):
 
-    # Sources
     kwargs = {}
 
     # Start filter
-    kwargs["source_alert_notification_time_filters"] = [{"date": start_filter["date"], "op": start_filter["operator"]}]
+    kwargs["notification_time_filters"] = [{"date": start_filter["date"], "op": start_filter["operator"]}]
     
     # Stop filter
-    kwargs["source_alert_notification_time_filters"].append({"date": stop_filter["date"], "op": stop_filter["operator"]})
+    kwargs["notification_time_filters"].append({"date": stop_filter["date"], "op": stop_filter["operator"]})
 
     # Avoid showing the sources related to the ingestion of health data
     kwargs["dim_signatures"] = {"filter": ["BOA_HEALTH"], "op": "notin"}
@@ -232,42 +231,39 @@ def query_and_render(start_filter = None, stop_filter = None, sliding_window = N
     sources = query.get_sources(source_uuids = {"filter": [source_alert.source_uuid for source_alert in source_alerts], "op": "in"})
 
     # Order sources by reception time descending
-    sources.sort(key=lambda x: x.reception_time, reverse = True)
-
-    # Reports
-    kwargs = {}
-
-    # Start filter
-    kwargs["report_alert_notification_time_filters"] = [{"date": start_filter["date"], "op": start_filter["operator"]}]
-    
-    # Stop filter
-    kwargs["report_alert_notification_time_filters"].append({"date": stop_filter["date"], "op": stop_filter["operator"]})
-
-    # Avoid showing the sources related to the ingestion of health data
-    kwargs["dim_signatures"] = {"filter": ["BOA_HEALTH"], "op": "notin"}
-
-    # Set offset and limit for the query
-    if filters and "offset" in filters and filters["offset"][0] != "":
-        kwargs["offset"] = filters["offset"][0]
-    # end if
-    if filters and "limit" in filters and filters["limit"][0] != "":
-        kwargs["limit"] = filters["limit"][0]
-    # end if
-
-    # Set order by ingestion_time descending
-    kwargs["order_by"] = {"field": "ingestion_time", "descending": True}
+    #sources.sort(key=lambda x: x.reception_time, reverse = True)
 
     # Obtain report alerts and then the reports
     report_alerts = query.get_report_alerts(kwargs)
-    print("hola")
     reports = query.get_reports(report_uuids = {"filter": [report_alert.report_uuid for report_alert in report_alerts], "op": "in"})
 
     # Order reports by reception time descending
-    reports.sort(key=lambda x: x.reception_time, reverse = True)
+    #reports.sort(key=lambda x: x.reception_time, reverse = True)
+
+    # Obtain event alerts and then the events
+    event_alerts = query.get_event_alerts(kwargs)
+    events = query.get_events(event_uuids = {"filter": [event_alert.event_uuid for event_alert in event_alerts], "op": "in"})
+
+    # Order events by reception time descending
+    #events.sort(key=lambda x: x.reception_time, reverse = True)
+
+    # Obtain annotation alerts and then the annotations
+    annotation_alerts = query.get_annotation_alerts(kwargs)
+    annotations = query.get_annotations(annotation_uuids = {"filter": [annotation_alert.annotation_uuid for annotation_alert in annotation_alerts], "op": "in"})
+
+    # Order annotations by reception time descending
+    #annotations.sort(key=lambda x: x.reception_time, reverse = True)
+
+    # Obtain explicit ref alerts and then the explicit refs
+    explicit_ref_alerts = query.get_explicit_ref_alerts(kwargs)
+    explicit_refs = query.get_explicit_refs(explicit_ref_uuids = {"filter": [explicit_ref_alert.explicit_ref_uuid for explicit_ref_alert in explicit_ref_alerts], "op": "in"})
+
+    # Order explicit refs by reception time descending
+    #explicit_refs.sort(key=lambda x: x.reception_time, reverse = True)
     
     reporting_start = stop_filter["date"]
     reporting_stop = start_filter["date"]
 
     template = "general_view_alerts/general_view_alerts.html"
 
-    return render_template(template, sources=sources, events=None, annotations=None, reports=reports, ers=None, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)
+    return render_template(template, sources=sources, events=events, annotations=annotations, reports=reports, ers=explicit_refs, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)

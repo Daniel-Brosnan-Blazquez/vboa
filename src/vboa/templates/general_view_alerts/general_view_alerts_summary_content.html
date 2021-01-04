@@ -11,45 +11,75 @@
       {% if "sources" in show and show["sources"] == True %}
       <!-- Sources alerts -->
       <div class="col-xs-3">
-        <div class="panel panel-warning">
+        {% if sources_alerts|length > 0 %}
+         <div class="panel panel-danger">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of sources alerts</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: gold">{{ sources_alerts|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ sources_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of sources alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green">{{ sources_alerts|length }}</div>
+        {% endif %}
         </div>
       </div>
       {% endif %}
       {% if "events" in show and show["events"] == True %}
       <!-- Events alerts -->
       <div class="col-xs-3">
-        <div class="panel panel-warning">
+        {% if events_alerts|length > 0 %}
+         <div class="panel panel-danger">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of events alerts</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: gold">{{ events_alerts|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ events_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of events alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green">{{ events_alerts|length }}</div>
+        {% endif %}
         </div>
       </div>
       {% endif %}
       {% if "annotations" in show and show["annotations"] == True %}
       <!-- Annotations alerts -->
       <div class="col-xs-3">
-        <div class="panel panel-warning">
+        {% if annotations_alerts|length > 0 %}
+         <div class="panel panel-danger">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of annotations alerts</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: gold">{{ annotations_alerts|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ annotations_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of annotations alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green">{{ annotations_alerts|length }}</div>
+        {% endif %}
         </div>
       </div>
       {% endif %}
       {% if "reports" in show and show["reports"] == True %}
       <!-- Reports alerts -->
       <div class="col-xs-3">
-        <div class="panel panel-warning">
+        {% if reports_alerts|length > 0 %}
+         <div class="panel panel-danger">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of reports alerts</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: gold">{{ reports_alerts|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ reports_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of reports alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green">{{ reports_alerts|length }}</div>
+        {% endif %}
         </div>
       </div>
       {% endif %}
       {% if "ers" in show and show["ers"] == True %}
       <!-- Explicit references alerts -->
       <div class="col-xs-3">
-        <div class="panel panel-warning">
+       {% if ers_alerts|length > 0 %}
+         <div class="panel panel-danger">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of explicit references alerts</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: gold">{{ ers_alerts|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ ers_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of explicit references alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green">{{ ers_alerts|length }}</div>
+        {% endif %}
         </div>
       </div>
       {% endif %}

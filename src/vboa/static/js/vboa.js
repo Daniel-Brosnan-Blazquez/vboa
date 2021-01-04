@@ -24,6 +24,7 @@ import * as reportFunctions from "./reports.js";
 import * as gaugeFunctions from "./gauges.js";
 import * as annotationCnfsFunctions from "./annotation_confs.js";
 import * as eventFunctions from "./events.js";
+import * as alertFunctions from "./alerts.js";
 import * as annotationFunctions from "./annotations.js";
 import * as eventKeyFunctions from "./event_keys.js";
 import * as dimSignatureFunctions from "./dim_signatures.js";
@@ -358,6 +359,19 @@ export function create_event_map(geometries, dom_id){
 
     jQuery(document).ready(function(){
         eventFunctions.create_event_map(geometries, dom_id);
+    });
+
+};
+
+/*
+* ALERTS *
+*/
+
+/* Function to show a timeline of alerts */
+export function create_alert_timeline(alerts, dom_id){
+
+    jQuery(document).ready(function(){
+        alertFunctions.create_alert_timeline(alerts, dom_id);
     });
 
 };
