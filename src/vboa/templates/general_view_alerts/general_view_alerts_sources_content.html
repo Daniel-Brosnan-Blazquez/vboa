@@ -48,7 +48,7 @@
             <td>{{ alert.alertDefinition.description }}</td>
             <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
             <td>{{ alert.alertDefinition.group.name }}</td>
-            <td><a href="/eboa_nav/query-sources-by-name/{{ alert.source.name }}">{{ alert.source.name }}</a></td>
+            <td><a href="/general_view_alerts/query-source/{{ alert.source_uuid }}">{{ alert.source_uuid }}</a></td>
             <td>{{ alert.message }}</td>
             <td>{{ alert.validated }}</td>
             <td>{{ alert.generator }}</td>

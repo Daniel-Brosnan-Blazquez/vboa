@@ -4,7 +4,7 @@ var sources_alerts = [
     {% for alert in sources_alerts %}
     {
         "id": "{{ alert.source_alert_uuid }}",
-        "name": "{{ alert.alertDefinition.name|upper }}",
+        "name": "{{ alert.alertDefinition.name }}",
         "severity": "{{ alert.alertDefinition.severity }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
@@ -18,7 +18,7 @@ var sources_alerts = [
         "justification": "{{ alert.justification }}",
         "alert_uuid": "{{ alert.alert_uuid }}",
         "source_uuid": "{{ alert.source_uuid }}",
-        "group": "{{ alert.alertDefinition.group.name|upper }}",
+        "group": "{{ alert.alertDefinition.group.name }}",
         "group_uuid": "{{ alert.alertDefinition.group.alert_group_uuid }}",
         "entity": "SOURCES"
     },
@@ -31,7 +31,7 @@ var events_alerts = [
     {% for alert in events_alerts %}
     {
         "id": "{{ alert.event_alert_uuid }}",
-        "name": "{{ alert.alertDefinition.name|upper }}",
+        "name": "{{ alert.alertDefinition.name }}",
         "severity": "{{ alert.alertDefinition.severity }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
@@ -45,7 +45,7 @@ var events_alerts = [
         "justification": "{{ alert.justification }}",
         "alert_uuid": "{{ alert.alert_uuid }}",
         "event_uuid": "{{ alert.event_uuid }}",
-        "group": "{{ alert.alertDefinition.group.name|upper }}",
+        "group": "{{ alert.alertDefinition.group.name }}",
         "group_uuid": "{{ alert.alertDefinition.group.alert_group_uuid }}",
         "entity": "EVENTS"
     },
@@ -58,7 +58,7 @@ var annotations_alerts = [
     {% for alert in annotations_alerts %}
     {
         "id": "{{ alert.annotation_alert_uuid }}",
-        "name": "{{ alert.alertDefinition.name|upper }}",
+        "name": "{{ alert.alertDefinition.name }}",
         "severity": "{{ alert.alertDefinition.severity }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
@@ -72,7 +72,7 @@ var annotations_alerts = [
         "justification": "{{ alert.justification }}",
         "alert_uuid": "{{ alert.alert_uuid }}",
         "annotation_uuid": "{{ alert.annotation_uuid }}",
-        "group": "{{ alert.alertDefinition.group.name|upper }}",
+        "group": "{{ alert.alertDefinition.group.name }}",
         "group_uuid": "{{ alert.alertDefinition.group.alert_group_uuid }}",
         "entity": "ANNOTATIONS"   
     },
@@ -85,7 +85,7 @@ var reports_alerts = [
     {% for alert in reports_alerts %}
     {
         "id": "{{ alert.report_alert_uuid }}",
-        "name": "{{ alert.alertDefinition.name|upper }}",
+        "name": "{{ alert.alertDefinition.name }}",
         "severity": "{{ alert.alertDefinition.severity }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
@@ -99,7 +99,7 @@ var reports_alerts = [
         "justification": "{{ alert.justification }}",
         "alert_uuid": "{{ alert.alert_uuid }}",
         "report_uuid": "{{ alert.report_uuid }}",
-        "group": "{{ alert.alertDefinition.group.name|upper }}",
+        "group": "{{ alert.alertDefinition.group.name }}",
         "group_uuid": "{{ alert.alertDefinition.group.alert_group_uuid }}",
         "entity": "REPORTS"     
     },
@@ -112,7 +112,7 @@ var ers_alerts = [
     {% for alert in ers_alerts %}
     {
         "id": "{{ alert.explicit_ref_alert_uuid }}",
-        "name": "{{ alert.alertDefinition.name|upper }}",
+        "name": "{{ alert.alertDefinition.name }}",
         "severity": "{{ alert.alertDefinition.severity }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
@@ -126,7 +126,7 @@ var ers_alerts = [
         "justification": "{{ alert.justification }}",
         "alert_uuid": "{{ alert.alert_uuid }}",
         "explicit_ref_uuid": "{{ alert.explicit_ref_uuid }}",
-        "group": "{{ alert.alertDefinition.group.name|upper }}",
+        "group": "{{ alert.alertDefinition.group.name }}",
         "group_uuid": "{{ alert.alertDefinition.group.alert_group_uuid }}",
         "entity": "EXPLICIT REFERENCES"     
     },
