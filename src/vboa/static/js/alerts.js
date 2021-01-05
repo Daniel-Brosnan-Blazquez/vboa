@@ -13,9 +13,18 @@ function create_alert_tooltip_text(alert){
         "<tr><td>Severity</td><td>" + alert["severity"] + "</td></tr>" +
         "<tr><td>Description</td><td>" + alert["description"] + "</td></tr>" +
         "<tr><td>Message</td><td>" + alert['message'] + "</td></tr>" +
+        "<tr><td>Validated</td><td>" + alert['validated'] + "</td></tr>" +
+        "<tr><td>Ingestion time</td><td>" + alert['ingestion_time'] + "</td></tr>" +
+        "<tr><td>Generator</td><td>" + alert['generator'] + "</td></tr>" +
+        "<tr><td>Notified</td><td>" + alert['notified'] + "</td></tr>" +
+        "<tr><td>Solved</td><td>" + alert['solved'] + "</td></tr>" +
+        "<tr><td>Solved time</td><td>" + alert['solved_time'] + "</td></tr>" +
         "<tr><td>Notification time</td><td>" + alert['notification_time'] + "</td></tr>" +
+        "<tr><td>Justification</td><td>" + alert['justification'] + "</td></tr>" +
+        "<tr><td>Alert UUID</td><td>" + alert['alert_uuid'] + "</td></tr>" +
         "<tr><td>" + alert["entity"][0] + alert["entity"].slice(1).toLowerCase() + " UUID</td><td>" + alert["group_uuid"] + "</td></tr>" +
         "<tr><td>Group</td><td>" + alert["group"] + "</td></tr>" +
+        "<tr><td>Group UUID</td><td>" + alert["group_uuid"] + "</td></tr>" +
         "<tr><td>Entity</td><td>" + alert["entity"] + "</td></tr>" +
         "</table>"
 };
