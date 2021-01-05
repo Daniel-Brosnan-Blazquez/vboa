@@ -27,6 +27,7 @@ from sqlalchemy.orm.exc import DetachedInstanceError
 
 bp = Blueprint("general_view_alerts", __name__, url_prefix="/general_view_alerts")
 query = Query()
+engine = Engine()
 
 # Default configuration
 window_delay=0
@@ -267,3 +268,73 @@ def query_and_render(start_filter = None, stop_filter = None, sliding_window = N
     template = "general_view_alerts/general_view_alerts.html"
 
     return render_template(template, sources=sources, events=events, annotations=annotations, reports=reports, ers=explicit_refs, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)
+
+@bp.route("/query-source/<uuid:source_uuid>")
+def query_source(source_uuid):
+    """
+    Query source corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query source")
+    source = query.get_sources(source_uuids={"filter": [source_uuid], "op": "in"})
+    
+    show = {}
+    show["validity_timeline"]=True
+    show["generation_to_ingestion_timeline"]=True
+    show["number_events_xy"]=True
+    show["ingestion_duration_xy"]=True
+    show["generation_time_to_ingestion_time_xy"]=True
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/sources_nav.html", sources=source, show=show, filters=filters)
+
+@bp.route("/query-event/<uuid:event_uuid>")
+def query_event(event_uuid):
+    """
+    Query event corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query event")
+    event = query.get_events(event_uuids={"filter": [event_uuid], "op": "in"})
+    
+    show = {}
+    show["timeline"]=True
+    show["map"]=True
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/events_nav.html", events=event, show=show, filters=filters)
+
+@bp.route("/query-annotation/<uuid:annotation_uuid>")
+def query_annotation(annotation_uuid):
+    """
+    Query annotation corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query annotation")
+    annotation = query.get_annotations(annotation_uuids={"filter": [annotation_uuid], "op": "in"})
+    
+    show = {}
+    show["map"]=True
+    
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+
+    return render_template("eboa_nav/annotations_nav.html", annotations=annotation, show=show, filters=filters)
+
+@bp.route("/query-er/<uuid:explicit_ref_uuid>")
+def query_er(explicit_ref_uuid):
+    """
+    Query explicit reference corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query explicit reference")
+    er = query.get_explicit_refs(explicit_ref_uuids={"filter": [explicit_ref_uuid], "op": "in"})
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("eboa_nav/explicit_references_nav.html", ers=er, filters=filters)
