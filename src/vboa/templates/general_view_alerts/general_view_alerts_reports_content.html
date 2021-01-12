@@ -45,10 +45,10 @@
           <tr>
             {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
             <td>{{ alert.alertDefinition.name }}</td>
-            <td>{{ alert.alertDefinition.description }}</td>
             <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
+            <td>{{ alert.alertDefinition.description }}</td>
             <td>{{ alert.alertDefinition.group.name }}</td>
-            <td>TO DO</td>
+            <td><a href="/general_view_alerts/query-report/{{ alert.report_uuid }}"><i class="fa fa-link"></i></a></td>
             <td>{{ alert.message }}</td>
             <td>{{ alert.validated }}</td>
             <td>{{ alert.generator }}</td>

@@ -2,10 +2,11 @@ var alerts = [];
 {% if sources_alerts|length > 0 %}
 var sources_alerts = [
     {% for alert in sources_alerts %}
+    {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
     {
         "id": "{{ alert.source_alert_uuid }}",
         "name": "{{ alert.alertDefinition.name }}",
-        "severity": "{{ alert.alertDefinition.severity }}",
+        "severity": "{{ severity_label }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
         "validated": "{{ alert.generator }}",
@@ -29,10 +30,11 @@ alerts = alerts.concat(sources_alerts)
 {% if events_alerts|length > 0 %}
 var events_alerts = [
     {% for alert in events_alerts %}
+    {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
     {
         "id": "{{ alert.event_alert_uuid }}",
         "name": "{{ alert.alertDefinition.name }}",
-        "severity": "{{ alert.alertDefinition.severity }}",
+        "severity": "{{ severity_label }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
         "validated": "{{ alert.generator }}",
@@ -56,10 +58,11 @@ alerts = alerts.concat(events_alerts)
 {% if annotations_alerts|length > 0 %}
 var annotations_alerts = [
     {% for alert in annotations_alerts %}
+    {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
     {
         "id": "{{ alert.annotation_alert_uuid }}",
         "name": "{{ alert.alertDefinition.name }}",
-        "severity": "{{ alert.alertDefinition.severity }}",
+        "severity": "{{ severity_label }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
         "validated": "{{ alert.generator }}",
@@ -83,10 +86,11 @@ alerts = alerts.concat(annotations_alerts)
 {% if reports_alerts|length > 0 %}
 var reports_alerts = [
     {% for alert in reports_alerts %}
+    {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
     {
         "id": "{{ alert.report_alert_uuid }}",
         "name": "{{ alert.alertDefinition.name }}",
-        "severity": "{{ alert.alertDefinition.severity }}",
+        "severity": "{{ severity_label }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
         "validated": "{{ alert.generator }}",
@@ -110,10 +114,11 @@ alerts = alerts.concat(reports_alerts)
 {% if ers_alerts|length > 0 %}
 var ers_alerts = [
     {% for alert in ers_alerts %}
+    {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
     {
         "id": "{{ alert.explicit_ref_alert_uuid }}",
         "name": "{{ alert.alertDefinition.name }}",
-        "severity": "{{ alert.alertDefinition.severity }}",
+        "severity": "{{ severity_label }}",
         "description": "{{ alert.alertDefinition.description }}",
         "message": "{{ alert.message }}",
         "validated": "{{ alert.generator }}",

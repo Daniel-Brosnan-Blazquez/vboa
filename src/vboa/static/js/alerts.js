@@ -6,18 +6,31 @@ import * as graph from "./graph.js";
 
 /* Function to create the text for the tooltip of the alert information */
 function create_alert_tooltip_text(alert){
- 
+    
+    var validated = "<span class='bold-green'>" + alert['validated'] + "</span>"
+    if (alert['validated'] == "True"){
+        validated = "<span class='bold-red'>" + alert['validated'] + "</span>"
+    }
+    var notified = "<span class='bold-green'>" + alert['notified'] + "</span>"
+    if (alert['notified'] == "True"){
+        notified = "<span class='bold-red'>" + alert['notified'] + "</span>"
+    }
+    var solved = "<span class='bold-green'>" + alert['solved'] + "</span>"
+    if (alert['solved'] == "True"){
+        solved = "<span class='bold-red'>" + alert['solved'] + "</span>"
+    }
+
     return "<table border='1'>" +
         "<tr><td>UUID</td><td>" + alert['id'] + "</td></tr>" +
         "<tr><td>Name</td><td>" + alert["name"] + "</td></tr>" +
-        "<tr><td>Severity</td><td>" + alert["severity"] + "</td></tr>" +
+        "<tr><td>Severity</td><td class=" + alert["severity"] + "-severity>" + alert["severity"] + "</td></tr>" +
         "<tr><td>Description</td><td>" + alert["description"] + "</td></tr>" +
         "<tr><td>Message</td><td>" + alert['message'] + "</td></tr>" +
-        "<tr><td>Validated</td><td>" + alert['validated'] + "</td></tr>" +
+        "<tr><td>Validated</td><td>" + validated + "</td></tr>" +
         "<tr><td>Ingestion time</td><td>" + alert['ingestion_time'] + "</td></tr>" +
         "<tr><td>Generator</td><td>" + alert['generator'] + "</td></tr>" +
-        "<tr><td>Notified</td><td>" + alert['notified'] + "</td></tr>" +
-        "<tr><td>Solved</td><td>" + alert['solved'] + "</td></tr>" +
+        "<tr><td>Notified</td><td>" + notified + "</td></tr>" +
+        "<tr><td>Solved</td><td>" + solved + "</td></tr>" +
         "<tr><td>Solved time</td><td>" + alert['solved_time'] + "</td></tr>" +
         "<tr><td>Notification time</td><td>" + alert['notification_time'] + "</td></tr>" +
         "<tr><td>Justification</td><td>" + alert['justification'] + "</td></tr>" +

@@ -338,3 +338,17 @@ def query_er(explicit_ref_uuid):
     filters["limit"] = ["100"]
     
     return render_template("eboa_nav/explicit_references_nav.html", ers=er, filters=filters)
+
+@bp.route("/query-report/<uuid:report_uuid>")
+def query_report(report_uuid):
+    """
+    Query report corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query report")
+    report = query.get_reports(report_uuids={"filter": [report_uuid], "op": "in"})
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("rboa_nav/reports_nav.html", reports=report, filters=filters)
