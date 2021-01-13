@@ -97,6 +97,65 @@ div.apply-timeliness-overflow .vis-item .vis-item-overflow {
     background: coral;
 }
 
+/* Fill and border Colours */
+.fill-border-green {
+    background: green;
+    border-color: green;
+}
+.fill-border-blue {
+    background: blue;
+    border-color: blue;
+}
+.fill-border-yellow {
+    background: yellow;
+    border-color: yellow;
+}
+.fill-border-pink {
+    background: pink;
+    border-color: pink;
+}
+.fill-border-brown {
+    background: brown;
+    border-color: brown;
+}
+.fill-border-red {
+    background: red;
+    border-color: red;
+}
+.fill-border-orange {
+    background: orange;
+    border-color: orange;
+}
+.fill-border-light-green {
+    background: lightgreen;
+    border-color: lightgreen;
+}
+.fill-border-light-blue {
+    background: lightblue;
+    border-color: lightblue;
+}
+.fill-border-light-yellow {
+    background: gold;
+    border-color: gold;
+}
+.fill-border-light-pink {
+    background: lightpink;
+    border-color: lightpink;
+}
+.fill-border-light-brown {
+    background: burlywood;
+    border-color: burlywood;
+}
+.fill-border-light-red {
+    background: lightcoral;
+    border-color: lightcoral;
+}
+.fill-border-light-orange {
+    background: coral;
+    border-color: coral;    
+}
+
+
 /* Static table */
 .table-static {
     width:1px;
