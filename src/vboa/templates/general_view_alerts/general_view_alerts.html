@@ -1,5 +1,6 @@
 {% extends "panel/index.html" %}
 
+{% set elements = sources + events + annotations + reports + ers %}
 {% set sources_alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set events_alerts = events|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set annotations_alerts = annotations|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
@@ -15,7 +16,7 @@
 {% include "general_view_alerts/general_view_alerts_query.html" %}
 
 <!-- Pagination -->
-{% with route = "/general_view_alerts/general-view-alerts-pages", elements = sources, filters = filters %}
+{% with route = "/general_view_alerts/general-view-alerts-pages", elements = elements, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
