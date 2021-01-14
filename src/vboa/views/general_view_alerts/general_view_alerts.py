@@ -25,7 +25,7 @@ from eboa.engine.engine import Engine
 # Import SQLAlchemy exceptions
 from sqlalchemy.orm.exc import DetachedInstanceError
 
-bp = Blueprint("general_view_alerts", __name__, url_prefix="/general_view_alerts")
+bp = Blueprint("general-view-alerts", __name__, url_prefix="/general-view-alerts")
 query = Query()
 engine = Engine()
 
@@ -119,7 +119,7 @@ def query_general_view_alerts_pages():
     
     return query_and_render(start_filter, stop_filter, filters = filters)
 
-@bp.route("/sliding_general_view_alerts_parameters", methods=["GET", "POST"])
+@bp.route("/sliding-general-view-alerts-parameters", methods=["GET", "POST"])
 def show_sliding_general_view_alerts_parameters():
     """
     General view of alerts view of the BOA.
@@ -147,7 +147,7 @@ def show_sliding_general_view_alerts_parameters():
 
     return query_and_render(start_filter, stop_filter, sliding_window)
     
-@bp.route("/sliding_general_view_alerts", methods=["GET", "POST"])
+@bp.route("/sliding-general-view-alerts", methods=["GET", "POST"])
 def show_sliding_general_view_alerts():
     """
     General view of alerts view of the BOA.
