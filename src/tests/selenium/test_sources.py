@@ -68,6 +68,25 @@ class TestSourcesTab(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         self.driver.quit()
+    
+    def test_sources_no_data(self):
+
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Sources")
+
+        # Click on query button
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
+        functions.click(submit_button)
+
+        # Check table generatedd
+        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
+        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert empty_element is True
 
     def test_sources_query_no_filter_no_graphs(self):
 

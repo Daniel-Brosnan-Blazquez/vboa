@@ -69,6 +69,25 @@ class TestAnnotationCnfsTab(unittest.TestCase):
     def tearDownClass(self):
         self.driver.quit()
 
+    def test_annotation_cnfs_no_data(self):
+
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Annotation Cnfs")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
+        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert empty_element is True
+
     def test_annotation_cnfs_query_no_filter(self):
 
         # Insert data

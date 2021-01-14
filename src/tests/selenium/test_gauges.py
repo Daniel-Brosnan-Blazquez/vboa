@@ -69,6 +69,25 @@ class TestGaugesTab(unittest.TestCase):
     def tearDownClass(self):
         self.driver.quit()
 
+    def test_gauges_no_data(self):
+
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Gauges")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'gauges-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
+        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert empty_element is True
+
     def test_gauges_no_filter_no_network(self):
 
         # Insert data
@@ -105,7 +124,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5);
+        wait = WebDriverWait(self.driver,5)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
