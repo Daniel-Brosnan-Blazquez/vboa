@@ -68,6 +68,25 @@ class TestEventsTab(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         self.driver.quit()
+    
+    def test_events_no_data(self):
+
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert empty_element is True
 
     def test_events_query_no_filter_no_timeline(self):
 
@@ -237,6 +256,67 @@ class TestEventsTab(unittest.TestCase):
             }]
 
         return condition
+
+        # Linked events table
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/eboa_nav/query-event-links/" + str(event.event_uuid))
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"linked-events-table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        # Check description
+        gauge_name = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[2]")
+
+        assert gauge_name[0].text == "PRIME"
+        
+        # Check gauge_name
+        gauge_name = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[3]")
+
+        assert gauge_name[0].text == "GAUGE_NAME"
+
+        # Check gauge_system
+        gauge_system = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[4]")
+
+        assert gauge_system[0].text == "GAUGE_SYSTEM"
+
+        # Check start
+        start_date = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[5]")
+
+        assert start_date[0].text == "2018-06-05T04:07:03"
+
+        # Check stop
+        stop_date = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[6]")
+
+        assert stop_date[0].text == "2018-06-05T06:07:36"
+
+        # Check duration
+        duration = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[7]")
+
+        assert duration[0].text == str((parser.parse(stop_date[0].text) - parser.parse(start_date[0].text)).total_seconds())
+
+        # Check ingestion_time
+        ingestion_time = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[8]")
+
+        assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
+
+        #Check source
+        source = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[9]")
+
+        assert source[0].text == "source.xml"
+
+        #Check source
+        explicit_ref = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[10]")
+
+        assert explicit_ref[0].text == "EXPLICIT_REFERENCE_EVENT"
+
+        # Check uuid
+        uuid = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[12]")
+
+        assert re.match("........-....-....-....-............", uuid[0].text)
 
     def test_events_query_source_filter(self):
 
