@@ -76,17 +76,16 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
         functions.click(submitButton)
 
         # Check table generated
-        annot_cnf_table = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-table")))
-        empty_element = len(annot_cnf_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotation-cnfs-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_annotation_cnfs_query_no_filter(self):
 
@@ -137,7 +136,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
@@ -244,7 +243,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
 
         # Fill the annotation_name_like input
         input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-name-text")
@@ -265,7 +264,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_name_like input
@@ -288,7 +287,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_name_in input
@@ -314,7 +313,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_name_in input
@@ -416,7 +415,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
 
         # Fill the annotation_system_like input
         input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-system-text")
@@ -437,7 +436,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_system_like input
@@ -460,7 +459,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_system_in input
@@ -486,7 +485,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_system_in input
@@ -601,7 +600,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
 
         # Fill the dim_signature_like input
         input_element = self.driver.find_element_by_id("annotation-cnfs-dim-signature-text")
@@ -622,7 +621,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the dim_signature_like input
@@ -645,7 +644,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the dim_signature_in input
@@ -676,7 +675,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"Annotation Cnfs")
+        functions.goToTab(self.driver,"Annotation configurations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the dim_signature_in input

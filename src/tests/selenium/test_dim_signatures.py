@@ -76,17 +76,16 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"DIM Signatures")
+        functions.goToTab(self.driver,"DIM signatures")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
         functions.click(submitButton)
 
         # Check table generated
-        dim_signature_table = wait.until(EC.visibility_of_element_located((By.ID,"dim-signatures-table")))
-        empty_element = len(dim_signature_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"dim-signatures-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_dim_signatures_query_no_filter(self):
 
@@ -127,7 +126,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"DIM Signatures")
+        functions.goToTab(self.driver,"DIM signatures")
 
         # Click on query button
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
@@ -201,7 +200,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"DIM Signatures")
+        functions.goToTab(self.driver,"DIM signatures")
 
         # Fill the dim_signature_like input
         input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-text")
@@ -222,7 +221,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"DIM Signatures")
+        functions.goToTab(self.driver,"DIM signatures")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_like input
@@ -245,7 +244,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"DIM Signatures")
+        functions.goToTab(self.driver,"DIM signatures")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_in input
@@ -275,7 +274,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
-        functions.goToTab(self.driver,"DIM Signatures")
+        functions.goToTab(self.driver,"DIM signatures")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_in input

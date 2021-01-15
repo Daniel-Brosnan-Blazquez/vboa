@@ -83,10 +83,9 @@ class TestGaugesTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        gauges_table = wait.until(EC.visibility_of_element_located((By.ID,"gauges-table")))
-        empty_element = len(gauges_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"gauges-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_gauges_no_filter_no_network(self):
 

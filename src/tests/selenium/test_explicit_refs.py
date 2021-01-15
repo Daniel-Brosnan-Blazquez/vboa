@@ -80,14 +80,13 @@ class TestExplicitReferencesTab(unittest.TestCase):
         functions.goToTab(self.driver,"Explicit references")
 
         # Click on query button
-        submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
-        functions.click(submit_button)
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'explicit-refs-submit-button')))
+        functions.click(submitButton)
 
         # Check table generated
-        explicit_refs_table = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-table")))
-        empty_element = len(explicit_refs_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     @debug
     def test_explicit_refs_query_no_filter(self):
@@ -671,6 +670,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         ## In ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1293,6 +1297,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
     def test_explicit_refs_query_events_value_timestamp(self):
 
         # Insert data
@@ -1363,6 +1372,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1373,6 +1386,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1399,6 +1416,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1443,6 +1464,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1453,6 +1478,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1497,6 +1526,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
@@ -1523,6 +1556,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1610,6 +1647,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1620,6 +1661,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1646,6 +1691,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1690,6 +1739,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1701,6 +1754,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
@@ -1710,6 +1767,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1754,6 +1815,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
@@ -1780,6 +1845,10 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2308,6 +2377,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2338,6 +2412,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2367,6 +2446,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
     def test_explicit_refs_query_annotations_value_text(self):
 
@@ -2556,6 +2640,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2567,6 +2656,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2595,6 +2689,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2642,6 +2741,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2654,6 +2758,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
@@ -2664,6 +2773,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2711,6 +2825,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
@@ -2739,6 +2858,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2843,6 +2967,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2854,6 +2983,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2882,6 +3016,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2929,6 +3068,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2941,6 +3085,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
@@ -2951,6 +3100,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2998,6 +3152,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
 
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
+
         self.driver.get("http://localhost:5000/eboa_nav/")
 
         # Go to tab
@@ -3026,6 +3185,11 @@ class TestExplicitReferencesTab(unittest.TestCase):
         # Click on query button
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-submit-button")))
         functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"explicit-refs-nav-no-data")))
+
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -3166,8 +3330,6 @@ class TestExplicitReferencesTab(unittest.TestCase):
         number_of_elements = len(explicit_refs_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 1
-
-        assert True
 
     def test_explicit_refs_query_period(self):
 

@@ -77,6 +77,7 @@
 </div>
 <!-- /.panel -->
 {% endif %}
+{% if sources|length > 0 %}
 <div class="panel panel-green">
   <div class="panel-heading">
     Table of ingested sources
@@ -129,7 +130,11 @@
           <td>{{ source.reported_validity_stop.isoformat() }}</td>
           <td>{{ (source.reported_validity_stop - source.reported_validity_start).total_seconds() }}</td>
           <td>{{ source.reported_generation_time.isoformat() }}</td>
-          <td>{{ source.ingestion_completeness }}</td>
+          {% if source.ingestion_completeness == True %}
+          <td><span class='bold-green'>{{ source.ingestion_completeness }}</span></td>
+          {% else %}
+          <td><span class='bold-red'>{{ source.ingestion_completeness }}</span></td>
+          {% endif %}
           <td>{{ source.ingestion_completeness_message }}</td>
           <td>{{ source.dimSignature.dim_signature }}</td>
           <td>{{ source.processor }}</td>
@@ -234,6 +239,20 @@
   <div class="panel-body">
     <div id="sources-nav-generation-time-to-ingestion-time-xy">
     </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of ingested sources
+  </div>
+  <div id="sources-nav-no-data">
+    <br/>
+    <p style="text-indent: 1em">There have been not found any "sources" with the requested filters.</p>
+    <br/>
   </div>
   <!-- /.panel-body -->
 </div>

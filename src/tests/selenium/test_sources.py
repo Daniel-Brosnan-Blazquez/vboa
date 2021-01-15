@@ -82,11 +82,10 @@ class TestSourcesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'sources-submit-button')))
         functions.click(submit_button)
 
-        # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_sources_query_no_filter_no_graphs(self):
 
@@ -1040,11 +1039,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1080,11 +1077,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1120,11 +1115,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_sources_query_generation_time(self):
 
@@ -1181,11 +1174,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1221,11 +1212,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1261,11 +1250,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_sources_query_value_ingestion_duration(self):
 
@@ -1324,11 +1311,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1364,11 +1349,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1404,11 +1387,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
     def test_sources_query_reported_validity(self):
 
@@ -1661,11 +1642,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1701,11 +1680,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1741,11 +1718,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_sources_query_processing_duration(self):
 
@@ -1810,11 +1785,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1850,11 +1823,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1890,11 +1861,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
     def test_sources_query_reported_generation_time(self):
 
@@ -1956,11 +1925,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1995,12 +1962,10 @@ class TestSourcesTab(unittest.TestCase):
         # Click on query button
         functions.click(submit_button)
 
-        # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+       # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2036,11 +2001,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
     def test_sources_query_ingestion_completeness(self):
 
@@ -2104,11 +2067,9 @@ class TestSourcesTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"sources-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"sources-nav-no-data")))
 
-        assert number_of_elements == 1 and empty_element is True
+        assert no_data
 
          # false option
         self.driver.get("http://localhost:5000/eboa_nav/")

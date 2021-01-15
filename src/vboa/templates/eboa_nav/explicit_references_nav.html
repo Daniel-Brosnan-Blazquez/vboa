@@ -16,6 +16,7 @@
     Table of explicit references
   </div>
   <!-- /.panel-heading -->
+  {% if ers|length > 0 %}
   <div class="panel-body">
     <table width="100%" class="table table-striped table-bordered table-hover table-search" id="explicit-refs-table">
       <thead>
@@ -55,6 +56,13 @@
       </tfoot>
     </table>
   </div>
+  {% else %}
+  <div id="explicit-refs-nav-no-data">
+    <br/>
+    <p style="text-indent: 1em">There have been not found any "explicit reference" with the requested filters.</p>
+    <br/>
+  </div>
+  {% endif %}
   <!-- /.panel-body -->
 </div>
 {% endblock %}

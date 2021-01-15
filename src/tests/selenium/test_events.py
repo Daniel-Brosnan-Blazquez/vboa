@@ -83,10 +83,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_events_query_no_filter_no_timeline(self):
 
@@ -1228,11 +1227,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert  number_of_elements == 1 and empty_element is True
+        assert no_data
 
     def test_events_query_value_timestamp(self):
 
@@ -1302,11 +1299,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1322,11 +1317,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1360,11 +1353,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1418,11 +1409,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1438,11 +1427,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1457,11 +1444,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1515,11 +1500,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1553,11 +1536,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## != ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1667,11 +1648,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1687,11 +1666,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1725,11 +1702,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1783,11 +1758,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1803,11 +1776,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1822,11 +1793,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1880,11 +1849,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1919,11 +1886,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2034,11 +1999,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2074,11 +2037,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2114,11 +2075,9 @@ class TestEventsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
-        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_events_query_two_values(self):
 
@@ -2221,8 +2180,6 @@ class TestEventsTab(unittest.TestCase):
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
-
-        assert True
 
     def test_events_query_period(self):
 
@@ -2391,5 +2348,3 @@ class TestEventsTab(unittest.TestCase):
         empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
-
-        assert True

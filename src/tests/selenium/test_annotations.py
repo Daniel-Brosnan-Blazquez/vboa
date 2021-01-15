@@ -82,10 +82,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotation_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        empty_element = len(annotation_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_annotations_query_no_filter_no_map(self):
 
@@ -1163,11 +1162,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1183,11 +1180,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1221,11 +1216,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1279,11 +1272,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1299,11 +1291,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1318,11 +1308,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1376,11 +1364,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1415,11 +1401,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1531,11 +1515,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## > ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1551,11 +1533,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1589,11 +1569,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1647,11 +1625,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element == True
+        assert no_data
 
         ## < ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1667,11 +1643,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1686,11 +1660,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1744,11 +1716,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1783,11 +1753,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1899,11 +1867,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## >= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1939,11 +1905,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
         ## <= ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1979,11 +1943,9 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
-        annotations_table = wait.until(EC.visibility_of_element_located((By.ID,"annotations-table")))
-        number_of_elements = len(annotations_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"annotations-nav-no-data")))
 
-        assert empty_element is True
+        assert no_data
 
     def test_annotations_query_two_values(self):
 
@@ -2092,5 +2054,3 @@ class TestAnnotationsTab(unittest.TestCase):
         empty_element = len(annotations_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
-
-        assert True
