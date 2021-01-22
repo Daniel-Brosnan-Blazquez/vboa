@@ -11,12 +11,12 @@
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
+{% if events|length > 0 %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Table of events
   </div>
   <!-- /.panel-heading -->
-  {% if events|length > 0 %}
   <div class="panel-body">
     <table width="100%" class="table table-striped table-bordered table-hover table-search" id="events-table">
       <thead>
@@ -73,13 +73,6 @@
       </tfoot>
     </table>
   </div>
-  {% else %}
-  <div id="events-nav-no-data">
-    <br/>
-    <p style="text-indent: 1em">There have been not found any "events" with the requested filters.</p>
-    <br/>
-  </div>
-  {% endif %}
   <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
@@ -106,6 +99,20 @@
   <div class="panel-body">
     <div id="events-nav-map">
     </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of ingested events
+  </div>
+  <div id="events-nav-no-data">
+    <br/>
+    <p style="text-indent: 1em">There have been not found any "events" with the requested filters.</p>
+    <br/>
   </div>
   <!-- /.panel-body -->
 </div>
