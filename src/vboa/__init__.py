@@ -51,12 +51,16 @@ def create_app():
     app.register_blueprint(boa_scheduler.bp)
     app.register_blueprint(general_view_alerts.bp)
 
+    if "VBOA_DEBUG" in os.environ and os.environ["VBOA_DEBUG"] == "TRUE":
+        app.debug = True
+        toolbar = DebugToolbarExtension(app)
+    else:
+        app.debug = False
+    # end if
+    
     # the toolbar is only enabled in debug mode:
-    app.debug = False
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-
-    toolbar = DebugToolbarExtension(app)
 
     # Error handeling
     @app.errorhandler(404)
