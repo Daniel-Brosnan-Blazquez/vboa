@@ -12,7 +12,7 @@ import time
 import subprocess
 import datetime
 import re
-import tests.selenium.functions as functions
+import vboa.tests.selenium.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException

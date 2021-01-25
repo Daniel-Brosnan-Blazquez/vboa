@@ -11,7 +11,7 @@ import unittest
 import time
 import subprocess
 import datetime
-import tests.selenium.functions as functions
+import vboa.tests.selenium.functions as functions
 import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
