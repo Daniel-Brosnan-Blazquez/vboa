@@ -32,14 +32,31 @@ import eboa.ingestion.functions as ingestion_functions
 # Import alert severity codes
 from eboa.engine.alerts import alert_severity_codes
 
+# Import method to obtain the resources PATH
+from eboa.engine.functions import get_resources_path
+
 def create_app():
     """
     Create and configure an instance of the Flask application.
     """
     app = Flask(__name__, instance_relative_config=True)
     app.jinja_env.add_extension('jinja2.ext.do')
+
+    # Get secret key
+    web_server_secret_key_path = get_resources_path() + "/web_server_secret_key.txt"
+    if os.path.isfile(web_server_secret_key_path):
+        web_server_secret_key_file = open(web_server_secret_key_path)
+        secret_key = web_server_secret_key_file.readline().replace("\n", "")
+    else:
+        secret_key = os.urandom(24)
+    # end if
+
     app.config.from_mapping(
-        SECRET_KEY=b'\xca+-\x9b\xcek.\x9fkM \xea\x8d\x1c\x99&'
+        SECRET_KEY=secret_key,
+        SESSION_COOKIE_SECURE=True,
+        REMEMBER_COOKIE_SECURE=True,
+        SESSION_COOKIE_HTTPONLY=True,
+        REMEMBER_COOKIE_HTTPONLY=True
     )
 
     app.register_blueprint(panel.bp)
