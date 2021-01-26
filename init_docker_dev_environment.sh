@@ -173,19 +173,19 @@ then
 fi
 
 # Check that the path to the orc packets exists
-if [ "$PATH_TO_BOA_CERTIFICATES" != "" ] && ! [ -d $PATH_TO_BOA_CERTIFICATES ];
+if [ "$PATH_TO_BOA_CERTIFICATES" != "" ] && [ ! -d $PATH_TO_BOA_CERTIFICATES ];
 then
     echo "ERROR: The directory $PATH_TO_BOA_CERTIFICATES provided does not exist"
     exit -1
 fi
 
 # Check that the needed certificates are available
-if [ "$PATH_TO_BOA_CERTIFICATES" != "" ] && ! [ -f $PATH_TO_BOA_CERTIFICATES/boa_certificate.pem ];
+if [ "$PATH_TO_BOA_CERTIFICATES" != "" ] && [ ! -f $PATH_TO_BOA_CERTIFICATES/boa_certificate.pem ];
 then
     echo "ERROR: A path to the certificates has been provided but the file $PATH_TO_BOA_CERTIFICATES/boa_certificate.pem does not exist"
     exit -1
 fi
-if [ "$PATH_TO_BOA_CERTIFICATES" != "" ] && ! [ -f $PATH_TO_BOA_CERTIFICATES/boa_key.pem ];
+if [ "$PATH_TO_BOA_CERTIFICATES" != "" ] && [ ! -f $PATH_TO_BOA_CERTIFICATES/boa_key.pem ];
 then
     echo "ERROR: A path to the certificates has been provided but the file $PATH_TO_BOA_CERTIFICATES/boa_key.pem does not exist"
     exit -1
