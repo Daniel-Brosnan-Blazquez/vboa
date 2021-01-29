@@ -131,102 +131,102 @@ class TestSourcesTab(unittest.TestCase):
         assert number_of_elements == 1 and empty_element is False
 
         # Check name
-        name = sources_table.find_elements_by_xpath("tbody/tr[1]/td[1]")
+        name = sources_table.find_elements_by_xpath("tbody/tr[1]/td[2]")
 
         assert name[0].text == "source.xml"
 
         # Check validity_start
-        validity_start = sources_table.find_elements_by_xpath("tbody/tr[1]/td[4]")
+        validity_start = sources_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
 
         assert validity_start[0].text == "2018-06-05T02:07:03"
 
         # Check validity_stop
-        validity_stop = sources_table.find_elements_by_xpath("tbody/tr[1]/td[5]")
+        validity_stop = sources_table.find_elements_by_xpath("tbody/tr[1]/td[6]")
 
         assert validity_stop[0].text == "2018-06-05T08:07:36"
         
         # Check duration
-        duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[6]")
+        duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[7]")
 
         assert duration[0].text == str((parser.parse(validity_stop[0].text) - parser.parse(validity_start[0].text)).total_seconds())
 
         # Check generation_time
-        generation_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[7]")
+        generation_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[8]")
 
         assert generation_time[0].text == "2018-07-05T02:07:03"
 
         #Check priority
-        priority = sources_table.find_elements_by_xpath("tbody/tr[1]/td[8]")
+        priority = sources_table.find_elements_by_xpath("tbody/tr[1]/td[9]")
 
         assert priority[0].text == "10"
         
         #Check reception_time
-        reception_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[9]")
+        reception_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[10]")
 
         assert reception_time[0].text == self.session.query(Source).all()[0].reception_time.isoformat()
         
         #Check ingestion_time
-        ingestion_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[10]")
+        ingestion_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[11]")
 
         assert ingestion_time[0].text == self.session.query(Source).all()[0].ingestion_time.isoformat()
 
         # Check ingestion_duration
-        ingestion_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[11]")
+        ingestion_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[12]")
 
         assert re.match(".:..:.........", ingestion_duration[0].text)
 
         # Check processing_duration
-        processing_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[12]")
+        processing_duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[13]")
 
         assert processing_duration[0].text == "None"
 
         # Check reported_validity_start
-        reported_validity_start = sources_table.find_elements_by_xpath("tbody/tr[1]/td[13]")
+        reported_validity_start = sources_table.find_elements_by_xpath("tbody/tr[1]/td[14]")
 
         assert reported_validity_start[0].text == "2018-06-05T02:07:03"
 
         # Check reported_validity_stop
-        reported_validity_stop = sources_table.find_elements_by_xpath("tbody/tr[1]/td[14]")
+        reported_validity_stop = sources_table.find_elements_by_xpath("tbody/tr[1]/td[15]")
 
         assert reported_validity_stop[0].text == "2018-06-05T08:07:36"
         
         # Check duration
-        duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[15]")
+        duration = sources_table.find_elements_by_xpath("tbody/tr[1]/td[16]")
 
         assert duration[0].text == str((parser.parse(reported_validity_stop[0].text) - parser.parse(reported_validity_start[0].text)).total_seconds())
 
         #Check reported_generation_time
-        reported_generation_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[16]")
+        reported_generation_time = sources_table.find_elements_by_xpath("tbody/tr[1]/td[17]")
 
         assert reported_generation_time[0].text == self.session.query(Source).all()[0].reported_generation_time.isoformat()
         
         #Check ingestion_completeness
-        ingestion_completeness = sources_table.find_elements_by_xpath("tbody/tr[1]/td[17]")
+        ingestion_completeness = sources_table.find_elements_by_xpath("tbody/tr[1]/td[18]")
 
         assert ingestion_completeness[0].text == "False"
 
         #Check ingestion_completeness_message
-        ingestion_completeness_message = sources_table.find_elements_by_xpath("tbody/tr[1]/td[18]")
+        ingestion_completeness_message = sources_table.find_elements_by_xpath("tbody/tr[1]/td[19]")
 
         assert ingestion_completeness_message[0].text == "MISSING DEPENDENCIES"
         
         #Check dim_signature
-        dim_signature = sources_table.find_elements_by_xpath("tbody/tr[1]/td[19]")
+        dim_signature = sources_table.find_elements_by_xpath("tbody/tr[1]/td[20]")
 
         assert dim_signature[0].text == "dim_signature"
 
         #Check processor
-        processor = sources_table.find_elements_by_xpath("tbody/tr[1]/td[20]")
+        processor = sources_table.find_elements_by_xpath("tbody/tr[1]/td[21]")
 
         assert processor[0].text == "exec"
 
         #Check version
-        version = sources_table.find_elements_by_xpath("tbody/tr[1]/td[21]")
+        version = sources_table.find_elements_by_xpath("tbody/tr[1]/td[22]")
 
         assert version[0].text == "1.0"
 
         # Check uuid
-        uuid = sources_table.find_elements_by_xpath("tbody/tr[1]/td[22]")
+        uuid = sources_table.find_elements_by_xpath("tbody/tr[1]/td[23]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
