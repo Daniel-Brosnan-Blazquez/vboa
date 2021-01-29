@@ -196,9 +196,9 @@
         </div>
         <table id="number-of-processes-evolution-statistics" align="center" class="table table-striped table-bordered table-hover table-static">
           <tr>
-            <th>Minimum (%)</th>
-            <th>Maximum (%)</th>
-            <th>Mean (%)</th>
+            <th>Minimum</th>
+            <th>Maximum</th>
+            <th>Mean</th>
           </tr>
           {% set number_of_processes_over_time = [] %}
           {% for event in health_events %}
@@ -289,9 +289,9 @@
         </div>
         <table id="number-of-connections-to-ddbb" align="center" class="table table-striped table-bordered table-hover table-static">
           <tr>
-            <th>Minimum (%)</th>
-            <th>Maximum (%)</th>
-            <th>Mean (%)</th>
+            <th>Minimum</th>
+            <th>Maximum</th>
+            <th>Mean</th>
           </tr>
           {% set number_of_connections_to_ddbb_over_time = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", "number_of_parallel_connections_to_ddbb")|map(attribute="value")|list %}
           <tr>
@@ -333,9 +333,9 @@
           <tr>
             <th>Folder</th>
             <th>Path</th>
-            <th>Minimum (%)</th>
-            <th>Maximum (%)</th>
-            <th>Mean (%)</th>
+            <th>Minimum</th>
+            <th>Maximum</th>
+            <th>Mean</th>
           </tr>        
           {% for folder in folders %}
           {% set path = health_events|map(attribute="eventTexts")|flatten|selectattr("name", "equalto", folder + "_path")|map(attribute="value")|unique|first %}
