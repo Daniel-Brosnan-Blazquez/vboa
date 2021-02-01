@@ -166,13 +166,36 @@ export function display_network(dom_id, nodes, edges, options){
             interaction:{hover:true}
         };
     }
+
+    const threshold = 20
+    if (nodes.length > threshold){
+        container.style.display = "none";
+        const button_container = document.createElement("div");
+        container.parentNode.appendChild(button_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Number of elements (" + nodes.length + ") exceeded the threshold (" + threshold + "). Click here to show the network graph";
+        button_container.appendChild(button);
+        button.onclick = function (){
+            button.style.display = "none";
+            container.style.display = "inherit";
+            show_network(dom_id, nodes, container, data, options);
+        };
+    }
+    else{
+        show_network(dom_id, nodes, container, data, options);
+    }
+};
+function show_network(dom_id, nodes, container, data, options){
+
     const network = new vis_network.Network(container, data, options);
 
     network.on("click", function (params) {
         show_network_node_information(params, nodes, dom_id)
     });
 
-};
+}
 
 function show_network_node_information(params, nodes, dom_id){
 
