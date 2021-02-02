@@ -120,6 +120,28 @@ export function display_timeline(dom_id, items, groups, options){
         };
     };
 
+    const threshold = 1000
+    if (items.length > threshold){
+        container.style.display = "none";
+        const button_container = document.createElement("div");
+        container.parentNode.appendChild(button_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Number of elements (" + items.length + ") exceeded the threshold (" + threshold + "). Click here to show the timeline graph";
+        button_container.appendChild(button);
+        button.onclick = function (){
+            button.style.display = "none";
+            container.style.display = "inherit";
+            show_timeline(dom_id, items, container, groups, options);
+        };
+    }
+    else{
+        show_timeline(dom_id, items, container, groups, options);
+    }
+};
+function show_timeline(dom_id, items, container, groups, options){
+
     const timeline = new vis_timeline_graph2d.Timeline(container, items, groups, options);
 
     timeline.on("click", function (params) {
@@ -195,7 +217,7 @@ function show_network(dom_id, nodes, container, data, options){
         show_network_node_information(params, nodes, dom_id)
     });
 
-}
+};
 
 function show_network_node_information(params, nodes, dom_id){
 
@@ -225,6 +247,28 @@ export function display_x_time(dom_id, items, groups, options){
         };
     }
     
+    const threshold = 1000
+    if (items.length > threshold){
+        container.style.display = "none";
+        const button_container = document.createElement("div");
+        container.parentNode.appendChild(button_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Number of elements (" + items.length + ") exceeded the threshold (" + threshold + "). Click here to show the timeline graph";
+        button_container.appendChild(button);
+        button.onclick = function (){
+            button.style.display = "none";
+            container.style.display = "inherit";
+            show_x_time(dom_id, items, container, groups, options);
+        };
+    }
+    else{
+        show_x_time(dom_id, items, container, groups, options);
+    }
+};
+function show_x_time(dom_id, items, container, groups, options){
+
     const x_time = new vis_timeline_graph2d.Graph2d(container, items, groups, options);
 
     x_time.on("click", function (params) {
