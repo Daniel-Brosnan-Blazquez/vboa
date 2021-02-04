@@ -31,7 +31,8 @@ RUN yum install -y python36 \
     libcurl \
     libcurl-devel \
     postgresql-devel \
-    postgresql
+    postgresql \
+    openssl
 
 RUN yum install -y rh-ruby25 \
     rh-ruby25-rubygem-bundler \
