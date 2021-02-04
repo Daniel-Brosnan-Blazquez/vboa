@@ -119,8 +119,7 @@ export function activate_search_and_checkboxes_on_tables() {
             select: {
                 style:    'os',
                 selector: 'td:first-child'
-            },
-            order: [[ 1, 'asc' ]]
+            }
         });
         // Apply the search
         table.columns().every( function () {
