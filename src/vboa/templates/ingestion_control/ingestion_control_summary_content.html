@@ -30,8 +30,15 @@
       <!-- Processings in error -->
       <div class="col-xs-3">
         <div class="panel panel-danger">
-          <div class="panel-heading" align="center" style="font-size: 20px">Number of errors</div>
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of ingestion errors</div>
           <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ ingestion_errors|length }}</div>
+        </div>
+      </div>
+      <!-- Processings in error -->
+      <div class="col-xs-3">
+        <div class="panel panel-danger">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of incomplete ingestions</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ incomplete_ingestions|length }}</div>
         </div>
       </div>
       {% endif %}
