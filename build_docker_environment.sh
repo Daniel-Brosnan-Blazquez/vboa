@@ -7,7 +7,7 @@
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -d path_to_docker_image -i path_to_external_inputs_folder -b path_to_boa_ddbb -r path_to_rboa_archive -m path_to_minarc_archive -s path_to_boa_certificates [-p port] [-l containers_label]\n
+USAGE="Usage: `basename $0` -d path_to_docker_image -i path_to_external_inputs_folder -b path_to_boa_ddbb -r path_to_rboa_archive -m path_to_minarc_archive -s path_to_boa_certificates -o log_folder [-p port] [-l containers_label]\n
 Where:\n
 -s path_to_boa_certificates_and_secret_key: Path to SSL certificates which names should be boa_certificate.pem and boa_key.pem and to the secret key used for encripting cookies\n"
 
@@ -21,8 +21,9 @@ PATH_TO_BOA_DDBB=""
 PATH_TO_RBOA_ARCHIVE=""
 PATH_TO_MINARC_ARCHIVE=""
 PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY=""
+PATH_TO_LOG_FOLDER=""
 
-while getopts d:p:l:i:b:r:m:s: option
+while getopts d:p:l:i:b:r:m:s:o: option
 do
     case "${option}"
         in
@@ -34,6 +35,7 @@ do
         r) PATH_TO_RBOA_ARCHIVE=${OPTARG};;
         m) PATH_TO_MINARC_ARCHIVE=${OPTARG};;
         s) PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY=${OPTARG};;
+        o) PATH_TO_LOG_FOLDER=${OPTARG};;
         ?) echo -e $USAGE
             exit -1
     esac
@@ -148,6 +150,21 @@ then
     exit -1
 fi
 
+# Check that option -o has been specified
+if [ "$PATH_TO_LOG_FOLDER" == "" ];
+then
+    echo "ERROR: The option -o has to be provided"
+    echo -e $USAGE
+    exit -1
+fi
+
+# Check that the docker image exists
+if [ ! -d $PATH_TO_LOG_FOLDER ];
+then
+    echo "ERROR: The directory $PATH_TO_LOG_FOLDER provided does not exist"
+    exit -1
+fi
+
 DATABASE_CONTAINER="boa_database_$CONTAINERS_LABEL"
 APP_CONTAINER="boa_app_$CONTAINERS_LABEL"
 DOCKER_NETWORK="boa_network_$CONTAINERS_LABEL"
@@ -165,6 +182,7 @@ These are the configuration options that will be applied to initialize the envir
 - PATH_TO_RBOA_ARCHIVE: $PATH_TO_RBOA_ARCHIVE
 - PATH_TO_MINARC_ARCHIVE: $PATH_TO_MINARC_ARCHIVE
 - PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY: $PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY
+- PATH_TO_LOG_FOLDER: $PATH_TO_LOG_FOLDER
 
 Do you wish to proceed with the building of the production environment?" answer
 
@@ -218,7 +236,7 @@ docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER 
 ######
 docker load -i $PATH_TO_DOCKERIMAGE
 
-docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive -v $PATH_TO_LOG_FOLDER:/log --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
 
 # Copy certificates and secret key to the container
 docker cp $PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY/boa_certificate.pem $APP_CONTAINER:/resources_path

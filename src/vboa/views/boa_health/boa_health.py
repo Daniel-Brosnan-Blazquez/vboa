@@ -77,7 +77,7 @@ def show_health():
     template_name = request.args.get("template")
 
     filters = {}
-    filters["limit"] = ["100"]    
+    filters["limit"] = ["20"]    
     if request.method == "POST":
         filters = request.form.to_dict(flat=False).copy()
     # end if

@@ -1,5 +1,5 @@
 # Script to start the web server in development mode
-nohup npm --prefix /vboa/src/vboa/static run watch &> /log/npm.log &
+nohup npm --prefix /vboa/src/vboa/static run test &> /log/npm.log &
 
 # Start flask server on port 5000 for testing purposes
 export VBOA_DEBUG=TRUE; source scl_source enable rh-ruby25; nohup flask run --host=0.0.0.0 -p 5000 &> /log/flask_5000.log &
