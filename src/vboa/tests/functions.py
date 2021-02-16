@@ -284,3 +284,10 @@ def select_checkbox(element):
             break
         #end if
     #end while
+
+def verify_js_var(items, expected_items):
+    for expected_item in expected_items:
+        matched_item = [item for item in items if item["id"] == expected_item["id"]]
+        assert len(matched_item) > 0
+        assert matched_item[0] == expected_item
+    # end for
