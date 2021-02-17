@@ -370,7 +370,7 @@ input[type="checkbox"]:disabled + .label-text:before{
   animation: spin 2s linear infinite;
 }
 .loader-render {
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   z-index: 10;
