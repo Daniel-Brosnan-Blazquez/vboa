@@ -130,22 +130,21 @@ export function activate_search_and_checkboxes_on_tables() {
                 }
             } );
         } );
-        
-        $(".table-search-checkboxes.dataTable").on("click", "th.select-checkbox", function() {
-            if ($("th.select-checkbox").hasClass("selected")) {
+        $(table.tables().header()).on("click", "th.select-checkbox", function() {
+            if ($(this).hasClass("selected")) {
                 table.rows().deselect();
-                $("th.select-checkbox").removeClass("selected");
+                $(this).removeClass("selected");
             } else {
                 table.rows().select();
-                $("th.select-checkbox").addClass("selected");
+                $(this).addClass("selected");
             }
         }).on("select deselect", function() {
             if (table.rows({
                 selected: true
             }).count() !== table.rows().count()) {
-                $("th.select-checkbox").removeClass("selected");
+                $(this).removeClass("selected");
             } else {
-                $("th.select-checkbox").addClass("selected");
+                $(this).addClass("selected");
             }
         });
         
