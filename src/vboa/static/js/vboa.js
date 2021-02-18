@@ -34,6 +34,7 @@ import * as dates from "./dates.js";
 import * as datatableFunctions from "./datatables.js";
 import * as selectorFunctions from "./selectors.js";
 import * as screenshotFunctions from "./screenshots.js";
+import * as renderFunctions from "./render.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -216,12 +217,12 @@ export function expand_annotation_values(dom_id, annotation_uuid){
     annotationFunctions.expand_values(dom_id, annotation_uuid);
 }
 
-/* Function to expand the sources associated to a source */
+/* Function to expand the statuses associated to a source */
 export function expand_source_statuses(dom_id, source_uuid){
     sourceFunctions.expand_source_statuses(dom_id, source_uuid);
 }
 
-/* Function to expand the reports associated to a report */
+/* Function to expand the statuses associated to a report */
 export function expand_report_statuses(dom_id, report_uuid){
     reportFunctions.expand_report_statuses(dom_id, report_uuid);
 }
@@ -464,6 +465,10 @@ export function create_source_generation_time_to_ingestion_time_xy(sources, dom_
     });
 
 };
+
+export function submit_request_for_ingestion_management(form_id){
+    sourceFunctions.submit_request_for_ingestion_management(form_id);
+}
 
 /*
 * REPORTS *

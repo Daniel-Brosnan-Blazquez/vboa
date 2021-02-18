@@ -2,6 +2,9 @@ import * as dates from "./dates.js";
 import * as graph from "./graph.js";
 import * as query from "./query.js";
 import * as selectorFunctions from "./selectors.js";
+import * as queryFunctions from "./query.js";
+import * as toastr from "toastr/toastr.js";
+import * as renderFunctions from "./render.js";
 
 /*
 * Functions for the EBOA navigation
@@ -35,6 +38,10 @@ function create_source_tooltip_text(source){
     if (source["ingestion_error"] == "True"){
         ingestion_error = "<span class='bold-red'>" + source["ingestion_error"] + "</span>"
     }
+    var ingestion_completeness = "<span class='bold-green'>" + source["ingestion_completeness"] + "</span>"
+    if (source["ingestion_completeness"] != "True"){
+        ingestion_completeness = "<span class='bold-red'>" + source["ingestion_completeness"] + "</span>"
+    }
     
     return "<table border='1'>" +
         "<tr><td>Source UUID</td><td>" + source["id"] + "</td></tr>" +
@@ -58,6 +65,8 @@ function create_source_tooltip_text(source){
         "<tr><td>Ingestion completeness message</td><td>" + source["ingestion_completeness_message"] + "</td></tr>" +
         "<tr><td>Ingestion time - generation time (m)</td><td>" + ingestion_minus_generation + "</td></tr>" +
         "<tr><td>Ingestion error</td><td>" + ingestion_error + "</td></tr>" +
+        "<tr><td>Ingestion completeness</td><td>" + ingestion_completeness + "</td></tr>" +
+        "<tr><td>Ingestion completeness message</td><td>" + source["ingestion_completeness_message"] + "</td></tr>" +
         "</table>"
 };
 
@@ -74,6 +83,9 @@ export function create_source_validity_timeline(sources, dom_id){
         }
         if ("ingestion_error" in source && source["ingestion_error"] == "True"){
             item["className"] = "background-red"
+        }
+        else if ("ingestion_completeness" in source && source["ingestion_completeness"] != "True"){
+            item["className"] = "background-orange"
         }
         else{
             item["className"] = "background-green"
@@ -97,6 +109,9 @@ export function create_source_generation_to_ingestion_timeline(sources, dom_id){
         }
         if ("ingestion_error" in source && source["ingestion_error"] == "True"){
             item["className"] = "background-red"
+        }
+        else if ("ingestion_completeness" in source && source["ingestion_completeness"] != "True"){
+            item["className"] = "background-orange"
         }
         else{
             item["className"] = "background-green"
@@ -290,4 +305,74 @@ function fill_statuses_into_selectors(selectors, statuses){
 
     /* Activate tooltips */
     jQuery("[data-toggle='tooltip']").tooltip();
+}
+
+/*
+* Ingestion management functions
+*/
+
+export function submit_request_for_ingestion_management(form_id){
+
+    var form = document.getElementById(form_id);
+    var operation = form.operation
+
+    /* Search table id */
+    var tables = form.getElementsByTagName("table");
+    var table_id = "";
+    for (const table of tables){
+        if (table.id != ""){
+            table_id = table.id;
+            break;
+        };
+    };
+
+    /* Fill form data */
+    var form_data = new FormData(form);
+    var table = jQuery("#" + table_id).dataTable();
+    table.$(".selected").each(function(){
+        form_data.append("sources", this.id)
+    })
+
+    if (!form_data.has("sources")){
+        toastr.error("No source has been selected to perform the chosen operation.")
+    }
+    else{
+        var loader = document.getElementById("updating-page");
+        loader.className = "loader-render"
+        if (operation == "reingestion_preparation"){
+            queryFunctions.request_info_form_data("/eboa_nav/prepare-reingestion-of-sources", renderFunctions.render_page, form_data)
+
+            var message = "Re-ingestion of selected sources requested"
+        }
+        else if (operation == "deletion_preparation"){
+            queryFunctions.request_info_form_data("/eboa_nav/prepare-deletion-of-sources", renderFunctions.render_page, form_data)
+            
+            var message = "Deletion of selected sources requested"
+        }
+        else if (operation == "deletion"){
+            var deletion_confirmation = confirm("You are about to perform a deletion operation. This will erase the data from the DDBB. Do you want to continue with the operation?")
+            if (deletion_confirmation){
+                queryFunctions.request_info_form_data("/eboa_nav/delete-sources", notify_deletion, form_data)
+                var message = "Deletion of selected sources has been confirmed"
+            }else{
+                var message = "Deletion of selected sources has been cancelled"
+                loader.className = ""
+            };
+        }
+        else{
+            var message = "The operation requested is not available"
+            loader.className = ""
+        };
+
+        toastr.success(message)
+    };
+    
+}
+
+function notify_deletion(response){
+
+    toastr.success("Deletion operation has been completed")
+    var loader = document.getElementById("updating-page");
+    loader.className = ""
+    
 }

@@ -291,3 +291,31 @@ def verify_js_var(items, expected_items):
         assert len(matched_item) > 0
         assert matched_item[0] == expected_item
     # end for
+
+def query(driver, wait, start = None, stop = None):
+
+    query_interface = driver.find_element_by_partial_link_text("Query interface")
+    i = 0
+    while not query_interface.get_attribute("aria-expanded") == "true":
+        click(query_interface)
+        # Add time to avoid lags on expanding the collapsed
+        time.sleep(0.1)
+    # end if
+
+    if start is not None:
+        # Select start date
+        startTime = driver.find_element_by_id("start-input")
+        ActionChains(driver).double_click(startTime).perform()
+        startTime.send_keys(start)
+    # end if
+
+    if stop is not None:
+        # Select stop date
+        stopTime = driver.find_element_by_id("stop-input")
+        ActionChains(driver).double_click(stopTime).perform()
+        stopTime.send_keys(stop)
+    # end if
+
+    click(driver.find_element_by_id("query-submit-button"))
+
+    

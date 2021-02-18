@@ -1,11 +1,13 @@
 <thead>
   <tr>
     <th></th>
+    <th></th>
     <th>Name</th>
     <th>DIM signature</th>
     <th>Ingestion progress</th>
     <th>Processor progress</th>
     <th>Ingestion completeness</th>
+    <th>Ingestion completeness message</th>
     <th>Triggering duration</th>
     <th>Ingestion duration</th>
     <th>Processing duration</th>
@@ -22,7 +24,8 @@
 </thead>
 <tbody>
   {% for source in sources %}
-  <tr>
+  <tr id="{{ source.source_uuid }}">
+    <td></td>
     <td><i id="expand-source-ingestion-error-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-error-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
     <td><a href="/eboa_nav/query-sources-by-name/{{ source.name }}">{{ source.name }}</a></td>
     <td>{{ source.dimSignature.dim_signature }}</td>
@@ -37,6 +40,7 @@
     {% else %}
     <td><span class='bold-red'>{{ source.ingestion_completeness }}</span></td>
     {% endif %}
+    <td>{{ source.ingestion_completeness_message }}</td>
     <td>{{ source.get_triggering_duration() }}</td>
     <td>{{ source.ingestion_duration }}</td>
     <td>{{ source.processing_duration }}</td>
@@ -67,11 +71,13 @@
 <tfoot>
   <tr>
     <th></th>
+    <th></th>
     <th>Name</th>
     <th>DIM signature</th>
     <th>Ingestion progress</th>
     <th>Processor progress</th>
     <th>Ingestion completeness</th>
+    <th>Ingestion completeness message</th>
     <th>Triggering duration</th>
     <th>Ingestion duration</th>
     <th>Processing duration</th>

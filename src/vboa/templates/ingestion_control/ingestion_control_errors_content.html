@@ -12,11 +12,19 @@
       <div>
         <h3><u>Table of ingestion errors</u></h3>
       </div>
-      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="ingestion-errors-table">
-        {% with sources = ingestion_errors %}
-        {% include "ingestion_control/ingestion_table_content.html" %}
-        {% endwith %}
-      </table>
+      <form role="form" id="ingestion-errors-ingestion-control-operations" method=post onSubmit="vboa.submit_request_for_ingestion_management(this.id); return false;">
+        <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="ingestion-errors-table">
+          {% with sources = ingestion_errors %}
+          {% include "ingestion_control/ingestion_table_content.html" %}
+          {% endwith %}
+        </table>
+        <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+          <div align="center">
+            <button type="submit" onclick="this.form.operation='reingestion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="ingestion-errors-reingetion-button">Re-ingest</button>
+            <button type="submit" onclick="this.form.operation='deletion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="ingestion-errors-deletion-button">Delete</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -34,26 +42,34 @@
       <div>
         <h3><u>Table of incomplete ingestions</u></h3>
       </div>
-      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="incomplete-ingestions-table">
-        {% with sources = incomplete_ingestions %}
-        {% include "ingestion_control/ingestion_table_content.html" %}
-        {% endwith %}
-      </table>
+      <form role="form" id="incomplete-ingestions-ingestion-control-operations" method=post onSubmit="vboa.submit_request_for_ingestion_management(this.id); return false;">
+        <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="incomplete-ingestions-table">
+          {% with sources = incomplete_ingestions %}
+          {% include "ingestion_control/ingestion_table_content.html" %}
+          {% endwith %}
+        </table>
+        <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+          <div align="center">
+            <button type="submit" onclick="this.form.operation='reingestion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="incomplete-ingestions-reingetion-button">Re-ingest</button>
+            <button type="submit" onclick="this.form.operation='deletion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="incomplete-ingestions-deletion-button">Delete</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 {% endif %}
 {% else %}
 <div class="row">
-  <div class="panel panel-default">
+  <div class="panel panel-green">
     <div class="panel-heading">
       <h3 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#ingestion-errors">Ingestion errors <span class="fa fa-angle-double-down"></span></a>
+        <a data-toggle="collapse" data-parent="#accordion" href="#no-ingestion-errors">Ingestion errors <span class="fa fa-angle-double-down"></span></a>
       </h3>
     </div>
-    <div class="panel-body panel-collapse collapse" id="ingestion-errors">
+    <div class="panel-body panel-collapse" id="no-ingestion-errors">
       <div>
-        <p id="no-sources-ingestion-control" style="text-indent: 1em">There are no ingestion errors during the requested period.</p>
+        <p id="no-sources-ingestion-control" style="text-indent: 1em">There are no ingestion errors or incomplete ingestions during the requested period.</p>
         <br/>
       </div>
     </div>

@@ -1,26 +1,352 @@
-# """
-# Automated tests for the eboa_nav submodule
+"""
+Automated tests for the eboa_nav submodule
 
-# Written by DEIMOS Space S.L. (dibb)
+Written by DEIMOS Space S.L. (dibb)
 
-# module vboa
-# """
-# # Import python utilities
-# import pytest
-# import json
+module vboa
+"""
+# Import python utilities
+import unittest
+import os
+import shutil
+import pdb
 
-# from vboa.eboa_nav import eboa_nav
+from vboa.views.eboa_nav import eboa_nav
 
-# def test_initial_panel(client):
+# Import app
+from vboa import create_app
 
-#     response = client.get('/')
-#     assert response.status_code == 200
+# Import engine of the DDBB
+import eboa.engine.engine as eboa_engine
+from eboa.engine.engine import Engine
+from eboa.engine.query import Query
+from eboa.datamodel.base import Session, engine, Base
 
-# def test_initial_eboa_nav(client):
+class TestEboaNav(unittest.TestCase):
 
-#     response = client.get('/eboa_nav', follow_redirects=True)
-#     assert response.status_code == 200
+    def setUp(self):
+        # Create the engine to manage the data
+        self.engine_eboa = Engine()
+        self.query_eboa = Query()
 
+        # Create session to connect to the database
+        self.session = Session()
+
+        # Clear all tables before executing the test
+        self.query_eboa.clear_db()
+
+        # Create app
+        self.app = create_app()
+
+        # Create client
+        self.client = self.app.test_client()
+
+    def tearDown(self):
+        try:
+            os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+        except FileNotFoundError:
+            pass
+        # end try
+        # Close connections to the DDBB
+        self.engine_eboa.close_session()
+        self.query_eboa.close_session()
+        self.session.close()
+
+    def test_initial_panel(self):
+
+        response = self.client.get('/eboa_nav/')
+        assert response.status_code == 200
+
+    def test_prepare_reingestion_of_sources_and_dependencies_no_data(self):
+
+        sources = []
+        source_uuids_matching_triggering_rule = []
+        source_uuids_not_matching_triggering_rule = []
+        eboa_nav.prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+
+        assert len(sources) == 0
+
+        assert len(source_uuids_matching_triggering_rule) == 0
+
+        assert len(source_uuids_not_matching_triggering_rule) == 0
+
+    def test_prepare_reingestion_of_sources_and_dependencies_one_source_no_matching_triggering_rules(self):
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "source.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                }
+        }]}
+
+        # Check data is correctly inserted
+        exit_status = self.engine_eboa.treat_data(data)
+        assert len([item for item in exit_status if item["status"] != eboa_engine.exit_codes["OK"]["status"]]) == 0
+        
+        sources = self.query_eboa.get_sources()
+        source_uuids_matching_triggering_rule = []
+        source_uuids_not_matching_triggering_rule = []
+        eboa_nav.prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+
+        assert len(sources) == 1
+
+        assert len(source_uuids_matching_triggering_rule) == 0
+
+        assert len(source_uuids_not_matching_triggering_rule) == 1
+
+    def test_prepare_reingestion_of_sources_and_dependencies_one_source_matching_triggering_rules(self):
+
+        # Move test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_PROCESS_1.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                }
+        }]}
+
+        # Check data is correctly inserted
+        exit_status = self.engine_eboa.treat_data(data)
+        assert len([item for item in exit_status if item["status"] != eboa_engine.exit_codes["OK"]["status"]]) == 0
+        
+        sources = self.query_eboa.get_sources()
+        source_uuids_matching_triggering_rule = []
+        source_uuids_not_matching_triggering_rule = []
+        eboa_nav.prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+
+        assert len(sources) == 1
+
+        assert len(source_uuids_matching_triggering_rule) == 1
+
+        assert len(source_uuids_not_matching_triggering_rule) == 0
+
+        shutil.copyfile("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+
+    def test_prepare_reingestion_of_sources_and_dependencies_one_source_matching_triggering_rules_skip(self):
+
+        # Move test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_SKIP_1.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                }
+        }]}
+
+        # Check data is correctly inserted
+        exit_status = self.engine_eboa.treat_data(data)
+        assert len([item for item in exit_status if item["status"] != eboa_engine.exit_codes["OK"]["status"]]) == 0
+        
+        sources = self.query_eboa.get_sources()
+        source_uuids_matching_triggering_rule = []
+        source_uuids_not_matching_triggering_rule = []
+        eboa_nav.prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+
+        assert len(sources) == 1
+
+        assert len(source_uuids_matching_triggering_rule) == 0
+
+        assert len(source_uuids_not_matching_triggering_rule) == 1
+
+        shutil.copyfile("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+
+    def test_prepare_reingestion_of_sources_and_dependencies_three_source_uuids_matching_triggering_rules_one_to_be_reingest_one_linked_to_it(self):
+
+        # Move test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_PROCESS_1.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                           },
+            "events": [{
+                "link_ref": "EVENT_1",
+                "gauge": {"name": "GAUGE_NAME",
+                          "system": "GAUGE_SYSTEM",
+                          "insertion_type": "SIMPLE_UPDATE"},
+                "start": "2018-06-05T04:07:03",
+                "stop": "2018-06-05T06:07:36"
+            }]
+        },
+                              {
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_PROCESS_2.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                           },
+            "events": [{
+                "gauge": {"name": "GAUGE_NAME",
+                          "system": "GAUGE_SYSTEM",
+                          "insertion_type": "SIMPLE_UPDATE"},
+                "start": "2018-06-05T04:07:03",
+                "stop": "2018-06-05T06:07:36",
+                "links": [{
+                    "link": "EVENT_1",
+                    "link_mode": "by_ref",
+                    "name": "LINK_NAME"
+                }]
+            }]
+                              },{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_PROCESS_3.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                }
+        }]}
+
+        # Check data is correctly inserted
+        exit_status = self.engine_eboa.treat_data(data)
+        assert len([item for item in exit_status if item["status"] != eboa_engine.exit_codes["OK"]["status"]]) == 0
+        
+        sources = self.query_eboa.get_sources(names = {"filter": "FILE_TO_PROCESS_1.xml", "op": "=="})
+        source_uuids_matching_triggering_rule = []
+        source_uuids_not_matching_triggering_rule = []
+        eboa_nav.prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+
+        assert len(sources) == 1
+
+        assert len(source_uuids_matching_triggering_rule) == 2
+
+        assert len(source_uuids_not_matching_triggering_rule) == 0
+
+        shutil.copyfile("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+
+    def test_prepare_reingestion_of_sources_circular_links(self):
+
+        # Move test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
+
+        # Insert data
+        data = {"operations":[{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_PROCESS_4.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                           },
+            "events": [{
+                "link_ref": "EVENT_1",
+                "gauge": {"name": "GAUGE_NAME",
+                          "system": "GAUGE_SYSTEM",
+                          "insertion_type": "SIMPLE_UPDATE"},
+                "start": "2018-06-05T04:07:03",
+                "stop": "2018-06-05T06:07:36"
+            }]
+        },
+                              {
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_PROCESS_5.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                           },
+            "events": [{
+                "gauge": {"name": "GAUGE_NAME",
+                          "system": "GAUGE_SYSTEM",
+                          "insertion_type": "SIMPLE_UPDATE"},
+                "start": "2018-06-05T04:07:03",
+                "stop": "2018-06-05T06:07:36",
+                "links": [{
+                    "link": "EVENT_1",
+                    "link_mode": "by_ref",
+                    "name": "LINK_NAME",
+                    "back_ref": "BACK_REF_LINK_NAME"
+                }]
+            }]
+                              },{
+                "mode": "insert",
+                "dim_signature": {"name": "dim_signature",
+                                    "exec": "exec",
+                                    "version": "1.0"},
+                "source": {"name": "FILE_TO_PROCESS_3.xml",
+                            "reception_time": "2018-07-05T02:07:03",
+                            "generation_time": "2018-07-05T02:07:03",
+                            "validity_start": "2018-06-05T02:07:03",
+                            "validity_stop": "2018-06-05T08:07:36",
+                            "priority": 10
+                }
+        }]}
+
+        # Check data is correctly inserted
+        exit_status = self.engine_eboa.treat_data(data)
+        assert len([item for item in exit_status if item["status"] != eboa_engine.exit_codes["OK"]["status"]]) == 0
+        
+        sources = self.query_eboa.get_sources(names = {"filter": "FILE_TO_PROCESS_4.xml", "op": "=="})
+        source_uuids_matching_triggering_rule = []
+        source_uuids_not_matching_triggering_rule = []
+
+        eboa_nav.prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+
+        assert len(sources) == 1
+
+        assert len(source_uuids_matching_triggering_rule) == 2
+
+        assert len(source_uuids_not_matching_triggering_rule) == 0
+
+        shutil.copyfile("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+
+        
 # def test_query_events_and_render(client):
 
 #     response = client.get('/eboa_nav/query-events')

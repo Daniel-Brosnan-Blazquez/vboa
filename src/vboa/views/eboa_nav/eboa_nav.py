@@ -20,6 +20,9 @@ from eboa.engine.query import Query
 import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
 
+# Import triggering
+from eboa.triggering.eboa_triggering import get_triggering_conf
+
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 query = Query()
 engine = Engine()
@@ -950,6 +953,93 @@ def get_source_status():
     """
     current_app.logger.debug("Get source statuses")
     return jsonify(eboa_engine.exit_codes)
+
+def prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule):
+
+    sources_to_follow_reingestion = []
+    
+    if len(sources) > 0:
+        # Get triggering configuration
+        triggering_xpath = get_triggering_conf()
+        for source in sources:
+            matching_rules = triggering_xpath("/triggering_rules/rule[match(source_mask, $file_name)]", file_name = source.name)
+            if len(matching_rules) > 0:
+                rule = matching_rules[0]
+                skip = rule.get("skip")
+                if skip != "true":
+                    source_uuids_matching_triggering_rule.append(source.source_uuid)
+                    source_type = triggering_xpath("/triggering_rules/rule[match(source_mask, $file_name)]/source_type", file_name = source.name)[0].text
+                    source_masks_depending_on_this = triggering_xpath("/triggering_rules/rule[dependencies/source_type = $source_type]/source_mask", source_type = source_type)
+                    if len(source_masks_depending_on_this) > 0:
+                        source_masks_sql = [source_mask.text.replace('.*', '%').replace('.', '_').replace('*', '%') for source_mask in source_masks_depending_on_this]
+                        # Obtain events linking to the events of the source
+                        event_uuid_links = [link.event_uuid_link for event in source.events for link in event.eventLinks]
+
+                        for source_mask_sql in source_masks_sql:
+                            events = query.get_events(event_uuids = {"filter": event_uuid_links, "op": "in"}, sources = {"filter": source_mask_sql, "op": "like"})
+                            sources_linked = [event.source for event in events]
+                            sources_to_follow_reingestion = sources_to_follow_reingestion + [source for source in sources_linked if source.source_uuid not in source_uuids_matching_triggering_rule]
+                        # end for
+                    # end if
+                else:
+                    source_uuids_not_matching_triggering_rule.append(source.source_uuid)
+                # end if
+            else:
+                source_uuids_not_matching_triggering_rule.append(source.source_uuid)
+            # end if
+        # end for
+    # end if
+
+    if len(sources_to_follow_reingestion) > 0:
+        prepare_reingestion_of_sources_and_dependencies(list(set(sources_to_follow_reingestion)), source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+    # end if
+
+    return
+
+@bp.route("/prepare-reingestion-of-sources", methods=["POST"])
+def prepare_reingestion_of_sources():
+    """
+    Prepare reingestion of selected sources.
+    """
+    current_app.logger.debug("Prepare reingestion of selected sources")
+    filters = request.json
+    sources_from_uuids = query.get_sources(source_uuids = {"filter": filters["sources"], "op": "in"})
+
+    sources = query.get_sources(names = {"filter": [source.name for source in sources_from_uuids], "op": "in"})
+
+    source_uuids_matching_triggering_rule = []
+    source_uuids_not_matching_triggering_rule = []
+    prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matching_triggering_rule, source_uuids_not_matching_triggering_rule)
+
+    sources_matching_triggering_rule = query.get_sources(source_uuids = {"filter": source_uuids_matching_triggering_rule, "op": "in"})
+
+    sources_not_matching_triggering_rule = query.get_sources(source_uuids = {"filter": source_uuids_not_matching_triggering_rule, "op": "in"})
+
+    return render_template("eboa_nav/reingestion_of_sources.html", sources_matching_triggering_rule=sources_matching_triggering_rule, sources_not_matching_triggering_rule=sources_not_matching_triggering_rule)
+
+@bp.route("/prepare-deletion-of-sources", methods=["POST"])
+def prepare_deletion_of_sources():
+    """
+    Prepare deletion of selected sources.
+    """
+    current_app.logger.debug("Prepare deletion of selected sources")
+    filters = request.json
+    sources_from_uuids = query.get_sources(source_uuids = {"filter": filters["sources"], "op": "in"})
+
+    sources = query.get_sources(names = {"filter": [source.name for source in sources_from_uuids], "op": "in"})
+
+    return render_template("eboa_nav/deletion_of_sources.html", sources=sources)
+
+@bp.route("/delete-sources", methods=["POST"])
+def delete_sources():
+    """
+    Delete selected sources.
+    """
+    current_app.logger.debug("Delete selected sources")
+    filters = request.json
+    query.get_sources(names = {"filter": filters["sources"], "op": "in"}, delete=True)
+
+    return {"status": "OK"}
 
 @bp.route("/query-gauges", methods=["GET", "POST"])
 def query_gauges_and_render():

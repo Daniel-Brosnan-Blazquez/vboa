@@ -1,0 +1,80 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Re-ingestion of selected sources</h1>
+</div>
+
+{% if sources_matching_triggering_rule|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Table of sources to be re-ingested</h3>
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+        <p>
+          <b>The following table shows the selected sources to be re-ingested after confirmation:</b>
+          <br/>
+          Please read carefully the following notes:
+          <br/>
+          - Note that there could be more than one entry per source as there could be several processors and DIMs configured for any source.
+          <br/>
+          - Note that the system also derives the sources depending on the previously selected and recursively (dependencies defined in triggering.xml). These sources will be also re-ingested to keep the consistency of links between events.
+        </p>
+        <form role="form" id="sources-ingestion-control-operations" method=post onSubmit="vboa.submit_request_for_ingestion_management(this.id); return false;">
+          <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="sources-to-reingest-table">
+            {% with sources = sources_matching_triggering_rule %}
+            {% include "eboa_nav/table_content_operations_of_sources.html" %}
+            {% endwith %}
+          </table>
+          <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+            <div align="center">
+              <button type="submit" onclick="this.form.operation='reingestion'" class="btn btn-primary" style="margin-top: 12px" id="ingestion-control-reingetion-confirmation-button">Confirm re-ingestion of sources</button>
+            </div>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+{% endif %}
+{% if sources_not_matching_triggering_rule|length > 0 %}
+<div class="row">
+  <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">Table of sources selected to be re-ingest not matching any triggering rule</h3>
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+        <p>
+          <b>The following table shows the selected sources to be re-ingest not matching any triggering rule:</b>
+        </p>
+        <br/>
+        Please read carefully the following notes:
+        <br/>
+        - Note that these selected sources cannot be re-ingested as they are not matching any processing rule to extract data to be inserted into the DDBB.
+        <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="selected-to-reingest-not-matching-any-triggering-rule-table">
+          {% with sources = sources_not_matching_triggering_rule %}
+          {% include "eboa_nav/table_content_operations_of_sources.html" %}
+          {% endwith %}
+        </table>
+      </div>
+  </div>
+</div>
+{% endif %}
+{% if sources_matching_triggering_rule|length == 0 and sources_not_matching_triggering_rule|length == 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Table of sources to be re-ingested
+    </div>
+    <div id="re-ingestion-ingestion-control-no-data">
+      <br/>
+      <p style="text-indent: 1em">No "sources" selected to re-ingest</p>
+      <br/>
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+{% endif %}
+{% endblock %}
