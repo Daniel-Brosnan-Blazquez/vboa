@@ -758,7 +758,7 @@ function update_scheduler_status(parameters, scheduler_status) {
 };
 
 /* Function to create an index content at the beggining of the page */
-function create_index_of_content(divs, divs_already_covered, div_index_of_content, iterator, level){
+function create_index_of_content(divs, divs_already_covered, div_index_of_content, iterator, level, parent_position){
     for (const div of divs){
         if (!divs_already_covered.includes(div)){
             // Create link in the div with class panel-heading (to go
@@ -766,8 +766,8 @@ function create_index_of_content(divs, divs_already_covered, div_index_of_conten
             // content)
             const a_href_element = document.createElement("a");
             div.appendChild(a_href_element);
-            a_href_element.setAttribute("name", "BOA-ELEMENT-OF-CONTENT-" + iterator);
-            a_href_element.setAttribute("href", "#BOA-INDEX-OF-CONTENT-" + iterator);
+            a_href_element.setAttribute("name", "BOA-ELEMENT-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
+            a_href_element.setAttribute("href", "#BOA-INDEX-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
             a_href_element.innerHTML = "<i class='fa fa-level-up'></i>";
             a_href_element.classList.add("panel-index-reference");
             
@@ -779,30 +779,49 @@ function create_index_of_content(divs, divs_already_covered, div_index_of_conten
             div_index_of_content.appendChild(div_index_element);
             const a_index_element = document.createElement("a");
             div_index_element.appendChild(a_index_element);
-            a_index_element.setAttribute("name", "BOA-INDEX-OF-CONTENT-" + iterator);
-            a_index_element.setAttribute("href", "#BOA-ELEMENT-OF-CONTENT-" + iterator);
-            a_index_element.textContent = div.textContent.replace(/\n */g,"").replace(/ *$/g,"").replace(/ /g,"_");
+            a_index_element.setAttribute("name", "BOA-INDEX-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
+            a_index_element.setAttribute("href", "#BOA-ELEMENT-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
+            a_index_element.textContent = div.textContent.replace(/\n */g,"").replace(/ *$/g,"").replace(/^ */g,"").replace(/ /g,"_");
             a_index_element.classList.add("index-element");
 
             divs_already_covered.push(div)
+
+            // Create the collapse div with the sub-elements
+            const child_divs = div.parentNode.getElementsByClassName("panel-heading");
+            if (child_divs.length > 1){
+                a_index_element.innerHTML = a_index_element.innerHTML + "     " + "<a  data-toggle='collapse' data-parent='#accordion' href='#boa-index-of-content-" + iterator + "-level-" + level + "'><i class='fa fa-angle-double-down'></i></a>";
+                const div_next_level = document.createElement("div");
+                div_next_level.classList.add("row");
+                div_next_level.classList.add("collapse");
+                div_next_level.classList.add("panel-index");
+                div_next_level.id = "boa-index-of-content-" + iterator + "-level-" + level;
+                div_index_element.parentNode.insertBefore(div_next_level, div_index_element.nextSibling);
+                create_index_of_content(child_divs, divs_already_covered, div_next_level, 0, level+1, iterator);
+            };
             iterator++;
 
-            const child_divs = div.getElementsByClassName("panel-heading");
-            create_index_of_content(child_divs, divs_already_covered, iterator, level);
         };
     };    
 };
 
 jQuery(document).ready(function() {
+    // Build the div where the index of content will be placed
     const div_page_header = document.getElementsByClassName("page-header")[0].parentNode;
     const div_index_of_content = document.createElement("div");
     div_index_of_content.classList.add("row");
     div_index_of_content.id = "boa-index-of-content";
     div_page_header.parentNode.insertBefore(div_index_of_content, div_page_header.nextSibling);
+
+    // Obtain panel headings to be traced in index of content
     const divs = document.getElementsByClassName("panel-heading");
+    
+    jQuery("#boa-index-of-content").append("<div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'><a data-toggle='collapse' data-parent='#accordion' href='#panel-body-index-of-conent'>Index of content <span class='fa fa-angle-double-down'></span></a></h3></div><div class='panel-body panel-collapse panel-index collapse in' id='panel-body-index-of-conent'></div></div>");
+
+    const div_panel_body_index = document.getElementById("panel-body-index-of-conent");
+    
     var divs_already_covered = [];
     var iterator = 0;
     var level = 0;
 
-    create_index_of_content(divs, divs_already_covered, div_index_of_content, iterator, level);
+    create_index_of_content(divs, divs_already_covered, div_panel_body_index, iterator, level, -1);
 });

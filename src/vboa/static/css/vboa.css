@@ -3,6 +3,13 @@ h3.panel-title {
     display: inline-block;
 }
 
+.panel-index {
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 20px;
+}
+
 .panel-index-reference {
     display: inline-block;
 }
