@@ -756,3 +756,52 @@ function update_scheduler_status(parameters, scheduler_status) {
     }
     
 };
+
+/* Function to create an index content at the beggining of the page */
+function create_index_of_content(divs, divs_already_covered, div_index_of_content, iterator, level){
+    for (const div of divs){
+        if (!divs_already_covered.includes(div)){
+            // Create link in the div with class panel-heading (to go
+            // to the element and to come back to the index of
+            // content)
+            const a_href_element = document.createElement("a");
+            div.appendChild(a_href_element);
+            a_href_element.setAttribute("name", "BOA-ELEMENT-OF-CONTENT-" + iterator);
+            a_href_element.setAttribute("href", "#BOA-INDEX-OF-CONTENT-" + iterator);
+            a_href_element.textContent = "Go to the index of content";
+            a_href_element.classList.add("panel-index-reference");
+            
+            // Create link for the element in the index of content (to go
+            // to the element and to come back to the index of
+            // content)
+            const div_index_element = document.createElement("div");
+            div_index_element.classList.add("row");
+            div_index_of_content.appendChild(div_index_element);
+            const a_index_element = document.createElement("a");
+            div_index_element.appendChild(a_index_element);
+            a_index_element.setAttribute("name", "BOA-INDEX-OF-CONTENT-" + iterator);
+            a_index_element.setAttribute("href", "#BOA-ELEMENT-OF-CONTENT-" + iterator);
+            a_index_element.textContent = div.textContent.replace(/\n */g,"");
+
+            divs_already_covered.push(div)
+            iterator++;
+
+            const child_divs = div.getElementsByClassName("panel-heading");
+            create_index_of_content(child_divs, divs_already_covered, iterator, level);
+        };
+    };    
+};
+
+jQuery(document).ready(function() {
+    const div_page_header = document.getElementsByClassName("page-header")[0].parentNode;
+    const div_index_of_content = document.createElement("div");
+    div_index_of_content.classList.add("row");
+    div_index_of_content.id = "boa-index-of-content";
+    div_page_header.parentNode.insertBefore(div_index_of_content, div_page_header.nextSibling);
+    const divs = document.getElementsByClassName("panel-heading");
+    var divs_already_covered = [];
+    var iterator = 0;
+    var level = 0;
+
+    create_index_of_content(divs, divs_already_covered, div_index_of_content, iterator, level);
+});

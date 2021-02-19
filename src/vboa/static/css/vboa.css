@@ -1,3 +1,12 @@
+/* Styles for panels */
+h3.panel-title {
+    display: inline-block;
+}
+
+.panel-index-reference {
+    display: inline-block;
+}
+
 /* Styles for checkboxes in header of datatables */
 table.dataTable thead th.select-checkbox {
   position: relative;
@@ -256,6 +265,10 @@ i.green {
 
 .draggable-div-body td {
     width: 100%;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
 }
 
 /*Check box*/
