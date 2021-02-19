@@ -768,7 +768,7 @@ function create_index_of_content(divs, divs_already_covered, div_index_of_conten
             div.appendChild(a_href_element);
             a_href_element.setAttribute("name", "BOA-ELEMENT-OF-CONTENT-" + iterator);
             a_href_element.setAttribute("href", "#BOA-INDEX-OF-CONTENT-" + iterator);
-            a_href_element.textContent = "Go to the index of content";
+            a_href_element.innerHTML = "<i class='fa fa-level-up'></i>";
             a_href_element.classList.add("panel-index-reference");
             
             // Create link for the element in the index of content (to go
@@ -781,7 +781,8 @@ function create_index_of_content(divs, divs_already_covered, div_index_of_conten
             div_index_element.appendChild(a_index_element);
             a_index_element.setAttribute("name", "BOA-INDEX-OF-CONTENT-" + iterator);
             a_index_element.setAttribute("href", "#BOA-ELEMENT-OF-CONTENT-" + iterator);
-            a_index_element.textContent = div.textContent.replace(/\n */g,"");
+            a_index_element.textContent = div.textContent.replace(/\n */g,"").replace(/ *$/g,"").replace(/ /g,"_");
+            a_index_element.classList.add("index-element");
 
             divs_already_covered.push(div)
             iterator++;

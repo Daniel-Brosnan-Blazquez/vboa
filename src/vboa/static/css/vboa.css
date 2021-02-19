@@ -7,6 +7,10 @@ h3.panel-title {
     display: inline-block;
 }
 
+.index-element {
+    text-decoration: underline;
+}
+
 /* Styles for checkboxes in header of datatables */
 table.dataTable thead th.select-checkbox {
   position: relative;
