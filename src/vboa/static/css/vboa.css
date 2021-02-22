@@ -10,6 +10,9 @@ h3.panel-title {
     margin-left: 20px;
 }
 
+.panel-no-index {
+}
+
 .panel-index-reference {
     display: inline-block;
 }
