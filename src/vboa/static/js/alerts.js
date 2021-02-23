@@ -74,7 +74,6 @@ export function create_alert_timeline(alerts, dom_id){
             end: alert["notification_time"],
             tooltip: create_alert_tooltip_text(alert)
         })
-        console.log(items);
     }
 
     graph.display_timeline(dom_id, items, groups);
