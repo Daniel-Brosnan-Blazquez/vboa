@@ -161,32 +161,80 @@ export function prepare_events_data_for_bar(events, items, groups){
 
 };
 
+/* Function to prepare the timeline groups following the nested logic */
+function prepare_timeline_groups(groups, timeline_groups){
+
+    for (const group of groups){
+        var timeline_group = timeline_groups;
+        var id = ""
+        for (const label of group.split(";")){
+            // Id is the concatenation of the previous and current ids
+            id = id + label;
+            // Check if label already exists in dictionary
+            if (!(label in timeline_group)){
+                timeline_group[label] = {"id": id, "subgroups": {}};
+            }
+            // Timeline group now points to the subgroups
+            timeline_group = timeline_group[label]["subgroups"];
+            id = id + ";";
+        }
+    }
+    
+}
+
+function populate_timeline_groups(timeline_groups, groups, tree_level){
+
+    for (const group in timeline_groups){
+
+        // Prepare nested groups
+        var nested_groups = [];
+        for (const nested_group in timeline_groups[group]["subgroups"]){
+            nested_groups.push(timeline_groups[group]["subgroups"][nested_group]["id"])
+        }
+
+        if (nested_groups.length > 0){
+            // Prepare group with nested groups
+            groups.push({
+                id: timeline_groups[group]["id"],
+                content: group,
+                treeLevel: tree_level,
+                nestedGroups: nested_groups
+            })
+        }
+        else{
+            // Prepare group without nested groups
+            groups.push({
+                id: timeline_groups[group]["id"],
+                content: group,
+                treeLevel: tree_level
+            })
+        }
+
+        // Recursive call to include subgroups
+        populate_timeline_groups(timeline_groups[group]["subgroups"], groups, tree_level + 1)
+    }
+    
+}
+
 /* Function to prepare data from events for a timeline given the events to be displayed */
 export function prepare_events_data_for_timeline(events, items, groups){
 
-    var event_groups = new Set(events.map(event => event["group"]))
+    // Groups should be only defined by group. event["timeline"] is mantained for backwards compatibility. 
+    var event_groups = new Set(events.map(event => event["group"] + ";" + event["timeline"]));
 
-    for (const group of event_groups){
-        var several_associated_timeliness = new Set(events.filter(event => event["group"] == group).map(event => event["timeline"] + "_" + event["group"]))
-        groups.push({
-            id: group,
-            content: group,
-            treeLevel: 1,
-            nestedGroups: Array.from(several_associated_timeliness)
-        })
-        for (const associated_timeliness of several_associated_timeliness){
-            groups.push({
-                id: associated_timeliness,
-                treeLevel: 2,
-                content: associated_timeliness
-            })
-        }
-    }
+    // Obtain the nested timeline groups
+    var timeline_groups = {};
+    var event_groups_array = Array.from(event_groups);
+    prepare_timeline_groups(event_groups_array, timeline_groups);
 
+    // Populate groups for the timeline with nested logic
+    populate_timeline_groups(timeline_groups, groups, 1);
+
+    // Populate items (be aware that event["timeline"] is mantained for backwards compatibility.)
     for (const event of events){
         var item = {
             id: event["id"],
-            group: event["timeline"] + "_" + event["group"],
+            group: event["group"] + ";" + event["timeline"],
             content: event["content"],
             start: event["start"],
             end: event["stop"],
