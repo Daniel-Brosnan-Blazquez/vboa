@@ -19,62 +19,72 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="sources-tables">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Events</th>
-          <th>Annotations</th>
-          <th>Validity start</th>
-          <th>Validity stop</th>
-          <th>Duration (s)</th>
-          <th>Generation time</th>
-          <th>DIM signature</th>
-          <th>Processor</th>
-          <th>Version</th>
-          <th>UUID</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for source in not_ingested_sources %}
-        <tr>
-          <td><i id="expand-source-ingestion-success-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
-          <td>{{ source.name }}</td>
-          <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td>{{ source.validity_start.isoformat() }}</td>
-          <td>{{ source.validity_stop.isoformat() }}</td>
-          {% if source.validity_stop and source.validity_start %}
-          <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
-          {% else %}
-          <td></td>
-          {% endif %}
-          <td>{{ source.generation_time.isoformat() }}</td>
-          <td>{{ source.dimSignature.dim_signature }}</td>
-          <td>{{ source.processor }}</td>
-          <td>{{ source.processor_version }}</td>
-          <td>{{ source.source_uuid }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-      <tfoot>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Events</th>
-          <th>Annotations</th>          
-          <th>Validity start</th>
-          <th>Validity stop</th>
-          <th>Duration (s)</th>
-          <th>Generation time</th>
-          <th>DIM signature</th>
-          <th>Processor</th>
-          <th>Version</th>
-          <th>UUID</th>
-        </tr>
-      </tfoot>
-    </table>
+    <form role="form" id="sources-eboa-nav-operations" method=post onSubmit="vboa.submit_request_for_ingestion_management(this.id); return false;">  
+      <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="sources-tables">
+        <thead>
+          <tr>
+            <th></th>
+            <th></th>
+            <th>Name</th>
+            <th>Events</th>
+            <th>Annotations</th>
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Duration (s)</th>
+            <th>Generation time</th>
+            <th>DIM signature</th>
+            <th>Processor</th>
+            <th>Version</th>
+            <th>UUID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for source in not_ingested_sources %}
+          <tr id="{{ source.source_uuid }}">
+            <td></td>
+            <td><i id="expand-source-ingestion-success-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
+            <td>{{ source.name }}</td>
+            <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+            <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+            <td>{{ source.validity_start.isoformat() }}</td>
+            <td>{{ source.validity_stop.isoformat() }}</td>
+            {% if source.validity_stop and source.validity_start %}
+            <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            <td>{{ source.generation_time.isoformat() }}</td>
+            <td>{{ source.dimSignature.dim_signature }}</td>
+            <td>{{ source.processor }}</td>
+            <td>{{ source.processor_version }}</td>
+            <td>{{ source.source_uuid }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Events</th>
+            <th>Annotations</th>          
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Duration (s)</th>
+            <th>Generation time</th>
+            <th>DIM signature</th>
+            <th>Processor</th>
+            <th>Version</th>
+            <th>UUID</th>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+        <div align="center">
+          <button type="submit" onclick="this.form.operation='reingestion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="sources-reingetion-button">Re-ingest</button>
+          <button type="submit" onclick="this.form.operation='deletion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="sources-deletion-button">Delete</button>
+        </div>
+      </div>
+    </form>
   </div>
   <!-- /.panel-body -->
 </div>
@@ -87,95 +97,106 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="sources-table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Events</th>
-          <th>Annotations</th>
-          <th>Validity start</th>
-          <th>Validity stop</th>
-          <th>Validity duration (s)</th>
-          <th>Generation time</th>
-          <th>Priority</th>
-          <th>Reception time</th>
-          <th>Ingestion time</th>
-          <th>Ingestion duration</th>
-          <th>Processing duration</th>
-          <th>Reported validity start</th>
-          <th>Reported validity stop</th>
-          <th>Reported validity duration (s)</th>
-          <th>Reported generation time</th>
-          <th>Ingestion completeness</th>
-          <th>Ingestion completeness message</th>
-          <th>DIM signature</th>
-          <th>Processor</th>
-          <th>Version</th>
-          <th>UUID</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for source in sources if source.ingestion_duration %}
-        <tr>
-          <td><i id="expand-source-ingestion-success-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
-          <td>{{ source.name }}</td>
-          <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td>{{ source.validity_start.isoformat() }}</td>
-          <td>{{ source.validity_stop.isoformat() }}</td>
-          <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
-          <td>{{ source.generation_time.isoformat() }}</td>
-          <td>{{ source.priority }}</td>
-          <td>{{ source.reception_time.isoformat() }}</td>
-          <td>{{ source.ingestion_time.isoformat() }}</td>
-          <td>{{ source.ingestion_duration }}</td>
-          <td>{{ source.processing_duration }}</td>
-          <td>{{ source.reported_validity_start.isoformat() }}</td>
-          <td>{{ source.reported_validity_stop.isoformat() }}</td>
-          <td>{{ (source.reported_validity_stop - source.reported_validity_start).total_seconds() }}</td>
-          <td>{{ source.reported_generation_time.isoformat() }}</td>
-          {% if source.ingestion_completeness == True %}
-          <td><span class='bold-green'>{{ source.ingestion_completeness }}</span></td>
-          {% else %}
-          <td><span class='bold-red'>{{ source.ingestion_completeness }}</span></td>
-          {% endif %}
-          <td>{{ source.ingestion_completeness_message }}</td>
-          <td>{{ source.dimSignature.dim_signature }}</td>
-          <td>{{ source.processor }}</td>
-          <td>{{ source.processor_version }}</td>
-          <td>{{ source.source_uuid }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-      <tfoot>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Events</th>
-          <th>Annotations</th>
-          <th>Validity start</th>
-          <th>Validity stop</th>
-          <th>Validity duration (s)</th>
-          <th>Generation time</th>
-          <th>Priority</th>
-          <th>Reception time</th>
-          <th>Ingestion time</th>
-          <th>Ingestion duration</th>
-          <th>Processing duration</th>
-          <th>Reported validity start</th>
-          <th>Reported validity stop</th>
-          <th>Reported validity duration (s)</th>
-          <th>Reported generation time</th>
-          <th>Ingestion completeness</th>
-          <th>Ingestion completeness message</th>
-          <th>DIM signature</th>
-          <th>Processor</th>
-          <th>Version</th>
-          <th>UUID</th>
-        </tr>
-      </tfoot>
-    </table>
+    <form role="form" id="sources-eboa-nav-operations" method=post onSubmit="vboa.submit_request_for_ingestion_management(this.id); return false;">  
+      <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="sources-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th></th>
+            <th>Name</th>
+            <th>Events</th>
+            <th>Annotations</th>
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Validity duration (s)</th>
+            <th>Generation time</th>
+            <th>Priority</th>
+            <th>Reception time</th>
+            <th>Ingestion time</th>
+            <th>Ingestion duration</th>
+            <th>Processing duration</th>
+            <th>Reported validity start</th>
+            <th>Reported validity stop</th>
+            <th>Reported validity duration (s)</th>
+            <th>Reported generation time</th>
+            <th>Ingestion completeness</th>
+            <th>Ingestion completeness message</th>
+            <th>DIM signature</th>
+            <th>Processor</th>
+            <th>Version</th>
+            <th>UUID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for source in sources if source.ingestion_duration %}
+          <tr id="{{ source.source_uuid }}">
+            <td></td>
+            <td><i id="expand-source-ingestion-success-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
+            <td>{{ source.name }}</td>
+            <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+            <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+            <td>{{ source.validity_start.isoformat() }}</td>
+            <td>{{ source.validity_stop.isoformat() }}</td>
+            <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
+            <td>{{ source.generation_time.isoformat() }}</td>
+            <td>{{ source.priority }}</td>
+            <td>{{ source.reception_time.isoformat() }}</td>
+            <td>{{ source.ingestion_time.isoformat() }}</td>
+            <td>{{ source.ingestion_duration }}</td>
+            <td>{{ source.processing_duration }}</td>
+            <td>{{ source.reported_validity_start.isoformat() }}</td>
+            <td>{{ source.reported_validity_stop.isoformat() }}</td>
+            <td>{{ (source.reported_validity_stop - source.reported_validity_start).total_seconds() }}</td>
+            <td>{{ source.reported_generation_time.isoformat() }}</td>
+            {% if source.ingestion_completeness == True %}
+            <td><span class='bold-green'>{{ source.ingestion_completeness }}</span></td>
+            {% else %}
+            <td><span class='bold-red'>{{ source.ingestion_completeness }}</span></td>
+            {% endif %}
+            <td>{{ source.ingestion_completeness_message }}</td>
+            <td>{{ source.dimSignature.dim_signature }}</td>
+            <td>{{ source.processor }}</td>
+            <td>{{ source.processor_version }}</td>
+            <td>{{ source.source_uuid }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th></th>
+            <th>Name</th>
+            <th>Events</th>
+            <th>Annotations</th>
+            <th>Validity start</th>
+            <th>Validity stop</th>
+            <th>Validity duration (s)</th>
+            <th>Generation time</th>
+            <th>Priority</th>
+            <th>Reception time</th>
+            <th>Ingestion time</th>
+            <th>Ingestion duration</th>
+            <th>Processing duration</th>
+            <th>Reported validity start</th>
+            <th>Reported validity stop</th>
+            <th>Reported validity duration (s)</th>
+            <th>Reported generation time</th>
+            <th>Ingestion completeness</th>
+            <th>Ingestion completeness message</th>
+            <th>DIM signature</th>
+            <th>Processor</th>
+            <th>Version</th>
+            <th>UUID</th>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+        <div align="center">
+          <button type="submit" onclick="this.form.operation='reingestion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="sources-reingetion-button">Re-ingest</button>
+          <button type="submit" onclick="this.form.operation='deletion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="sources-deletion-button">Delete</button>
+        </div>
+      </div>
+    </form>
   </div>
   <!-- /.panel-body -->
 </div>
