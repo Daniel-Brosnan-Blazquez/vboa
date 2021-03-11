@@ -629,39 +629,39 @@ class TestIngestionControl(unittest.TestCase):
         # alerts table
         table = self.driver.find_element_by_id("ingestion-control-alerts-details-table")
 
-        severity = table.find_element_by_xpath("tbody/tr[last()]/td[1]")
+        severity = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
         assert severity.text == "critical"
 
-        group = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
+        group = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
         assert group.text == "alert_group"
 
-        alert_name = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
+        alert_name = table.find_element_by_xpath("tbody/tr[last()]/td[4]")
 
         assert alert_name.text == "alert_name1"
 
-        name = table.find_element_by_xpath("tbody/tr[last()]/td[4]")
+        name = table.find_element_by_xpath("tbody/tr[last()]/td[5]")
 
         assert name.text == "source.xml"
 
-        alert_message = table.find_element_by_xpath("tbody/tr[last()]/td[5]")
+        alert_message = table.find_element_by_xpath("tbody/tr[last()]/td[6]")
 
         assert alert_message.text == "Alert message"
 
-        validated = table.find_element_by_xpath("tbody/tr[last()]/td[6]")
+        validated = table.find_element_by_xpath("tbody/tr[last()]/td[7]")
 
         assert validated.text == "None"
 
-        generator = table.find_element_by_xpath("tbody/tr[last()]/td[7]")
+        generator = table.find_element_by_xpath("tbody/tr[last()]/td[8]")
 
         assert generator.text == "test"
 
-        notified = table.find_element_by_xpath("tbody/tr[last()]/td[8]")
+        notified = table.find_element_by_xpath("tbody/tr[last()]/td[9]")
 
         assert notified.text == "None"
 
-        notification_time = table.find_element_by_xpath("tbody/tr[last()]/td[9]")
+        notification_time = table.find_element_by_xpath("tbody/tr[last()]/td[10]")
 
         assert notification_time.text == "2018-06-05 08:07:36"
 
