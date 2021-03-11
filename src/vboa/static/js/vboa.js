@@ -806,24 +806,27 @@ function create_index_of_content(divs, divs_already_covered, div_index_of_conten
 
 jQuery(document).ready(function() {
     // Build the div where the index of content will be placed
-    const div_page_header = document.getElementsByClassName("page-header")[0].parentNode;
-    if (! div_page_header.classList.contains("panel-no-index")){
-        const div_index_of_content = document.createElement("div");
-        div_index_of_content.classList.add("row");
-        div_index_of_content.id = "boa-index-of-content";
-        div_page_header.parentNode.insertBefore(div_index_of_content, div_page_header.nextSibling);
+    const h1_page_header = document.getElementsByClassName("page-header");
+    if (h1_page_header.length > 0){
+        const div_page_header = h1_page_header[0].parentNode;
+        if (! div_page_header.classList.contains("panel-no-index")){
+            const div_index_of_content = document.createElement("div");
+            div_index_of_content.classList.add("row");
+            div_index_of_content.id = "boa-index-of-content";
+            div_page_header.parentNode.insertBefore(div_index_of_content, div_page_header.nextSibling);
 
-        // Obtain panel headings to be traced in index of content
-        const divs = document.getElementsByClassName("panel-heading");
-        
-        jQuery("#boa-index-of-content").append("<div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'><a data-toggle='collapse' data-parent='#accordion' href='#panel-body-index-of-conent'>Index of content <span class='fa fa-angle-double-down'></span></a></h3></div><div class='panel-body panel-collapse panel-index collapse in' id='panel-body-index-of-conent'></div></div>");
+            // Obtain panel headings to be traced in index of content
+            const divs = document.getElementsByClassName("panel-heading");
+            
+            jQuery("#boa-index-of-content").append("<div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'><a data-toggle='collapse' data-parent='#accordion' href='#panel-body-index-of-conent'>Index of content <span class='fa fa-angle-double-down'></span></a></h3></div><div class='panel-body panel-collapse panel-index collapse in' id='panel-body-index-of-conent'></div></div>");
 
-        const div_panel_body_index = document.getElementById("panel-body-index-of-conent");
-        
-        var divs_already_covered = [];
-        var iterator = 0;
-        var level = 0;
+            const div_panel_body_index = document.getElementById("panel-body-index-of-conent");
+            
+            var divs_already_covered = [];
+            var iterator = 0;
+            var level = 0;
 
-        create_index_of_content(divs, divs_already_covered, div_panel_body_index, iterator, level, -1);
+            create_index_of_content(divs, divs_already_covered, div_panel_body_index, iterator, level, -1);
+        };
     };
 });
