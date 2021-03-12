@@ -1,4 +1,5 @@
 import * as vis_data from "vis-data/dist/umd.js";
+import { DataSet } from "vis-data/peer/esm/vis-data"
 import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
 import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
 import * as chartjs from "chart.js/dist/Chart.js";
@@ -142,7 +143,9 @@ export function display_timeline(dom_id, items, groups, options){
 };
 function show_timeline(dom_id, items, container, groups, options){
 
-    const timeline = new vis_timeline_graph2d.Timeline(container, items, groups, options);
+    var groups_dataset = new DataSet(groups)
+    var items_dataset = new DataSet(items)
+    const timeline = new vis_timeline_graph2d.Timeline(container, items_dataset, groups_dataset, options);
 
     timeline.on("click", function (params) {
         show_timeline_item_information(params, items, dom_id)
