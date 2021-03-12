@@ -11,57 +11,68 @@
       <div>
         <h3><u>Table of alerts</u></h3>
       </div>
-      <p>
-        The following table shows the list alerts associated to the ingestion processes:
+      <form role="form" id="ingestion-alerts-ingestion-control-operations" method=post onSubmit="vboa.submit_request_for_ingestion_management(this.id); return false;">
+        <p>
+          The following table shows the list alerts associated to the ingestion processes:
+          <br/>
+        </p>
         <br/>
-      </p>
-      <br/>
-      <br/>
+        <br/>
 
-      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="ingestion-control-alerts-details-table">
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>Group</th>
-            <th>Name</th>
-            <th>Associated source</th>
-            <th>Message</th>
-            <th>Validated</th>
-            <th>Generator</th>
-            <th>Notified</th>
-            <th>Notification time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for alert in alerts %}
-          <tr>
-            {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
-            <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
-            <td>{{ alert.alertDefinition.group.name }}</td>
-            <td>{{ alert.alertDefinition.name }}</td>
-            <td><a href="/eboa_nav/query-sources-by-name/{{ alert.source.name }}">{{ alert.source.name }}</a></td>
-            <td>{{ alert.message }}</td>
-            <td>{{ alert.validated }}</td>
-            <td>{{ alert.generator }}</td>
-            <td>{{ alert.notified }}</td>
-            <td>{{ alert.notification_time }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-        <tfoot>
-          <tr>
-            <th>Severity</th>
-            <th>Group</th>
-            <th>Name</th>
-            <th>Associated source</th>
-            <th>Message</th>
-            <th>Validated</th>
-            <th>Generator</th>
-            <th>Notified</th>
-            <th>Notification time</th>
-          </tr>
-        </tfoot>
-      </table>
+        <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="ingestion-control-alerts-details-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Severity</th>
+              <th>Group</th>
+              <th>Name</th>
+              <th>Associated source</th>
+              <th>Message</th>
+              <th>Validated</th>
+              <th>Generator</th>
+              <th>Notified</th>
+              <th>Notification time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for alert in alerts %}
+            <tr id="{{ alert.source.source_uuid }}">
+              <td></td>
+              {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
+              <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
+              <td>{{ alert.alertDefinition.group.name }}</td>
+              <td>{{ alert.alertDefinition.name }}</td>
+              <td><a href="/eboa_nav/query-sources-by-name/{{ alert.source.name }}">{{ alert.source.name }}</a></td>
+              <td>{{ alert.message }}</td>
+              <td>{{ alert.validated }}</td>
+              <td>{{ alert.generator }}</td>
+              <td>{{ alert.notified }}</td>
+              <td>{{ alert.notification_time }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th></th>
+              <th>Severity</th>
+              <th>Group</th>
+              <th>Name</th>
+              <th>Associated source</th>
+              <th>Message</th>
+              <th>Validated</th>
+              <th>Generator</th>
+              <th>Notified</th>
+              <th>Notification time</th>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+          <div align="center">
+            <button type="submit" onclick="this.form.operation='reingestion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="ingestion-errors-reingetion-button">Re-ingest</button>
+            <button type="submit" onclick="this.form.operation='deletion_preparation'" class="btn btn-primary" style="margin-top: 12px" id="ingestion-errors-deletion-button">Delete</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>

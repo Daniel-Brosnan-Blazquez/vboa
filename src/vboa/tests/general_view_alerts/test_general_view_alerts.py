@@ -389,7 +389,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
     def test_reports_alerts_query_no_filter(self):
 
         filename = "report.html"
-        file_path = os.path.dirname(os.path.abspath(__file__)) + "/html_inputs/" + filename
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
 
         # Insert data
         data = {"operations": [{
@@ -683,7 +683,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
         filename = "report.html"
-        file_path = os.path.dirname(os.path.abspath(__file__)) + "/html_inputs/" + filename
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
 
         # Insert data
         data = {"operations": [{
