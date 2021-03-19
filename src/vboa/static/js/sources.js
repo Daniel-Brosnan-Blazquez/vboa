@@ -333,38 +333,47 @@ export function submit_request_for_ingestion_management(form_id){
         form_data.append("sources", this.id)
     })
 
+    
     if (!form_data.has("sources")){
         toastr.error("No source has been selected to perform the chosen operation.")
     }
     else{
         var loader = document.getElementById("updating-page");
         loader.className = "loader-render"
-        if (operation == "reingestion_preparation"){
+        if (operation == "download_preparation"){
+            if (form_data.getAll("sources").length > 1){
+                toastr.error("The download operation is only available for 1 source per request.")
+            }
+            else{
+                queryFunctions.request_info_form_data("/eboa_nav/download-source", notify_download, form_data)
+
+                toastr.success("Download of selected source requested")
+            }
+        }
+        else if (operation == "reingestion_preparation"){
             queryFunctions.request_info_form_data("/eboa_nav/prepare-reingestion-of-sources", renderFunctions.render_page, form_data)
 
-            var message = "Re-ingestion of selected sources requested"
+            toastr.success("Re-ingestion of selected source/s requested")
         }
         else if (operation == "deletion_preparation"){
             queryFunctions.request_info_form_data("/eboa_nav/prepare-deletion-of-sources", renderFunctions.render_page, form_data)
             
-            var message = "Deletion of selected sources requested"
+            toastr.success("Deletion of selected source/s requested")
         }
         else if (operation == "deletion"){
             var deletion_confirmation = confirm("You are about to perform a deletion operation. This will erase the data from the DDBB. Do you want to continue with the operation?")
             if (deletion_confirmation){
                 queryFunctions.request_info_form_data("/eboa_nav/delete-sources", notify_deletion, form_data)
-                var message = "Deletion of selected sources has been confirmed"
+                toastr.success("Deletion of selected source/s has been confirmed")
             }else{
-                var message = "Deletion of selected sources has been cancelled"
+                toastr.success("Deletion of selected source/s has been cancelled")
                 loader.className = ""
             };
         }
         else{
-            var message = "The operation requested is not available"
+            toastr.success("The operation requested is not available")
             loader.className = ""
         };
-
-        toastr.success(message)
     };
     
 }
@@ -372,7 +381,28 @@ export function submit_request_for_ingestion_management(form_id){
 function notify_deletion(response){
 
     toastr.success("Deletion operation has been completed")
+
+    // Stop loader
     var loader = document.getElementById("updating-page");
     loader.className = ""
+    
+}
+
+function notify_download(response){
+
+    console.log(response)
+    toastr.success("File should be ready to download")
+
+    // var blob = new Blob([response]);
+
+    // console.log(blob)
+
+    // var url = window.URL.createObjectURL(blob);
+    
+    // //saveAs(blob, filename);
+    
+    // // Stop loader
+    // var loader = document.getElementById("updating-page");
+    // loader.className = ""
     
 }

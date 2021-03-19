@@ -9,9 +9,11 @@ module vboa
 import sys
 import json
 from distutils import util
+import shlex
+from subprocess import Popen, PIPE
 
 # Import flask utilities
-from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
+from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for, send_from_directory
 from flask_debugtoolbar import DebugToolbarExtension
 from flask import jsonify
 
@@ -1029,6 +1031,25 @@ def prepare_deletion_of_sources():
     sources = query.get_sources(names = {"filter": [source.name for source in sources_from_uuids], "op": "in"})
 
     return render_template("eboa_nav/deletion_of_sources.html", sources=sources)
+
+@bp.route("/download-source/<string:source_name>")
+def download_source(source_name):
+    """
+    Download of selected source.
+    """
+    current_app.logger.debug("Download of selected source")
+
+    command = "minArcStatus --file " + source_name
+    command_split = shlex.split(command)
+    program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    output, error = program.communicate()        
+    return_code = program.returncode
+
+    # Get filename and filepath from minArcStatus output
+    filename = output.decode().split(",")[1].split('=>')[1].replace('"', "")
+    filepath = output.decode().split(",")[2].split('=>')[1].replace('"', "")
+
+    return send_from_directory(filepath, filename, as_attachment=True)
 
 @bp.route("/delete-sources", methods=["POST"])
 def delete_sources():
