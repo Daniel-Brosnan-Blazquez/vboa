@@ -1,0 +1,60 @@
+<thead>
+  <tr>
+    <th>Justification</th>
+    <th>Severity</th>
+    <th>Group</th>
+    <th>Name</th>
+    <th>Message</th>
+    <th>Notification time</th>
+    <th>Solved</th>
+    <th>Solved time</th>
+    <th>Description</th>
+    <th>Validated</th>
+    <th>Generator</th>
+    <th>Notified</th>
+    <th>Ingestion time</th>
+    <th>Alert UUID</th>
+    <th>Event UUID</th>
+  </tr>
+</thead>
+<tbody>
+  {% for alert in alerts %}
+  <tr>
+    {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
+    <td>{{ alert.justification }}</td>
+    <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
+    <td>{{ alert.alertDefinition.group.name }}</td>
+    <td>{{ alert.alertDefinition.name }}</td>
+    <td>{{ alert.message }}</td>
+    <td>{{ alert.notification_time }}</td>
+    <td>{{ alert.solved }}</td>
+    <td>{{ alert.solved_time }}</td>
+    <td>{{ alert.alertDefinition.description }}</td>
+    <td>{{ alert.validated }}</td>
+    <td>{{ alert.generator }}</td>
+    <td>{{ alert.notified }}</td>
+    <td>{{ alert.ingestion_time }}</td>
+    <td>{{ alert.alert_uuid }}</td>
+    <td><a href="/eboa_nav/query-event-links/{{ alert.event_uuid }}">{{ alert.event_uuid }}</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+<tfoot>
+  <tr>
+    <th>Justification</th>
+    <th>Severity</th>
+    <th>Group</th>
+    <th>Name</th>
+    <th>Message</th>
+    <th>Notification time</th>
+    <th>Solved</th>
+    <th>Solved time</th>
+    <th>Description</th>
+    <th>Validated</th>
+    <th>Generator</th>
+    <th>Notified</th>
+    <th>Ingestion time</th>
+    <th>Alert UUID</th>
+    <th>Event UUID</th>
+  </tr>
+</tfoot>
