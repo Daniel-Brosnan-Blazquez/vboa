@@ -20,6 +20,12 @@ from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 
+# Instantiate TestCase for having the correct management of assertions
+# out of the nominal flow of the testing
+test_case = unittest.TestCase()
+# This is needed for showing all the difference without limit
+test_case.maxDiff = None
+
 def goToTab(driver,tab_name):
     tab = driver.find_element_by_link_text(tab_name)
     click(tab)
@@ -285,11 +291,37 @@ def select_checkbox(element):
         #end if
     #end while
 
-def verify_js_var(items, expected_items):
+def assert_equal_list_dictionaries(items, expected_items):
+    """
+    Method to compare two lists of dictionaries
+    Pre-conditions:
+    1. dictionary should contain the key id
+
+    :param items: list of items to be compared with the expected items
+    :type items: list of dictionaries
+    :param expected_items: list of expected items to be compared with the items list
+    :type expected_items: list of dictionaries
+    """
+
+    # Check that the parameters are lists
+    test_case.assertIsInstance(items, list)
+    test_case.assertIsInstance(expected_items, list)
+    
+    # Check that the length of the lists is the same
+    test_case.assertEqual(len(items), len(expected_items))
+
+    # Check every element of the expected list
     for expected_item in expected_items:
-        matched_item = [item for item in items if item["id"] == expected_item["id"]]
-        assert len(matched_item) > 0
-        assert matched_item[0] == expected_item
+        # Check that the expected item is a dictionary
+        test_case.assertIsInstance(expected_item, dict)
+        # Check that the expected item has the key id
+        test_case.assertIn("id", expected_item)
+        # Check that the element is in the other list
+        matched_item = [item for item in items if test_case.assertIsInstance(item, dict) == None and test_case.assertIn("id", item) == None and item["id"] == expected_item["id"]]
+        # Check that the id is in the other list
+        test_case.assertGreater(len(matched_item), 0)
+        # Compare the elements with the same id
+        test_case.assertEqual(matched_item[0], expected_item)
     # end for
 
 def query(driver, wait, start = None, stop = None):
@@ -318,4 +350,3 @@ def query(driver, wait, start = None, stop = None):
 
     click(driver.find_element_by_id("query-submit-button"))
 
-    
