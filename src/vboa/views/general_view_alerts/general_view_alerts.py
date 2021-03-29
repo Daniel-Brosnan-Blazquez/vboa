@@ -231,6 +231,9 @@ def query_and_render(start_filter = None, stop_filter = None, sliding_window = N
     source_alerts = query.get_source_alerts(kwargs)
     sources = query.get_sources(source_uuids = {"filter": [source_alert.source_uuid for source_alert in source_alerts], "op": "in"})
 
+    # Remove filter by DIM signature
+    del kwargs["dim_signatures"]
+
     # Obtain report alerts and then the reports
     report_alerts = query.get_report_alerts(kwargs)
     reports = query.get_reports(report_uuids = {"filter": [report_alert.report_uuid for report_alert in report_alerts], "op": "in"})
