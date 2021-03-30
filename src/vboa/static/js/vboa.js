@@ -830,3 +830,18 @@ jQuery(document).ready(function() {
         };
     };
 });
+
+
+/* Event key listeners */
+document.addEventListener("keydown", function(event) {
+    const key = event.key
+    if (key === "Escape") {
+        // Escape key is used to close tooltips
+        // Obtain tooltips
+        const draggable_divs = document.getElementsByClassName("draggable-div")
+
+        // Remove the last one
+        const last_draggable_div = draggable_divs[draggable_divs.length - 1]
+        last_draggable_div.parentNode.removeChild(last_draggable_div);
+    }
+});
