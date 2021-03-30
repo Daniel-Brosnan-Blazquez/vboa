@@ -841,7 +841,9 @@ document.addEventListener("keydown", function(event) {
         const draggable_divs = document.getElementsByClassName("draggable-div")
 
         // Remove the last one
-        const last_draggable_div = draggable_divs[draggable_divs.length - 1]
-        last_draggable_div.parentNode.removeChild(last_draggable_div);
+        if (draggable_divs.length > 0){
+            const last_draggable_div = draggable_divs[draggable_divs.length - 1]
+            last_draggable_div.parentNode.removeChild(last_draggable_div);
+        }
     }
 });
