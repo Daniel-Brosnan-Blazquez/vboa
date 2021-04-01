@@ -80,15 +80,22 @@ export function create_event_timeline(events, dom_id){
     var gauge_systems = new Set(events.map(event => event["gauge"]["system"]))
 
     for (const gauge_system of gauge_systems){
-        if (gauge_system == "None"){
-            var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"]))
-        }else{
-            var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"] + "_" + event["gauge"]["system"]))
+        var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"]));
+        var tree_level = 1;
+        if (gauge_system != "None"){
+            var associated_gauge_ids = Array.from(new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => "GAUGE_NAME_" + event["gauge"]["name"])));
+            groups.push({
+                id: "GAUGE_SYSTEM_" + gauge_system,
+                treeLevel: 1,
+                content: gauge_system,
+                nestedGroups: associated_gauge_ids
+            })
+            tree_level = 2;
         }
         for (const associated_gauge of associated_gauges){
             groups.push({
-                id: associated_gauge,
-                treeLevel: 1,
+                id: "GAUGE_NAME_" + associated_gauge,
+                treeLevel: tree_level,
                 content: associated_gauge
             })
         }
@@ -98,11 +105,7 @@ export function create_event_timeline(events, dom_id){
 
     for (const event_uuid of unique_event_uuids){
         var event = events.filter(event => event["id"] == event_uuid)[0]
-        if (event["gauge"]["system"] == "None"){
-            var group = event["gauge"]["name"]
-        }else{
-            var group = event["gauge"]["name"] + "_" + event["gauge"]["system"]
-        }
+        var group = "GAUGE_NAME_" + event["gauge"]["name"]
         items.push({
             id: event["id"],
             group: group,
