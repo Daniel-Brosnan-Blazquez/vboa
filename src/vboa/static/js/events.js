@@ -83,7 +83,7 @@ export function create_event_timeline(events, dom_id){
         var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"]));
         var tree_level = 1;
         if (gauge_system != "None"){
-            var associated_gauge_ids = Array.from(new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => "GAUGE_NAME_" + event["gauge"]["name"])));
+            var associated_gauge_ids = Array.from(new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => "GAUGE_NAME_" + event["gauge"]["system"] + "_" + event["gauge"]["name"])));
             groups.push({
                 id: "GAUGE_SYSTEM_" + gauge_system,
                 treeLevel: 1,
@@ -93,8 +93,12 @@ export function create_event_timeline(events, dom_id){
             tree_level = 2;
         }
         for (const associated_gauge of associated_gauges){
+            var id = "GAUGE_NAME_" + associated_gauge;
+            if (gauge_system != "None"){
+                id = "GAUGE_NAME_" + gauge_system + "_" + associated_gauge
+            }
             groups.push({
-                id: "GAUGE_NAME_" + associated_gauge,
+                id: id,
                 treeLevel: tree_level,
                 content: associated_gauge
             })
@@ -102,10 +106,13 @@ export function create_event_timeline(events, dom_id){
     }
 
     var unique_event_uuids = new Set(events.map(event => event["id"]));
-
     for (const event_uuid of unique_event_uuids){
         var event = events.filter(event => event["id"] == event_uuid)[0]
         var group = "GAUGE_NAME_" + event["gauge"]["name"]
+        if (event["gauge"]["system"] != "None"){
+            group = "GAUGE_NAME_" + event["gauge"]["system"] + "_" + event["gauge"]["name"]
+        }
+
         items.push({
             id: event["id"],
             group: group,
