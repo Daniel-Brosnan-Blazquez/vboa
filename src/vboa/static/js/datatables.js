@@ -115,11 +115,7 @@ export function activate_search_and_checkboxes_on_tables() {
                 orderable: false,
                 className: 'select-checkbox',
                 targets:   0
-            } ],
-            select: {
-                style:    'os',
-                selector: 'td:first-child'
-            }
+            } ]
         });
         // Apply the search
         table.columns().every( function () {
