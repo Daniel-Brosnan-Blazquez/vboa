@@ -42,7 +42,7 @@
           {% for source in not_ingested_sources %}
           <tr id="{{ source.source_uuid }}">
             <td></td>
-            <td><i id="expand-source-not-ingested-sources-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
+            <td><i id="expand-source-not-ingested-sources-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-not-ingested-sources-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
             <td><a href="/eboa_nav/download-source/{{ source.name }}">{{ source.name }}</a></td>
             <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
             <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
