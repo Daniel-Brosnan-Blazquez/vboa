@@ -409,14 +409,15 @@ function show_map_item_information(event, map, dom_id){
         return feature;
     });
 
-    const header_content = "Detailed information for polygon with id: " + feature.getId();
-    const body_content = feature.getProperties()["tooltip"]
-    const x = event.originalEvent.pageX;
-    const y = event.originalEvent.pageY;
+    if (typeof feature !== 'undefined') {
+        const header_content = "Detailed information for polygon with id: " + feature.getId();
+        const body_content = feature.getProperties()["tooltip"]
+        const x = event.originalEvent.pageX;
+        const y = event.originalEvent.pageY;
 
-    const div = create_div(dom_id, feature.getId(), header_content, body_content, x, y)
-    drag_element(div)
-
+        const div = create_div(dom_id, feature.getId(), header_content, body_content, x, y)
+        drag_element(div)
+    }
 }
 
 function create_div(dom_id, element_id, header_content, body_content, x, y){
