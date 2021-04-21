@@ -115,7 +115,7 @@ export function display_timeline(dom_id, items, groups, options){
             groupOrder: 'content',
             margin: {
                 item : {
-                    horizontal : -1
+                    horizontal : 0
                 }
             },
         };
