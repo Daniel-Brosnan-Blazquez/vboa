@@ -246,8 +246,10 @@ class TestAnnotationsTab(unittest.TestCase):
                     "system": "SYSTEM"
             },
             "explicit_reference": str(annotation.explicitRef.explicit_ref),
+            "explicit_ref_uuid": str(annotation.explicit_ref_uuid),
             "ingestion_time": annotation.ingestion_time.isoformat().replace("T"," "),
             "source": "source_1.xml",
+            "source_uuid": str(annotation.source_uuid),
             "geometries": [
                 {
                     "value": "POLYGON ((27.5923694065675 28.6897912912051, 27.8617502445779 28.6464983273278, 27.7690524083984 28.2803979779816, 27.4991925556512 28.322475522552, 27.5923694065675 28.6897912912051))",

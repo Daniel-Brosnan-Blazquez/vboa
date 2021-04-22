@@ -217,6 +217,10 @@ export function expand_annotation_values(dom_id, annotation_uuid){
     annotationFunctions.expand_values(dom_id, annotation_uuid);
 }
 
+export function expand_annotation_values_in_tooltip(dom_id, annotation_uuid){
+    annotationFunctions.expand_values_in_tooltip(dom_id, annotation_uuid);
+}
+
 /* Function to expand the statuses associated to a source */
 export function expand_source_statuses(dom_id, source_uuid){
     sourceFunctions.expand_source_statuses(dom_id, source_uuid);
