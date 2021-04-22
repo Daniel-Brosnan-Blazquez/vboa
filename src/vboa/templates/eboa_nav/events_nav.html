@@ -76,7 +76,7 @@
   <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
-{% if show["timeline"] and events|length > 0 %}
+{% if show["timeline"] %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Timeline of events
@@ -122,6 +122,7 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
+      {% if events|length > 0 %}
       {% if show["timeline"] %}
       {% with events=events %}
       {% include "graphs/events_to_json_for_timeline.js" %}
@@ -133,6 +134,7 @@
       {% include "graphs/events_geometries_to_json_for_map.js" %}
       {% endwith %}
       vboa.create_event_map(events_geometries, "events-nav-map");
-      {% endif %}      
+      {% endif %} 
+      {% endif %}     
     </script>
 {% endblock %}

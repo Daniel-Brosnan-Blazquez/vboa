@@ -83,12 +83,11 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
-      {% if show["network"] %}
+      {% if show["network"] and gauges|length > 0 %}
       {% with links=links %}
       {% include "graphs/gauges_to_json_for_network.js" %}
       {% endwith %}
       const gauges_for_network = gauges;
-
       vboa.create_gauge_network(gauges_for_network, "gauges-nav-network");
       {% endif %}
     </script>

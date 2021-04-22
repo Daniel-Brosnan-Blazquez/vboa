@@ -92,7 +92,7 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
-      {% if show["map"] %}
+      {% if show["map"] and annotations|length > 0 %}
       {% with annotations_geometries=annotations_geometries %}
       {% include "graphs/annotations_geometries_to_json_for_map.js" %}
       {% endwith %}
