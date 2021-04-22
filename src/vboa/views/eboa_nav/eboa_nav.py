@@ -406,6 +406,27 @@ def query_annotations_by_er(er):
 
     return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show, filters=filters)
 
+@bp.route("/query-annotation/<uuid:annotation_uuid>")
+def query_annotation(annotation_uuid):
+    """
+    Query annotation corresponding to the UUID received.
+    """
+    current_app.logger.debug("Query annotation")
+    
+    show = {}
+    show["map"]=True
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+
+    annotation = query.get_annotations(annotation_uuids={"filter": [annotation_uuid], "op": "in"})
+
+    annotation_geometries = []
+    if len(annotation[0].annotationGeometries) > 0: 
+        annotation_geometries = [{"annotation": annotation, "geometries": engine.geometries_to_wkt(annotation.annotationGeometries)}]
+
+    return render_template("eboa_nav/annotations_nav.html", annotations=annotation, annotations_geometries=annotation_geometries, show=show, filters=filters)
+
 @bp.route("/query-annotations-by-source-uuid/<string:source_uuid>")
 def query_annotations_by_source_uuid(source_uuid):
     """
