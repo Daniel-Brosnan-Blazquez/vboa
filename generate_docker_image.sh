@@ -7,7 +7,7 @@
 # module boa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets -u uid_host_user_to_map [-t path_to_tailored] [-a app] [-c boa_tailoring_configuration_path] [-l version] [-g export_docker_image]"
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -p path_to_dockerfile_pkg -o path_to_orc_packets -u uid_host_user_to_map [-t path_to_tailored] [-b path_to_common_base] [-a app] [-c boa_tailoring_configuration_path] [-l version] [-g export_docker_image]"
 
 ########
 # Initialization
@@ -15,6 +15,7 @@ USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_d
 PATH_TO_EBOA=""
 PATH_TO_VBOA=""
 PATH_TO_TAILORED=""
+PATH_TO_COMMON_BASE=""
 PATH_TO_DOCKERFILE="Dockerfile"
 APP="vboa"
 PATH_TO_ORC=""
@@ -22,13 +23,14 @@ VERSION="0.1.0"
 EXPORT_DOCKER_IMAGE="NO"
 UID_HOST_USER_TO_MAP=""
 
-while getopts e:v:d:p:t:a:o:c:p:l:u:g option
+while getopts e:v:d:p:t:b:a:o:c:p:l:u:g option
 do
     case "${option}"
         in
         e) PATH_TO_EBOA=${OPTARG}; PATH_TO_EBOA_CALL="-e ${OPTARG}";;
         v) PATH_TO_VBOA=${OPTARG}; PATH_TO_VBOA_CALL="-v ${OPTARG}";;
         t) PATH_TO_TAILORED=${OPTARG}; PATH_TO_TAILORED_CALL="-t ${OPTARG}";;
+        b) PATH_TO_COMMON_BASE=${OPTARG}; COMMON_BASE_FOLDER=`basename $PATH_TO_COMMON_BASE`; PATH_TO_COMMON_BASE_CALL="-b ${OPTARG}";;
         d) PATH_TO_DOCKERFILE=${OPTARG}; PATH_TO_DOCKERFILE_CALL="-d ${OPTARG}";;
         p) PATH_TO_DOCKERFILE_PKG=${OPTARG}; PATH_TO_DOCKERFILE_PKG_CALL="-d ${OPTARG}";;
         a) APP=${OPTARG}; APP_CALL="-a ${OPTARG}";;
@@ -146,6 +148,13 @@ then
     exit -1
 fi
 
+# Check that the path to the common base project exists
+if [ "$PATH_TO_COMMON_BASE" != "" ] && [ ! -d $PATH_TO_COMMON_BASE ];
+then
+    echo "ERROR: The directory $PATH_TO_COMMON_BASE provided does not exist"
+    exit -1
+fi
+
 # Check that the path to the boa tailoring congiguration exists
 if [ "$PATH_TO_BOA_TAILORING_CONFIGURATION" != "" ] && [ ! -d $PATH_TO_BOA_TAILORING_CONFIGURATION ];
 then
@@ -162,8 +171,9 @@ then
 fi
 
 EBOA_RESOURCES_PATH="/eboa/src/config"
-APP_CONTAINER="boa_app"
+APP_CONTAINER="boa_app_$APP"
 
+while true; do
 read -p "
 Welcome to the docker image generator of the BOA environment :-)
 
@@ -172,6 +182,7 @@ These are the configuration options that will be applied to initialize the envir
 - PATH_TO_EBOA: $PATH_TO_EBOA
 - PATH_TO_VBOA: $PATH_TO_VBOA
 - PATH_TO_TAILORED: $PATH_TO_TAILORED
+- PATH_TO_COMMON_BASE: $PATH_TO_COMMON_BASE
 - PATH_TO_DOCKERFILE: $PATH_TO_DOCKERFILE
 - PATH_TO_DOCKERFILE_PKG: $PATH_TO_DOCKERFILE_PKG
 - APP: $APP
@@ -181,6 +192,15 @@ These are the configuration options that will be applied to initialize the envir
 - VERSION: $VERSION
 
 Do you wish to proceed with the generation of the docker image?" answer
+    case $answer in
+        [Yy]* )
+            break;;
+        [Nn]* )
+            echo "No worries, the docker image will not be generated";
+            exit;;
+        * ) echo "Please answer Y or y for yes or N or n for no. Answered: $answer";;
+    esac
+done
 
 if [ "$(docker ps -a | grep -w $APP_CONTAINER)" ];
 then
@@ -204,13 +224,26 @@ fi
 # Generate BOA packages
 ######
 TMP_DIR=`mktemp -d`
-$PATH_TO_VBOA/generate_boa_packages.sh $PATH_TO_EBOA_CALL $PATH_TO_VBOA_CALL $PATH_TO_DOCKERFILE_PKG_CALL $APP_CALL -o $TMP_DIR $PATH_TO_TAILORED_CALL
+$PATH_TO_VBOA/generate_boa_packages.sh $PATH_TO_EBOA_CALL $PATH_TO_VBOA_CALL $PATH_TO_DOCKERFILE_PKG_CALL $APP_CALL -o $TMP_DIR $PATH_TO_TAILORED_CALL $PATH_TO_COMMON_BASE_CALL
+
+# Check that BOA packages could be generated
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "BOA packages could not be generated :-("
+    exit -1
+else
+    echo "The BOA packages have been generated successfully :-)"
+fi
 
 # Build image
 docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$UID_HOST_USER_TO_MAP -t boa:$VERSION -t boa:latest -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 
 # Create container
-if [ "$PATH_TO_TAILORED" != "" ];
+if [ "$PATH_TO_TAILORED" != "" ] && [ "$PATH_TO_COMMON_BASE" != "" ];
+then
+    docker run -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP -v $PATH_TO_COMMON_BASE:/$COMMON_BASE_FOLDER -v $TMP_DIR:/boa_packages boa:$VERSION
+elif [ "$PATH_TO_TAILORED" != "" ];
 then
     docker run -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP -v $TMP_DIR:/boa_packages boa:$VERSION
 else
@@ -261,8 +294,15 @@ docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/schemas/* /schemas'
 # Specify the ID of the HEAD versions used for EBOA, VBOA and the tailored BOA
 HEAD_ID_EBOA=`git -C $PATH_TO_EBOA rev-parse HEAD`
 HEAD_ID_VBOA=`git -C $PATH_TO_VBOA rev-parse HEAD`
-HEAD_ID_TAILORED=`git -C $PATH_TO_TAILORED rev-parse HEAD`
-docker exec -it -u boa $APP_CONTAINER bash -c "echo -e 'HEAD_ID_EBOA=$HEAD_ID_EBOA\nHEAD_ID_VBOA=$HEAD_ID_VBOA\nHEAD_ID_TAILORED=$HEAD_ID_TAILORED' > /resources_path/boa_package_versions"
+if [ "$PATH_TO_TAILORED" != "" ];
+then
+    HEAD_ID_TAILORED=`git -C $PATH_TO_TAILORED rev-parse HEAD`
+fi
+if [ "$PATH_TO_COMMON_BASE" != "" ];
+then
+    HEAD_ID_COMMON_BASE=`git -C $PATH_TO_COMMON_BASE rev-parse HEAD`
+fi
+docker exec -it -u boa $APP_CONTAINER bash -c "echo -e 'HEAD_ID_EBOA=$HEAD_ID_EBOA\nHEAD_ID_VBOA=$HEAD_ID_VBOA\nHEAD_ID_TAILORED=$HEAD_ID_TAILORED\nHEAD_ID_COMMON_BASE=$HEAD_ID_COMMON_BASE' > /resources_path/boa_package_versions"
 
 # Install cron activities
 echo "Installing cron activities"

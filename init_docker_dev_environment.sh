@@ -7,7 +7,7 @@
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets -u host_user_to_map [-p port] [-t path_to_tailored] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-s path_to_boa_certificates] [-n] [-r]\n
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets -u host_user_to_map [-p port] [-t path_to_tailored] [-b path_to_common_base] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-s path_to_boa_certificates] [-n] [-r]\n
 Where:\n
 -s path_to_boa_certificates: Path to SSL certificates which names should be boa_certificate.pem and boa_key.pem\n
 -n: disable DDBB port exposure (5432). Exposure of this port is needed for obtaining differences between data models
@@ -20,6 +20,8 @@ Where:\n
 PATH_TO_EBOA=""
 PATH_TO_VBOA=""
 PATH_TO_TAILORED=""
+PATH_TO_COMMON_BASE=""
+COMMON_BASE_FOLDER=""
 PATH_TO_DOCKERFILE="Dockerfile.dev"
 PORT="5000"
 CONTAINERS_LABEL="dev"
@@ -30,7 +32,7 @@ EXPOSE_DDBB_PORT="TRUE"
 PATH_TO_BOA_CERTIFICATES=""
 REMOVE_AVAILABLE_BOA_IMAGES="TRUE"
 
-while getopts e:v:d:o:u:p:t:l:a:c:s:nr option
+while getopts e:v:d:o:u:p:t:b:l:a:c:s:nr option
 do
     case "${option}"
         in
@@ -41,6 +43,7 @@ do
         u) HOST_USER_TO_MAP=${OPTARG};;
         p) PORT=${OPTARG};;
         t) PATH_TO_TAILORED=${OPTARG};;
+        b) PATH_TO_COMMON_BASE=${OPTARG}; COMMON_BASE_FOLDER=`basename $PATH_TO_COMMON_BASE`;;
         l) CONTAINERS_LABEL=${OPTARG};;
         a) APP=${OPTARG};;
         c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG};;
@@ -142,6 +145,13 @@ then
     exit -1
 fi
 
+# Check that the path to the common base project exists
+if [ "$PATH_TO_COMMON_BASE" != "" ] && [ ! -d $PATH_TO_COMMON_BASE ];
+then
+    echo "ERROR: The directory $PATH_TO_COMMON_BASE provided does not exist"
+    exit -1
+fi
+
 # Check that the path to the boa tailoring congiguration exists
 if [ "$PATH_TO_BOA_TAILORING_CONFIGURATION" != "" ] && [ ! -d $PATH_TO_BOA_TAILORING_CONFIGURATION ];
 then
@@ -205,6 +215,7 @@ These are the configuration options that will be applied to initialize the envir
 - PATH_TO_EBOA: $PATH_TO_EBOA
 - PATH_TO_VBOA: $PATH_TO_VBOA
 - PATH_TO_TAILORED: $PATH_TO_TAILORED
+- PATH_TO_COMMON_BASE: $PATH_TO_COMMON_BASE
 - PATH_TO_DOCKERFILE: $PATH_TO_DOCKERFILE
 - PORT: $PORT
 - CONTAINERS_LABEL: $CONTAINERS_LABEL
@@ -260,14 +271,14 @@ then
     done
 fi
 
-if [ "$REMOVE_AVAILABLE_BOA_IMAGES" == "TRUE" ] && [ "$(docker images boa_dev -q)" ];
+if [ "$REMOVE_AVAILABLE_BOA_IMAGES" == "TRUE" ] && [ "$(docker images boa_$CONTAINERS_LABEL -q)" ];
 then
     while true; do
-        read -p "There has been detected a BOA image with the name: boa_dev. Do you wish to remove it and proceed with the new installation?" answer
+        read -p "There has been detected a BOA image with the name: boa_$CONTAINERS_LABEL. Do you wish to remove it and proceed with the new installation?" answer
         case $answer in
             [Yy]* )
                 # Remove app image
-                docker rmi $(docker images boa_dev -q)
+                docker rmi $(docker images boa_$CONTAINERS_LABEL -q)
 
                 break;;
             [Nn]* ) exit;;
@@ -302,22 +313,29 @@ if [ "$PATH_TO_TAILORED" != "" ];
 then
     find $PATH_TO_TAILORED -name *pyc -delete
 fi
+if [ "$PATH_TO_COMMON_BASE" != "" ];
+then
+    find $PATH_TO_COMMON_BASE -name *pyc -delete
+fi
 
 HOST_UID_USER_TO_MAP=`id -u $HOST_USER_TO_MAP`
 
-if [ "$(docker images boa_dev -q)" ];
+if [ "$(docker images boa_$CONTAINERS_LABEL -q)" ];
 then
-    echo -e "The image boa_dev was already available. So, it is not going to be re-built."
+    echo -e "The image boa_$CONTAINERS_LABEL was already available. So, it is not going to be re-built."
 else
-    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP --build-arg PATH_TO_BOA_CERTIFICATES=$PATH_TO_BOA_CERTIFICATES -t boa_dev -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP --build-arg PATH_TO_BOA_CERTIFICATES=$PATH_TO_BOA_CERTIFICATES -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 fi
 
 # Initialize the eboa database
-if [ "$PATH_TO_TAILORED" != "" ];
+if [ "$PATH_TO_TAILORED" != "" ] && [ "$PATH_TO_COMMON_BASE" != "" ];
 then
-    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_dev
+    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP -v $PATH_TO_COMMON_BASE:/$COMMON_BASE_FOLDER boa_$CONTAINERS_LABEL
+elif [ "$PATH_TO_TAILORED" != "" ];
+then
+    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_$CONTAINERS_LABEL
 else
-    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_dev
+    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_$CONTAINERS_LABEL
 fi
 
 # Link and copy configurations
@@ -359,6 +377,10 @@ docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e '/vboa/src[tests
 if [ "$PATH_TO_TAILORED" != "" ];
 then
     docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
+fi
+if [ "$PATH_TO_COMMON_BASE" != "" ];
+then
+    docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e /$COMMON_BASE_FOLDER/src"
 fi
 
 # Restart container to make accesible the app to the web server
