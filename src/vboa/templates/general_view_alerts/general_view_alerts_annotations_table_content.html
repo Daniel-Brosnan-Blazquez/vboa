@@ -1,0 +1,81 @@
+<thead>
+    <tr>
+      <th>Justification</th>
+      <th>Severity</th>
+      <th>Group</th>
+      <th>Name</th>
+      <th>Message</th>
+      <th>Notification time</th>
+      <th>Solved</th>
+      <th>Solved time</th>
+      <th>Description</th>
+      <th>Validated</th>
+      <th>Generator</th>
+      <th>Notified</th>
+      <th>Ingestion time</th>
+      <th>Alert UUID</th>
+      <th>Annotation UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for alert in alerts %}
+    <tr>
+      {% if alert.solved == "True" %}
+      {% set solved_class="bold-red" %}
+      {% else %}
+      {% set solved_class="bold-orange" %}
+      {% endif %}
+      {% if alert.notified == "True" %}
+      {% set notified_class="bold-red" %}
+      {% else %}
+      {% set notified_class="bold-orange" %}
+      {% endif %}
+      {% if alert.validated == "True" %}
+      {% set validated_class="bold-red" %}
+      {% else %}
+      {% set validated_class="bold-orange" %}
+      {% endif %}
+      {% if alert.solved_time == None %}
+      {% set solved_time = alert.solved_time %}
+      {% else %}
+      {% set solved_time = alert.solved_time.isoformat() %}
+      {% endif %}
+      {% set severity_label=alert.alertDefinition.severity|get_severity_label %}
+      <td>{{ alert.justification }}</td>
+      <td class="{{ severity_label }}-severity">{{ severity_label }}</td>
+      <td>{{ alert.alertDefinition.group.name }}</td>
+      <td>{{ alert.alertDefinition.name }}</td>
+      <td>{{ alert.message }}</td>
+      <td>{{ alert.notification_time.isoformat() }}</td>
+      <td><span class="{{solved_class}}">{{ alert.solved }}</span></td>
+      <td>{{ solved_time }}</td>
+      <td>{{ alert.alertDefinition.description }}</td>
+      <td><span class="{{validated_class}}">{{ alert.validated }}</span></td>
+      <td>{{ alert.generator }}</td>
+      <td><span class="{{notified_class}}">{{ alert.notified }}</span></td>
+      <td>{{ alert.ingestion_time.isoformat() }}</td>
+      <td><a href="/eboa_nav/query-alert/{{ alert.annotation_alert_uuid }}">{{ alert.annotation_alert_uuid }}</a></td>
+      <td><a href="/eboa_nav/query-annotation/{{ alert.annotation_uuid }}">{{ alert.annotation_uuid }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Justification</th>
+      <th>Severity</th>
+      <th>Group</th>
+      <th>Name</th>
+      <th>Message</th>
+      <th>Notification time</th>
+      <th>Solved</th>
+      <th>Solved time</th>
+      <th>Description</th>
+      <th>Validated</th>
+      <th>Generator</th>
+      <th>Notified</th>
+      <th>Ingestion time</th>
+      <th>Alert UUID</th>
+      <th>Annotation UUID</th>
+    </tr>
+  </tfoot>
+  
