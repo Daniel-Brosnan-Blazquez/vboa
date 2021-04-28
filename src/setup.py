@@ -20,8 +20,7 @@ setup(name="vboa",
           "eboa",
           "Flask",
           "Flask-DebugToolbar",
-          "gunicorn",
-          "jsonpath-ng"
+          "gunicorn"
       ],
       extras_require={
           "tests" :[

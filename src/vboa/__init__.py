@@ -25,7 +25,6 @@ from vboa.views.reporting_control import reporting_control
 from vboa.views.boa_scheduler import boa_scheduler
 from vboa.views.general_view_alerts import general_view_alerts
 
-
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
 
@@ -34,6 +33,9 @@ from eboa.engine.alerts import alert_severity_codes
 
 # Import method to obtain the resources PATH
 from eboa.engine.functions import get_resources_path
+
+# Import filters
+from vboa.filters import filters_for_events_in_json, filters_for_values_in_json
 
 def create_app():
     """
@@ -79,7 +81,9 @@ def create_app():
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
+    ########
     # Error handeling
+    ########
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template("panel/error.html"), 404
@@ -92,6 +96,9 @@ def create_app():
     def page_forbidden(e):
         return render_template("panel/error.html"), 403
     
+    ########
+    # Tests
+    ########
     @app.template_test()
     def has_value(values, name, value):
         filtered_values = [available_value for available_value in values if available_value.name == name and available_value.value == value]
@@ -107,6 +114,19 @@ def create_app():
         matching_text_formatted = "^" + matching_text + "$"
         return re.match(matching_text_formatted, item)
 
+    ########
+    # Filters for events in json format
+    ########
+    filters_for_events_in_json.add_filters(app)
+
+    ########
+    # Filters for values in json format
+    ########
+    filters_for_values_in_json.add_filters(app)
+
+    ########
+    # Filters for events in DDBB format
+    ########
     @app.template_filter()
     def reject_events_with_link_name(list_of_events, link_name):
         """Convert a string to all caps."""
@@ -127,35 +147,6 @@ def create_app():
         result = [event for event in list_of_events if len([value for value in event.eventTexts if value.name == name and value.value == filter]) > 0]
         
         return result
-
-    @app.template_filter()
-    def filter_annotations(list_of_annotations, annotation_name, annotation_system = None):
-        """Convert a string to all caps."""
-        result = [annotation for annotation in list_of_annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None)]
-        
-        return result
-
-    @app.template_filter()
-    def filter_annotations_by_text_value(list_of_annotations, name, filter):
-        """Convert a string to all caps."""
-        result = [annotation for annotation in list_of_annotations if len([value for value in annotation.annotationTexts if value.name == name and value.value == filter]) > 0]
-        
-        return result
-
-    @app.template_filter()
-    def filter_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
-        """Convert a string to all caps."""
-        result = [reference for reference in list_of_references for annotation in reference.annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and len([value for value in annotation.annotationTexts if value.name == value_name and value.value == filter]) > 0]
-        
-        return result
-
-    @app.template_filter()
-    def reject_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
-        """Convert a string to all caps."""
-        result = [reference for reference in list_of_references if len([annotation for annotation in reference.annotations if len([value for value in annotation.annotationTexts if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and value.name == value_name and value.value == filter]) > 0]) == 0]
-
-        return result
-
 
     @app.template_filter()
     def events_group_by_text_value(list_of_events, name):
@@ -224,27 +215,6 @@ def create_app():
         # end for
         return result
 
-    @app.template_filter()    
-    def refs_get_first_annotation(list_of_refs, name = None, system = None):
-        """Convert a string to all caps."""
-        result = []
-        for ref in list_of_refs:
-            if name and system:
-                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name and annotation.annotationCnf.system == system]
-            elif name:
-                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name]
-            elif system:
-                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.system == system]
-            else:
-                annotations = ref.annotations
-            # end if
-            if len(annotations) > 0:
-                result.append(annotations[0])
-            # end if
-        # end for
-        
-        return result
-
     @app.template_filter()
     def filter_events_by_text_values(list_of_events, name, values):
         """Convert a string to all caps."""
@@ -275,19 +245,79 @@ def create_app():
         durations = [event.get_duration() for event in list_of_events]
         return max(durations)
 
+    ########
+    # Filters for annotations in DDBB format
+    ########
     @app.template_filter()
-    def flatten(list_of_lists):
-        return [item for list in list_of_lists for item in list]
+    def filter_annotations(list_of_annotations, annotation_name, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [annotation for annotation in list_of_annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None)]
+        
+        return result
 
+    @app.template_filter()
+    def filter_annotations_by_text_value(list_of_annotations, name, filter):
+        """Convert a string to all caps."""
+        result = [annotation for annotation in list_of_annotations if len([value for value in annotation.annotationTexts if value.name == name and value.value == filter]) > 0]
+        
+        return result
+
+    ########
+    # Filters for annotations in DDBB format
+    ########
+    @app.template_filter()
+    def filter_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [reference for reference in list_of_references for annotation in reference.annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and len([value for value in annotation.annotationTexts if value.name == value_name and value.value == filter]) > 0]
+        
+        return result
+
+    @app.template_filter()
+    def reject_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [reference for reference in list_of_references if len([annotation for annotation in reference.annotations if len([value for value in annotation.annotationTexts if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and value.name == value_name and value.value == filter]) > 0]) == 0]
+
+        return result
+
+    @app.template_filter()    
+    def refs_get_first_annotation(list_of_refs, name = None, system = None):
+        """Convert a string to all caps."""
+        result = []
+        for ref in list_of_refs:
+            if name and system:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name and annotation.annotationCnf.system == system]
+            elif name:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name]
+            elif system:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.system == system]
+            else:
+                annotations = ref.annotations
+            # end if
+            if len(annotations) > 0:
+                result.append(annotations[0])
+            # end if
+        # end for
+        
+        return result
+
+    ########
+    # Filters for alerts in DDBB format
+    ########
     @app.template_filter()
     def get_severity_label(severity):
         severity_labels = [severity_label for severity_label in alert_severity_codes if alert_severity_codes[severity_label] == severity]
         return severity_labels[0]
 
-    @app.template_filter()
-    def get_value_key(dict, key):
+    ########
+    # Filters for values in DDBB format
+    ########
 
-        return dict[key]
+    ########
+    # Filters for lists
+    ########
+    @app.template_filter()
+    def flatten(list_of_lists):
+        return [item for list in list_of_lists for item in list]
 
     @app.template_filter()
     def mean(list_of_items):
@@ -328,9 +358,17 @@ def create_app():
         
         return tuple(list_to_covert)
 
-    ###
+    ########
+    # Filters for dicts
+    ########
+    @app.template_filter()
+    def get_value_key(dict, key):
+
+        return dict[key]
+
+    ########
     # Date operations
-    ###
+    ########
     @app.template_filter()
     def convert_eboa_events_to_date_segments(list_of_events):
         """Convert list of events to date segments."""
