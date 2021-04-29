@@ -221,6 +221,64 @@ class TestVboaFiltersInJson(unittest.TestCase):
                 }]
         }
 
+    def test_search_values_duplicated_using_indexed_values(self):
+        """
+        Method to test the function filters_for_values_in_json.search_values using the indexed values
+        """
+
+        list_values = [{
+            "name": "name",
+            "value": "value",
+            "type": "text"
+        },{
+            "name": "name",
+            "value": "value",
+            "type": "text"
+        },{
+            "name": "name2",
+            "value": "value2",
+            "type": "text"
+        }]
+
+        indexed_values = {
+            "name": [{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+            },{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+            }],
+            "name2": [{
+                "name": "name2",
+                "value": "value2",
+                "type": "text"
+            }]
+        }
+
+        value_filters = [{
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "value": {
+                "filter": "value",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_values = filters_for_values_in_json.search_values(list_values, value_filters, indexed_values = indexed_values)
+
+        assert found_values == {
+            "group": [{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+                }]
+        }
+
     def test_search_values_duplicated_not_stop_first(self):
         """
         Method to test the function filters_for_values_in_json.check_value

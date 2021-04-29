@@ -48,7 +48,23 @@ def check_value(value, value_filter):
 
     return matches
 
-def search_values(list_values, value_filters, stop_first = True):
+def insert_value(value, found_values, value_filter):
+    """
+    """
+    group = "values"
+    if "group" in value_filter:
+        group = value_filter["group"]
+    # end if
+
+    if group not in found_values:
+        found_values[group] = []
+    # end if
+
+    found_values[group].append(value)
+
+    return
+
+def search_values(list_values, value_filters, stop_first = True, indexed_values = None):
     """
     Recursive method to get the values inside the list of values with name value_name
 
@@ -64,59 +80,56 @@ def search_values(list_values, value_filters, stop_first = True):
 
     """
     found_values = {}
-    found_value_flags = [False] * len(value_filters)
-    for value in list_values:
 
-        # Check if all values were already found
-        if False not in found_value_flags and stop_first:
-            break
-        # end if
-        
-        if type(value) == list:
-            found_values += _search_values(list_values, value_filters, stop_first)
-        # end if
-
-        iterator = 0
-        for value_filter in value_filters:
-            name_filter = value_filter["name"]
-            if found_value_flags[iterator] and stop_first:
-                iterator += 1
-                continue
-            # end if
-            value_matches = False
-            # Discriminate by type of operator
-            if name_filter["op"] in arithmetic_operators.keys():
-                op = arithmetic_operators[name_filter["op"]]
-                # Check if the value name matches
-                if op(value["name"], name_filter["filter"]):
+    for value_filter in value_filters:
+        name_filter = value_filter["name"]
+        if indexed_values != None and name_filter["op"] == "==":
+            if name_filter["filter"] in indexed_values:
+                for value in indexed_values[name_filter["filter"]]:
                     value_matches = check_value(value, value_filter)
-                # end if
-            elif name_filter["op"] in regex_operators.keys():
-                # Check if the value name matches
-                if re.match(name_filter["filter"], value["name"]):
-                    value_matches = check_value(value, value_filter)
-                # end if
+                    if value_matches:
+                        insert_value(value, found_values, value_filter)
+
+                        if stop_first:
+                            break
+                        # end if
+                        
+                    # end if
             # end if
+        else:
+            for value in list_values:
 
-            # Insert the value in the dictionary
-            if value_matches:
-                group = "values"
-                if "group" in value_filter:
-                    group = value_filter["group"]
+                if type(value) == list:
+                    found_values += _search_values(value, [value_filter], stop_first)
                 # end if
 
-                if group not in found_values:
-                    found_values[group] = []
+                value_matches = False
+                # Discriminate by type of operator
+                if name_filter["op"] in arithmetic_operators.keys():
+                    op = arithmetic_operators[name_filter["op"]]
+                    # Check if the value name matches
+                    if op(value["name"], name_filter["filter"]):
+                        value_matches = check_value(value, value_filter)
+                    # end if
+                elif name_filter["op"] in regex_operators.keys():
+                    # Check if the value name matches
+                    if re.match(name_filter["filter"], value["name"]):
+                        value_matches = check_value(value, value_filter)
+                    # end if
                 # end if
-                
-                found_values[group].append(value)
-                found_value_flags[iterator] = True
 
-                # Break as this value matched already with a filter
-                break
-            # end if
-            iterator += 1
-        # end for
+                if value_matches:
+                    insert_value(value, found_values, value_filter)
+
+                    if stop_first:
+                        break
+                    # end if
+                    
+                # end if
+                    
+            # end for
+        # end if
+    # end for
         
     # end for
     return found_values
@@ -136,7 +149,12 @@ def get_values_definition(entity, value_filters, stop_first = True):
     :rtype: dict
 
     """
-    found_values = search_values(entity["values"], value_filters, stop_first)
+    indexed_values = None
+    if "indexed_values" in entity:
+        indexed_values = entity["indexed_values"]
+    # end if
+    
+    found_values = search_values(entity["values"], value_filters, stop_first = stop_first, indexed_values = indexed_values)
     return found_values
 
 def add_filters(app):
