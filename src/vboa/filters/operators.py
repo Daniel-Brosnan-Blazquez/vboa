@@ -1,6 +1,11 @@
 # Import python utilities
 import operator
 
+mathematic_operators = {
+    "+": operator.add,
+    "-": operator.sub
+}
+
 arithmetic_operators = {
     ">": operator.gt,
     ">=": operator.ge,

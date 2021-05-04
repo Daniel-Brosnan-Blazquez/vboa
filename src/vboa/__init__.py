@@ -35,7 +35,7 @@ from eboa.engine.alerts import alert_severity_codes
 from eboa.engine.functions import get_resources_path
 
 # Import filters
-from vboa.filters import filters_for_events_in_json, filters_for_values_in_json
+from vboa.filters import filters_for_events_in_json, filters_for_annotations_in_json, filters_for_values_in_json, filters_for_dates_in_json
 
 def create_app():
     """
@@ -120,9 +120,19 @@ def create_app():
     filters_for_events_in_json.add_filters(app)
 
     ########
+    # Filters for annotations in json format
+    ########
+    filters_for_annotations_in_json.add_filters(app)
+
+    ########
     # Filters for values in json format
     ########
     filters_for_values_in_json.add_filters(app)
+
+    ########
+    # Filters for dates in json format
+    ########
+    filters_for_dates_in_json.add_filters(app)
 
     ########
     # Filters for events in DDBB format

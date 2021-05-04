@@ -13,6 +13,7 @@ import sys
 # Import the VBOA functions module
 from vboa.filters import filters_for_values_in_json
 from vboa.filters import filters_for_events_in_json
+from vboa.filters import filters_for_annotations_in_json
 
 class TestVboaFiltersInJson(unittest.TestCase):
 
@@ -226,6 +227,7 @@ class TestVboaFiltersInJson(unittest.TestCase):
         Method to test the function filters_for_values_in_json.search_values using the indexed values
         """
 
+        # ==
         list_values = [{
             "name": "name",
             "value": "value",
@@ -274,6 +276,117 @@ class TestVboaFiltersInJson(unittest.TestCase):
         assert found_values == {
             "group": [{
                 "name": "name",
+                "value": "value",
+                "type": "text"
+                }]
+        }
+
+        # in
+        list_values = [{
+            "name": "name",
+            "value": "value",
+            "type": "text"
+        },{
+            "name": "name",
+            "value": "value",
+            "type": "text"
+        },{
+            "name": "name2",
+            "value": "value2",
+            "type": "text"
+        }]
+
+        indexed_values = {
+            "name": [{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+            },{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+            }],
+            "name2": [{
+                "name": "name2",
+                "value": "value2",
+                "type": "text"
+            }]
+        }
+
+        value_filters = [{
+            "name": {
+                "filter": ["name"],
+                "op": "in"
+            },
+            "value": {
+                "filter": "value",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_values = filters_for_values_in_json.search_values(list_values, value_filters, indexed_values = indexed_values)
+
+        assert found_values == {
+            "group": [{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+                }]
+        }
+
+        list_values = [{
+            "name": "name",
+            "value": "value",
+            "type": "text"
+        },{
+            "name": "name",
+            "value": "value",
+            "type": "text"
+        },{
+            "name": "name2",
+            "value": "value2",
+            "type": "text"
+        }]
+
+        indexed_values = {
+            "name": [{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+            },{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+            }],
+            "name2": [{
+                "name": "name2",
+                "value": "value",
+                "type": "text"
+            }]
+        }
+
+        value_filters = [{
+            "name": {
+                "filter": ["name", "name2"],
+                "op": "in"
+            },
+            "value": {
+                "filter": "value",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_values = filters_for_values_in_json.search_values(list_values, value_filters, indexed_values = indexed_values)
+
+        assert found_values == {
+            "group": [{
+                "name": "name",
+                "value": "value",
+                "type": "text"
+                },{
+                "name": "name2",
                 "value": "value",
                 "type": "text"
                 }]
@@ -609,3 +722,505 @@ class TestVboaFiltersInJson(unittest.TestCase):
                 }]
             }
         ]
+
+    #############
+    # Tests for filters for annotations
+    #############
+    def test_check_annotation_system_all_operators(self):
+        """
+        Method to test the function filters_for_annotations_in_json.check_system
+        """
+        # regex
+        annotation = {
+            "annotation_uuid": "5f519d5e-a665-11eb-8c0f-000000000234",
+            "name": "name",
+            "system": "system"
+        }
+        
+        annotation_filter = {
+            "name": {
+                "filter": ".*am.*",
+                "op": "regex"
+            },
+            "system": {
+                "filter": "system",
+                "op": "regex"
+            },
+            "group": "group"
+        }
+        
+        check = filters_for_annotations_in_json.check_system(annotation, annotation_filter)
+
+        assert check == True
+
+        annotation = {
+            "name": "name",
+            "system": "system",
+            "type": "text"
+        }
+        
+        annotation_filter = {
+            "name": {
+                "filter": "different",
+                "op": "regex"
+            },
+            "system": {
+                "filter": "different",
+                "op": "regex"
+            },
+            "group": "group"
+        }
+        
+        check = filters_for_annotations_in_json.check_system(annotation, annotation_filter)
+
+        assert check == False
+
+        # ==
+        annotation = {
+            "name": "name",
+            "system": "system",
+            "type": "text"
+        }
+        
+        annotation_filter = {
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }
+        
+        check = filters_for_annotations_in_json.check_system(annotation, annotation_filter)
+
+        assert check == True
+
+        annotation = {
+            "name": "name",
+            "system": "system",
+            "type": "text"
+        }
+        
+        annotation_filter = {
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "different",
+                "op": "=="
+            },
+            "group": "group"
+        }
+        
+        check = filters_for_annotations_in_json.check_system(annotation, annotation_filter)
+
+        assert check == False
+
+        # !=
+        annotation = {
+            "name": "name",
+            "system": "system",
+            "type": "text"
+        }
+        
+        annotation_filter = {
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "different",
+                "op": "!="
+            },
+            "group": "group"
+        }
+        
+        check = filters_for_annotations_in_json.check_system(annotation, annotation_filter)
+
+        assert check == True
+
+        annotation = {
+            "name": "name",
+            "system": "system",
+            "type": "text"
+        }
+        
+        annotation_filter = {
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "system",
+                "op": "!="
+            },
+            "group": "group"
+        }
+        
+        check = filters_for_annotations_in_json.check_system(annotation, annotation_filter)
+
+        assert check == False
+
+    def test_search_annotations_duplicated(self):
+        """
+        Method to test the function filters_for_annotations_in_json.search_annotations
+        """
+
+        annotations = {
+            "name": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.search_annotations(annotations, annotation_filters)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+
+    def test_search_annotations_in(self):
+        """
+        Method to test the function filters_for_annotations_in_json.search_annotations
+        """
+
+        annotations = {
+            "name": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }],
+            "name2": [{
+                "name": "name2",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name2",
+                "system": "system2",
+                "type": "text"
+                }]
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": ["name", "name2"],
+                "op": "in"
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.search_annotations(annotations, annotation_filters)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name2",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+
+    def test_search_annotations_other_operations(self):
+        """
+        Method to test the function filters_for_annotations_in_json.search_annotations
+        """
+
+        # !=
+        annotations = {
+            "name": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }],
+            "name2": [{
+                "name": "name2",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name2",
+                "system": "system2",
+                "type": "text"
+                }]
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": "name",
+                "op": "!="
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.search_annotations(annotations, annotation_filters)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name2",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+
+        # regex
+        annotations = {
+            "name": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }],
+            "name2": [{
+                "name": "name2",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name2",
+                "system": "system2",
+                "type": "text"
+                }]
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": "nam.*",
+                "op": "regex"
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.search_annotations(annotations, annotation_filters)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name2",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+
+    def test_search_annotations_duplicated_not_stop_first(self):
+        """
+        Method to test the function filters_for_annotations_in_json.search_annotations not stopping at the first match
+        """
+
+        annotations = {
+            "name": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.search_annotations(annotations, annotation_filters, stop_first = False)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+
+    def test_search_annotations_without_system(self):
+        """
+        Method to test the function filters_for_annotations_in_json.search_annotations without system
+        """
+
+        annotations = {
+            "name": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.search_annotations(annotations, annotation_filters)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+
+    def test_get_annotations_duplicated_not_stop_first(self):
+        """
+        Method to test the function filters_for_annotations_in_json.get_annotations not stopping at the first match
+        """
+
+        explicit_reference = {
+            "explicit_ref_uuid": "5f519d5e-a665-11eb-8c0f-000000000234",
+            "ingestion_time": "2021-04-30T00:00:00",
+            "explicit_ref": "EXPLICIT_REFERENCE",
+            "alerts": [],
+            "annotations": {
+                "name": [{
+                    "name": "name",
+                    "system": "system",
+                    "type": "text"
+                },{
+                    "name": "name",
+                    "system": "system",
+                    "type": "text"
+                }]
+            }
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.get_annotations_definition(explicit_reference, annotation_filters, stop_first = False)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                },{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }
+
+    def test_get_annotations_duplicated(self):
+        """
+        Method to test the function filters_for_annotations_in_json.get_annotations
+        """
+
+        explicit_reference = {
+            "explicit_ref_uuid": "5f519d5e-a665-11eb-8c0f-000000000234",
+            "ingestion_time": "2021-04-30T00:00:00",
+            "explicit_ref": "EXPLICIT_REFERENCE",
+            "alerts": [],
+            "annotations": {
+                "name": [{
+                    "name": "name",
+                    "system": "system",
+                    "type": "text"
+                },{
+                    "name": "name",
+                    "system": "system",
+                    "type": "text"
+                }]
+            }
+        }
+        
+        annotation_filters = [{
+            "name": {
+                "filter": "name",
+                "op": "=="
+            },
+            "system": {
+                "filter": "system",
+                "op": "=="
+            },
+            "group": "group"
+        }]
+        
+        found_annotations = filters_for_annotations_in_json.get_annotations_definition(explicit_reference, annotation_filters)
+
+        assert found_annotations == {
+            "group": [{
+                "name": "name",
+                "system": "system",
+                "type": "text"
+                }]
+        }

@@ -71,6 +71,9 @@ class TestEboaNav(unittest.TestCase):
         assert len(source_uuids_not_matching_triggering_rule) == 0
 
     def test_prepare_reingestion_of_sources_and_dependencies_one_source_no_matching_triggering_rules(self):
+        # Move test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
 
         # Insert data
         data = {"operations":[{
@@ -101,6 +104,8 @@ class TestEboaNav(unittest.TestCase):
         assert len(source_uuids_matching_triggering_rule) == 0
 
         assert len(source_uuids_not_matching_triggering_rule) == 1
+
+        shutil.copyfile("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
 
     def test_prepare_reingestion_of_sources_and_dependencies_one_source_matching_triggering_rules(self):
 

@@ -11,19 +11,19 @@ from dateutil import parser
 import re
 
 # Import operators
-from eboa.engine.operators import arithmetic_operators, text_operators, regex_operators
+from vboa.filters.operators import arithmetic_operators, text_operators, regex_operators
 
 def check_value(value, value_filter):
     """
     Method to get the values inside the list of values with name value_name
 
     :param value: value structure
-    :type list_values: list
-    :param value_filters: list of value filters
-    :type value_filters: list of value filters
+    :type value: dict
+    :param value_filter: value filters
+    :type value_filter: dict
 
-    :return: found_values
-    :rtype: list
+    :return: flag indicating if the value matches the filter
+    :rtype: bool
 
     """
     matches = False
@@ -83,18 +83,25 @@ def search_values(list_values, value_filters, stop_first = True, indexed_values 
 
     for value_filter in value_filters:
         name_filter = value_filter["name"]
-        if indexed_values != None and name_filter["op"] == "==":
-            if name_filter["filter"] in indexed_values:
-                for value in indexed_values[name_filter["filter"]]:
-                    value_matches = check_value(value, value_filter)
-                    if value_matches:
-                        insert_value(value, found_values, value_filter)
+        if indexed_values != None and (name_filter["op"] == "==" or name_filter["op"] == "in"):
+            if name_filter["op"] == "==":
+                names = [name_filter["filter"]]
+            else:
+                names = name_filter["filter"]
+            # end if
+            for name in names:
+                if name in indexed_values:
+                    for value in indexed_values[name]:
+                        value_matches = check_value(value, value_filter)
+                        if value_matches:
+                            insert_value(value, found_values, value_filter)
 
-                        if stop_first:
-                            break
+                            if stop_first:
+                                break
+                            # end if
+
                         # end if
-                        
-                    # end if
+                # end if
             # end if
         else:
             for value in list_values:
