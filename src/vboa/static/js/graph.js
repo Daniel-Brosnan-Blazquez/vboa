@@ -39,7 +39,8 @@ export function display_pie(dom_id, data, options){
                     {render: 'percentage',
                      fontSize: 14,
                      fontStyle: "bold",
-                     fontColor: "white"}]
+                     fontColor: "white",
+                     precision: 2}]
             }
         }
     }
