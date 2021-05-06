@@ -34,6 +34,7 @@
     "jquery": "3.4.1",
     "jszip": "3.2.2",
     "keycharm": "0.3.1",
+    "mathjs": "^9.3.2",
     "metismenu": "3.0.5",
     "moment": "2.24.0",
     "ol": "5.3.3",

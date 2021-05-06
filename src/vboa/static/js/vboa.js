@@ -10,6 +10,7 @@ import "datatables.net-select/js/dataTables.select.js";
 import "jszip/dist/jszip.min.js";
 import "chosen-js/chosen.jquery.min.js";
 import "metismenu/dist/metisMenu.min.js";
+import * as mathjs from "mathjs/lib/browser/math.js";
 import * as toastr from "toastr/toastr.js";
 import * as olMap from "ol/Map.js";
 import * as olView from "ol/View.js";
@@ -51,6 +52,8 @@ import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
 import "toastr/build/toastr.min.css";
+
+export let math = mathjs;
 
 /* Save the very same page in the div with id boa-html-page */
 jQuery(document).ready(function(){
