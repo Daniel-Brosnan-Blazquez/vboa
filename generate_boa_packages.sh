@@ -113,7 +113,7 @@ fi
 read -p "
 Welcome to the generator of the BOA packages for the BOA app :-)
 
-You are trying to initialize a new development environment for the app: $APP...
+You are trying to generate BOA packages for the app: $APP...
 These are the configuration options that will be applied to initialize the environment:
 - PATH_TO_EBOA: $PATH_TO_EBOA
 - PATH_TO_VBOA: $PATH_TO_VBOA
