@@ -1,12 +1,13 @@
 {% extends "panel/index.html" %}
 
-{% set elements = sources + events + annotations + reports + ers %}
 {% set sources_alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set events_alerts = events|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set annotations_alerts = annotations|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set reports_alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set ers_alerts = ers|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set alerts = sources_alerts + events_alerts + annotations_alerts + reports_alerts + ers_alerts %}
+
+{% set number_of_elements = [sources_alerts|length, events_alerts|length, annotations_alerts|length, reports_alerts|length, ers_alerts|length]|max %}
 
 {% block content %}
 <div class="row">
@@ -16,7 +17,7 @@
 {% include "general_view_alerts/general_view_alerts_query.html" %}
 
 <!-- Pagination -->
-{% with route = "/general-view-alerts-pages", elements = elements, filters = filters %}
+{% with route = "/general-view-alerts/general-view-alerts-pages", elements = None, number_of_elements = number_of_elements, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 

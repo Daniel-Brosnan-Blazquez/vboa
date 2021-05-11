@@ -2,7 +2,14 @@
 {% set filters_to_show_all = filters.copy() %}
 {% do filters_to_show_all.__setitem__("offset", [0]) %}
 {% do filters_to_show_all.__setitem__("limit", [""]) %}
-{% if filters["limit"][0] != "" and filters["limit"][0]|int == elements|length %}
+
+{# Define the number of elements displayed in the view #}
+{% set number_of_elements_displayed = number_of_elements %}
+{% if elements != None %}
+{% set number_of_elements_displayed = elements|length %}
+{% endif %}
+
+{% if filters["limit"][0] != "" and filters["limit"][0]|int == number_of_elements_displayed %}
 <div class="panel panel-yellow">
   <div class="panel-heading">
     The number of requested elements is higher than the limit of the query, you can navigate through all the list using the following links:
@@ -27,7 +34,7 @@
   </div>
   {% endif %}
 </div>
-{% elif filters["offset"][0]|int > 0 and elements|length < filters["limit"][0]|int %}
+{% elif filters["offset"][0]|int > 0 and filters["limit"][0]|int > number_of_elements_displayed  %}
 <div class="panel panel-yellow">
   <div class="panel-heading">
     All the elements have been reviewed, you can go to the previous pages:
@@ -38,6 +45,15 @@
     <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_forward_prev|tojson }}, true)'><< Prev</a>
     <br/>
     <a href="#" onclick='vboa.request_info_json("{{ route }}", vboa.render_page, {{ filters_to_show_all|tojson }}, true)'><< Show all >></a>
+  </div>
+</div>
+{% elif filters["limit"][0] != "" and filters["limit"][0]|int < number_of_elements_displayed %}
+<div class="panel panel-red">
+  <div class="panel-heading">
+    Pagination is aborted. Limit management at query level has an error.
+  </div>
+  <div class="panel-body" style="text-align:center">
+    The query used is not managing correctly the limit applied. The number of elements to be displayed ({{ number_of_elements_displayed }}) exceeded the limit ({{ filters["limit"][0] }}).
   </div>
 </div>
 {% endif %}
