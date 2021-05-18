@@ -229,30 +229,25 @@ def query_and_render(start_filter = None, stop_filter = None, sliding_window = N
 
     # Obtain source alerts and then the sources
     source_alerts = query.get_source_alerts(kwargs)
-    sources = query.get_sources(source_uuids = {"filter": [source_alert.source_uuid for source_alert in source_alerts], "op": "in"})
-
+    
     # Remove filter by DIM signature
     del kwargs["dim_signatures"]
 
     # Obtain report alerts and then the reports
     report_alerts = query.get_report_alerts(kwargs)
-    reports = query.get_reports(report_uuids = {"filter": [report_alert.report_uuid for report_alert in report_alerts], "op": "in"})
 
     # Obtain event alerts and then the events
     event_alerts = query.get_event_alerts(kwargs)
-    events = query.get_events(event_uuids = {"filter": [event_alert.event_uuid for event_alert in event_alerts], "op": "in"})
 
     # Obtain annotation alerts and then the annotations
     annotation_alerts = query.get_annotation_alerts(kwargs)
-    annotations = query.get_annotations(annotation_uuids = {"filter": [annotation_alert.annotation_uuid for annotation_alert in annotation_alerts], "op": "in"})
 
     # Obtain explicit ref alerts and then the explicit refs
-    explicit_ref_alerts = query.get_explicit_ref_alerts(kwargs)
-    explicit_refs = query.get_explicit_refs(explicit_ref_uuids = {"filter": [explicit_ref_alert.explicit_ref_uuid for explicit_ref_alert in explicit_ref_alerts], "op": "in"})
+    er_alerts = query.get_explicit_ref_alerts(kwargs)
     
     reporting_start = stop_filter["date"]
     reporting_stop = start_filter["date"]
 
     template = "general_view_alerts/general_view_alerts.html"
 
-    return render_template(template, sources=sources, events=events, annotations=annotations, reports=reports, ers=explicit_refs, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)
+    return render_template(template, source_alerts=source_alerts, event_alerts=event_alerts, annotation_alerts=annotation_alerts, report_alerts=report_alerts, er_alerts=er_alerts, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)
