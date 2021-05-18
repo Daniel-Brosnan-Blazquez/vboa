@@ -324,7 +324,7 @@ def assert_equal_list_dictionaries(items, expected_items):
         test_case.assertEqual(matched_item[0], expected_item)
     # end for
 
-def query(driver, wait, start = None, stop = None):
+def query(driver, wait, start = None, stop = None, limit = None):
 
     query_interface = driver.find_element_by_partial_link_text("Query interface")
     i = 0
@@ -346,6 +346,13 @@ def query(driver, wait, start = None, stop = None):
         stopTime = driver.find_element_by_id("stop-input")
         ActionChains(driver).double_click(stopTime).perform()
         stopTime.send_keys(stop)
+    # end if
+
+    if limit is not None:
+        # Select limit
+        limitNum = driver.find_element_by_name("limit")
+        ActionChains(driver).double_click(limitNum).perform()
+        limitNum.send_keys(limit)
     # end if
 
     click(driver.find_element_by_id("query-submit-button"))
