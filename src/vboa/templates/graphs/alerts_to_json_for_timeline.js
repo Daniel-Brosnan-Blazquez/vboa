@@ -1,7 +1,7 @@
 var alerts = [];
-{% if sources_alerts|length > 0 %}
-var sources_alerts = [
-    {% for alert in sources_alerts %}
+{% if source_alerts|length > 0 %}
+var source_alerts = [
+    {% for alert in source_alerts %}
     {% if alert.solved == "True" %}
     {% set solved_class="bold-red" %}
     {% else %}
@@ -48,11 +48,11 @@ var sources_alerts = [
     },
     {% endfor %}
 ]
-alerts = alerts.concat(sources_alerts)
+alerts = alerts.concat(source_alerts)
 {% endif %}
-{% if events_alerts|length > 0 %}
-var events_alerts = [
-    {% for alert in events_alerts %}
+{% if event_alerts|length > 0 %}
+var event_alerts = [
+    {% for alert in event_alerts %}
     {% if alert.solved == "True" %}
     {% set solved_class="bold-red" %}
     {% else %}
@@ -99,11 +99,11 @@ var events_alerts = [
     },
     {% endfor %}
 ]
-alerts = alerts.concat(events_alerts)
+alerts = alerts.concat(event_alerts)
 {% endif %}
-{% if annotations_alerts|length > 0 %}
-var annotations_alerts = [
-    {% for alert in annotations_alerts %}
+{% if annotation_alerts|length > 0 %}
+var annotation_alerts = [
+    {% for alert in annotation_alerts %}
     {% if alert.solved == "True" %}
     {% set solved_class="bold-red" %}
     {% else %}
@@ -150,11 +150,11 @@ var annotations_alerts = [
     },
     {% endfor %}
 ]
-alerts = alerts.concat(annotations_alerts)
+alerts = alerts.concat(annotation_alerts)
 {% endif %}
-{% if reports_alerts|length > 0 %}
-var reports_alerts = [
-    {% for alert in reports_alerts %}
+{% if report_alerts|length > 0 %}
+var report_alerts = [
+    {% for alert in report_alerts %}
     {% if alert.solved == "True" %}
     {% set solved_class="bold-red" %}
     {% else %}
@@ -201,11 +201,11 @@ var reports_alerts = [
     },
     {% endfor %}
 ]
-alerts = alerts.concat(reports_alerts)
+alerts = alerts.concat(report_alerts)
 {% endif %}
-{% if ers_alerts|length > 0 %}
-var ers_alerts = [
-    {% for alert in ers_alerts %}
+{% if er_alerts|length > 0 %}
+var er_alerts = [
+    {% for alert in er_alerts %}
     {% if alert.solved == "True" %}
     {% set solved_class="bold-red" %}
     {% else %}
@@ -252,5 +252,5 @@ var ers_alerts = [
     },
     {% endfor %}
 ]
-alerts = alerts.concat(ers_alerts)
+alerts = alerts.concat(er_alerts)
 {% endif %}
