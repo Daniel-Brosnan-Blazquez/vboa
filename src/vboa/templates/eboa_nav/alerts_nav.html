@@ -1,0 +1,75 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+
+{% if event_alerts|length > 0 %}
+{% set alerts = event_alerts %}
+{% set alerts_html_table_file = "general_view_alerts/general_view_alerts_events_table_content.html" %}
+{% block li_active_events %}class="active"{% endblock %}
+{% block div_active_events %}active{% endblock %}
+{% block events_nav_content %}
+<div>
+  <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
+</div>
+<!-- Pagination -->
+{% with route = "/eboa_nav/query-alerts-pages", elements = alerts, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
+{% if alerts|length > 0 %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of alerts
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="alerts-table">
+    {% with alerts = alerts %}
+    {% include alerts_html_table_file %}
+    {% endwith %}
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% if show["timeline"] %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Timeline of alerts
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="alerts-nav-timeline">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of alerts
+  </div>
+  <div id="alerts-nav-no-data">
+    <br/>
+    <p style="text-indent: 1em">No "alerts" have been found with the requested filters.</p>
+    <br/>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
+{% endblock %}
+{% endif %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        {% if alerts|length > 0 %}
+        {% if show["timeline"] %}
+        {% with source_alerts=source_alerts, event_alerts=event_alerts, annotation_alerts=annotation_alerts, report_alerts=report_alerts, er_alerts=er_alerts %}
+        {% include "graphs/alerts_to_json_for_timeline.js" %}
+        {% endwith %}
+        vboa.create_alert_timeline(alerts, "alerts-nav-timeline");
+        {% endif %}
+        {% endif %}     
+    </script>
+{% endblock %}

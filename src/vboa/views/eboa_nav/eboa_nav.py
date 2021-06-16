@@ -46,14 +46,21 @@ def query_events_and_render():
         filters = request.form.to_dict(flat=False).copy()
         filters["offset"] = [""]
 
-        events = query_events(filters)
-        show = define_what_to_show_events(filters)
-        events_geometries = []
-        if show["map"]:
-            events_geometries = [{"event": event, "geometries": engine.geometries_to_wkt(event.eventGeometries)} for event in events if len(event.eventGeometries) > 0]
-        # end if        
+        if "query_events" in filters:
+            events = query_events(filters)
+            show = define_what_to_show_events(filters)
+            events_geometries = []
+            if show["map"]:
+                events_geometries = [{"event": event, "geometries": engine.geometries_to_wkt(event.eventGeometries)} for event in events if len(event.eventGeometries) > 0]
+            # end if        
 
-        return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show, filters=filters)
+            return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show, filters=filters)
+        else:
+            event_alerts = query_event_alerts(filters)
+            show = define_what_to_show_alerts(filters)
+            return render_template("eboa_nav/alerts_nav.html", event_alerts=event_alerts, show=show, filters=filters)
+        # end if
+    
     # end if
     return render_template("eboa_nav/query_events.html")
 
@@ -75,7 +82,7 @@ def query_events_pages():
 
 def define_what_to_show_events(filters):
     """
-    Function to define what to show for annotations
+    Function to define what to show for events
     """
     show = {}
     show["timeline"]=True
@@ -135,6 +142,28 @@ def query_events(filters):
     """
     current_app.logger.debug("Query events")
 
+    kwargs = set_filters_for_query_events_or_event_alerts(filters)
+
+    events = query.get_events(**kwargs)
+
+    return events
+
+def query_event_alerts(filters):
+    """
+    Query event alerts.
+    """
+    current_app.logger.debug("Query event alerts")
+
+    kwargs = set_filters_for_query_events_or_event_alerts(filters)
+
+    event_alerts = query.get_event_alerts(kwargs)
+
+    return event_alerts
+
+def set_filters_for_query_events_or_event_alerts(filters):
+    """
+    Set filter for query events or query event alerts.
+    """
     kwargs = {}
 
     if filters["key"][0] != "":
@@ -269,11 +298,19 @@ def query_events(filters):
         # end for
     # end if
     if filters["ingestion_time"][0] != "":
-        kwargs["ingestion_time_filters"] = []
+        if "query_events" in filters:
+            kwargs["ingestion_time_filters"] = []
+        else:
+            kwargs["event_ingestion_time_filters"] = []
+        # end if
         i = 0
         operators = filters["ingestion_time_operator"]
         for ingestion_time in filters["ingestion_time"]:
-            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            if "query_events" in filters:
+                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            else:
+                kwargs["event_ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            # end if
             i+=1
         # end for
     # end if
@@ -304,9 +341,7 @@ def query_events(filters):
         kwargs["offset"] = filters["offset"][0]
     # end if
 
-    events = query.get_events(**kwargs)
-
-    return events
+    return kwargs
 
 @bp.route("/query-event-links/<uuid:event_uuid>")
 def query_event_links_and_render(event_uuid):
@@ -2037,3 +2072,29 @@ def treat_data():
         "returned_values": returned_values
     }
     return jsonify(exit_information)
+
+@bp.route("/query-alerts-pages", methods=["POST"])
+def query_alerts_pages():
+    """
+    Query alerts using pages and render.
+    """
+    current_app.logger.debug("Query alerts using pages and render")
+    filters = request.json
+
+    if "query_event_alerts" in filters:
+        alerts = query_event_alerts(filters)
+    # end if
+    show = define_what_to_show_alerts(filters) 
+    return render_template("eboa_nav/alerts_nav.html", alerts=alerts, show=show, filters=filters)
+
+def define_what_to_show_alerts(filters):
+    """
+    Function to define what to show for alerts
+    """
+    show = {}
+    show["timeline"]=True
+    if not "show_timeline" in filters:
+        show["timeline"] = False
+    # end if
+
+    return show
