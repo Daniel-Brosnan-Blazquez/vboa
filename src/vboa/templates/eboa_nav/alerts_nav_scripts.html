@@ -1,0 +1,10 @@
+<script type="text/javascript">
+    {% if alerts|length > 0 %}
+    {% if show["timeline"] %}
+    {% with source_alerts=source_alerts, event_alerts=event_alerts, annotation_alerts=annotation_alerts, report_alerts=report_alerts, er_alerts=er_alerts %}
+    {% include "graphs/alerts_to_json_for_timeline.js" %}
+    {% endwith %}
+    vboa.create_alert_timeline(alerts, "alerts-nav-timeline");
+    {% endif %}
+    {% endif %}     
+</script>

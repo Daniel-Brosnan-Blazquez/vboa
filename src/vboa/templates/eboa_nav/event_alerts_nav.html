@@ -1,0 +1,20 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+
+{% set event_alerts = alerts %}
+{% set alerts_html_table_file = "general_view_alerts/general_view_alerts_events_table_content.html" %}
+{% block li_active_events %}class="active"{% endblock %}
+{% block div_active_events %}active{% endblock %}
+{% block events_nav_content %}
+<div>
+  <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
+</div>
+<!-- Content -->
+{% include "eboa_nav/alerts_nav_content.html" %}
+{% endblock %}
+<!-- Scripts -->
+{% block scripts %}
+{{ super() }}
+{% with event_alerts=alerts%}
+{% include "eboa_nav/alerts_nav_scripts.html" %}
+{% endwith %}
+{% endblock %}
