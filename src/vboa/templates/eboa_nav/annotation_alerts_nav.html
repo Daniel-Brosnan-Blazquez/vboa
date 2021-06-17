@@ -1,0 +1,17 @@
+{% set alerts_html_table_file = "general_view_alerts/general_view_alerts_annotations_table_content.html" %}
+{% block li_active_annotations %}class="active"{% endblock %}
+{% block div_active_annotations %}active{% endblock %}
+{% block annotations_nav_content %}
+<div>
+  <a href="/eboa_nav/query-annotations"><p class="fa fa-chevron-left"> Back to query annotations</p></a>
+</div>
+<!-- Content -->
+{% include "eboa_nav/alerts_nav_content.html" %}
+{% endblock %}
+<!-- Scripts -->
+{% block scripts %}
+{{ super() }}
+{% with annotation_alerts=alerts%}
+{% include "eboa_nav/alerts_nav_scripts.html" %}
+{% endwith %}
+{% endblock %}

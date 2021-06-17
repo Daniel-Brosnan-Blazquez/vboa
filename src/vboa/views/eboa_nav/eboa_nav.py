@@ -58,7 +58,7 @@ def query_events_and_render():
         else:
             event_alerts = query_event_alerts(filters)
             show = define_what_to_show_alerts(filters)
-            return render_template("eboa_nav/alerts_nav.html", event_alerts=event_alerts, show=show, filters=filters)
+            return render_template("eboa_nav/event_alerts_nav.html", alerts=event_alerts, show=show, filters=filters)
         # end if
     
     # end if
@@ -383,14 +383,21 @@ def query_annotations_and_render():
         filters = request.form.to_dict(flat=False).copy()
         filters["offset"] = [""]
 
-        annotations = query_annotations(filters)
-        show = define_what_to_show_annotations(filters)
-        annotations_geometries = []
-        if show["map"]:
-            annotations_geometries = [{"annotation": annotation, "geometries": engine.geometries_to_wkt(annotation.annotationGeometries)} for annotation in annotations if len(annotation.annotationGeometries) > 0]
+        if "query_annotations" in filters:
+            annotations = query_annotations(filters)
+            show = define_what_to_show_annotations(filters)
+            annotations_geometries = []
+            if show["map"]:
+                annotations_geometries = [{"annotation": annotation, "geometries": engine.geometries_to_wkt(annotation.annotationGeometries)} for annotation in annotations if len(annotation.annotationGeometries) > 0]
+            # end if
+
+            return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show, filters=filters)
+        else:
+            annotation_alerts = query_annotation_alerts(filters)
+            show = define_what_to_show_alerts(filters)
+            return render_template("eboa_nav/annotation_alerts_nav.html", alerts=annotation_alerts, show=show, filters=filters)
         # end if
 
-        return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show, filters=filters)
     # end if
     return render_template("eboa_nav/query_annotations.html")
 
@@ -487,6 +494,28 @@ def query_annotations(filters):
     """
     current_app.logger.debug("Query annotations")
 
+    kwargs = set_filters_for_query_annotations_or_annotation_alerts(filters)
+
+    annotations = query.get_annotations(**kwargs)
+
+    return annotations
+
+def query_annotation_alerts(filters):
+    """
+    Query annotation alerts.
+    """
+    current_app.logger.debug("Query annotation alerts")
+
+    kwargs = set_filters_for_query_annotations_or_annotation_alerts(filters)
+
+    annotation_alerts = query.get_annotation_alerts(kwargs)
+
+    return annotation_alerts
+
+def set_filters_for_query_annotations_or_annotation_alerts(filters):
+    """
+    Set filter for query annotations or query annotation alerts.
+    """
     kwargs = {}
 
     if filters["annotation_value_name"][0] != "":
@@ -587,12 +616,20 @@ def query_annotations(filters):
         # end for
     # end if
     if filters["ingestion_time"][0] != "":
-        kwargs["ingestion_time_filters"] = []
+        if "query_annotations" in filters:
+            kwargs["ingestion_time_filters"] = []
+        else:
+            kwargs["annotation_ingestion_time_filters"] = []
+        # end if
         i = 0
         operators = filters["ingestion_time_operator"]
         for ingestion_time in filters["ingestion_time"]:
-            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            if "query_annotations" in filters:
+                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            else:
+                kwargs["annotation_ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
             i+=1
+            # end if
         # end for
     # end if
 
@@ -613,9 +650,7 @@ def query_annotations(filters):
         kwargs["offset"] = filters["offset"][0]
     # end if
 
-    annotations = query.get_annotations(**kwargs)
-
-    return annotations
+    return kwargs
 
 @bp.route("/query-jsonify-annotation-values/<uuid:annotation_uuid>")
 def query_jsonify_annotation_values(annotation_uuid):
@@ -2073,7 +2108,7 @@ def treat_data():
     }
     return jsonify(exit_information)
 
-@bp.route("/query-alerts-pages", methods=["POST"])
+@bp.route("/query-alerts-pages", methods=["GET", "POST"])
 def query_alerts_pages():
     """
     Query alerts using pages and render.
@@ -2083,9 +2118,10 @@ def query_alerts_pages():
 
     if "query_event_alerts" in filters:
         alerts = query_event_alerts(filters)
+        template = "eboa_nav/event_alerts_nav.html"
     # end if
     show = define_what_to_show_alerts(filters) 
-    return render_template("eboa_nav/alerts_nav.html", alerts=alerts, show=show, filters=filters)
+    return render_template(template, alerts=alerts, show=show, filters=filters)
 
 def define_what_to_show_alerts(filters):
     """
