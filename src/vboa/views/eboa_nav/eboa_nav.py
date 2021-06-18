@@ -57,8 +57,7 @@ def query_events_and_render():
             return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show, filters=filters)
         else:
             event_alerts = query_event_alerts(filters)
-            show = define_what_to_show_alerts(filters)
-            return render_template("eboa_nav/event_alerts_nav.html", alerts=event_alerts, show=show, filters=filters)
+            return render_template("eboa_nav/event_alerts_nav.html", alerts=event_alerts, filters=filters)
         # end if
     
     # end if
@@ -394,8 +393,7 @@ def query_annotations_and_render():
             return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show, filters=filters)
         else:
             annotation_alerts = query_annotation_alerts(filters)
-            show = define_what_to_show_alerts(filters)
-            return render_template("eboa_nav/annotation_alerts_nav.html", alerts=annotation_alerts, show=show, filters=filters)
+            return render_template("eboa_nav/annotation_alerts_nav.html", alerts=annotation_alerts, filters=filters)
         # end if
 
     # end if
@@ -2119,18 +2117,8 @@ def query_alerts_pages():
     if "query_event_alerts" in filters:
         alerts = query_event_alerts(filters)
         template = "eboa_nav/event_alerts_nav.html"
+    elif "query_annotation_alerts" in filters:
+        alerts = query_annotation_alerts(filters)
+        template = "eboa_nav/annotation_alerts_nav.html"
     # end if
-    show = define_what_to_show_alerts(filters) 
-    return render_template(template, alerts=alerts, show=show, filters=filters)
-
-def define_what_to_show_alerts(filters):
-    """
-    Function to define what to show for alerts
-    """
-    show = {}
-    show["timeline"]=True
-    if not "show_timeline" in filters:
-        show["timeline"] = False
-    # end if
-
-    return show
+    return render_template(template, alerts=alerts, filters=filters)
