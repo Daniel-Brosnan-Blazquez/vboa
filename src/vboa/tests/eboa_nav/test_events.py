@@ -237,6 +237,8 @@ class TestEventsTab(unittest.TestCase):
 
         condition = timeline.is_displayed()
 
+        assert condition
+
         event = self.session.query(Event).all()[0]
 
         assert self.driver.execute_script('return events;') == [{
@@ -253,8 +255,6 @@ class TestEventsTab(unittest.TestCase):
             "start": "2018-06-05T04:07:03",
             "stop": "2018-06-05T06:07:36",
             }]
-
-        return condition
 
         # Linked events table
         wait = WebDriverWait(self.driver,5)
