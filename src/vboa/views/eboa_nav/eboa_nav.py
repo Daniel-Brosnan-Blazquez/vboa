@@ -165,6 +165,10 @@ def set_filters_for_query_events_or_event_alerts(filters):
     """
     kwargs = {}
 
+    # Wether is query event or query alert events
+    ingestion_time_filter_name = "ingestion_time_filters" 
+    if "query_event_alerts" in filters: ingestion_time_filter_name = "event_ingestion_time_filters"
+        
     if filters["key"][0] != "":
         kwargs["keys"] = {"filter": filters["key"][0], "op": filters["key_operator"][0]}
     # end if
@@ -297,19 +301,11 @@ def set_filters_for_query_events_or_event_alerts(filters):
         # end for
     # end if
     if filters["ingestion_time"][0] != "":
-        if "query_events" in filters:
-            kwargs["ingestion_time_filters"] = []
-        else:
-            kwargs["event_ingestion_time_filters"] = []
-        # end if
+        kwargs[ingestion_time_filter_name] = []
         i = 0
         operators = filters["ingestion_time_operator"]
         for ingestion_time in filters["ingestion_time"]:
-            if "query_events" in filters:
-                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
-            else:
-                kwargs["event_ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
-            # end if
+            kwargs[ingestion_time_filter_name].append({"date": ingestion_time, "op": operators[i]})
             i+=1
         # end for
     # end if
@@ -516,6 +512,10 @@ def set_filters_for_query_annotations_or_annotation_alerts(filters):
     """
     kwargs = {}
 
+    # Wether is query annotation or query alert annotations
+    ingestion_time_filter_name = "ingestion_time_filters"
+    if "query_annotation_alerts" in filters: ingestion_time_filter_name = "annotation_ingestion_time_filters"
+    
     if filters["annotation_value_name"][0] != "":
         value_operators = filters["annotation_value_operator"]
         value_types = filters["annotation_value_type"]
@@ -614,20 +614,12 @@ def set_filters_for_query_annotations_or_annotation_alerts(filters):
         # end for
     # end if
     if filters["ingestion_time"][0] != "":
-        if "query_annotations" in filters:
-            kwargs["ingestion_time_filters"] = []
-        else:
-            kwargs["annotation_ingestion_time_filters"] = []
-        # end if
+        kwargs[ingestion_time_filter_name] = []
         i = 0
         operators = filters["ingestion_time_operator"]
         for ingestion_time in filters["ingestion_time"]:
-            if "query_annotations" in filters:
-                kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
-            else:
-                kwargs["annotation_ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            kwargs[ingestion_time_filter_name].append({"date": ingestion_time, "op": operators[i]})
             i+=1
-            # end if
         # end for
     # end if
 
@@ -670,9 +662,15 @@ def query_sources_and_render():
         filters = request.form.to_dict(flat=False).copy()
         filters["offset"] = [""]
 
-        sources = query_sources(filters)
-        show = define_what_to_show_sources(filters)
-        return render_template("eboa_nav/sources_nav.html", sources=sources, show=show, filters=filters)
+        if "query_sources" in filters:
+            sources = query_sources(filters)
+            show = define_what_to_show_sources(filters)
+            return render_template("eboa_nav/sources_nav.html", sources=sources, show=show, filters=filters)
+        else:
+            source_alerts = query_source_alerts(filters)
+            return render_template("eboa_nav/source_alerts_nav.html", alerts=source_alerts, filters=filters)
+        # end if
+    
     # end if
 
     return render_template("eboa_nav/query_sources.html")
@@ -723,23 +721,55 @@ def query_sources(filters):
     Query sources.
     """
     current_app.logger.debug("Query sources")
+    
+    kwargs = set_filters_for_query_sources_or_source_alerts(filters)
+
+    sources = query.get_sources(**kwargs)
+
+    return sources
+
+def query_source_alerts(filters):
+    """
+    Query source alerts.
+    """
+    current_app.logger.debug("Query source alerts")
+
+    kwargs = set_filters_for_query_sources_or_source_alerts(filters)
+
+    source_alerts = query.get_source_alerts(kwargs)
+
+    return source_alerts
+
+def set_filters_for_query_sources_or_source_alerts(filters):
+    """
+    Set filter for query sources or query source alerts.
+    """
     kwargs = {}
+    
+    # Wether is query source or query alert sources
+    ingestion_time_filter_name = "ingestion_time_filters" 
+    source_filter_name = "names"
+    if "query_source_alerts" in filters: 
+        ingestion_time_filter_name = "source_ingestion_time_filters"
+        source_filter_name = "source_names"
+    # end if
+    
     if filters["source"][0] != "":
         op="notlike"
         if not "source_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["names"] = {"filter": filters["source"][0], "op": filters["source_operator"][0]}
+        kwargs[source_filter_name] = {"filter": filters["source"][0], "op": filters["source_operator"][0]}
     # end if
     elif "sources" in filters and filters["sources"][0] != "":
         op="notin"
         if not "source_notin_check" in filters:
             op="in"
         # end if
-        kwargs["names"] = {"filter": [], "op": op}
+        kwargs[source_filter_name] = {"filter": [], "op": op}
         i = 0
         for source in filters["sources"]:
-            kwargs["names"]["filter"].append(source)
+            kwargs[source_filter_name]["filter"].append(source)
             i+=1
         # end for
     # end if
@@ -808,11 +838,11 @@ def query_sources(filters):
         # end for
     # end if
     if filters["ingestion_time"][0] != "":
-        kwargs["ingestion_time_filters"] = []
+        kwargs[ingestion_time_filter_name] = []
         i = 0
         operators = filters["ingestion_time_operator"]
         for ingestion_time in filters["ingestion_time"]:
-            kwargs["ingestion_time_filters"].append({"date": ingestion_time, "op": operators[i]})
+            kwargs[ingestion_time_filter_name].append({"date": ingestion_time, "op": operators[i]})
             i+=1
         # end for
     # end if
@@ -915,9 +945,7 @@ def query_sources(filters):
         kwargs["offset"] = filters["offset"][0]
     # end if
 
-    sources = query.get_sources(**kwargs)
-
-    return sources
+    return kwargs
 
 @bp.route("/query-source/<uuid:source_uuid>")
 def query_source(source_uuid):
@@ -2120,5 +2148,8 @@ def query_alerts_pages():
     elif "query_annotation_alerts" in filters:
         alerts = query_annotation_alerts(filters)
         template = "eboa_nav/annotation_alerts_nav.html"
+    elif "query_source_alerts" in filters:
+        alerts = query_source_alerts(filters)
+        template = "eboa_nav/source_alerts_nav.html"
     # end if
     return render_template(template, alerts=alerts, filters=filters)

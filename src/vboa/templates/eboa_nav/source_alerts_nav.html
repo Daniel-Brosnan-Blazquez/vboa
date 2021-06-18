@@ -1,0 +1,20 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+
+{% set source_alerts = alerts %}
+{% set alerts_html_table_file = "general_view_alerts/general_view_alerts_sources_table_content.html" %}
+{% block li_active_sources %}class="active"{% endblock %}
+{% block div_active_sources %}active{% endblock %}
+{% block sources_nav_content %}
+<div>
+  <a href="/eboa_nav/query-sources"><p class="fa fa-chevron-left"> Back to query sources</p></a>
+</div>
+<!-- Content -->
+{% include "eboa_nav/alerts_nav_content.html" %}
+{% endblock %}
+<!-- Scripts -->
+{% block scripts %}
+{{ super() }}
+{% with source_alerts=alerts%}
+{% include "eboa_nav/alerts_nav_scripts.html" %}
+{% endwith %}
+{% endblock %}
