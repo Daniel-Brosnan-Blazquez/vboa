@@ -1,0 +1,20 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+
+{% set event_alerts = alerts %}
+{% set alerts_html_table_file = "general_view_alerts/general_view_alerts_explicit_refs_table_content.html" %}
+{% block li_active_explicit_references %}class="active"{% endblock %}
+{% block div_active_explicit_references %}active{% endblock %}
+{% block explicit_references_nav_content %}
+<div>
+  <a href="/eboa_nav/query-ers"><p class="fa fa-chevron-left"> Back to query explicit references</p></a>
+</div>
+<!-- Content -->
+{% include "eboa_nav/alerts_nav_content.html" %}
+{% endblock %}
+<!-- Scripts -->
+{% block scripts %}
+{{ super() }}
+{% with er_alerts=alerts%}
+{% include "eboa_nav/alerts_nav_scripts.html" %}
+{% endwith %}
+{% endblock %}

@@ -670,7 +670,6 @@ def query_sources_and_render():
             source_alerts = query_source_alerts(filters)
             return render_template("eboa_nav/source_alerts_nav.html", alerts=source_alerts, filters=filters)
         # end if
-    
     # end if
 
     return render_template("eboa_nav/query_sources.html")
@@ -1650,10 +1649,16 @@ def query_ers_and_render():
     if request.method == "POST":
         filters = request.form.to_dict(flat=False).copy()
         filters["offset"] = [""]
-        ers = query_ers(filters)
-
-        return render_template("eboa_nav/explicit_references_nav.html", ers=ers, filters=filters)
+        
+        if "query_explicit_refs" in filters:
+            ers = query_ers(filters)
+            return render_template("eboa_nav/explicit_references_nav.html", ers=ers, filters=filters)
+        else:
+            er_alerts = query_er_alerts(filters)
+            return render_template("eboa_nav/explicit_reference_alerts_nav.html", alerts=er_alerts, filters=filters)
+        # end if
     # end if
+    
     return render_template("eboa_nav/query_explicit_references.html")
 
 @bp.route("/query-ers-pages", methods=["POST"])
@@ -1673,7 +1678,34 @@ def query_ers(filters):
     """
     current_app.logger.debug("Query explicit references")
 
+    kwargs = set_filters_for_query_ers_or_er_alerts(filters)
+
+    ers = query.get_explicit_refs(**kwargs)
+
+    return ers
+
+def query_er_alerts(filters):
+    """
+    Query explicit reference alerts.
+    """
+    current_app.logger.debug("Query explicit reference alerts")
+
+    kwargs = set_filters_for_query_ers_or_er_alerts(filters)
+
+    er_alerts = query.get_explicit_ref_alerts(**kwargs)
+
+    return er_alerts
+
+def set_filters_for_query_ers_or_er_alerts(filters):
+    """
+    Set filter for query ers or query er alerts.
+    """
     kwargs = {}
+
+    # Wether is query er or query alert ers
+    groups_filter_name = "groups" 
+    if "query_explicit_ref_alerts" in filters: groups_filter_name = "explicit_ref_groups"
+        
     if filters["er"][0] != "":
         op="notlike"
         if not "er_notlike_check" in filters:
@@ -1698,17 +1730,17 @@ def query_ers(filters):
         if not "group_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["groups"] = {"filter": filters["group"][0], "op": filters["group_operator"][0]}
+        kwargs[groups_filter_name] = {"filter": filters["group"][0], "op": filters["group_operator"][0]}
     # end if
     elif "groups" in filters and filters["groups"][0] != "":
         op="notin"
         if not "group_notin_check" in filters:
             op="in"
         # end if
-        kwargs["groups"] = {"filter": [], "op": op}
+        kwargs[groups_filter_name] = {"filter": [], "op": op}
         i = 0
         for group in filters["groups"]:
-            kwargs["groups"]["filter"].append(group)
+            kwargs[groups_filter_name]["filter"].append(group)
             i+=1
         # end for
     # end if
@@ -1928,9 +1960,7 @@ def query_ers(filters):
         kwargs["offset"] = filters["offset"][0]
     # end if
 
-    ers = query.get_explicit_refs(**kwargs)
-
-    return ers
+    return kwargs
 
 @bp.route("/query-er/<uuid:explicit_ref_uuid>")
 def query_er(explicit_ref_uuid):
@@ -2151,5 +2181,8 @@ def query_alerts_pages():
     elif "query_source_alerts" in filters:
         alerts = query_source_alerts(filters)
         template = "eboa_nav/source_alerts_nav.html"
+    elif "query_explicit_ref_alerts" in filters:
+        alerts = query_er_alerts(filters)
+        template = "eboa_nav/explicit_reference_alerts_nav.html"
     # end if
     return render_template(template, alerts=alerts, filters=filters)
