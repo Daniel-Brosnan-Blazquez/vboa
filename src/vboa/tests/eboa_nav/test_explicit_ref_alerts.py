@@ -70,7 +70,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
     def tearDownClass(self):
         self.driver.quit()
 
-    def test_explicit_refs_no_data(self):
+    def test_explicit_ref_alerts_no_data(self):
 
         wait = WebDriverWait(self.driver,5)
 
@@ -88,7 +88,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert no_data
 
-    def test_explicit_refs_query_no_filter_with_timeline(self):
+    def test_explicit_ref_alerts_query_no_filter_with_timeline(self):
 
         # Insert data
         data = {
@@ -353,7 +353,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert explicit_ref_uuid.text == str(explicit_refs_alerts[1].explicit_ref_uuid)
 
-    def test_explicit_refs_query_explicit_ref_filter(self):
+    def test_explicit_ref_alerts_query_explicit_ref_filter(self):
 
         # Insert data
         data = {
@@ -541,7 +541,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_group_filter(self):
+    def test_explicit_ref_alerts_query_group_filter(self):
 
         # Insert data
         data = {
@@ -725,7 +725,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_source_filter(self):
+    def test_explicit_ref_alerts_query_source_filter(self):
 
         # Insert data
         data = {
@@ -935,7 +935,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_key_filter(self):
+    def test_explicit_ref_alerts_query_key_filter(self):
 
         # Insert data
         data = {
@@ -1149,7 +1149,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_gauge_name_filter(self):
+    def test_explicit_ref_alerts_query_gauge_name_filter(self):
 
         # Insert data
         data = {
@@ -1359,7 +1359,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_gauge_system_filter(self):
+    def test_explicit_ref_alerts_query_gauge_system_filter(self):
 
         # Insert data
         data = {
@@ -1569,7 +1569,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_events_value_text(self):
+    def test_explicit_ref_alerts_query_events_value_text(self):
 
         # Insert data
         data = {
@@ -1679,7 +1679,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert no_data
 
-    def test_explicit_refs_query_events_value_timestamp(self):
+    def test_explicit_ref_alerts_query_events_value_timestamp(self):
 
         # Insert data
         data = {
@@ -1987,7 +1987,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_events_value_double(self):
+    def test_explicit_ref_alerts_query_events_value_double(self):
 
         # Insert data
         data = {
@@ -2310,7 +2310,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
-    def test_explicit_refs_query_events_two_values(self):
+    def test_explicit_ref_alerts_query_events_two_values(self):
 
         # Insert data
         data = {
@@ -2409,7 +2409,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_annotation_name_filter(self):
+    def test_explicit_ref_alerts_query_annotation_name_filter(self):
 
         # Insert data
         data = {
@@ -2616,7 +2616,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_annotation_system_filter(self):
+    def test_explicit_ref_alerts_query_annotation_system_filter(self):
 
         # Insert data
         data = {
@@ -2823,7 +2823,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_ingestion_time(self):
+    def test_explicit_ref_alerts_query_ingestion_time(self):
 
         # Insert data
         data = {
@@ -2989,7 +2989,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert no_data
 
-    def test_explicit_refs_query_annotations_value_text(self):
+    def test_explicit_ref_alerts_query_annotations_value_text(self):
 
         # Insert data
         data = {
@@ -3155,7 +3155,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert  number_of_elements == 1
 
-    def test_explicit_refs_query_annotations_value_timestamp(self):
+    def test_explicit_ref_alerts_query_annotations_value_timestamp(self):
 
         # Insert data
         data = {
@@ -3514,7 +3514,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_annotations_value_double(self):
+    def test_explicit_ref_alerts_query_annotations_value_double(self):
 
         # Insert data
         data = {
@@ -3873,7 +3873,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_annotations_two_values(self):
+    def test_explicit_ref_alerts_query_annotations_two_values(self):
 
         # Insert data
         data = {
@@ -3969,7 +3969,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1
 
-    def test_explicit_refs_query_period(self):
+    def test_explicit_ref_alerts_query_period(self):
 
          # Insert data
         data = {
