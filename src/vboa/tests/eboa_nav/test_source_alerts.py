@@ -378,9 +378,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -403,8 +403,8 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
         
         assert number_of_elements == 2
 
@@ -434,8 +434,8 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
@@ -466,9 +466,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -601,9 +601,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -626,8 +626,8 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
@@ -653,8 +653,8 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
@@ -685,9 +685,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -820,9 +820,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -845,8 +845,8 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
@@ -876,8 +876,8 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generatedd
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
 
         assert number_of_elements == 2
 
@@ -908,9 +908,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1041,9 +1041,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1061,9 +1061,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1081,9 +1081,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1104,9 +1104,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1126,9 +1126,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1195,9 +1195,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1217,9 +1217,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1255,9 +1255,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1293,9 +1293,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1377,9 +1377,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1415,9 +1415,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1453,9 +1453,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1540,9 +1540,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1578,9 +1578,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1616,9 +1616,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1716,9 +1716,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1736,9 +1736,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1756,9 +1756,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1779,9 +1779,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1801,9 +1801,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 2
 
@@ -1870,9 +1870,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1892,9 +1892,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1930,9 +1930,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -1968,9 +1968,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2035,9 +2035,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2073,9 +2073,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2111,9 +2111,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2175,9 +2175,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2213,9 +2213,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2251,9 +2251,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2316,9 +2316,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2356,9 +2356,9 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click(submit_button)
 
         # Check table generated
-        sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-        number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-        empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+        source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
         assert number_of_elements == 1 and empty_element is False
 
@@ -2405,9 +2405,9 @@ class TestSourceAlertsTab(unittest.TestCase):
     #     functions.click(submit_button)
 
     #     # Check table generatedd
-    #     sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-    #     number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-    #     empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+    #     source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+    #     number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+    #     empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
     #     assert number_of_elements == 1 and empty_element is False
 
@@ -2438,8 +2438,8 @@ class TestSourceAlertsTab(unittest.TestCase):
     #     functions.click(submit_button)
 
     #     # Check table generatedd
-    #     sources_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
-    #     number_of_elements = len(sources_table.find_elements_by_xpath("tbody/tr"))
-    #     empty_element = len(sources_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+    #     source_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+    #     number_of_elements = len(source_alerts_table.find_elements_by_xpath("tbody/tr"))
+    #     empty_element = len(source_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
 
     #     assert number_of_elements == 1 and empty_element is False
