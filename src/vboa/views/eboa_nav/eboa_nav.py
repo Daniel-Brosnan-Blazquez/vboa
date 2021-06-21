@@ -745,7 +745,7 @@ def set_filters_for_query_sources_or_source_alerts(filters):
     """
     kwargs = {}
     
-    # Wether is query source or query alert sources
+    # Wether is query source or query source alerts
     ingestion_time_filter_name = "ingestion_time_filters" 
     source_filter_name = "names"
     if "query_source_alerts" in filters: 
@@ -1702,7 +1702,7 @@ def set_filters_for_query_ers_or_er_alerts(filters):
     """
     kwargs = {}
 
-    # Wether is query er or query alert ers
+    # Wether is query er or query er alerts
     groups_filter_name = "groups" 
     if "query_explicit_ref_alerts" in filters: groups_filter_name = "explicit_ref_groups"
         
