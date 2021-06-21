@@ -1692,7 +1692,7 @@ def query_er_alerts(filters):
 
     kwargs = set_filters_for_query_ers_or_er_alerts(filters)
 
-    er_alerts = query.get_explicit_ref_alerts(**kwargs)
+    er_alerts = query.get_explicit_ref_alerts(kwargs)
 
     return er_alerts
 
