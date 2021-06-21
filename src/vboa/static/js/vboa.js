@@ -83,8 +83,8 @@ jQuery(document).ready(function(){
 function update_clock() {
     var date = new Date();
     var local_date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-    document.getElementById("time-clock").innerHTML = "<div class='nav navbar-text'>" +
-        "<p style='background:white'>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
+    document.getElementById("time-clock").innerHTML = "<div>" +
+        "<p>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
         "</div>"
 };
 
