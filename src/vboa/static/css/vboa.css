@@ -1,4 +1,10 @@
 /* Styles for panels */
+@media (min-width: 768px) {
+    .expand-content {
+        margin: 0 0 0 0 !important;
+    }
+}
+
 h3.panel-title {
     display: inline-block;
 }
