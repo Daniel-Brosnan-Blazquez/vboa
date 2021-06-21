@@ -55,6 +55,31 @@ import "toastr/build/toastr.min.css";
 
 export let math = mathjs;
 
+/* Make sidebar collapse and page content expand */
+jQuery(document).ready(function(){
+    jQuery("#sidbar-collapse").click(function(){
+        jQuery("#sidbar-collapse").ready(function(){
+        const content_divs = document.getElementsByClassName("shrink-expand-content");
+        
+        for (const div of content_divs){
+            if (! div.classList.contains("expand-content")){
+                div.classList.add("expand-content")
+            }else{
+                div.classList.remove("expand-content")
+            }
+        }
+        })
+        
+        const sidebar_div = document.getElementById("sidebar");
+        if (! sidebar_div.classList.contains("in")){
+            sidebar_div.classList.add("in")
+        }else{
+            sidebar_div.classList.remove("in")
+        }
+        
+    });
+});
+
 /* Save the very same page in the div with id boa-html-page */
 jQuery(document).ready(function(){
     var html_content = document.documentElement.innerHTML
@@ -83,8 +108,8 @@ jQuery(document).ready(function(){
 function update_clock() {
     var date = new Date();
     var local_date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-    document.getElementById("time-clock").innerHTML = "<div class='nav navbar-text'>" +
-        "<p style='background:white'>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
+    document.getElementById("time-clock").innerHTML = "<div>" +
+        "<p>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
         "</div>"
 };
 
