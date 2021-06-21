@@ -165,7 +165,7 @@ def set_filters_for_query_events_or_event_alerts(filters):
     """
     kwargs = {}
 
-    # Wether is query event or query alert events
+    # Wether is query event or query event alerts
     ingestion_time_filter_name = "ingestion_time_filters" 
     if "query_event_alerts" in filters: ingestion_time_filter_name = "event_ingestion_time_filters"
         
