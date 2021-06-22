@@ -61,11 +61,16 @@ def query_reports_and_render():
         filters = request.form.to_dict(flat=False).copy()
         filters["offset"] = [""]
 
-        reports = query_reports(filters)
-        show = define_what_to_show_reports(filters)
-        return render_template("rboa_nav/reports_nav.html", reports=reports, show=show, filters=filters)
+        if "query_reports" in filters:
+            reports = query_reports(filters)
+            show = define_what_to_show_reports(filters)
+            return render_template("rboa_nav/reports_nav.html", reports=reports, show=show, filters=filters)
+        else:
+            report_alerts = query_report_alerts(filters)
+            return render_template("rboa_nav/report_alerts_nav.html", alerts=report_alerts, filters=filters)
+        # end if
+    
     # end if
-
     return render_template("rboa_nav/query_reports.html")
 
 @bp.route("/query-reports-pages", methods=["POST"])
@@ -102,8 +107,35 @@ def query_reports(filters):
     Query reports.
     """
     current_app.logger.debug("Query reports")
+    
+    kwargs = set_filters_for_query_reports_or_report_alerts(filters)
+    
+    reports = query.get_reports(**kwargs)
+
+    return reports
+
+def query_report_alerts(filters):
+    """
+    Query report alerts.
+    """
+    current_app.logger.debug("Query report alerts")
+    
+    kwargs = set_filters_for_query_reports_or_report_alerts(filters)
+    
+    reports = query.get_report_alerts(kwargs)
+
+    return reports
+
+def set_filters_for_query_reports_or_report_alerts(filters):
+    """
+    Set filter for query reports or query report alerts.
+    """
     kwargs = {}
 
+    # Wether is query report or query report alerts
+    report_filter_name = "names" 
+    if "query_report_alerts" in filters: report_filter_name = "report_names"
+    
     # Get only generated reports
     kwargs["generated"] = True
     
@@ -112,17 +144,17 @@ def query_reports(filters):
         if not "report_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["names"] = {"filter": filters["report"][0], "op": filters["report_operator"][0]}
+        kwargs[report_filter_name] = {"filter": filters["report"][0], "op": filters["report_operator"][0]}
     # end if
     elif "reports" in filters and filters["reports"][0] != "":
         op="notin"
         if not "report_notin_check" in filters:
             op="in"
         # end if
-        kwargs["names"] = {"filter": [], "op": op}
+        kwargs[report_filter_name] = {"filter": [], "op": op}
         i = 0
         for report in filters["reports"]:
-            kwargs["names"]["filter"].append(report)
+            kwargs[report_filter_name]["filter"].append(report)
             i+=1
         # end for
     # end if
@@ -236,9 +268,7 @@ def query_reports(filters):
         kwargs["offset"] = filters["offset"][0]
     # end if
 
-    reports = query.get_reports(**kwargs)
-
-    return reports
+    return kwargs
 
 @bp.route("/query-report/<uuid:report_uuid>")
 def query_report(report_uuid):
@@ -554,3 +584,16 @@ def re_generate_report(report):
         trigger_generator(parameters)
     # end if
 # end def
+
+@bp.route("/query-alerts-pages", methods=["GET", "POST"])
+def query_alerts_pages():
+    """
+    Query alerts using pages and render.
+    """
+    current_app.logger.debug("Query alerts using pages and render")
+    filters = request.json
+
+    alerts = query_report_alerts(filters)
+    template = "rboa_nav/report_alerts_nav.html"
+    
+    return render_template(template, alerts=alerts, filters=filters)
