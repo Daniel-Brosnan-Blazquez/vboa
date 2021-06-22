@@ -76,6 +76,9 @@ jQuery(document).ready(function(){
         }else{
             sidebar_div.classList.remove("in")
         }
+
+        /* Raise event to resize the maps */
+        window.dispatchEvent( new Event("sidepanel-change") );
         
     });
 });

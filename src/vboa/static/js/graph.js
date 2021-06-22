@@ -374,8 +374,9 @@ export function display_map(dom_id, polygons){
         projection: 'EPSG:4326',
     });
 
-    if (document.getElementById(dom_id).data){
-        map = document.getElementById(dom_id).data;
+    var map_div = document.getElementById(dom_id);
+    if (map_div.data){
+        map = map_div.data;
         map.getLayers().forEach(function (layer) {
             if (layer.get('name') === 'features') {
                 map.removeLayer(layer);
@@ -393,14 +394,22 @@ export function display_map(dom_id, polygons){
                 zoom: 2
             })
         });
-        document.getElementById(dom_id).data = map;
+        map_div.data = map;
     
         /**
          * Add a click handler to the map to render the tooltip.
          */
         map.on('singleclick', function(event) {
+            map.updateSize();
             show_map_item_information(event, map, dom_id)
         });
+
+        /* Add sidepanel-change event handler to resize the map */
+        window.addEventListener("sidepanel-change", function() {
+            setTimeout(function() {
+                map.updateSize();
+            }, 1);
+        })
     }
 }
 
