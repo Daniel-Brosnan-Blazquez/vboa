@@ -2246,6 +2246,192 @@ class TestEventAlertsTab(unittest.TestCase):
 
         assert number_of_elements == 1 and empty_element is False
 
+    def test_event_alerts_query_value_event_duration(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "values": [
+                                {
+                                "name":"VALUES",
+                                "type":"object",
+                                "values":[
+                                    {
+                                    "type": "double",
+                                    "name": "double_name_1",
+                                    "value": "3.5"
+                                }
+                                ]
+                            }
+                            ],
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        events = self.session.query(Event).all()
+        event_duration = str((events[0].stop - events[0].start).total_seconds())
+
+        print(event_duration)
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "==", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, ">", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, ">=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "<", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "<=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "!=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+    
     def test_event_alerts_query_ingestion_time(self):
 
         # Insert data
