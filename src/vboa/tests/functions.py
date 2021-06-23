@@ -114,17 +114,47 @@ def fill_generation_time(driver, wait, tab, value_value, value_operator, row):
     click(value)
     value.send_keys(value_value)
 
+def fill_any_time(driver, wait, tab, field_name, value_value, value_operator, row):
+
+    if row is 1:
+        any_time_div = driver.find_element_by_id(tab + "-" + field_name + "-time-initial")
+    else:
+        any_time_div = driver.find_element_by_id("more-" + field_name + "-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+
+    operator = Select(any_time_div.find_element_by_id(field_name + "-time-operator"))
+    operator.select_by_visible_text(value_operator)
+
+    value = any_time_div.find_element_by_id(field_name + "-time-text")
+    click(value)
+    click(value)
+    value.send_keys(value_value)
+
 def fill_ingestion_duration(driver, wait, tab, value_value, value_operator, row):
 
     if row is 1:
-        generation_time_div = driver.find_element_by_id(tab + "-ingestion-duration-initial")
+        ingestion_duration_div = driver.find_element_by_id(tab + "-ingestion-duration-initial")
     else:
-        generation_time_div = driver.find_element_by_id("more-ingestion-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        ingestion_duration_div = driver.find_element_by_id("more-ingestion-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
 
-    operator = Select(generation_time_div.find_element_by_id("ingestion-duration-operator"))
+    operator = Select(ingestion_duration_div.find_element_by_id("ingestion-duration-operator"))
     operator.select_by_visible_text(value_operator)
 
-    value = generation_time_div.find_element_by_id("ingestion-duration-text")
+    value = ingestion_duration_div.find_element_by_id("ingestion-duration-text")
+    click(value)
+    click(value)
+    value.send_keys(value_value)
+
+def fill_any_duration(driver, wait, tab, field_name, value_value, value_operator, row):
+
+    if row is 1:
+        any_duration_div = driver.find_element_by_id(tab + "-" + field_name + "-duration-initial")
+    else:
+        any_duration_div = driver.find_element_by_id("more-" + field_name + "-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+
+    operator = Select(any_duration_div.find_element_by_id(field_name + "-duration-operator"))
+    operator.select_by_visible_text(value_operator)
+
+    value = any_duration_div.find_element_by_id(field_name + "-duration-text")
     click(value)
     click(value)
     value.send_keys(value_value)
