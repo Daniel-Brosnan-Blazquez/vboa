@@ -16,8 +16,8 @@
               </div>
               <div class="col-xs-3">
                 <label id="reports-report-names-in-checkbox">Names (<input type="checkbox" name="report_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'name', 20, 0)"/><i class="circle"></i>
-                <select name="reports" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-names-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'name', 20, 0)" id="reports-report-names-in-text"/><i class="circle"></i>
+                <select name="reports" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-names-in-select">
                 </select>
               </div>
             </div>
@@ -33,8 +33,8 @@
               </div>
               <div class="col-xs-3">
                 <label id="reports-generators-in-checkbox">Generators (<input type="checkbox" name="generator_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'generator', 20, 0)"/><i class="circle"></i>
-                <select name="generators" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-generators-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'generator', 20, 0)" id="reports-generators-in-text"/><i class="circle"></i>
+                <select name="generators" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-generators-in-select">
                 </select>
               </div>
             </div>
@@ -43,7 +43,7 @@
                 <label>Report group</label>
                 <div class="input-group" style="width: 100%">
                   {% if "report_group" in filters %}
-                  <input class="form-control" style="width: 80%" name="report_group" id="reports-report-group-text"/ value="{{ filters['report_group'] }}">
+                  <input class="form-control" style="width: 80%" name="report_group" id="reports-report-group-text" value="{{ filters['report_group'] }}"/>
                   {% else %}
                   <input class="form-control" style="width: 80%" name="report_group" id="reports-report-group-text"/>
                   {% endif %}
@@ -54,8 +54,8 @@
               </div>
               <div class="col-xs-3">
                 <label id="reports-report-groups-in-checkbox">Report groups (<input type="checkbox" name="report_group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-report-groups', 'name', 20, 0)"/><i class="circle"></i>
-                <select name="report_groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-groups-in-text">
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-report-groups', 'name', 20, 0)" id="reports-report-groups-in-text"/><i class="circle"></i>
+                <select name="report_groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-groups-in-select">
                 </select>
               </div>
             </div>
@@ -70,20 +70,18 @@
             <div id="more-validity-start-validity-stop-query-reports">
             </div>
             <!-- Validity duration -->
-            <div class="row" id="reports-validity-duration-initial">
+            <div class="row" id="reports-report-validity-duration-initial">
               <div class="col-xs-3">
                 <label>Report validity duration (days)</label>
-                <div>
-                  <input style="float: left; width: 90%" type="text" class="form-control"  name="report_validity_duration"/>
-                  <div style="float: right; width: 10%">
-                    <select class="form-control" style="padding-left: 0" name="report_validity_duration_operator">
-                      {% include "eboa_nav/operators.html" %}
-                    </select>
-                  </div>
+                <div class="input-group" style="width: 100%">
+                  <input style="width: 80%" type="text" class="form-control"  name="report_validity_duration" id="report-validity-duration-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="report_validity_duration_operator" id="report-validity-duration-operator">
+                    {% include "eboa_nav/operators.html" %}
+                  </select>
                 </div>
               </div>
               <div>
-                <span onclick="vboa.add_report_validity_duration('more-report-validity-duration-query-reports')" id="reports-add-validity-duration">
+                <span onclick="vboa.add_report_validity_duration('more-report-validity-duration-query-reports')" id="reports-add-report-validity-duration">
                   <span class="glyphicon glyphicon-plus"></span>
                 </span>
               </div>
@@ -152,7 +150,7 @@
               <!-- Limit -->
               <div class="col-xs-3">
                 <label>Limit</label>
-                <input type="text" class="form-control" style="width: 100%" name="limit" id="reports-limit" value="1000"/>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="reports-limit" value="100"/>
               </div>
             </div>
             <div>
