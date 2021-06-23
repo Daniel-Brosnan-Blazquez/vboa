@@ -133,8 +133,11 @@ def set_filters_for_query_reports_or_report_alerts(filters):
     kwargs = {}
 
     # Wether is query report or query report alerts
-    report_filter_name = "names" 
-    if "query_report_alerts" in filters: report_filter_name = "report_names"
+    report_filter_name = "names"
+    report_generetors_filter = "generators"
+    if "query_report_alerts" in filters: 
+        report_filter_name = "report_names"
+        report_generetors_filter ="report_generators_filters"
     
     # Get only generated reports
     kwargs["generated"] = True
@@ -184,17 +187,17 @@ def set_filters_for_query_reports_or_report_alerts(filters):
         if not "generator_notlike_check" in filters:
             op="like"
         # end if
-        kwargs["generators"] = {"filter": filters["generator"][0], "op": filters["generator_operator"][0]}
+        kwargs[report_generetors_filter] = {"filter": filters["generator"][0], "op": filters["generator_operator"][0]}
     # end if
     elif "generators" in filters and filters["generators"][0] != "":
         op="notin"
         if not "generator_notin_check" in filters:
             op="in"
         # end if
-        kwargs["generators"] = {"filter": [], "op": op}
+        kwargs[report_generetors_filter] = {"filter": [], "op": op}
         i = 0
         for generator in filters["generators"]:
-            kwargs["generators"]["filter"].append(generator)
+            kwargs[report_generetors_filter]["filter"].append(generator)
             i+=1
         # end for
     # end if
@@ -358,7 +361,7 @@ def query_jsonify_reports():
     kwargs = {}
     kwargs["limit"] = limit
     kwargs["offset"] = offset
-    kwargs["names"] = {"filter": search, "op": "=="}
+    kwargs["names"] = {"filter": "%" + search + "%", "op": "like"}
 
     reports = query.get_reports(**kwargs)
     jsonified_reports = [report.jsonify() for report in reports]
