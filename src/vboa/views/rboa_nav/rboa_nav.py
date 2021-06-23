@@ -138,7 +138,8 @@ def set_filters_for_query_reports_or_report_alerts(filters):
     if "query_report_alerts" in filters: 
         report_filter_name = "report_names"
         report_generetors_filter ="report_generators_filters"
-    
+    # end if
+
     # Get only generated reports
     kwargs["generated"] = True
     

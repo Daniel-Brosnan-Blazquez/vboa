@@ -163,7 +163,7 @@ class TestEventAlertsTab(unittest.TestCase):
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click(submitButton)
 
-        timeline = self.driver.find_element_by_id('alerts-nav-timeline')
+        timeline = self.driver.find_element_by_id('timeline-general-view-alerts')
         condition = timeline.is_displayed()
 
         assert condition

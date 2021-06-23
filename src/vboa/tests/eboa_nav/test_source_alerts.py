@@ -145,7 +145,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'source-alerts-submit-button')))
         functions.click(submit_button)
 
-        timeline = self.driver.find_element_by_id('alerts-nav-timeline')
+        timeline = self.driver.find_element_by_id('timeline-general-view-alerts')
         condition = timeline.is_displayed()
 
         assert condition
@@ -1008,7 +1008,7 @@ class TestSourceAlertsTab(unittest.TestCase):
                                 "name":"alert_name3",
                                 "severity":"critical",
                                 "description":"Alert description",
-                                "group":"alert_grou2"
+                                "group":"alert_group2"
                             },
                             "entity":{
                                 "reference_mode":"by_ref",
@@ -1642,59 +1642,111 @@ class TestSourceAlertsTab(unittest.TestCase):
 
     def test_source_alerts_query_reported_validity(self):
 
-        data = {"operations": [{
-                "mode": "insert",
-                "dim_signature": {
-                      "name": "DIM_SIGNATURE_1",
-                      "exec": "exec",
-                      "version": "1.0"
-                },
-                "source":  {"name": "source_1.xml",
-                        "reception_time": "2018-07-05T02:07:03",
-                         "generation_time": "2018-07-05T02:07:03",
-                         "validity_start": "2018-06-05T02:00:00",
-                         "validity_stop": "2018-06-05T03:00:00",
-                         "priority": 10,
-                         "ingestion_completeness": {
-                              "check": "false",
-                              "message": "MISSING DEPENDENCIES"}
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"DIM_SIGNATURE_1",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:00:00",
+                            "validity_stop":"2018-06-05T03:00:00"
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name1",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            },
+                            "entity":{
+                                "reference_mode":"by_ref",
+                                "reference":"source.json",
+                                "type":"source"
+                            }
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"DIM_SIGNATURE_2",
+                            "exec":"exec_2",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source_2.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T03:00:00",
+                            "validity_stop":"2018-06-05T04:00:00"
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test1",
+                            "notification_time":"2019-06-06T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name2",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            },
+                            "entity":{
+                                "reference_mode":"by_ref",
+                                "reference":"source_2.json",
+                                "type":"source"
+                            }
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"DIM_SIGNATURE_3",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source_3.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T04:00:00",
+                            "validity_stop":"2018-06-05T05:00:00"
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test1",
+                            "notification_time":"2019-06-06T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name3",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group2"
+                            },
+                            "entity":{
+                                "reference_mode":"by_ref",
+                                "reference":"source_3.json",
+                                "type":"source"
+                            }
+                            }
+                        ]
+                    }
+                ]
                 }
-            },{
-                "mode": "insert",
-                "dim_signature": {
-                      "name": "DIM_SIGNATURE_2",
-                      "exec": "exec_2",
-                      "version": "1.0"
-                },
-                "source":  {"name": "source_2.xml",
-                        "reception_time": "2018-07-05T02:07:03",
-                         "generation_time": "2018-07-05T02:07:03",
-                         "validity_start": "2018-06-05T03:00:00",
-                         "validity_stop": "2018-06-05T04:00:00",
-                         "priority": 10,
-                         "ingestion_completeness": {
-                              "check": "false",
-                              "message": "MISSING DEPENDENCIES"}
-                }
-            },{
-                "mode": "insert",
-                "dim_signature": {
-                      "name": "DIM_SIGNATURE_3",
-                      "exec": "exec",
-                      "version": "1.0"
-                },
-                "source":  {"name": "source_3.xml",
-                        "reception_time": "2018-07-05T02:07:03",
-                         "generation_time": "2018-07-05T02:07:03",
-                         "validity_start": "2018-06-05T04:00:00",
-                         "validity_stop": "2018-06-05T05:00:00",
-                         "priority": 10,
-                         "ingestion_completeness": {
-                              "check": "false",
-                              "message": "MISSING DEPENDENCIES"}
-                }
-            }
-        ]}
+        
 
         # Check data is correctly inserted
         self.engine_eboa.data = data
@@ -1995,22 +2047,43 @@ class TestSourceAlertsTab(unittest.TestCase):
     def test_source_alerts_query_processing_duration(self):
 
         # Insert data
-        data = {"operations":[{
-                "mode": "insert",
-                "dim_signature": {"name": "dim_signature",
-                                    "exec": "exec",
-                                    "version": "1.0"},
-                "source": {"name": "source.xml",
-                            "reception_time": "2018-07-05T02:07:03",
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"DIM_SIGNATURE_1",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
                             "generation_time": "2018-07-05T02:07:03",
-                            "validity_start": "2018-06-05T02:07:03",
-                            "validity_stop": "2018-06-05T08:07:36",
-                            "priority": 10,
-                            "ingestion_completeness": {
-                                    "check": "false",
-                                    "message": "MISSING DEPENDENCIES"}
+                            "validity_start":"2018-06-05T02:00:00",
+                            "validity_stop":"2018-06-05T03:00:00"
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name1",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            },
+                            "entity":{
+                                "reference_mode":"by_ref",
+                                "reference":"source.json",
+                                "type":"source"
+                            }
+                            }
+                        ]
+                    }
+                ]
                 }
-        }]}
 
         # Example value for processing duration field
         processing_duration = "21633.0"
@@ -2138,23 +2211,43 @@ class TestSourceAlertsTab(unittest.TestCase):
     def test_source_alerts_query_reported_generation_time(self):
 
         # Insert data
-        data = {"operations":[{
-                "mode": "insert",
-                "dim_signature": {"name": "dim_signature",
-                                    "exec": "exec",
-                                    "version": "1.0"},
-                "source": {"name": "source.xml",
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"DIM_SIGNATURE_1",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
                             "reception_time": "2018-07-05T02:07:03",
                             "generation_time": "2018-07-05T02:07:03",
                             "validity_start": "2018-06-05T02:07:03",
-                            "validity_stop": "2018-06-05T08:07:36",
-                            "priority": 10,
-                            "ingestion_completeness": {
-                                    "check": "false",
-                                    "message": "MISSING DEPENDENCIES"}
+                            "validity_stop": "2018-06-05T08:07:36"
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name1",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            },
+                            "entity":{
+                                "reference_mode":"by_ref",
+                                "reference":"source.json",
+                                "type":"source"
+                            }
+                            }
+                        ]
+                    }
+                ]
                 }
-        }]}
-
 
         # Check data is correctly inserted
         self.engine_eboa.data = data
@@ -2278,23 +2371,48 @@ class TestSourceAlertsTab(unittest.TestCase):
     def test_source_alerts_query_ingestion_completeness(self):
 
         # Insert data
-        data = {"operations":[{
-                "mode": "insert",
-                "dim_signature": {"name": "dim_signature",
-                                    "exec": "exec",
-                                    "version": "1.0"},
-                "source": {"name": "source.xml",
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"DIM_SIGNATURE_1",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
                             "reception_time": "2018-07-05T02:07:03",
                             "generation_time": "2018-07-05T02:07:03",
                             "validity_start": "2018-06-05T02:07:03",
                             "validity_stop": "2018-06-05T08:07:36",
                             "priority": 10,
-                            "ingestion_completeness": {
+                            "ingestion_completeness":{
                                     "check": "false",
-                                    "message": "MISSING DEPENDENCIES"}
+                                    "message": "MISSING DEPENDENCIES"
+                            }
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name1",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            },
+                            "entity":{
+                                "reference_mode":"by_ref",
+                                "reference":"source.json",
+                                "type":"source"
+                            }
+                            }
+                        ]
+                    }
+                ]
                 }
-        }]}
-
 
         # Check data is correctly inserted
         self.engine_eboa.data = data

@@ -167,8 +167,10 @@ def set_filters_for_query_events_or_event_alerts(filters):
 
     # Wether is query event or query event alerts
     ingestion_time_filter_name = "ingestion_time_filters" 
-    if "query_event_alerts" in filters: ingestion_time_filter_name = "event_ingestion_time_filters"
-        
+    if "query_event_alerts" in filters: 
+        ingestion_time_filter_name = "event_ingestion_time_filters"
+    # end if
+
     if filters["key"][0] != "":
         kwargs["keys"] = {"filter": filters["key"][0], "op": filters["key_operator"][0]}
     # end if
@@ -514,7 +516,9 @@ def set_filters_for_query_annotations_or_annotation_alerts(filters):
 
     # Wether is query annotation or query alert annotations
     ingestion_time_filter_name = "ingestion_time_filters"
-    if "query_annotation_alerts" in filters: ingestion_time_filter_name = "annotation_ingestion_time_filters"
+    if "query_annotation_alerts" in filters: 
+        ingestion_time_filter_name = "annotation_ingestion_time_filters"
+    # end if
     
     if filters["annotation_value_name"][0] != "":
         value_operators = filters["annotation_value_operator"]
@@ -1704,8 +1708,10 @@ def set_filters_for_query_ers_or_er_alerts(filters):
 
     # Wether is query er or query er alerts
     groups_filter_name = "groups" 
-    if "query_explicit_ref_alerts" in filters: groups_filter_name = "explicit_ref_groups"
-        
+    if "query_explicit_ref_alerts" in filters: 
+        groups_filter_name = "explicit_ref_groups"
+    # end if    
+    
     if filters["er"][0] != "":
         op="notlike"
         if not "er_notlike_check" in filters:

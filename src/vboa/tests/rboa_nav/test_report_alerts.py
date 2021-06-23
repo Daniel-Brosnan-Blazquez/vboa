@@ -200,7 +200,7 @@ class TestReportAlertsTab(unittest.TestCase):
         assert number_of_elements == 3
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("alerts-nav-timeline")
+        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
 
         condition = timeline_section.is_displayed()
         assert condition is True
