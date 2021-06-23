@@ -1,0 +1,3884 @@
+<!doctype html>
+<html lang="en">
+  
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Visualization tool for Bussiness Operation Analysis">
+    <meta name="author" content="Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>">
+    
+    <title>VBOA - Visualization tool for Bussiness Operation Analysis</title>
+    
+    <link rel="stylesheet" href="/static/dist/styles.css">
+    <link rel="stylesheet" href="/static/css/vboa.css">
+
+    <!-- Custom CSS from https://startbootstrap.com/template-overviews/sb-admin-2/ -->
+    <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div id="wrapper">
+      <!-- Navigation bar -->
+      <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <!-- Title -->
+        <div class="navbar-header">
+          <!-- Button for showing the side options when navigating through the phone -->
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">VBOA 0.1.0</a>
+        </div>
+        <div id="time-clock">
+        </div>
+        <!-- /.navbar-header -->
+        <!-- User menu -->
+        <ul class="nav navbar-top-links navbar-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+              <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+              </li>
+              <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+              </li>
+              <li class="divider"></li>
+              <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+              </li>
+            </ul>
+            <!-- /.dropdown-user -->
+          </li>
+          <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+        <div class="navbar-default sidebar" role="navigation">
+          <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+              <li>
+                <a href="#" id="boa-management-menu"><i class="fa fa-wrench fa-fw"></i> BOA management<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="#" onclick="vboa.request_switch_on_off_orc()"><i id="orc-indicator" class="circle red-circle"></i><span> Orchestrator</a>
+                  </li>
+                  <li>
+                    <a href="#" onclick="vboa.request_switch_on_off_cron()"><i id="cron-indicator" class="circle red-circle"></i><span> CRON</a>
+                  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-heart-o fa-fw"></i> BOA Health<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="/health/health"><i class="fa fa-fw fa-tachometer"></i> Complete view</a>
+                  </li>
+                  <li>
+                    <a href="/health/health?template=alerts"><i class="fa fa-fw fa-exclamation-triangle"></i> Alerts</a>
+                  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Ingestion control<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="/ingestion_control/ingestion_control"><i class="fa fa-fw fa-tachometer"></i> Complete view</a>
+                  </li>
+                  <li>
+                    <a href="/ingestion_control/ingestion_control?template=errors"><i class="fa fa-fw fa-exclamation-circle"></i> Ingestion errors</a>
+                  </li>
+                  <li>
+                    <a href="/ingestion_control/ingestion_control?template=alerts"><i class="fa fa-fw fa-exclamation-triangle"></i> Alerts</a>
+                  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+              <li>
+                <a href="/eboa_nav"><i class="fa fa-table fa-fw"></i> EBOA navigation</a>
+              </li>
+              <li>
+                <a href="/rboa_nav"><i class="fa fa-pie-chart fa-fw"></i> Reporting navigation</a>
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Reporting control<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="/rboa_nav/reporting_control"><i class="fa fa-fw fa-tachometer"></i> Complete view</a>
+                  </li>
+                  <li>
+                    <a href="/rboa_nav/reporting_control?template=errors"><i class="fa fa-fw fa-exclamation-circle"></i> Reporting errors</a>
+                  </li>
+                  <li>
+                    <a href="/rboa_nav/reporting_control?template=alerts"><i class="fa fa-fw fa-exclamation-triangle"></i> Alerts</a>
+                  </li>
+                </ul>
+              </li>
+              
+<li>
+  <a href="#"><i class="fa fa-file-text-o fa-fw"></i> S2 reporting<span class="fa arrow"></span></a>
+  <ul class="nav nav-second-level">
+    <li>
+      <a href="/views/planning"><i class="fa fa-calendar"></i> Planning</a>
+      <a href="/views/tracking"><i class="fa fa-map-marker"></i> Tracking</a>
+      <a href="/views/acquisition"><i class="fa fa-bolt"></i> Acquisition</a>
+    </li>
+  </ul>
+  <!-- /.nav-second-level -->
+</li>
+
+            </ul>
+          </div>
+          <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+      </nav>
+      <div id="page-wrapper">
+        
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-header">EBOA navigation</h1>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="row">
+  <ul class="nav nav-tabs responsive-tabs">
+    <li class="active"><a href="#nav-events">Events</a></li>
+    <li  ><a href="#nav-annotations">Annotations</a></li>
+    <li  ><a href="#nav-sources">Sources</a></li>
+    <li  ><a href="#nav-explicit-references">Explicit references</a></li>
+    <li  ><a href="#nav-gauges">Gauges</a></li>
+    <li  ><a href="#nav-annotation-cnfs">Annotation Cnfs</a></li>
+    <li  ><a href="#nav-dim-signatures">DIM Signatures</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="nav-events">
+      
+<div>
+  <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="events-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Gauge name</th>
+          <th>Gauge system</th>
+          <th>Start</th>
+          <th>Stop</th>
+          <th>Duration (s)</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Linked events</th>
+          <th>Event UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><i id="expand-values-event-00c4b486-ea65-11e9-8f05-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c4b486-ea65-11e9-8f05-00000000006c', '00c4b486-ea65-11e9-8f05-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_1</td>
+          <td>S2A</td>
+          <td>2018-07-21 18:51:28.225563</td>
+          <td>2018-07-21 18:55:29.946495</td>
+          <td>241.720932</td>
+          <td>2019-10-09 07:18:33.703428</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c4b486-ea65-11e9-8f05-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c4b486-ea65-11e9-8f05-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c7065e-ea65-11e9-b5bf-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c7065e-ea65-11e9-b5bf-00000000006c', '00c7065e-ea65-11e9-b5bf-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_1</td>
+          <td>S2A</td>
+          <td>2018-07-21 20:18:50.458085</td>
+          <td>2018-07-21 20:26:39.468624</td>
+          <td>469.010539</td>
+          <td>2019-10-09 07:18:33.715642</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c7065e-ea65-11e9-b5bf-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c7065e-ea65-11e9-b5bf-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c544c2-ea65-11e9-9bea-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c544c2-ea65-11e9-9bea-00000000006c', '00c544c2-ea65-11e9-9bea-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_2</td>
+          <td>S2A</td>
+          <td>2018-07-21 18:51:28.225563</td>
+          <td>2018-07-21 18:55:29.946495</td>
+          <td>241.720932</td>
+          <td>2019-10-09 07:18:33.707120</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c544c2-ea65-11e9-9bea-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c544c2-ea65-11e9-9bea-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c72034-ea65-11e9-aad1-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c72034-ea65-11e9-aad1-00000000006c', '00c72034-ea65-11e9-aad1-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_2</td>
+          <td>S2A</td>
+          <td>2018-07-21 20:18:50.458085</td>
+          <td>2018-07-21 20:26:39.468624</td>
+          <td>469.010539</td>
+          <td>2019-10-09 07:18:33.716277</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c72034-ea65-11e9-aad1-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c72034-ea65-11e9-aad1-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c79cfe-ea65-11e9-89ff-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c79cfe-ea65-11e9-89ff-00000000006c', '00c79cfe-ea65-11e9-89ff-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLANNED_PLAYBACK_COMPLETENESS_CHANNEL_1</td>
+          <td>S2A</td>
+          <td>2018-07-21 23:18:49.728755</td>
+          <td>2018-07-21 23:29:52.898715</td>
+          <td>663.16996</td>
+          <td>2019-10-09 07:18:33.720900</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c79cfe-ea65-11e9-89ff-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c79cfe-ea65-11e9-89ff-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c84be8-ea65-11e9-b489-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c84be8-ea65-11e9-b489-00000000006c', '00c84be8-ea65-11e9-b489-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLANNED_PLAYBACK_COMPLETENESS_CHANNEL_2</td>
+          <td>S2A</td>
+          <td>2018-07-21 23:18:49.759214</td>
+          <td>2018-07-21 23:29:52.934371</td>
+          <td>663.175157</td>
+          <td>2019-10-09 07:18:33.725213</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c84be8-ea65-11e9-b489-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c84be8-ea65-11e9-b489-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c8da36-ea65-11e9-bd57-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c8da36-ea65-11e9-bd57-00000000006c', '00c8da36-ea65-11e9-bd57-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLANNED_PLAYBACK_COMPLETENESS_CHANNEL_2</td>
+          <td>S2A</td>
+          <td>2018-07-21 23:29:57.350828</td>
+          <td>2018-07-21 23:30:03.707424</td>
+          <td>6.356596</td>
+          <td>2019-10-09 07:18:33.727401</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c8da36-ea65-11e9-bd57-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c8da36-ea65-11e9-bd57-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c73966-ea65-11e9-8fc0-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c73966-ea65-11e9-8fc0-00000000006c', '00c73966-ea65-11e9-8fc0-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLAYBACK_VALIDITY_4</td>
+          <td>MPS_</td>
+          <td>2018-07-21 23:18:49.728755</td>
+          <td>2018-07-21 23:29:52.898715</td>
+          <td>663.16996</td>
+          <td>2019-10-09 07:18:33.718831</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c73966-ea65-11e9-8fc0-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c73966-ea65-11e9-8fc0-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c6e9e8-ea65-11e9-bd5e-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c6e9e8-ea65-11e9-bd5e-00000000006c', '00c6e9e8-ea65-11e9-bd5e-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>ISP_VALIDITY</td>
+          <td>MPS_</td>
+          <td>2018-07-21 20:18:50.458085</td>
+          <td>2018-07-21 20:26:39.468624</td>
+          <td>469.010539</td>
+          <td>2019-10-09 07:18:33.714933</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c6e9e8-ea65-11e9-bd5e-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c6e9e8-ea65-11e9-bd5e-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c8953e-ea65-11e9-856c-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c8953e-ea65-11e9-856c-00000000006c', '00c8953e-ea65-11e9-856c-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLAYBACK_VALIDITY_2</td>
+          <td>MPS_</td>
+          <td>2018-07-21 23:29:57.350828</td>
+          <td>2018-07-21 23:30:03.707424</td>
+          <td>6.356596</td>
+          <td>2019-10-09 07:18:33.726968</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c8953e-ea65-11e9-856c-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c8953e-ea65-11e9-856c-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c7ed24-ea65-11e9-917b-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c7ed24-ea65-11e9-917b-00000000006c', '00c7ed24-ea65-11e9-917b-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>PLAYBACK_VALIDITY_20</td>
+          <td>MPS_</td>
+          <td>2018-07-21 23:18:49.759214</td>
+          <td>2018-07-21 23:29:52.934371</td>
+          <td>663.175157</td>
+          <td>2019-10-09 07:18:33.723315</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c7ed24-ea65-11e9-917b-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c7ed24-ea65-11e9-917b-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c396e4-ea65-11e9-9d78-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c396e4-ea65-11e9-9d78-00000000006c', '00c396e4-ea65-11e9-9d78-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>ISP_VALIDITY</td>
+          <td>MPS_</td>
+          <td>2018-07-21 18:51:28.225563</td>
+          <td>2018-07-21 18:55:29.946495</td>
+          <td>241.720932</td>
+          <td>2019-10-09 07:18:33.699710</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c396e4-ea65-11e9-9d78-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c396e4-ea65-11e9-9d78-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c66512-ea65-11e9-bd2c-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c66512-ea65-11e9-bd2c-00000000006c', '00c66512-ea65-11e9-bd2c-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>ISP_GAP</td>
+          <td>MPS_</td>
+          <td>2018-07-21 20:18:50.458085</td>
+          <td>2018-07-21 20:19:15.712714</td>
+          <td>25.254629</td>
+          <td>2019-10-09 07:18:33.714222</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c66512-ea65-11e9-bd2c-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c66512-ea65-11e9-bd2c-00000000006c</td>
+        </tr>
+        
+        <tr>
+          <td><i id="expand-values-event-00c5d522-ea65-11e9-8ea9-00000000006c" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-00c5d522-ea65-11e9-8ea9-00000000006c', '00c5d522-ea65-11e9-8ea9-00000000006c')" data-toggle="tooltip" title="Click to show the related values"></i></td>
+          <td>RAW_ISP_VALIDITY</td>
+          <td>MPS_</td>
+          <td>2018-07-21 18:51:28.225563</td>
+          <td>2018-07-21 20:26:35.860624</td>
+          <td>5707.635061</td>
+          <td>2019-10-09 07:18:33.710768</td>
+          
+          <td><a href="/eboa_nav/query-source/00636e7e-ea65-11e9-b1d1-00000000006c">S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF</a></td>
+          <td>
+            
+            
+            
+            
+            REP_PASS_2_2018-07-21T23:18:43
+          </td>
+          <td><a href="/eboa_nav/query-event-links/00c5d522-ea65-11e9-8ea9-00000000006c"><i class="fa fa-link"></i></a></td>
+          <td>00c5d522-ea65-11e9-8ea9-00000000006c</td>
+        </tr>
+        
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Gauge name</th>
+          <th>Gauge system</th>
+          <th>Start</th>
+          <th>Stop</th>
+          <th>Duration (s)</th>
+          <th>Ingestion Time</th>
+          <th>Source</th>
+          <th>Explicit Reference</th>
+          <th>Linked events</th>
+          <th>Event UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Timeline of events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="events-nav-timeline">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Map of footprints related to the queried events
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div id="events-nav-map">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+
+
+    </div>
+    <div class="tab-pane  " id="nav-annotations">
+      
+      <div class="col-lg-12" id="nav-annotations">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/eboa_nav/query-annotations">
+            <!-- Sources -->
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-names">
+                <label id="annotations-sources-like-checkbox">Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="source-like-annotations" name="source_like" id="annotations-sources-like-text"/>
+                <datalist id="source-like-annotations">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-source-names">
+                <label id="annotations-sources-in-checkbox">Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-sources-in-text">
+                </select>
+              </div>
+            </div>
+            <!-- Exlicit references -->
+            <div class="row">
+              <div class="col-xs-3 query-ers">
+                <label id="annotations-explicit-refs-like-checkbox">Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="er-like-annotations" name="er_like" id="annotations-explicit-refs-like-text"/>
+                <datalist id="er-like-annotations">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-ers">
+                <label id=annotations-explicit-refs-in-checkbox>Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-explicit-refs-in-text">
+                </select>
+              </div>
+            </div>
+            <!-- Annotation configurations -->
+            <div class="row  query-annotation-cnfs">
+              <div class="col-xs-3 query-annotation-names">
+                <label id="annotations-annotation-names-like-checkbox">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="annotation-name-like-annotations" name="annotation_name_like" id="annotations-annotation-names-like-text"/>
+                <datalist id="annotation-name-like-annotations">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-annotation-systems">
+                <label id="annotations-annotation-system-like-checkbox">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="annotation-system-like-annotations" name="annotation_system_like" id="annotations-annotation-system-like-text"/>
+                <datalist id="annotation-system-like-annotations">
+                </datalist>
+              </div>
+            </div>
+            <div class="row query-annotation-cnfs">
+              <div class="col-xs-3 query-annotation-names">
+                <label id="annotations-annotation-names-in-checkbox">Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-annotation-names-in-text">
+                </select>
+              </div>
+              <div class="col-xs-3 query-annotation-systems">
+                <label id="annotations-annotation-system-in-checkbox">Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotations-annotation-system-in-text">
+                </select>
+              </div>
+            </div>
+            <!-- Values -->
+            <div class="row" id="annotations-value-query-initial">
+              <div class="col-xs-3">
+                <label>Value type</label>
+                <select style="width: 100%" name="annotation_value_type" id="value-type">
+                  <option>text</option>
+                  <option>timestamp</option>
+                  <option>boolean</option>
+                  <option>double</option>
+                  <option>geometry</option>
+                  <option>object</option>
+                </select>
+              </div>
+              <div class="col-xs-3">
+                <label>Value name</label>
+                <div class="input-group" style="width: 100%">
+                  <input class="form-control" style="width: 80%" name="annotation_value_name_like" id="value-name-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_like_op" id="value-name-option">
+                    <option>like</option>
+                    <option>notlike</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-xs-3">
+                <label>Value</label>
+                <div class="input-group" style="width: 100%">
+                  <input type="text" class="form-control" style="width: 80%" name="annotation_value" id="value-value-text"/>
+                  <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_operator" id="value-value-operator">
+                        <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <span onclick="vboa.add_value_query_annotations('more-value-query-annotations')" id="annotations-add-value">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-value-query-annotations">
+            </div>
+            <!-- Ingestion time -->
+            <div class="row" id="annotations-ingestion-time-initial">
+              <div class="col-xs-3">
+  <label>Ingestion time</label>
+  <div class="input-group date">
+    <input type="text" class="form-control"  name="ingestion_time" id="ingestion-time-text"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="ingestion_time_operator" id="ingestion-time-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+              <div>
+                <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-annotations')" id="annotations-add-ingestion-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-ingestion-time-query-annotations">
+            </div>
+            <div>
+              <label id="annotations-show-map">
+                <input type="checkbox" name="show_map"><span class="label-text" ><b>Show map</b></span>
+              </label>
+            </div>
+            <!-- Query restrictions -->
+            <div class="row" id="annotations-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="annotations-order-by">
+                    <option></option>
+                    <option>ingestion_time</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="annotations-limit" value="1000"/>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="annotations-submit-button">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
+      
+    </div>
+    <div class="tab-pane  " id="nav-sources">
+      
+      <div class="col-lg-12" id="nav-sources">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/eboa_nav/query-sources">
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-names">
+                <label id="sources-source-names-like-checkbox">Name like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="source-like-sources" name="source_like" id="sources-source-names-like-text"/>
+                <datalist id="source-like-sources">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-source-names">
+                <label id="sources-source-names-in-checkbox">Names (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-source-names-in-text">
+                </select>
+              </div>
+            </div>
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-processors">
+                <label id="sources-processors-like-checkbox">Processor like (<input type="checkbox" name="processor_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="processor-like-sources" name="processor_like" id="sources-processors-like-text"/>
+                <datalist id="processor-like-sources">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-source-processors">
+                <label id="sources-processors-in-checkbox">Processors (<input type="checkbox" name="processor_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="processors" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-processors-in-text">
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="sources-dim-signatures-like-checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="dim-signature-like-sources" name="dim_signature_like" id="sources-dim-signatures-like-text"/>
+                <datalist id="dim-signature-like-sources">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="sources-dim-signatures-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-dim-signatures-in-text">
+                </select>
+              </div>
+            </div>
+            <div class="row" id="sources-validity-start-validity-stop-initial">
+              <div class="col-xs-3">
+  <label>Validity start</label>
+  <div class="input-group date">
+    <input type="text" class="form-control" name="validity_start" id="start-input"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="validity_start_operator" id="start-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="col-xs-3">
+  <label>Validity stop</label>
+  <div class="input-group date">
+    <input type="text" class="form-control" name="validity_stop" id="stop-input"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="validity_stop_operator" id="stop-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+              <div>
+                <span onclick="vboa.add_validity_start_validity_stop('more-validity-start-validity-stop-query-sources')" id="sources-add-validity-start-validity-stop">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-validity-start-validity-stop-query-sources">
+            </div>
+            <!-- Validity duration -->
+            <div class="row" id="sources-validity-duration-initial">
+              <div class="col-xs-3">
+  <label>Source validity duration (seconds)</label>
+  <div>
+    <input style="float: left; width: 90%" type="text" class="form-control"  name="source_validity_duration"/>
+    <div style="float: right; width: 10%">
+      <select class="form-control" style="padding-left: 0" name="source_validity_duration_operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+              <div>
+                <span onclick="vboa.add_source_validity_duration('more-source-validity-duration-query-sources')" id="sources-add-validity-duration">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-source-validity-duration-query-sources">
+            </div>
+            <!-- Ingestion time -->
+            <div class="row" id="sources-ingestion-time-initial">
+              <div class="col-xs-3">
+  <label>Ingestion time</label>
+  <div class="input-group date">
+    <input type="text" class="form-control"  name="ingestion_time" id="ingestion-time-text"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="ingestion_time_operator" id="ingestion-time-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+              <div>
+                <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-sources')" id="sources-add-ingestion-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-ingestion-time-query-sources">
+            </div>
+            <div class="row" id="sources-ingestion-duration-initial">
+              <div class="col-xs-3">
+  <label>Ingestion duration</label>
+  <div>
+    <input style="float: left; width: 90%" type="text" class="form-control"  name="ingestion_duration" id="ingestion-duration-text"/>
+    <div style="float: right; width: 10%">
+      <select class="form-control" style="padding-left: 0" name="ingestion_duration_operator" id="ingestion-duration-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+              <div>
+                <span onclick="vboa.add_ingestion_duration('more-ingestion-duration-query-sources')" id="sources-add-ingestion-duration">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-ingestion-duration-query-sources">
+            </div>
+            <div class="row" id="sources-generation-time-initial">
+              <div class="col-xs-3">
+  <label>Generation time</label>
+  <div class="input-group date">
+    <input type="text" class="form-control" name="generation_time" id="generation-duration-text"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="generation_time_operator" id="generation-duration-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+              <div>
+                <span onclick="vboa.add_generation_time('more-generation-time-query-sources')" id="sources-add-generation-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-generation-time-query-sources">
+            </div>
+            <div class="row" id="sources-statuses-initial">
+              <div class="col-xs-3 query-source-statuses">
+                <label id="sources-statuses-initial-checkbox">Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="source_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-statuses-initial-in-text">
+                </select>
+              </div>
+            </div>
+            <div>
+              <label id="sources-show-validity-timeline">
+                <input type="checkbox" id="show-timeline" name="show_validity_timeline" checked><span class="label-text"><b>Show validity timeline</b></span>
+              </label>
+            </div>
+            <div>
+              <label id="sources-show-generation-to-ingestion-timeline">
+                <input type="checkbox" id="show-timeline" name="show_generation_to_ingestion_timeline" checked><span class="label-text"><b>Show generation to ingestion timeline</b></span>
+              </label>
+            </div>
+            <div>
+              <label id="sources-show-number-events-xy">
+                <input type="checkbox" id="show-number-events-xy" name="show_number_events_xy" checked><span class="label-text"><b>Show number of events over time per source</b></span>
+              </label>
+            </div>
+            <div>
+              <label id="sources-show-ingestion-duration-xy">
+                <input type="checkbox" id="show-ingestion-duration-xy" name="show_ingestion_duration_xy" checked><span class="label-text"><b>Show ingestion duration over time per source</b></span>
+              </label>
+            </div>
+            <div>
+              <label id="sources-show-generation-time-to-ingestion-time-xy">
+                <input type="checkbox" id="show-generation-time-to-ingestion-time-xy" name="show_generation_time_to_ingestion_time_xy" checked><span class="label-text"><b>Show generation to ingestion times over time per source</b></span>
+              </label>
+            </div>
+            <!-- Query restrictions -->
+            <div class="row" id="explicit-refs-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="explicit-refs-order-by">
+                    <option></option>
+                    <option>name</option>
+                    <option>validity_start</option>
+                    <option>validity_stop</option>
+                    <option>reception_time</option>
+                    <option>generation_time</option>
+                    <option>ingestion_time</option>
+                    <option>ingestion_duration</option>
+                    <option>processing_duration</option>
+                    <option>processor</option>
+                    <option>processor_version</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="explicit-refs-limit" value="1000"/>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="sources-submit-button">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
+      
+    </div>
+    <div class="tab-pane  " id="nav-explicit-references">
+      
+      <div class="col-lg-12" id="nav-explicit-references">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/eboa_nav/query-ers">
+            <!-- Exlicit references -->
+            <div class="row">
+              <div class="col-xs-3 query-ers">
+                <label id="explicit-refs-explicit-refs-like-checkbox">Explicit reference like (<input type="checkbox" name="er_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="er-like-ers" name="er_like" id="explicit-refs-explicit-refs-like-text"/>
+                <datalist id="er-like-ers">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-ers">
+                <label id="explicit-refs-explicit-refs-in-checkbox">Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="ers" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="explicit-refs-explicit-refs-in-text">
+                </select>
+              </div>
+            </div>
+            <!-- Configuration -->
+            <div class="row">
+              <div class="col-xs-3 query-er-groups">
+                <label id="explicit-refs-groups-like-checkbox">Group like (<input type="checkbox" name="group_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="group-like-explicit-reference" name="group_like" id="explicit-refs-groups-like-text"/>
+                <datalist id="group-like-explicit-reference">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-er-groups">
+                <label id="explicit-refs-groups-in-checkbox">Groups (<input type="checkbox" name="group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select id="explicit-refs-groups-in-text" name="groups" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <!-- Sources -->
+            <div class="row query-sources">
+              <div class="col-xs-3 query-source-names">
+                <label id="explicit-refs-sources-like-checkbox">Source like (<input type="checkbox" name="source_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input id="explicit-refs-sources-like-text" class="form-control" list="source-like-ers" name="source_like"/>
+                <datalist id="source-like-ers">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-source-names">
+                <label id="explicit-refs-sources-in-checkbox">Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select id="explicit-refs-sources-in-text" name="sources" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                </select>
+              </div>
+            </div>
+            <!-- Event filters -->
+            <div class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">Specify search by using event filters</div>
+                <div class="panel-body">
+                  <!-- Event keys -->
+                  <div class="row">
+                    <div class="col-xs-3 query-keys">
+                      <label id="explicit-refs-keys-like-checkbox">Key like (<input type="checkbox" name="key_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                      <input id="explicit-refs-keys-like-text" class="form-control" list="key-like-events" name="key_like"/>
+                      <datalist id="key-like-events">
+                      </datalist>
+                    </div>
+                    <div class="col-xs-3 query-keys">
+                      <label id="explicit-refs-keys-in-checkbox">Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                      <select id="explicit-refs-keys-in-text" name="keys" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Gauges -->
+                  <div>
+                    <div class="row  query-gauges">
+                      <div class="col-xs-3 query-gauge-names">
+                        <label id="explicit-refs-gauge-names-like-checkbox">Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                        <input id="explicit-refs-gauge-names-like-text" class="form-control" list="gauge-name-like-events" name="gauge_name_like"/>
+                        <datalist id="gauge-name-like-events">
+                        </datalist>
+                      </div>
+                      <div class="col-xs-3 query-gauge-systems">
+                        <label id="explicit-refs-gauge-system-like-checkbox">Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                        <input id="explicit-refs-gauge-system-like-text" class="form-control" list="gauge-system-like-events" name="gauge_system_like"/>
+                        <datalist id="gauge-system-like-events">
+                        </datalist>
+                      </div>
+                    </div>
+                    <div class="row query-gauges">
+                      <div class="col-xs-3 query-gauge-names">
+                        <label id="explicit-refs-gauge-names-in-checkbox">Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                        <select id="explicit-refs-gauge-names-in-text" name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        </select>
+                      </div>
+                      <div class="col-xs-3 query-gauge-systems">
+                        <label id="explicit-refs-gauge-system-in-checkbox">Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                        <select id="explicit-refs-gauge-system-in-text" name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Values -->
+                  <div class="row" id="explicit-refs-events-value-query-initial">
+                    <div class="col-xs-3">
+                      <label>Value type</label>
+                      <select style="width: 100%" name="event_value_type" id="value-type">
+                        <option>text</option>
+                        <option>timestamp</option>
+                        <option>boolean</option>
+                        <option>double</option>
+                        <option>geometry</option>
+                        <option>object</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value name</label>
+                      <div class="input-group" style="width: 100%">
+                        <input class="form-control" style="width: 80%" name="event_value_name_like" id="value-name-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_name_like_op" id="value-name-option">
+                          <option>like</option>
+                          <option>notlike</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value</label>
+                      <div class="input-group" style="width: 100%">
+                        <input type="text" class="form-control" style="width: 80%" name="event_value" id="value-value-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="event_value_operator" id="value-value-operator">
+                              <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <span onclick="vboa.add_value_query_events('more-value-query-explicit-refs-events')" id="explicit-refs-events-add-value">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-value-query-explicit-refs-events">
+                  </div>
+                  <!-- Start and stop -->
+                  <div class="row" id="explicit-refs-events-start-stop-initial">
+                    <div class="col-xs-3">
+  <label>Start</label>
+  <div class="input-group date">
+    <input type="text" class="form-control" name="start" id="start-input"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="start_operator" id="start-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="col-xs-3">
+  <label>Stop</label>
+  <div class="input-group date">
+    <input type="text" class="form-control"  name="stop" id="stop-input"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="stop_operator" id="stop-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+                    <div>
+                      <span onclick="vboa.add_start_stop('more-start-stop-query-explicit-refs-events')" id="explicit-refs-events-start-stop-add-value">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-start-stop-query-explicit-refs-events">
+                  </div>
+                  <!-- Event duration -->
+                  <div class="row" id="explicit-refs-events-duration-initial">
+                    <div class="col-xs-3">
+  <label>Event duration (seconds)</label>
+  <div>
+    <input style="float: left; width: 90%" type="text" class="form-control"  name="event_duration" id="event-duration-input"/>
+    <div style="float: right; width: 10%">
+      <select class="form-control" style="padding-left: 0" name="event_duration_operator" id="event-duration-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+                    <div>
+                      <span onclick="vboa.add_event_duration('more-event-duration-query-explicit-refs')" id="explicit-refs-events-duration-add-value">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-event-duration-query-explicit-refs">
+                  </div>
+                </div>
+              </div>
+              <!-- Annotation filters -->
+              <div class="panel panel-default">
+                <div class="panel-heading">Specify search by using annotation filters</div>
+                <div class="panel-body">
+                  <!-- Annotation configurations -->
+                  <div class="row  query-annotation-cnfs">
+                    <div class="col-xs-3 query-annotation-names">
+                      <label id="explicit-refs-annotation-names-like-checkbox">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                      <input class="form-control" list="annotation-name-like-annotations" name="annotation_name_like" id="explicit-refs-annotation-names-like-text"/>
+                      <datalist id="annotation-name-like-annotations">
+                      </datalist>
+                    </div>
+                    <div class="col-xs-3 query-annotation-systems">
+                      <label id="explicit-refs-annotation-system-like-checkbox">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                      <input class="form-control" list="annotation-system-like-annotations" name="annotation_system_like" id="explicit-refs-annotation-system-like-text"/>
+                      <datalist id="annotation-system-like-annotations">
+                      </datalist>
+                    </div>
+                  </div>
+                  <div class="row query-annotation-cnfs">
+                    <div class="col-xs-3 query-annotation-names">
+                      <label id="explicit-refs-annotation-names-in-checkbox">Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                      <select id="explicit-refs-annotation-names-in-text" name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      </select>
+                    </div>
+                    <div class="col-xs-3 query-annotation-systems">
+                      <label id="explicit-refs-annotation-system-in-checkbox">Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                      <select id="explicit-refs-annotation-system-in-text" name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1">
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Values -->
+                  <div class="row" id="explicit-refs-annotations-value-query-initial">
+                    <div class="col-xs-3">
+                      <label>Value type</label>
+                      <select style="width: 100%" name="annotation_value_type" id="value-type">
+                        <option>text</option>
+                        <option>timestamp</option>
+                        <option>boolean</option>
+                        <option>double</option>
+                        <option>geometry</option>
+                        <option>object</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value name</label>
+                      <div class="input-group" style="width: 100%">
+                        <input class="form-control" style="width: 80%" name="annotation_value_name_like" id="value-name-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_name_like_op" id="value-name-option">
+                          <option>like</option>
+                          <option>notlike</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-xs-3">
+                      <label>Value</label>
+                      <div class="input-group" style="width: 100%">
+                        <input type="text" class="form-control" style="width: 80%" name="annotation_value" id="value-value-text"/>
+                        <select class="form-control" style="padding-left: 0; width: 20%" name="annotation_value_operator" id="value-value-operator">
+                              <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <span onclick="vboa.add_value_query_annotations('more-value-query-explicit-refs-annotations')" id="explicit-refs-annotations-add-value">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div id="more-value-query-explicit-refs-annotations">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="explicit-refs-annotations-ingestion-time-initial">
+              <div class="col-xs-3">
+  <label>Ingestion time</label>
+  <div class="input-group date">
+    <input type="text" class="form-control"  name="ingestion_time" id="ingestion-time-text"/>
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+    <div>
+      <select class="form-control" style="padding-left: 0" name="ingestion_time_operator" id="ingestion-time-operator">
+            <option>==</option>
+    <option>></option>
+    <option>>=</option>
+    <option><</option>
+    <option><=</option>
+    <option>!=</option>
+      </select>
+    </div>
+  </div>
+</div>
+              <div>
+                <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-explicit-refs')" id="explicit-refs-annotations-add-ingestion-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-ingestion-time-query-explicit-refs">
+            </div>
+            <!-- Query restrictions -->
+            <div class="row" id="explicit-refs-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="explicit-refs-order-by">
+                    <option></option>
+                    <option>explicit_ref</option>
+                    <option>ingestion_time</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="explicit-refs-limit" value="1000"/>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="explicit-refs-submit-button">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
+      
+    </div>
+    <div class="tab-pane  " id="nav-gauges">
+      
+      <div class="col-lg-12" id="nav-gauges">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/eboa_nav/query-gauges">
+            <div>
+              <div class="row  query-gauges">
+                <div class="col-xs-3 query-gauge-names">
+                  <label id="gauges-gauge-names-like-checkbox">Gauge name like (<input type="checkbox" name="gauge_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                  <input class="form-control" list="gauge-name-like-gauges" name="gauge_name_like" id="gauges-gauge-names-like-text"/>
+                  <datalist id="gauge-name-like-gauges">
+                  </datalist>
+                </div>
+                <div class="col-xs-3 query-gauge-systems">
+                  <label id="gauges-gauge-system-like-checkbox">Gauge system like (<input type="checkbox" name="gauge_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                  <input class="form-control" list="gauge-system-like-gauges" name="gauge_system_like" id="gauges-gauge-system-like-text"/>
+                  <datalist id="gauge-system-like-gauges">
+                  </datalist>
+                </div>
+              </div>
+              <div class="row query-gauges">
+                <div class="col-xs-3 query-gauge-names">
+                  <label id="gauges-gauge-names-in-checkbox">Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <select name="gauge_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="gauges-gauge-names-in-text">
+                  </select>
+                </div>
+                <div class="col-xs-3 query-gauge-systems">
+                  <label id="gauges-gauge-system-in-checkbox">Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <select name="gauge_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="gauges-gauge-system-in-text">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="gauges-dim-signatures-like-checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="dim-signature-like-sources" name="dim_signature_like" id="gauges-dim-signatures-like-text"/>
+                <datalist id="dim-signature-like-sources">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="gauges-dim-signatures-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1"  id="gauges-dim-signatures-in-text">
+                </select>
+              </div>
+            </div>
+            <div>
+              <label id="gauges-show-network">
+                <input type="checkbox" name="show_network" ><span class="label-text"><b>Show network of gauges</b></span>
+              </label>
+            </div>
+            <!-- Query restrictions -->
+            <div class="row" id="gauges-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="gauges-order-by">
+                    <option></option>
+                    <option>name</option>
+                    <option>system</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="gauges-limit" value="1000"/>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="gauges-submit-button">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
+      
+    </div>
+    <div class="tab-pane  " id="nav-annotation-cnfs">
+      
+      <div class="col-lg-12" id="nav-annotation-cnfs">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/eboa_nav/query-annotation-cnfs">
+            <div>
+              <div class="row  query-annotation-cnfs">
+                <div class="col-xs-3 query-annotation-names">
+                  <label id="annotation-cnfs-annotation-names-like-checkbox">Annotation name like (<input type="checkbox" name="annotation_name_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                  <input class="form-control" list="annotation-name-like-annotation-cnfs" name="annotation_name_like" id="annotation-cnfs-annotation-names-like-text"/>
+                  <datalist id="annotation-name-like-annotation-cnfs">
+                  </datalist>
+                </div>
+                <div class="col-xs-3 query-annotation-systems">
+                  <label id="annotation-cnfs-annotation-system-like-checkbox">Annotation system like (<input type="checkbox" name="annotation_system_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                  <input class="form-control" list="annotation-system-like-annotation-cnfs" name="annotation_system_like" id="annotation-cnfs-annotation-system-like-text"/>
+                  <datalist id="annotation-system-like-annotation-cnfs">
+                  </datalist>
+                </div>
+              </div>
+              <div class="row query-annotation-cnfs">
+                <div class="col-xs-3 query-annotation-names">
+                  <label id="annotation-cnfs-annotation-names-in-checkbox">Annotation names (<input type="checkbox" name="annotation_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <select name="annotation_names" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation-cnfs-annotation-names-in-text">
+                  </select>
+                </div>
+                <div class="col-xs-3 query-annotation-systems">
+                  <label id="annotation-cnfs-annotation-system-in-checkbox">Annotation systems (<input type="checkbox" name="annotation_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <select name="annotation_systems" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation-cnfs-annotation-system-in-text">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="annotation-cnfs-dim-signature-like-checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="dim-signature-like-sources" name="dim_signature_like" id="annotation-cnfs-dim-signature-like-text"/>
+                <datalist id="dim-signature-like-sources">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="annotation-cnfs-dim-signature-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="annotation-cnfs-dim-signature-in-text">
+                </select>
+              </div>
+            </div>
+            <!-- Query restrictions -->
+            <div class="row" id="annotation-cnfs-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="annotation-cnfs-order-by">
+                    <option></option>
+                    <option>name</option>
+                    <option>system</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="annotation-cnfs-limit" value="1000"/>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="annotation-cnfs-submit-button">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
+      
+    </div>
+    <div class="tab-pane  " id="nav-dim-signatures">
+      
+      <div class="col-lg-12" id="nav-events">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method=post action="/eboa_nav/query-dim-signatures">
+            <div class="row">
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="dim-signatures-dim-signature-like-checkbox">DIM signature like (<input type="checkbox" name="dim_signature_notlike_check"><span class="label-text"><b>Not like)</b></span></label>
+                <input class="form-control" list="dim-signature-like-dims" name="dim_signature_like" id="dim-signatures-dim-signature-like-text"/>
+                <datalist id="dim-signature-like-dims">
+                </datalist>
+              </div>
+              <div class="col-xs-3 query-dim-signatures">
+                <label id="dim-signatures-dim-signature-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="dim_signatures" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="dim-signatures-dim-signature-in-text">
+                </select>
+              </div>
+            </div>
+            <!-- Query restrictions -->
+            <div class="row" id="dim-signatures-query-restrictions">
+              <!-- Order by -->
+              <div class="col-xs-3">
+                  <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                  <select style="width: 100%" name="order_by" id="dim-signatures-order-by">
+                    <option></option>
+                    <option>dim_signature</option>
+                    <option>dim_signature_uuid</option>
+                  </select>
+              </div>
+              <!-- Limit -->
+              <div class="col-xs-3">
+                <label>Limit</label>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="dim-signatures-limit" value="1000"/>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="dim-signatures-submit-button">Query</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+<!-- /.panel -->
+      
+    </div>
+  </div>
+  <!-- /.tab-content -->
+</div>
+<!-- /.row -->
+
+      </div>
+      <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    
+    
+
+    <!-- Load the bundle of scripts -->
+    <script src="/static/dist/bundle.js" type="text/javascript"></script>
+
+    
+    <script type="text/javascript">
+      
+      
+      var events = [
+    
+    {
+        "id": "00c4b486-ea65-11e9-8f05-00000000006c",
+        "gauge":{
+            "name": "PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_1",
+            "system": "S2A"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.703428",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 18:51:28.225563",
+        "stop": "2018-07-21 18:55:29.946495",
+    },
+    
+    {
+        "id": "00c7065e-ea65-11e9-b5bf-00000000006c",
+        "gauge":{
+            "name": "PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_1",
+            "system": "S2A"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.715642",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 20:18:50.458085",
+        "stop": "2018-07-21 20:26:39.468624",
+    },
+    
+    {
+        "id": "00c544c2-ea65-11e9-9bea-00000000006c",
+        "gauge":{
+            "name": "PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_2",
+            "system": "S2A"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.707120",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 18:51:28.225563",
+        "stop": "2018-07-21 18:55:29.946495",
+    },
+    
+    {
+        "id": "00c72034-ea65-11e9-aad1-00000000006c",
+        "gauge":{
+            "name": "PLANNED_IMAGING_ISP_COMPLETENESS_CHANNEL_2",
+            "system": "S2A"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.716277",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 20:18:50.458085",
+        "stop": "2018-07-21 20:26:39.468624",
+    },
+    
+    {
+        "id": "00c79cfe-ea65-11e9-89ff-00000000006c",
+        "gauge":{
+            "name": "PLANNED_PLAYBACK_COMPLETENESS_CHANNEL_1",
+            "system": "S2A"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.720900",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 23:18:49.728755",
+        "stop": "2018-07-21 23:29:52.898715",
+    },
+    
+    {
+        "id": "00c84be8-ea65-11e9-b489-00000000006c",
+        "gauge":{
+            "name": "PLANNED_PLAYBACK_COMPLETENESS_CHANNEL_2",
+            "system": "S2A"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.725213",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 23:18:49.759214",
+        "stop": "2018-07-21 23:29:52.934371",
+    },
+    
+    {
+        "id": "00c8da36-ea65-11e9-bd57-00000000006c",
+        "gauge":{
+            "name": "PLANNED_PLAYBACK_COMPLETENESS_CHANNEL_2",
+            "system": "S2A"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.727401",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 23:29:57.350828",
+        "stop": "2018-07-21 23:30:03.707424",
+    },
+    
+    {
+        "id": "00c73966-ea65-11e9-8fc0-00000000006c",
+        "gauge":{
+            "name": "PLAYBACK_VALIDITY_4",
+            "system": "MPS_"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.718831",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 23:18:49.728755",
+        "stop": "2018-07-21 23:29:52.898715",
+    },
+    
+    {
+        "id": "00c6e9e8-ea65-11e9-bd5e-00000000006c",
+        "gauge":{
+            "name": "ISP_VALIDITY",
+            "system": "MPS_"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.714933",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 20:18:50.458085",
+        "stop": "2018-07-21 20:26:39.468624",
+    },
+    
+    {
+        "id": "00c8953e-ea65-11e9-856c-00000000006c",
+        "gauge":{
+            "name": "PLAYBACK_VALIDITY_2",
+            "system": "MPS_"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.726968",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 23:29:57.350828",
+        "stop": "2018-07-21 23:30:03.707424",
+    },
+    
+    {
+        "id": "00c7ed24-ea65-11e9-917b-00000000006c",
+        "gauge":{
+            "name": "PLAYBACK_VALIDITY_20",
+            "system": "MPS_"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.723315",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 23:18:49.759214",
+        "stop": "2018-07-21 23:29:52.934371",
+    },
+    
+    {
+        "id": "00c396e4-ea65-11e9-9d78-00000000006c",
+        "gauge":{
+            "name": "ISP_VALIDITY",
+            "system": "MPS_"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.699710",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 18:51:28.225563",
+        "stop": "2018-07-21 18:55:29.946495",
+    },
+    
+    {
+        "id": "00c66512-ea65-11e9-bd2c-00000000006c",
+        "gauge":{
+            "name": "ISP_GAP",
+            "system": "MPS_"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.714222",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 20:18:50.458085",
+        "stop": "2018-07-21 20:19:15.712714",
+    },
+    
+    {
+        "id": "00c5d522-ea65-11e9-8ea9-00000000006c",
+        "gauge":{
+            "name": "RAW_ISP_VALIDITY",
+            "system": "MPS_"
+        },
+        "explicit_reference": "REP_PASS_2_2018-07-21T23:18:43",
+        "ingestion_time": "2019-10-09 07:18:33.710768",
+        "source": "S2A_REP_PASS_CONTAINING_TWO_DATABLOCKS_WITH_GAPS.EOF",
+        "start": "2018-07-21 18:51:28.225563",
+        "stop": "2018-07-21 20:26:35.860624",
+    },
+    
+]
+      
+      vboa.create_event_timeline(events, "events-nav-timeline");
+      
+      
+      
+      var events_geometries = [
+    
+]
+      
+      vboa.create_event_map(events_geometries, "events-nav-map");
+            
+    </script>
+
+  <div id="flDebug" style="display:none;">
+  <script type="text/javascript">var DEBUG_TOOLBAR_STATIC_PATH = '/_debug_toolbar/static/'</script>
+  <script type="text/javascript" src="/_debug_toolbar/static/js/jquery.js"></script>
+  <script type="text/javascript" src="/_debug_toolbar/static/js/jquery.tablesorter.js"></script>
+  <script type="text/javascript" src="/_debug_toolbar/static/js/toolbar.js"></script>
+
+  <div style="display: none;" id="flDebugToolbar">
+    <ol id="flDebugPanelList">
+      
+      <li><a id="flHideToolBarButton" href="#" title="Hide Toolbar">Hide &raquo;</a></li>
+      
+
+      
+      <li id="flDebugVersionPanel">
+        
+        <a href="" title="Versions" class="flDebugVersionPanel">
+        
+
+        Versions
+        <br /><small>Flask 1.1.1</small>
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugTimerPanel">
+        
+        <a href="" title="Resource Usage" class="flDebugTimerPanel">
+        
+
+        Time
+        <br /><small>CPU: 142.98ms (1304.21ms)</small>
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugHeaderPanel">
+        
+        <a href="" title="HTTP Headers" class="flDebugHeaderPanel">
+        
+
+        HTTP Headers
+        
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugRequestVarsPanel">
+        
+        <a href="" title="Request Vars" class="flDebugRequestVarsPanel">
+        
+
+        Request Vars
+        
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugConfigVarsPanel">
+        
+        <a href="" title="Config" class="flDebugConfigVarsPanel">
+        
+
+        Config
+        
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugTemplatePanel">
+        
+        <a href="" title="Templates" class="flDebugTemplatePanel">
+        
+
+        Templates
+        <br /><small>1 rendered</small>
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugSQLAlchemyPanel">
+        
+        <a href="" title="SQLAlchemy queries" class="flDebugSQLAlchemyPanel">
+        
+
+        SQLAlchemy
+        <br /><small>Unavailable</small>
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugLoggingPanel">
+        
+        <a href="" title="Log Messages" class="flDebugLoggingPanel">
+        
+
+        Logging
+        <br /><small>3 messages</small>
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugRouteListPanel">
+        
+        <a href="" title="Route List" class="flDebugRouteListPanel">
+        
+
+        Route List
+        <br /><small>65 routes</small>
+
+        
+        </a>
+        
+        
+      </li>
+      
+      <li id="flDebugProfilerPanel">
+        
+        <a href="" title="Profiler not active" class="flDebugProfilerPanel">
+        
+
+        Profiler
+        <br /><small>in-active</small>
+
+        
+        </a>
+        
+        
+        <span class="switch inactive" title="Enable or disable the panel"></span>
+        
+      </li>
+      
+    </ol>
+  </div>
+  <div style="display:none;" id="flDebugToolbarHandle">
+    <a title="Show Toolbar" id="flShowToolBarButton" href="#">&laquo;</a>
+  </div>
+  
+    
+    <div id="flDebugVersionPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Versions</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          <h4>Installed Packages</h4>
+
+<p>
+  Installation paths relative to:
+</p>
+<pre>
+/usr/lib/python3.6/site-packages
+</pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th>Version</th>
+      <th>Installed Path</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+      <tr class="flDebugOdd">
+        <td>alabaster</td>
+        <td>0.7.12</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>astropy</td>
+        <td>3.2.1</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>atomicwrites</td>
+        <td>1.3.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>attrs</td>
+        <td>19.1.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Babel</td>
+        <td>2.7.0</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>before-after</td>
+        <td>1.0.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>blinker</td>
+        <td>1.4</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>cairocffi</td>
+        <td>1.1.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>CairoSVG</td>
+        <td>2.4.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>certifi</td>
+        <td>2019.6.16</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>cffi</td>
+        <td>1.12.3</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>chardet</td>
+        <td>3.0.4</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Click</td>
+        <td>7.0</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>coverage</td>
+        <td>4.5.4</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>cssselect2</td>
+        <td>0.2.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>cycler</td>
+        <td>0.10.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>debtcollector</td>
+        <td>1.21.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>defusedxml</td>
+        <td>0.6.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>docutils</td>
+        <td>0.15.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>eboa</td>
+        <td>0.1.1</td>
+        <td>/eboa/src</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>elementpath</td>
+        <td>1.2.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>et-xmlfile</td>
+        <td>1.0.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>fasteners</td>
+        <td>0.15</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>Flask</td>
+        <td>1.1.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Flask-DebugToolbar</td>
+        <td>0.10.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>Flask-WeasyPrint</td>
+        <td>0.6</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>GeoAlchemy2</td>
+        <td>0.6.3</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>html5lib</td>
+        <td>1.0.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>idna</td>
+        <td>2.8</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>imagesize</td>
+        <td>1.1.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>importlib-metadata</td>
+        <td>0.20</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>inotify</td>
+        <td>0.2.10</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>iso8601</td>
+        <td>0.1.12</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>itsdangerous</td>
+        <td>1.1.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>jdcal</td>
+        <td>1.4.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>Jinja2</td>
+        <td>2.10.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>jsonschema</td>
+        <td>3.0.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>kiwisolver</td>
+        <td>1.1.0</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>lxml</td>
+        <td>4.4.1</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>MarkupSafe</td>
+        <td>1.1.1</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>massedit</td>
+        <td>0.68.5</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>matplotlib</td>
+        <td>3.1.1</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>mock</td>
+        <td>1.0.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>monotonic</td>
+        <td>1.5</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>more-itertools</td>
+        <td>7.2.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>netaddr</td>
+        <td>0.7.19</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>netifaces</td>
+        <td>0.10.9</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>nose</td>
+        <td>1.3.7</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>numpy</td>
+        <td>1.17.1</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>openpyxl</td>
+        <td>2.6.3</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>oslo.concurrency</td>
+        <td>3.29.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>oslo.config</td>
+        <td>6.11.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>oslo.i18n</td>
+        <td>3.23.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>oslo.utils</td>
+        <td>3.41.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>packaging</td>
+        <td>19.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>pbr</td>
+        <td>5.4.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>pdfkit</td>
+        <td>0.6.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>Pillow</td>
+        <td>6.1.0</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>pip</td>
+        <td>19.2.3</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>pluggy</td>
+        <td>0.12.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>psutil</td>
+        <td>5.6.3</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>psycopg2-binary</td>
+        <td>2.8.3</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>py</td>
+        <td>1.8.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>pycparser</td>
+        <td>2.19</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Pygments</td>
+        <td>2.4.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>pyparsing</td>
+        <td>2.4.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Pyphen</td>
+        <td>0.9.5</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>pyrsistent</td>
+        <td>0.15.4</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>pytest</td>
+        <td>5.1.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>pytest-cov</td>
+        <td>2.7.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>python-dateutil</td>
+        <td>2.8.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>pytz</td>
+        <td>2019.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>PyYAML</td>
+        <td>5.1.2</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>requests</td>
+        <td>2.22.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>rfc3986</td>
+        <td>1.3.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>s2boa</td>
+        <td>0.1.1</td>
+        <td>/s2vboa/src</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>selenium</td>
+        <td>3.141.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>setuptools</td>
+        <td>39.2.0</td>
+        <td></td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Shapely</td>
+        <td>1.6.4.post2</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>six</td>
+        <td>1.12.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>snowballstemmer</td>
+        <td>1.9.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>Sphinx</td>
+        <td>2.2.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>sphinxcontrib-applehelp</td>
+        <td>1.0.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>sphinxcontrib-devhelp</td>
+        <td>1.0.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>sphinxcontrib-htmlhelp</td>
+        <td>1.0.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>sphinxcontrib-jsmath</td>
+        <td>1.0.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>sphinxcontrib-qthelp</td>
+        <td>1.0.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>sphinxcontrib-serializinghtml</td>
+        <td>1.1.3</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>SQLAlchemy</td>
+        <td>1.3.8</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>stevedore</td>
+        <td>1.30.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>termcolor</td>
+        <td>1.1.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>tinycss2</td>
+        <td>1.0.2</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>urllib3</td>
+        <td>1.25.3</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>vboa</td>
+        <td>0.1.1</td>
+        <td>/vboa/src</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>wcwidth</td>
+        <td>0.1.7</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>WeasyPrint</td>
+        <td>50</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>webencodings</td>
+        <td>0.5.1</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>Werkzeug</td>
+        <td>0.15.5</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>wrapt</td>
+        <td>1.11.2</td>
+        <td>/usr/local/lib64/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>xmlschema</td>
+        <td>1.0.14</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>zipp</td>
+        <td>0.6.0</td>
+        <td>/usr/local/lib/python3.6/site-packages</td>
+      </tr>
+    
+  </tbody>
+</table>
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugTimerPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Resource Usage</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          <table>
+  <colgroup>
+    <col style="width:20%"/>
+    <col/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+      <tr class="flDebugOdd">
+        <td>User CPU time</td>
+        <td>103.798 msec</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>System CPU time</td>
+        <td>39.179 msec</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Total CPU time</td>
+        <td>142.977 msec</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>Elapsed time</td>
+        <td>1304.209 msec</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>Context switches</td>
+        <td>173 voluntary, 11 involuntary</td>
+      </tr>
+    
+  </tbody>
+</table>
+
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugHeaderPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>HTTP Headers</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          <table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+      <tr class="flDebugOdd">
+        <td>CONTENT_TYPE</td>
+        <td>application/x-www-form-urlencoded</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>HTTP_ACCEPT</td>
+        <td>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>HTTP_ACCEPT_ENCODING</td>
+        <td>gzip, deflate</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>HTTP_ACCEPT_LANGUAGE</td>
+        <td>en-US,en;q=0.5</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>HTTP_CONNECTION</td>
+        <td>keep-alive</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>HTTP_HOST</td>
+        <td>localhost:5000</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>HTTP_REFERER</td>
+        <td>http://localhost:5000/eboa_nav/query-events</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>HTTP_USER_AGENT</td>
+        <td>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>QUERY_STRING</td>
+        <td></td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>REMOTE_ADDR</td>
+        <td>172.24.0.1</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>REQUEST_METHOD</td>
+        <td>POST</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>SCRIPT_NAME</td>
+        <td></td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>SERVER_NAME</td>
+        <td>0.0.0.0</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>SERVER_PORT</td>
+        <td>5000</td>
+      </tr>
+    
+      <tr class="flDebugOdd">
+        <td>SERVER_PROTOCOL</td>
+        <td>HTTP/1.1</td>
+      </tr>
+    
+      <tr class="flDebugEven">
+        <td>SERVER_SOFTWARE</td>
+        <td>Werkzeug/0.15.5</td>
+      </tr>
+    
+  </tbody>
+</table>
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugRequestVarsPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Request Vars</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          
+<h4>View information</h4>
+<table>
+  <thead>
+    <tr>
+      <th>View Function</th>
+      <th>args</th>
+      <th>kwargs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>vboa.eboa_nav.eboa_nav.query_events_and_render</td>
+      <td>[]</td>
+      <td>
+        
+          None
+        
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+<h4>COOKIES Variables</h4>
+
+  
+<table>
+  <colgroup>
+    <col style="width:20%"/>
+    <col/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;fldt&#39;</td>
+      <td>&#39;hide&#39;</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+
+
+<h4>SESSION Variables</h4>
+
+  <p>No SESSION data</p>
+
+
+
+
+
+
+<h4>GET Variables</h4>
+
+  
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+  </tbody>
+</table>
+
+
+
+<h4>POST Variables</h4>
+
+  
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;source_like&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;er_like&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;key_like&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;gauge_name_like&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;gauge_system_like&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;event_value_type&#39;</td>
+      <td>&#39;text&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;event_value_name_like&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;event_value_name_like_op&#39;</td>
+      <td>&#39;like&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;event_value&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;event_value_operator&#39;</td>
+      <td>&#39;==&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;start&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;start_operator&#39;</td>
+      <td>&#39;==&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;stop&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;stop_operator&#39;</td>
+      <td>&#39;==&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;event_duration&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;event_duration_operator&#39;</td>
+      <td>&#39;==&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;ingestion_time&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;ingestion_time_operator&#39;</td>
+      <td>&#39;==&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;show_timeline&#39;</td>
+      <td>&#39;on&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;show_map&#39;</td>
+      <td>&#39;on&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;order_descending&#39;</td>
+      <td>&#39;on&#39;</td>
+    </tr>
+    
+    <tr class="flDebugEven">
+      <td>&#39;order_by&#39;</td>
+      <td>&#39;&#39;</td>
+    </tr>
+    
+    <tr class="flDebugOdd">
+      <td>&#39;limit&#39;</td>
+      <td>&#39;1000&#39;</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugConfigVarsPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Config</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          <table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+            <tr class="flDebugOdd">
+                <td>APPLICATION_ROOT</td>
+                <td><code>&#39;/&#39;</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>DEBUG</td>
+                <td><code>True</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>DEBUG_TB_ENABLED</td>
+                <td><code>True</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>DEBUG_TB_HOSTS</td>
+                <td><code>()</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>DEBUG_TB_INTERCEPT_REDIRECTS</td>
+                <td><code>False</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>DEBUG_TB_PANELS</td>
+                <td><code>(&#39;flask_debugtoolbar.panels.versions.VersionDebugPanel&#39;, &#39;flask_debugtoolbar.panels.timer.TimerDebugPanel&#39;, &#39;flask_debugtoolbar.panels.headers.HeaderDebugPanel&#39;, &#39;flask_debugtoolbar.panels.request_vars.RequestVarsDebugPanel&#39;, &#39;flask_debugtoolbar.panels.config_vars.ConfigVarsDebugPanel&#39;, &#39;flask_debugtoolbar.panels.template.TemplateDebugPanel&#39;, &#39;flask_debugtoolbar.panels.sqlalchemy.SQLAlchemyDebugPanel&#39;, &#39;flask_debugtoolbar.panels.logger.LoggingPanel&#39;, &#39;flask_debugtoolbar.panels.route_list.RouteListDebugPanel&#39;, &#39;flask_debugtoolbar.panels.profiler.ProfilerDebugPanel&#39;)</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>ENV</td>
+                <td><code>&#39;development&#39;</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>EXPLAIN_TEMPLATE_LOADING</td>
+                <td><code>False</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>JSON_AS_ASCII</td>
+                <td><code>True</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>JSON_SORT_KEYS</td>
+                <td><code>True</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>JSONIFY_MIMETYPE</td>
+                <td><code>&#39;application/json&#39;</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>JSONIFY_PRETTYPRINT_REGULAR</td>
+                <td><code>False</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>MAX_CONTENT_LENGTH</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>MAX_COOKIE_SIZE</td>
+                <td><code>4093</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>PERMANENT_SESSION_LIFETIME</td>
+                <td><code>datetime.timedelta(31)</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>PREFERRED_URL_SCHEME</td>
+                <td><code>&#39;http&#39;</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>PRESERVE_CONTEXT_ON_EXCEPTION</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>PROPAGATE_EXCEPTIONS</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>SECRET_KEY</td>
+                <td><code>b&#39;\xca+-\x9b\xcek.\x9fkM \xea\x8d\x1c\x99&amp;&#39;</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>SEND_FILE_MAX_AGE_DEFAULT</td>
+                <td><code>0</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>SERVER_NAME</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>SESSION_COOKIE_DOMAIN</td>
+                <td><code>False</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>SESSION_COOKIE_HTTPONLY</td>
+                <td><code>True</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>SESSION_COOKIE_NAME</td>
+                <td><code>&#39;session&#39;</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>SESSION_COOKIE_PATH</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>SESSION_COOKIE_SAMESITE</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>SESSION_COOKIE_SECURE</td>
+                <td><code>False</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>SESSION_REFRESH_EACH_REQUEST</td>
+                <td><code>True</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>TEMPLATES_AUTO_RELOAD</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>TESTING</td>
+                <td><code>False</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>TRAP_BAD_REQUEST_ERRORS</td>
+                <td><code>None</code></td>
+            </tr>
+        
+            <tr class="flDebugEven">
+                <td>TRAP_HTTP_EXCEPTIONS</td>
+                <td><code>False</code></td>
+            </tr>
+        
+            <tr class="flDebugOdd">
+                <td>USE_X_SENDFILE</td>
+                <td><code>False</code></td>
+            </tr>
+        
+    </tbody>
+</table>
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugTemplatePanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Templates</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          
+  
+  
+    <h4>eboa_nav/events_nav.html</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr class="flDebugOdd">
+          <td>events</td>
+          <td>[&lt;eboa.datamodel.events.Event object at 0x7f65b0b62940&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b629b0&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b62a20&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b62a90&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b504a8&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b50390&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b50438&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b505c0&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b50710&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b506a0&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b50630&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b50550&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b502e8&gt;, &lt;eboa.datamodel.events.Event object at 0x7f65b0b430b8&gt;]</td>
+        </tr>
+        
+        <tr class="flDebugEven">
+          <td>events_geometries</td>
+          <td>[]</td>
+        </tr>
+        
+        <tr class="flDebugOdd">
+          <td>filters</td>
+          <td>{&#39;source_like&#39;: [&#39;&#39;], &#39;er_like&#39;: [&#39;&#39;], &#39;key_like&#39;: [&#39;&#39;], &#39;gauge_name_like&#39;: [&#39;&#39;], &#39;gauge_system_like&#39;: [&#39;&#39;], &#39;event_value_type&#39;: [&#39;text&#39;], &#39;event_value_name_like&#39;: [&#39;&#39;], &#39;event_value_name_like_op&#39;: [&#39;like&#39;], &#39;event_value&#39;: [&#39;&#39;], &#39;event_value_operator&#39;: [&#39;==&#39;], &#39;start&#39;: [&#39;&#39;], &#39;start_operator&#39;: [&#39;==&#39;], &#39;stop&#39;: [&#39;&#39;], &#39;stop_operator&#39;: [&#39;==&#39;], &#39;event_duration&#39;: [&#39;&#39;], &#39;event_duration_operator&#39;: [&#39;==&#39;], &#39;ingestion_time&#39;: [&#39;&#39;], &#39;ingestion_time_operator&#39;: [&#39;==&#39;], &#39;show_timeline&#39;: [&#39;on&#39;], &#39;show_map&#39;: [&#39;on&#39;], &#39;order_descending&#39;: [&#39;on&#39;], &#39;order_by&#39;: [&#39;&#39;], &#39;limit&#39;: [&#39;1000&#39;], &#39;offset&#39;: [&#39;&#39;]}</td>
+        </tr>
+        
+        <tr class="flDebugEven">
+          <td>g</td>
+          <td>&lt;flask.g of &#39;vboa&#39;&gt;</td>
+        </tr>
+        
+        <tr class="flDebugOdd">
+          <td>request</td>
+          <td>&lt;Request &#39;http://localhost:5000/eboa_nav/query-events&#39; [POST]&gt;</td>
+        </tr>
+        
+        <tr class="flDebugEven">
+          <td>session</td>
+          <td>&lt;SecureCookieSession {}&gt;</td>
+        </tr>
+        
+        <tr class="flDebugOdd">
+          <td>show</td>
+          <td>{&#39;timeline&#39;: True, &#39;map&#39;: True}</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  
+
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugSQLAlchemyPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>SQLAlchemy queries</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          <h4>Queries Unavailable</h4>
+
+<p>
+  The toolbar was unable to fetch the SQLAlchemy queries for this request.
+  To enable the SQLAlchemy query display, please:
+</p>
+
+<ol>
+  
+  <li>
+    <h5>Install required libraries:</h5>
+    <ul>
+      
+      
+      <li>Flask-SQLAlchemy</li>
+      
+    </ul>
+  </li>
+  
+
+  
+  <li>
+    <h5>Configure Flask-SQLAlchemy:</h5>
+    <p>
+      The Flask-SQLAlchemy extension needs to be configured for this application.
+      Please see the <a href="http://flask-sqlalchemy.pocoo.org/latest/quickstart/">
+      Flask-SQLAlchemy documentation</a> for details.
+    </p>
+  </li>
+  
+
+  
+</ol>
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugLoggingPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Log Messages</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          
+  <table>
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Time</th>
+        <th>Message</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr class="flDebugOdd">
+          <td>DEBUG</td>
+          <td>2019-10-09 07:25:53.348406</td>
+          <td>Query events and render</td>
+          <td title="/vboa/src/vboa/eboa_nav/eboa_nav.py:37">./eboa_nav/eboa_nav.py:37</td>
+        </tr>
+      
+        <tr class="flDebugEven">
+          <td>DEBUG</td>
+          <td>2019-10-09 07:25:53.348845</td>
+          <td>Query events</td>
+          <td title="/vboa/src/vboa/eboa_nav/eboa_nav.py:109">./eboa_nav/eboa_nav.py:109</td>
+        </tr>
+      
+        <tr class="flDebugOdd">
+          <td>DEBUG</td>
+          <td>2019-10-09 07:25:53.349838</td>
+          <td>The following query is going to be executed: SELECT events.event_uuid, events.start, events.stop, events.ingestion_time, events.visible, events.gauge_uuid, events.explicit_ref_uuid, events.source_uuid 
+FROM events 
+WHERE events.visible = 1
+ LIMIT 1000</td>
+          <td title="/eboa/src/eboa/engine/query.py:73">&lt;eboa/engine/query.py&gt;:73</td>
+        </tr>
+      
+    </tbody>
+  </table>
+
+
+
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugRouteListPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Route List</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          <table>
+  <thead>
+    <tr>
+      <th>URL route</th>
+      <th>Endpoint name</th>
+      <th>HTTP methods</th>
+      <th>Is alias</th>
+      <th>Redirect to</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+      
+        <tr>
+          <td>/</td>
+          <td>panel.index</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/_debug_toolbar/static/&lt;path:filename&gt;</td>
+          <td>_debug_toolbar.static</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/_debug_toolbar/views/sqlalchemy/sql_explain</td>
+          <td>debugtoolbar.sql_select</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/_debug_toolbar/views/sqlalchemy/sql_select</td>
+          <td>debugtoolbar.sql_select</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/_debug_toolbar/views/template/&lt;key&gt;</td>
+          <td>debugtoolbar.template_editor</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/_debug_toolbar/views/template/&lt;key&gt;</td>
+          <td>debugtoolbar.template_preview</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/_debug_toolbar/views/template/&lt;key&gt;/save</td>
+          <td>debugtoolbar.save_template</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/check-cron-status</td>
+          <td>panel.check_cron_status</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/check-orc-status</td>
+          <td>panel.check_orc_status</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/</td>
+          <td>eboa_nav.navigate</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/get-source-status</td>
+          <td>eboa_nav.get_source_status</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-annotation-cnfs</td>
+          <td>eboa_nav.query_annotation_cnfs_and_render</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-annotation-cnfs-by-dim/&lt;uuid:dim_signature_uuid&gt;</td>
+          <td>eboa_nav.query_annotation_cnfs_by_dim</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-annotation-cnfs-pages</td>
+          <td>eboa_nav.query_annotation_cnfs_pages</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-annotations</td>
+          <td>eboa_nav.query_annotations_and_render</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-annotations-by-er/&lt;string:er&gt;</td>
+          <td>eboa_nav.query_annotations_by_er</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-annotations-pages</td>
+          <td>eboa_nav.query_annotations_pages</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-dim-signatures</td>
+          <td>eboa_nav.query_dim_signatures_and_render</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-dim-signatures-pages</td>
+          <td>eboa_nav.query_dim_signatures_pages</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-ers</td>
+          <td>eboa_nav.query_ers_and_render</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-ers-pages</td>
+          <td>eboa_nav.query_ers_pages</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-event-links/&lt;uuid:event_uuid&gt;</td>
+          <td>eboa_nav.query_event_links_and_render</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-events</td>
+          <td>eboa_nav.query_events_and_render</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-events-by-er/&lt;string:er&gt;</td>
+          <td>eboa_nav.query_events_by_er</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-events-pages</td>
+          <td>eboa_nav.query_events_pages</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-gauges</td>
+          <td>eboa_nav.query_gauges_and_render</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-gauges-by-dim/&lt;uuid:dim_signature_uuid&gt;</td>
+          <td>eboa_nav.query_gauges_by_dim</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-gauges-pages</td>
+          <td>eboa_nav.query_gauges_pages</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-annotation-cnfs</td>
+          <td>eboa_nav.query_jsonify_annotation_cnfs</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-annotation-values/&lt;uuid:annotation_uuid&gt;</td>
+          <td>eboa_nav.query_jsonify_annotation_values</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-dim-signatures</td>
+          <td>eboa_nav.query_jsonify_dim_signatures</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-er-groups</td>
+          <td>eboa_nav.query_jsonify_er_groups</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-ers</td>
+          <td>eboa_nav.query_jsonify_ers</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-event-values/&lt;uuid:event_uuid&gt;</td>
+          <td>eboa_nav.query_jsonify_event_values</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-gauges</td>
+          <td>eboa_nav.query_jsonify_gauges</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-keys</td>
+          <td>eboa_nav.query_jsonify_keys</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-source-statuses/&lt;uuid:source_uuid&gt;</td>
+          <td>eboa_nav.query_jsonify_source_statuses</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-jsonify-sources</td>
+          <td>eboa_nav.query_jsonify_sources</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-source/&lt;uuid:source_uuid&gt;</td>
+          <td>eboa_nav.query_source</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-sources</td>
+          <td>eboa_nav.query_sources_and_render</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-sources-by-dim/&lt;uuid:dim_signature_uuid&gt;</td>
+          <td>eboa_nav.query_sources_by_dim</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/query-sources-pages</td>
+          <td>eboa_nav.query_sources_pages</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/eboa_nav/treat-data</td>
+          <td>eboa_nav.treat_data</td>
+          <td>OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/health/health</td>
+          <td>health.show_health</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/health/sliding_health</td>
+          <td>health.show_sliding_health</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/health/sliding_health_parameters</td>
+          <td>health.show_sliding_health_parameters</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/ingestion_control/ingestion_control</td>
+          <td>ingestion_control.show_health</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/ingestion_control/sliding_ingestion_control</td>
+          <td>ingestion_control.show_sliding_ingestion_control</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/ingestion_control/sliding_ingestion_control_parameters</td>
+          <td>ingestion_control.show_sliding_ingestion_control_parameters</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/rboa_nav/</td>
+          <td>rboa_nav.navigate</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/static/&lt;path:filename&gt;</td>
+          <td>static</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/switch-off-cron</td>
+          <td>panel.switch_off_cron</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/switch-off-orc</td>
+          <td>panel.switch_off_orc</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/switch-on-cron</td>
+          <td>panel.switch_on_cron</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/switch-on-orc</td>
+          <td>panel.switch_on_orc</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/acquisition</td>
+          <td>acquisition.show_acquisition</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/planning</td>
+          <td>planning.show_planning</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/query-tracking</td>
+          <td>tracking.query_tracking</td>
+          <td>GET, HEAD, OPTIONS</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/sliding_acquisition</td>
+          <td>acquisition.show_sliding_acquisition</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/sliding_acquisition_parameters</td>
+          <td>acquisition.show_sliding_acquisition_parameters</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/sliding_planning</td>
+          <td>planning.show_sliding_planning</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/sliding_planning_parameters</td>
+          <td>planning.show_sliding_planning_parameters</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/sliding_tracking</td>
+          <td>tracking.show_sliding_tracking</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/sliding_tracking_parameters</td>
+          <td>tracking.show_sliding_tracking_parameters</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+        <tr>
+          <td>/views/tracking</td>
+          <td>tracking.show_tracking</td>
+          <td>GET, HEAD, OPTIONS, POST</td>
+          <td>False</td>
+          <td>None</td>
+        </tr>
+      
+    
+  </tbody>
+</table>
+        </div>
+      </div>
+    </div>
+    
+  
+    
+    <div id="flDebugProfilerPanel-content" class="panelContent">
+      <div class="flDebugPanelTitle">
+        <a href="" class="flDebugClose">Close</a>
+        <h3>Profiler not active</h3>
+      </div>
+      <div class="flDebugPanelContent">
+        <div class="scroll">
+          The profiler is not activated, activate it to use it
+        </div>
+      </div>
+    </div>
+    
+  
+  <div id="flDebugWindow" class="panelContent"></div>
+</div></body>
+</html>
