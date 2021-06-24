@@ -6,7 +6,7 @@
   <a href="/rboa_nav/query-reports"><p class="fa fa-chevron-left"> Back to query reports</p></a>
 </div>
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-report-pages", elements = reports, filters = filters %}
+{% with route = "/rboa_nav/query-reports-pages", elements = reports, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -94,14 +94,14 @@
 </div>
 <!-- /.panel -->
 {% endif %}
-
+{% if reports|length > 0 %}
 <div class="panel panel-green">
   <div class="panel-heading">
     Table of reports
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="reports-tables">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="reports-table">
       <thead>
         <tr>
           <th></th>          
@@ -203,10 +203,25 @@
 </div>
 <!-- /.panel -->
 {% endif %}
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of ingested reports
+  </div>
+  <div id="reports-nav-no-data">
+    <br/>
+    <p style="text-indent: 1em">No "reports" have been found with the requested filters..</p>
+    <br/>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
 {% endblock %}
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
+      {% if reports|length > 0 %}
       {% with reports=reports %}
       {% include "graphs/reports_to_json.js" %}
       {% endwith %}
@@ -215,6 +230,7 @@
       {% endif %}
       {% if not show or show["generation_duration_xy"] %}
       vboa.create_report_generation_duration_xy(reports, "reports-nav-generation-duration-xy");
+      {% endif %}
       {% endif %}
     </script>
 {% endblock %}
