@@ -1,0 +1,183 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#alert-filters">Alert filters <span class="fa fa-angle-double-down"></span></a>
+    </h3>
+  </div>
+  <div class="panel-body panel-collapse collapse" id="alert-filters">
+    <!-- Names -->
+    <div class="row">
+      <div class="col-xs-3">
+        <label>Name</label>
+        <div class="input-group" style="width: 100%">
+          <input class="form-control" style="width: 80%" name="alert_name" id="alerts-name-text"/>
+          <select class="form-control" style="padding-left: 0; width: 20%" name="alert_name_operator" id="alerts-name-operator">
+            {% include "eboa_nav/operators.html" %}
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-3">
+        <label id="alerts-names-in-checkbox">Names (<input type="checkbox" name="alert_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-alert-names', 'name', 20, 0)" id="alerts-names-in-text"/><i class="circle"></i>
+        <select name="alert_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="alerts-names-in-select">
+        </select>
+      </div>
+    </div>
+    <!-- Groups -->
+    <div class="row">
+      <div class="col-xs-3">
+        <label>Group</label>
+        <div class="input-group" style="width: 100%">
+          <input class="form-control" style="width: 80%" name="alert_group" id="alerts-group-text"/>
+          <select class="form-control" style="padding-left: 0; width: 20%" name="alert_group_operator" id="alerts-group-operator">
+            {% include "eboa_nav/operators.html" %}
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-3">
+        <label id="alerts-groups-in-checkbox">Groups (<input type="checkbox" name="alert_group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-ers', 'explicit_ref', 20, 0)" id="alerts-groups-in-text"/><i class="circle"></i>
+        <select name="alert_groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="alerts-groups-in-select">
+        </select>
+      </div>
+    </div>
+    <!-- Generators -->
+    <div class="row">
+      <div class="col-xs-3">
+        <label>Generator</label>
+        <div class="input-group" style="width: 100%">
+          <input class="form-control" style="width: 80%" name="alert_generator" id="alerts-generator-text"/>
+          <select class="form-control" style="padding-left: 0; width: 20%" name="alert_generator_operator" id="alerts-generator-operator">
+            {% include "eboa_nav/operators.html" %}
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-3">
+        <label id="alerts-generators-in-checkbox">Generators (<input type="checkbox" name="alert_generator_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-keys', 'event_key', 20, 0)" id="alerts-generators-in-text"/><i class="circle"></i>
+        <select name="alert_generators" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="alerts-generators-in-select">
+        </select>
+      </div>
+    </div>
+    <!-- Ingestion time -->
+    <div class="row" id="alerts-ingestion-time-initial">
+      <div class="col-xs-3">
+        <label>Ingestion time</label>
+        <div class="input-group date">
+          <input type="text" class="form-control" name="alert_ingestion_time" id="alerts-ingestion-time-text"/>
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+          <div>
+            <select class="form-control" style="padding-left: 0" name="alert_ingestion_time_operator" id="alerts-ingestion-time-operator">
+              {% include "eboa_nav/operators.html" %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span onclick="vboa.add_ingestion_time('more-ingestion-time-query-alerts')" id="alerts-add-ingestion-time">
+          <span class="glyphicon glyphicon-plus"></span>
+        </span>
+      </div>
+    </div>
+    <div id="more-ingestion-time-query-alerts">
+    </div>
+    <!-- Solved time -->
+    <div class="row" id="alerts-solved-time-initial">
+      <div class="col-xs-3">
+          <label>Solved time</label>
+          <div class="input-group date">
+            <input type="text" class="form-control"  name="alert_solved_time" id="alerts-solved-time-text"/>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+            <div>
+              <select class="form-control" style="padding-left: 0" name="alert_solved_time_operator" id="alerts-solved-time-operator">
+                {% include "eboa_nav/operators.html" %}
+              </select>
+            </div>
+          </div>
+        </div>
+      <div>
+        <span onclick="vboa.add_ingestion_time('more-solved-time-query-alerts')" id="alerts-add-solved-time">
+          <span class="glyphicon glyphicon-plus"></span>
+        </span>
+      </div>
+    </div>
+    <div id="more-solved-time-query-alerts">
+    </div>
+    <!-- Notification time -->
+    <div class="row" id="alerts-notification-time-initial">
+      <div class="col-xs-3">
+          <label>Notification time</label>
+          <div class="input-group date">
+            <input type="text" class="form-control"  name="alert_notification_time" id="alerts-notification-time-text"/>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+            <div>
+              <select class="form-control" style="padding-left: 0" name="alert_notification_time_operator" id="alerts-notification-time-operator">
+                {% include "eboa_nav/operators.html" %}
+              </select>
+            </div>
+          </div>
+        </div>
+      <div>
+        <span onclick="vboa.add_ingestion_time('more-notification-time-query-alerts')" id="alerts-add-notification-time">
+          <span class="glyphicon glyphicon-plus"></span>
+        </span>
+      </div>
+    </div>
+    <div id="more-notification-time-query-alerts">
+    </div>
+    <!-- Validated -->
+    <div class="row">
+      <div class="col-xs-3 query-alert-validated">
+        <label>Validated</label>
+        <select style="width: 100%" name="alert_validated" id="alerts-sources-validated">
+          <option></option>
+          <option>true</option>
+          <option>false</option>
+        </select>
+      </div>
+    </div>
+    <!-- Notified -->
+    <div class="row">
+      <div class="col-xs-3 query-alert-notified">
+        <label>Notified</label>
+        <select style="width: 100%" name="alert_notified" id="alerts-sources-notified">
+          <option></option>
+          <option>true</option>
+          <option>false</option>
+        </select>
+      </div>
+    </div>
+    <!-- Solved -->
+    <div class="row">
+      <div class="col-xs-3 query-alert-solved">
+        <label>Solved</label>
+        <select style="width: 100%" name="alert_solved" id="alerts-sources-solved">
+          <option></option>
+          <option>true</option>
+          <option>false</option>
+        </select>
+      </div>
+    </div>
+    <!-- Severities -->
+    <div class="row" id="alerts-severities-initial">
+      <div class="col-xs-3">
+        <label id="alerts-severities-initial-checkbox">Severities (<input type="checkbox" name="alert_severity_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+        <select name="alert_severities" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="alerts-severities-initial-in-text">
+          <option></option>
+            <option>info</option>
+            <option>warning</option>
+            <option>minor</option>
+            <option>major</option>
+            <option>critical</option>
+            <option>fatal</option>
+        </select>
+      </div>
+    </div>
+  </div>            
+</div>
