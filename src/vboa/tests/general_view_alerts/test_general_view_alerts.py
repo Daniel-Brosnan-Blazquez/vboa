@@ -181,7 +181,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        sources_alerts = self.query_eboa.get_source_alerts(kwargs)
+        sources_alerts = self.query_eboa.get_source_alerts(**kwargs)
 
         assert len(sources_alerts) == 2
 
@@ -438,7 +438,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Check generated content for widgets
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        events_alerts = self.query_eboa.get_event_alerts(kwargs)
+        events_alerts = self.query_eboa.get_event_alerts(**kwargs)
 
         assert len(events_alerts) == 4
 
@@ -859,7 +859,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Check generated content for widgets
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        annotations_alerts = self.query_eboa.get_annotation_alerts(kwargs)
+        annotations_alerts = self.query_eboa.get_annotation_alerts(**kwargs)
 
         assert len(annotations_alerts) == 4
 
@@ -1142,7 +1142,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Check generated content for widgets
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        explicit_refs_alerts = self.query_eboa.get_explicit_ref_alerts(kwargs)
+        explicit_refs_alerts = self.query_eboa.get_explicit_ref_alerts(**kwargs)
 
         assert len(explicit_refs_alerts) == 2
 

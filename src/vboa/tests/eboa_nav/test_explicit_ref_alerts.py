@@ -172,7 +172,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
         # Check generated content for widgets
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        explicit_refs_alerts = self.query_eboa.get_explicit_ref_alerts(kwargs)
+        explicit_refs_alerts = self.query_eboa.get_explicit_ref_alerts(**kwargs)
 
         assert len(explicit_refs_alerts) == 2
 

@@ -196,7 +196,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Check generated content for widgets
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        annotations_alerts = self.query_eboa.get_annotation_alerts(kwargs)
+        annotations_alerts = self.query_eboa.get_annotation_alerts(**kwargs)
 
         assert len(annotations_alerts) == 2
 

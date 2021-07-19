@@ -155,7 +155,7 @@ def query_event_alerts(filters):
 
     kwargs = set_filters_for_query_events_or_event_alerts(filters)
 
-    event_alerts = query.get_event_alerts(kwargs)
+    event_alerts = query.get_event_alerts(**kwargs)
 
     return event_alerts
 
@@ -504,7 +504,7 @@ def query_annotation_alerts(filters):
 
     kwargs = set_filters_for_query_annotations_or_annotation_alerts(filters)
 
-    annotation_alerts = query.get_annotation_alerts(kwargs)
+    annotation_alerts = query.get_annotation_alerts(**kwargs)
 
     return annotation_alerts
 
@@ -739,7 +739,7 @@ def query_source_alerts(filters):
 
     kwargs = set_filters_for_query_sources_or_source_alerts(filters)
 
-    source_alerts = query.get_source_alerts(kwargs)
+    source_alerts = query.get_source_alerts(**kwargs)
 
     return source_alerts
 
@@ -1696,7 +1696,7 @@ def query_er_alerts(filters):
 
     kwargs = set_filters_for_query_ers_or_er_alerts(filters)
 
-    er_alerts = query.get_explicit_ref_alerts(kwargs)
+    er_alerts = query.get_explicit_ref_alerts(**kwargs)
 
     return er_alerts
 
