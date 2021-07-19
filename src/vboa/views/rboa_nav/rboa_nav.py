@@ -242,15 +242,15 @@ def set_filters_for_query_reports_or_report_alerts(filters):
         # end for
     # end if
 
-    if "statuses" in filters and filters["statuses"][0] != "":
+    if "report_statuses" in filters and filters["report_statuses"][0] != "":
         op="notin"
         if not "status_notin_check" in filters:
             op="in"
         # end if
         kwargs["statuses"] = {"filter": [], "op": op}
         i = 0
-        for status in filters["statuses"]:
-            kwargs["statuses"]["filter"].append(status)
+        for status in filters["report_statuses"]:
+            kwargs["statuses"]["filter"].append(str(rboa_engine.exit_codes[status]["status"]))
             i+=1
         # end for
     # end if
