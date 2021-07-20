@@ -133,6 +133,28 @@ export function add_reported_generation_time(dom_id){
 
 };
 
+/* Function to add more solved time selectors when commanded */
+export function add_solved_time(dom_id){
+    
+    jQuery.get("/static/html/more_solved_time.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+    
+    react_activate_datetimepicker(dom_id);
+
+};
+
+/* Function to add more rnotification time selectors when commanded */
+export function add_notification_time(dom_id){
+    
+    jQuery.get("/static/html/more_notification_time.html", function (data){
+        jQuery("#" + dom_id).append(data);
+    });
+    
+    react_activate_datetimepicker(dom_id);
+
+};
+
 /* Function to add more report validity duration selectors when commanded */
 export function add_report_validity_duration(dom_id){
     

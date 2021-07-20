@@ -2316,3 +2316,66 @@ def get_alert_severities():
     """
     current_app.logger.debug("Get alert severities")
     return jsonify(eboa_alerts.alert_severity_codes)
+
+@bp.route("/query-jsonify-alerts-by-name")
+def query_jsonify_alerts_by_name():
+    """
+    Query all the alerts by name.
+    """
+    current_app.logger.debug("Query alerts by name")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["names"] = {"filter": search, "op": "=="}
+
+    alerts = query.get_alerts(**kwargs)
+    jsonified_alerts = [alert.jsonify() for alert in alerts]
+    return jsonify(jsonified_alerts)
+
+@bp.route("/query-jsonify-alerts-by-group")
+def query_jsonify_alerts_by_group():
+    """
+    Query all the alerts by group.
+    """
+    current_app.logger.debug("Query alerts by group")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["groups"] = {"filter": search, "op": "=="}
+
+    alerts = query.get_alerts(**kwargs)
+    jsonified_alerts = [alert.jsonify() for alert in alerts]
+    return jsonify(jsonified_alerts)
+
+@bp.route("/query-jsonify-event-alerts-by-generator")
+def query_jsonify_event_alerts():
+    """
+    Query all the event alerts by generator.
+    """
+    current_app.logger.debug("Query event alerts by generator")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["generators"] = {"filter": search, "op": "=="}
+
+    event_alerts = query.get_event_alerts(**kwargs)
+    jsonified_event_alerts = [event_alert.jsonify() for event_alert in event_alerts]
+    return jsonify(jsonified_event_alerts)

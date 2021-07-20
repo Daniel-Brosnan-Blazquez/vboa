@@ -194,6 +194,14 @@ export function add_ingestion_time(dom_id){
     dates.add_ingestion_time(dom_id);
 }
 
+export function add_solved_time(dom_id){
+    dates.add_solved_time(dom_id);
+}
+
+export function add_notification_time(dom_id){
+    dates.add_notification_time(dom_id);
+}
+
 export function add_processing_duration(dom_id){
     dates.add_processing_duration(dom_id);
 }
