@@ -1,4 +1,6 @@
 import * as graph from "./graph.js";
+import * as query from "./query.js";
+import * as selectorFunctions from "./selectors.js";
 
 /*
 * Functions for the general view of alerts
@@ -115,3 +117,39 @@ export function create_alert_timeline(alerts, dom_id){
 
     graph.display_timeline(dom_id, items, groups);
 };
+
+/*
+* Query functions
+*/
+
+export function fill_severities(){
+    const divs = document.getElementsByClassName("query-alert-severities");
+    var selectors = []
+    for (const div of divs){
+        var selector = div.getElementsByTagName("datalist")[0];
+        if (selector == null){
+           selector = div.getElementsByTagName("select")[0];
+        }
+        /* If the options were already filled exit */
+        if (selector.getElementsByTagName("option").length != 0){
+            return false
+        }
+        selectors.push(selector);
+    }
+    query.request_info("/eboa_nav/get-alert-severity", fill_severities_into_selectors, selectors);
+    return true
+}
+
+function fill_severities_into_selectors(selectors, severities){
+
+    for (const severity of Object.keys(severities)){
+        for (const selector of selectors){
+            selectorFunctions.add_option_tooltip(selector, severity, "Severity code: " + severities[severity]);
+        }
+    }
+    /* Update chosen for the multiple input selection */
+    jQuery(".chosen-select").trigger("chosen:updated");
+
+    /* Activate tooltips */
+    jQuery("[data-toggle='tooltip']").tooltip();
+}

@@ -21,6 +21,7 @@ from flask import jsonify
 from eboa.engine.query import Query
 import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
+import eboa.engine.alerts as eboa_alerts
 
 # Import triggering
 from eboa.triggering.eboa_triggering import get_triggering_conf
@@ -2307,3 +2308,11 @@ def query_alerts_pages():
         template = "eboa_nav/explicit_reference_alerts_nav.html"
     # end if
     return render_template(template, alerts=alerts, filters=filters)
+
+@bp.route("/get-alert-severity")
+def get_alert_severities():
+    """
+    Get the alert severities defined in the EBOA component.
+    """
+    current_app.logger.debug("Get alert severities")
+    return jsonify(eboa_alerts.alert_severity_codes)

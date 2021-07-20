@@ -412,6 +412,9 @@ export function create_alert_timeline(alerts, dom_id){
 
 };
 
+/* Fill alert severities */
+jQuery(".query-alert-severities").one("focusin", alertFunctions.fill_severities);
+
 /*
 * ANNOTATIONS *
 */
