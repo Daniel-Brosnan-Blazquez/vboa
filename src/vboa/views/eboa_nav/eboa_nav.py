@@ -156,7 +156,7 @@ def query_event_alerts(filters):
 
     event_kwargs = set_filters_for_query_events_or_event_alerts(filters)
 
-    alert_kwargs = set_alert_filters(filters)
+    alert_kwargs = set_specific_alert_filters(filters)
 
     kwargs = {**event_kwargs, **alert_kwargs}
 
@@ -164,7 +164,7 @@ def query_event_alerts(filters):
 
     return event_alerts
 
-def set_alert_filters(filters):
+def set_specific_alert_filters(filters):
     """
     Set filter for query alerts.
     """
@@ -618,7 +618,11 @@ def query_annotation_alerts(filters):
     """
     current_app.logger.debug("Query annotation alerts")
 
-    kwargs = set_filters_for_query_annotations_or_annotation_alerts(filters)
+    annotation_kwargs = set_filters_for_query_annotations_or_annotation_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**annotation_kwargs, **alert_kwargs}
 
     annotation_alerts = query.get_annotation_alerts(**kwargs)
 
@@ -2359,12 +2363,12 @@ def query_jsonify_alerts_by_group():
     jsonified_alerts = [alert.jsonify() for alert in alerts]
     return jsonify(jsonified_alerts)
 
-@bp.route("/query-jsonify-event-alerts-by-generator")
-def query_jsonify_event_alerts():
+@bp.route("/query-jsonify-<string:entity>-alerts-by-generator")
+def query_jsonify_entity_alerts_by_generator(entity):
     """
-    Query all the event alerts by generator.
+    Query all the entity alerts by generator.
     """
-    current_app.logger.debug("Query event alerts by generator")
+    current_app.logger.debug("Query entity alerts by generator")
     # Get limit and offset values
     limit = request.args.get("limit")
     offset = request.args.get("offset")
@@ -2376,6 +2380,10 @@ def query_jsonify_event_alerts():
     kwargs["offset"] = offset
     kwargs["generators"] = {"filter": search, "op": "=="}
 
-    event_alerts = query.get_event_alerts(**kwargs)
-    jsonified_event_alerts = [event_alert.jsonify() for event_alert in event_alerts]
-    return jsonify(jsonified_event_alerts)
+    if entity == "event":
+        event_alerts = query.get_event_alerts(**kwargs)
+        jsonified_alerts = [event_alert.jsonify() for event_alert in event_alerts]
+    elif entity == "annotation":
+        annotation_alerts = query.get_annotation_alerts(**kwargs)
+        jsonified_alerts = [annotation_alert.jsonify() for annotation_alert in annotation_alerts]
+    return jsonify(jsonified_alerts)

@@ -32,7 +32,7 @@ from eboa.engine.errors import UndefinedEventLink, DuplicatedEventLinkRef, Wrong
 
 # Import datamodel
 from eboa.datamodel.dim_signatures import DimSignature
-from eboa.datamodel.alerts import Alert
+from eboa.datamodel.alerts import Alert, EventAlert
 from eboa.datamodel.events import Event, EventLink, EventKey, EventText, EventDouble, EventObject, EventGeometry, EventBoolean, EventTimestamp
 from eboa.datamodel.gauges import Gauge
 from eboa.datamodel.sources import Source, SourceStatus
@@ -3061,6 +3061,1358 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.click(submitButton)
 
         # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 2
+
+    def test_event_alerts_name_alert_filter(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source_1.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test2",
+                                    "notification_time":"2018-06-05T08:07:38",
+                                    "alert_cnf":{
+                                        "name":"alert_name4",
+                                        "severity":"major",
+                                        "description":"Alert description",
+                                        "group":"alert_group3"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## Like ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("event-alerts-name-text")
+        input_element.send_keys("alert_name3")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not Like ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("event-alerts-name-text")
+        input_element.send_keys("alert_name3")
+
+        menu = Select(self.driver.find_element_by_id("event-alerts-name-operator"))
+        menu.select_by_visible_text("notlike")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("event-alerts-names-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_name3")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("event-alerts-names-in-select"))
+        options.select_by_visible_text("alert_name3")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("event-alerts-names-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_name4")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("event-alerts-names-in-select"))
+        options.select_by_visible_text("alert_name4")
+
+        notInButton = self.driver.find_element_by_id("event-alerts-names-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+    def test_event_alerts_group_alert_filter(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source_1.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test2",
+                                    "notification_time":"2018-06-05T08:07:38",
+                                    "alert_cnf":{
+                                        "name":"alert_name4",
+                                        "severity":"major",
+                                        "description":"Alert description",
+                                        "group":"alert_group3"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## Like ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("event-alerts-group-text")
+        input_element.send_keys("alert_group2")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not Like ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("event-alerts-group-text")
+        input_element.send_keys("alert_group2")
+
+        menu = Select(self.driver.find_element_by_id("event-alerts-group-operator"))
+        menu.select_by_visible_text("notlike")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("event-alerts-groups-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_group2")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("event-alerts-groups-in-select"))
+        options.select_by_visible_text("alert_group2")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("event-alerts-groups-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_group3")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("event-alerts-groups-in-select"))
+        options.select_by_visible_text("alert_group3")
+
+        notInButton = self.driver.find_element_by_id("event-alerts-groups-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+    def test_event_alerts_generator_alert_filter(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source_1.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test2",
+                                    "notification_time":"2018-06-05T08:07:38",
+                                    "alert_cnf":{
+                                        "name":"alert_name4",
+                                        "severity":"major",
+                                        "description":"Alert description",
+                                        "group":"alert_group3"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## Like ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("event-alerts-generator-text")
+        input_element.send_keys("test")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not Like ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("event-alerts-generator-text")
+        input_element.send_keys("test")
+
+        menu = Select(self.driver.find_element_by_id("event-alerts-generator-operator"))
+        menu.select_by_visible_text("notlike")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("event-alerts-generators-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("test")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("event-alerts-generators-in-select"))
+        options.select_by_visible_text("test")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("event-alerts-generators-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("test2")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("event-alerts-generators-in-select"))
+        options.select_by_visible_text("test2")
+
+        notInButton = self.driver.find_element_by_id("event-alerts-generators-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+    def test_event_alerts_query_ingestion_time_alert_filter(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "values": [
+                                {
+                                "name":"VALUES",
+                                "type":"object",
+                                "values":[
+                                    {
+                                    "type": "double",
+                                    "name": "double_name_1",
+                                    "value": "3.5"
+                                }
+                                ]
+                            }
+                            ],
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        ingestion_time = self.session.query(EventAlert).all()[0].ingestion_time.isoformat()
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "==", 1)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+    """ def test_event_alerts_query_solved_time_alert_filter(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "values": [
+                                {
+                                "name":"VALUES",
+                                "type":"object",
+                                "values":[
+                                    {
+                                    "type": "double",
+                                    "name": "double_name_1",
+                                    "value": "3.5"
+                                }
+                                ]
+                            }
+                            ],
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        solved_time = "2018-06-05T10:07:37"
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "==", 1)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data """
+
+    def test_event_alerts_query_notification_time_alert_filter(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "values": [
+                                {
+                                "name":"VALUES",
+                                "type":"object",
+                                "values":[
+                                    {
+                                    "type": "double",
+                                    "name": "double_name_1",
+                                    "value": "3.5"
+                                }
+                                ]
+                            }
+                            ],
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        notification_time = "2018-06-05T08:07:37"
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "==", 1)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+    def test_event_alerts_severities_alert_filter(self):
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test",
+                                    "notification_time":"2018-06-05T08:07:37",
+                                    "alert_cnf":{
+                                        "name":"alert_name3",
+                                        "severity":"critical",
+                                        "description":"Alert description",
+                                        "group":"alert_group2"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "dim_signature":{
+                            "name":"dim_signature",
+                            "exec":"exec",
+                            "version":"1.0"
+                        },
+                        "source":{
+                            "name":"source_1.json",
+                            "reception_time":"2018-06-06T13:33:29",
+                            "generation_time":"2018-07-05T02:07:03",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2019-06-05T08:07:36",
+                            "priority":30
+                        },
+                        "events":[
+                            {
+                            "explicit_reference":"ER2",
+                            "gauge":{
+                                "name":"GAUGE_NAME2",
+                                "system":"GAUGE_SYSTEM2",
+                                "insertion_type":"SIMPLE_UPDATE"
+                            },
+                            "start":"2019-06-05T02:07:03",
+                            "stop":"2019-06-05T08:07:36",
+                            "alerts":[
+                                {
+                                    "message":"Alert message",
+                                    "generator":"test2",
+                                    "notification_time":"2018-06-05T08:07:38",
+                                    "alert_cnf":{
+                                        "name":"alert_name4",
+                                        "severity":"major",
+                                        "description":"Alert description",
+                                        "group":"alert_group3"
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the select option
+        functions.select_option_dropdown(self.driver, "event-alerts-severities-in-select", "critical")
+        
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the select option
+        functions.select_option_dropdown(self.driver, "event-alerts-severities-in-select", "critical")
+
+        notInButton = self.driver.find_element_by_id("event-alerts-severities-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+        ## Multiple selection ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+        functions.display_specific_alert_filters(self.driver, "event")
+
+        # Fill the select option
+        functions.select_option_dropdown(self.driver, "event-alerts-severities-in-select", "critical")
+        functions.select_option_dropdown(self.driver, "event-alerts-severities-in-select", "major")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
         event_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
         number_of_elements = len(event_alerts_table.find_elements_by_xpath("tbody/tr"))
         empty_element = len(event_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0

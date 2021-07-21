@@ -387,3 +387,21 @@ def query(driver, wait, start = None, stop = None, limit = None):
 
     click(driver.find_element_by_id("query-submit-button"))
 
+def display_specific_alert_filters(driver, entity):
+
+    query_interface = driver.find_element_by_partial_link_text("Specific filters for querying " + entity + " alerts")
+   
+    while not query_interface.get_attribute("aria-expanded") == "true":
+        click(query_interface)
+        # Add time to avoid lags on expanding the collapsed
+        time.sleep(0.1)
+    # end if
+
+def select_option_dropdown(driver, select_id, option):
+
+    chosen_id = (select_id + '_chosen').replace('-', '_')
+    select_element = driver.find_element_by_xpath("//*[@id='" + chosen_id + "']")
+    click(select_element)
+
+    option_element = driver.find_element_by_xpath("//*[@id='" + chosen_id + "']/div/ul/li[contains(.,'" + option + "')]")
+    click(option_element)
