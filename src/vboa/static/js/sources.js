@@ -18,6 +18,7 @@ function create_sources_groups_by_dim_signature(sources){
     for (const dim_signature of dim_signatures){
         groups.push({
             id: dim_signature,
+            treeLevel: 1,
             content: dim_signature,
             options: {
                 drawPoints: {
