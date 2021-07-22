@@ -387,9 +387,9 @@ def query(driver, wait, start = None, stop = None, limit = None):
 
     click(driver.find_element_by_id("query-submit-button"))
 
-def display_specific_alert_filters(driver, entity):
+def display_specific_alert_filters(driver):
 
-    query_interface = driver.find_element_by_partial_link_text("Specific filters for querying " + entity + " alerts")
+    query_interface = driver.find_element_by_partial_link_text("Specify search by using alert filters")
    
     while not query_interface.get_attribute("aria-expanded") == "true":
         click(query_interface)

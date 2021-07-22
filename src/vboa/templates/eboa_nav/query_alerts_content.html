@@ -1,10 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">
-      <a data-toggle="collapse" data-parent="#accordion" href="#{{ entity }}-specific-alert-filters">Specific filters for querying {{ entity }} alerts<span class="fa fa-angle-double-down"></span></a>
-    </h3>
+    <a style="color: #333" data-toggle="collapse" data-parent="#accordion" href="#{{ entity }}-alerts-filters">Specify search by using alert filters <span class="fa fa-angle-double-down"></span></a>
   </div>
-  <div class="panel-body panel-collapse collapse" id="{{ entity }}-specific-alert-filters">
+  <div class="panel-body panel-collapse collapse" id="{{ entity }}-alerts-filters">
     <!-- Names -->
     <div class="row">
       <div class="col-xs-3">
@@ -18,7 +16,7 @@
       </div>
       <div class="col-xs-3">
         <label id="{{ entity }}-alerts-names-in-checkbox">Names (<input type="checkbox" name="alert_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-alerts-by-name', 'name', 20, 0)" id="{{ entity }}-alerts-names-in-text"/><i class="circle"></i>
+        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/{{ url_prefix }}/query-jsonify-alerts-by-name', 'name', 20, 0)" id="{{ entity }}-alerts-names-in-text"/><i class="circle"></i>
         <select name="alert_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="{{ entity }}-alerts-names-in-select">
         </select>
       </div>
@@ -36,7 +34,7 @@
       </div>
       <div class="col-xs-3">
         <label id="{{ entity }}-alerts-groups-in-checkbox">Groups (<input type="checkbox" name="alert_group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-alerts-by-group', 'group', 20, 0)" id="{{ entity }}-alerts-groups-in-text"/><i class="circle"></i>
+        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/{{ url_prefix }}/query-jsonify-alerts-by-group', 'group', 20, 0)" id="{{ entity }}-alerts-groups-in-text"/><i class="circle"></i>
         <select name="alert_groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="{{ entity }}-alerts-groups-in-select">
         </select>
       </div>
@@ -54,7 +52,7 @@
       </div>
       <div class="col-xs-3">
         <label id="{{ entity }}-alerts-generators-in-checkbox">Generators (<input type="checkbox" name="alert_generator_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-{{ entity }}-alerts-by-generator', 'generator', 20, 0)" id="{{ entity }}-alerts-generators-in-text"/><i class="circle"></i>
+        <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/{{ url_prefix }}/query-jsonify-{{ entity }}-alerts-by-generator', 'generator', 20, 0)" id="{{ entity }}-alerts-generators-in-text"/><i class="circle"></i>
         <select name="alert_generators" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="{{ entity }}-alerts-generators-in-select">
         </select>
       </div>

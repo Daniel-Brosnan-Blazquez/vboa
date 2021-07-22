@@ -147,8 +147,8 @@
               </div>
             </div>
             <!-- Specific alert filters -->
-            <div class="row" style="margin-top: 12px" id="annotations-specific-alert-filters">
-              {% with entity="annotation" %}
+            <div class="panel-group" style="margin-top: 12px">
+              {% with entity="annotation", url_prefix="eboa_nav" %}
               {% include "eboa_nav/query_alerts_content.html" %}
               {% endwith %}
             </div>

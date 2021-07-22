@@ -2525,7 +2525,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("annotation-alerts-name-text")
@@ -2549,7 +2549,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("annotation-alerts-name-text")
@@ -2574,7 +2574,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("annotation-alerts-names-in-text")
@@ -2602,7 +2602,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("annotation-alerts-names-in-text")
@@ -2727,7 +2727,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("annotation-alerts-group-text")
@@ -2751,7 +2751,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("annotation-alerts-group-text")
@@ -2776,7 +2776,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("annotation-alerts-groups-in-text")
@@ -2804,7 +2804,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("annotation-alerts-groups-in-text")
@@ -2929,7 +2929,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("annotation-alerts-generator-text")
@@ -2953,7 +2953,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("annotation-alerts-generator-text")
@@ -2978,7 +2978,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("annotation-alerts-generators-in-text")
@@ -3006,7 +3006,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("annotation-alerts-generators-in-text")
@@ -3107,7 +3107,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "ingestion", ingestion_time, "==", 1)
         # Click on query button
@@ -3127,7 +3127,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "ingestion", ingestion_time, ">", 1)
 
@@ -3146,7 +3146,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "ingestion", ingestion_time, ">=", 1)
 
@@ -3167,7 +3167,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "ingestion", ingestion_time, "<", 1)
 
@@ -3186,7 +3186,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "ingestion", ingestion_time, "<=", 1)
 
@@ -3207,7 +3207,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "ingestion", ingestion_time, "!=", 1)
 
@@ -3296,7 +3296,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "solved", solved_time, "==", 1)
         # Click on query button
@@ -3316,7 +3316,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "solved", solved_time, ">", 1)
 
@@ -3335,7 +3335,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "solved", solved_time, ">=", 1)
 
@@ -3356,7 +3356,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "solved", solved_time, "<", 1)
 
@@ -3375,7 +3375,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "solved", solved_time, "<=", 1)
 
@@ -3396,7 +3396,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "solved", solved_time, "!=", 1)
 
@@ -3483,7 +3483,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "notification", notification_time, "==", 1)
         # Click on query button
@@ -3503,7 +3503,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "notification", notification_time, ">", 1)
 
@@ -3522,7 +3522,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "notification", notification_time, ">=", 1)
 
@@ -3543,7 +3543,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "notification", notification_time, "<", 1)
 
@@ -3562,7 +3562,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "notification", notification_time, "<=", 1)
 
@@ -3583,7 +3583,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Annotations")
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "annotation-alerts", "notification", notification_time, "!=", 1)
 
@@ -3695,7 +3695,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "annotation-alerts-severities-in-select", "critical")
@@ -3716,7 +3716,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "annotation-alerts-severities-in-select", "critical")
@@ -3743,7 +3743,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotations")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-alerts-submit-button')))
         functions.click_no_graphs_annotations(self.driver)
-        functions.display_specific_alert_filters(self.driver, "annotation")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "annotation-alerts-severities-in-select", "critical")

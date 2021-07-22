@@ -23,8 +23,9 @@ import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
 import eboa.engine.alerts as eboa_alerts
 
-# Import triggering
+# Import auxiliary functions
 from eboa.triggering.eboa_triggering import get_triggering_conf
+from vboa.functions import set_specific_alert_filters
 
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 query = Query()
@@ -163,117 +164,6 @@ def query_event_alerts(filters):
     event_alerts = query.get_event_alerts(**kwargs)
 
     return event_alerts
-
-def set_specific_alert_filters(filters):
-    """
-    Set filter for query alerts.
-    """
-    kwargs = {}
-
-    if filters["alert_name"][0] != "":
-        kwargs["names"] = {"filter": filters["alert_name"][0], "op": filters["alert_name_operator"][0]}
-    # end if
-    elif "alert_names" in filters and filters["alert_names"][0] != "":
-        op="notin"
-        if not "alert_name_notin_check" in filters:
-            op="in"
-        # end if
-        kwargs["names"] = {"filter": [], "op": op}
-        i = 0
-        for alert_name in filters["alert_names"]:
-            kwargs["names"]["filter"].append(alert_name)
-            i+=1
-        # end for
-    # end if
-
-    if filters["alert_group"][0] != "":
-        kwargs["groups"] = {"filter": filters["alert_group"][0], "op": filters["alert_group_operator"][0]}
-    # end if
-    elif "alert_groups" in filters and filters["alert_groups"][0] != "":
-        op="notin"
-        if not "alert_group_notin_check" in filters:
-            op="in"
-        # end if
-        kwargs["groups"] = {"filter": [], "op": op}
-        i = 0
-        for alert_group in filters["alert_groups"]:
-            kwargs["groups"]["filter"].append(alert_group)
-            i+=1
-        # end for
-    # end if
-
-    if filters["alert_generator"][0] != "":
-        kwargs["generators"] = {"filter": filters["alert_generator"][0], "op": filters["alert_generator_operator"][0]}
-    # end if
-    elif "alert_generators" in filters and filters["alert_generators"][0] != "":
-        op="notin"
-        if not "alert_generator_notin_check" in filters:
-            op="in"
-        # end if
-        kwargs["generators"] = {"filter": [], "op": op}
-        i = 0
-        for alert_generator in filters["alert_generators"]:
-            kwargs["generators"]["filter"].append(alert_generator)
-            i+=1
-        # end for
-    # end if
-
-    if filters["alert_ingestion_time"][0] != "":
-        kwargs["alert_ingestion_time_filters"] = []
-        i = 0
-        operators = filters["alert_ingestion_time_operator"]
-        for alert_ingestion_time in filters["alert_ingestion_time"]:
-            kwargs["alert_ingestion_time_filters"].append({"date": alert_ingestion_time, "op": operators[i]})
-            i+=1
-        # end for
-    # end if
-
-    if filters["alert_solved_time"][0] != "":
-        kwargs["solved_time_filters"] = []
-        i = 0
-        operators = filters["alert_solved_time_operator"]
-        for alert_solved_time in filters["alert_solved_time"]:
-            kwargs["solved_time_filters"].append({"date": alert_solved_time, "op": operators[i]})
-            i+=1
-        # end for
-    # end if
-
-    if filters["alert_notification_time"][0] != "":
-        kwargs["notification_time_filters"] = []
-        i = 0
-        operators = filters["alert_notification_time_operator"]
-        for alert_notification_time in filters["alert_notification_time"]:
-            kwargs["notification_time_filters"].append({"date": alert_notification_time, "op": operators[i]})
-            i+=1
-        # end for
-    # end if
-
-    if filters["alert_validated"][0] != "":
-        kwargs["validated"] = bool(util.strtobool(filters["alert_validated"][0]))
-    # end if
-
-    if filters["alert_notified"][0] != "":
-        kwargs["notified"] = bool(util.strtobool(filters["alert_notified"][0]))
-    # end if
-
-    if filters["alert_solved"][0] != "":
-        kwargs["solved"] = bool(util.strtobool(filters["alert_solved"][0]))
-    # end if
-
-    if "alert_severities" in filters and filters["alert_severities"][0] != "":
-        op="notin"
-        if not "alert_severity_notin_check" in filters:
-            op="in"
-        # end if
-        kwargs["severities"] = {"filter": [], "op": op}
-        i = 0
-        for alert_severities in filters["alert_severities"]:
-            kwargs["severities"]["filter"].append(alert_severities)
-            i+=1
-        # end for
-    # end if
-
-    return kwargs
 
 def set_filters_for_query_events_or_event_alerts(filters):
     """
@@ -857,7 +747,11 @@ def query_source_alerts(filters):
     """
     current_app.logger.debug("Query source alerts")
 
-    kwargs = set_filters_for_query_sources_or_source_alerts(filters)
+    source_kwargs = set_filters_for_query_sources_or_source_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**source_kwargs, **alert_kwargs}
 
     source_alerts = query.get_source_alerts(**kwargs)
 
@@ -1814,7 +1708,11 @@ def query_er_alerts(filters):
     """
     current_app.logger.debug("Query explicit reference alerts")
 
-    kwargs = set_filters_for_query_ers_or_er_alerts(filters)
+    er_kwargs = set_filters_for_query_ers_or_er_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**er_kwargs, **alert_kwargs}
 
     er_alerts = query.get_explicit_ref_alerts(**kwargs)
 
@@ -2386,4 +2284,10 @@ def query_jsonify_entity_alerts_by_generator(entity):
     elif entity == "annotation":
         annotation_alerts = query.get_annotation_alerts(**kwargs)
         jsonified_alerts = [annotation_alert.jsonify() for annotation_alert in annotation_alerts]
+    elif entity == "source":
+        source_alerts = query.get_source_alerts(**kwargs)
+        jsonified_alerts = [source_alert.jsonify() for source_alert in source_alerts]
+    elif entity == "explicit-ref":
+        er_alerts = query.get_explicit_ref_alerts(**kwargs)
+        jsonified_alerts = [er_alert.jsonify() for er_alert in er_alerts]
     return jsonify(jsonified_alerts)

@@ -3169,7 +3169,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("event-alerts-name-text")
@@ -3193,7 +3193,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("event-alerts-name-text")
@@ -3218,7 +3218,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("event-alerts-names-in-text")
@@ -3246,7 +3246,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
         input_element = self.driver.find_element_by_id("event-alerts-names-in-text")
@@ -3375,7 +3375,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("event-alerts-group-text")
@@ -3399,7 +3399,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("event-alerts-group-text")
@@ -3424,7 +3424,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("event-alerts-groups-in-text")
@@ -3452,7 +3452,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
         input_element = self.driver.find_element_by_id("event-alerts-groups-in-text")
@@ -3581,7 +3581,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("event-alerts-generator-text")
@@ -3605,7 +3605,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("event-alerts-generator-text")
@@ -3630,7 +3630,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("event-alerts-generators-in-text")
@@ -3658,7 +3658,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
         input_element = self.driver.find_element_by_id("event-alerts-generators-in-text")
@@ -3761,7 +3761,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "==", 1)
         # Click on query button
@@ -3781,7 +3781,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, ">", 1)
 
@@ -3800,7 +3800,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, ">=", 1)
 
@@ -3821,7 +3821,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "<", 1)
 
@@ -3840,7 +3840,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "<=", 1)
 
@@ -3861,7 +3861,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "ingestion", ingestion_time, "!=", 1)
 
@@ -3950,7 +3950,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "==", 1)
         # Click on query button
@@ -3970,7 +3970,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, ">", 1)
 
@@ -3989,7 +3989,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, ">=", 1)
 
@@ -4010,7 +4010,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "<", 1)
 
@@ -4029,7 +4029,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "<=", 1)
 
@@ -4050,7 +4050,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "solved", solved_time, "!=", 1)
 
@@ -4139,7 +4139,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "==", 1)
         # Click on query button
@@ -4159,7 +4159,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, ">", 1)
 
@@ -4178,7 +4178,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, ">=", 1)
 
@@ -4199,7 +4199,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "<", 1)
 
@@ -4218,7 +4218,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "<=", 1)
 
@@ -4239,7 +4239,7 @@ class TestEventAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Events")
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "event-alerts", "notification", notification_time, "!=", 1)
 
@@ -4355,7 +4355,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "event-alerts-severities-in-select", "critical")
@@ -4376,7 +4376,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "event-alerts-severities-in-select", "critical")
@@ -4403,7 +4403,7 @@ class TestEventAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Events")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'event-alerts-submit-button')))
         functions.click_no_graphs_events(self.driver)
-        functions.display_specific_alert_filters(self.driver, "event")
+        functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "event-alerts-severities-in-select", "critical")
