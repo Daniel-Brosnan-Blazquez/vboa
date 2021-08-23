@@ -23,17 +23,17 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 import rboa.engine.engine as rboa_engine
 from rboa.engine.engine import Engine
 
-bp = Blueprint('panel', __name__)
+bp = Blueprint("panel", __name__)
 
 version="1.0"
 
-@bp.route('/')
+@bp.route("/")
 def index():
     """
     Show initial panel.
     """
 
-    return render_template('panel/index.html')
+    return render_template("panel/index.html")
 
 def execute_command(command):
     '''
@@ -64,7 +64,7 @@ def execute_command(command):
 ###
 # ORC
 ###
-@bp.route('/check-orc-status')
+@bp.route("/check-orc-status")
 def check_orc_status():
     """
     Check ORC status.
@@ -88,7 +88,7 @@ def check_orc_status():
     
     return jsonify(orc_status)
 
-@bp.route('/switch-on-orc')
+@bp.route("/switch-on-orc")
 def switch_on_orc():
     """
     Switch on ORC.
@@ -100,7 +100,7 @@ def switch_on_orc():
     
     return jsonify(command_status)
 
-@bp.route('/switch-off-orc')
+@bp.route("/switch-off-orc")
 def switch_off_orc():
     """
     Switch off ORC.
@@ -115,7 +115,7 @@ def switch_off_orc():
 ###
 # CRON
 ###
-@bp.route('/check-cron-status')
+@bp.route("/check-cron-status")
 def check_cron_status():
     """
     Check CRON status.
@@ -132,7 +132,7 @@ def check_cron_status():
     
     return jsonify(cron_status)
 
-@bp.route('/switch-on-cron')
+@bp.route("/switch-on-cron")
 def switch_on_cron():
     """
     Switch on CRON.
@@ -144,7 +144,7 @@ def switch_on_cron():
     
     return jsonify(command_status)
 
-@bp.route('/switch-off-cron')
+@bp.route("/switch-off-cron")
 def switch_off_cron():
     """
     Switch off CRON.
@@ -159,7 +159,7 @@ def switch_off_cron():
 ###
 # Schduler
 ###
-@bp.route('/check-scheduler-status')
+@bp.route("/check-scheduler-status")
 def check_scheduler_status():
     """
     Check scheduler status.
@@ -167,7 +167,7 @@ def check_scheduler_status():
 
     return jsonify(boa_scheduler.status_scheduler())
 
-@bp.route('/switch-on-scheduler')
+@bp.route("/switch-on-scheduler")
 def switch_on_scheduler():
     """
     Switch on scheduler.
@@ -179,7 +179,7 @@ def switch_on_scheduler():
     
     return jsonify(command_status)
 
-@bp.route('/switch-off-scheduler')
+@bp.route("/switch-off-scheduler")
 def switch_off_scheduler():
     """
     Switch off scheduler.
@@ -194,7 +194,7 @@ def switch_off_scheduler():
 ###
 # Screnshots
 ###
-@bp.route('/save-screenshot', methods=["POST"])
+@bp.route("/save-screenshot", methods=["POST"])
 def save_screenshot():
     """
     Save screenshot.
