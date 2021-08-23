@@ -50,7 +50,9 @@ RUN pip3 install wheel \
     before_after \
     Sphinx \
     Flask \
-    gunicorn
+    gunicorn \
+    flask-security-too \
+    bcrypt
     
 # Create folders for BOA
 RUN mkdir /log
