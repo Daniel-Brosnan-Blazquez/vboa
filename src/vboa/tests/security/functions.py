@@ -28,7 +28,6 @@ def set_dict_app_security(path_files):
                     route = ""
                     # Iterate through the decorators of the function
                     for decorator in node.decorator_list:
-                        decorator_name = ""
                         # The relevant decorators are a function call (ast.Call)
                         if isinstance(decorator, ast.Call):
                             # For decorator route (ast.Attribute)
@@ -38,6 +37,8 @@ def set_dict_app_security(path_files):
                             else: 
                                 decorator_name = str(decorator.func.id)
                             # end if
+                        else:
+                            continue
                         # end if
 
                         # Insert the relevant decorators into the list
