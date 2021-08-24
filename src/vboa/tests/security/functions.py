@@ -1,5 +1,4 @@
 import ast
-import os
 
 def set_dict_app_security(path_files):
     """
@@ -29,17 +28,15 @@ def set_dict_app_security(path_files):
                     route = ""
                     # Iterate through the decorators of the function
                     for decorator in node.decorator_list:
+                        decorator_name = ""
+                        # The relevant decorators are a function call (ast.Call)
                         if isinstance(decorator, ast.Call):
+                            # For decorator route (ast.Attribute)
                             if isinstance(decorator.func, ast.Attribute):
                                 decorator_name = str(decorator.func.attr)
+                            # For decorators roles_accepted and auth_required (ast.Name)
                             else: 
                                 decorator_name = str(decorator.func.id)
-                            # end if
-                        else:
-                            if isinstance(decorator, ast.Attribute):
-                                decorator_name = str(decorator.attr) 
-                            else: 
-                                decorator_name = str(decorator.id)
                             # end if
                         # end if
 
