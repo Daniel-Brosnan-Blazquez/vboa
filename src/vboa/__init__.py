@@ -37,12 +37,20 @@ from eboa.engine.functions import get_resources_path
 # Import filters
 from vboa.filters import filters_for_events_in_json, filters_for_annotations_in_json, filters_for_values_in_json, filters_for_dates_in_json
 
+# This is to be reviewed
+from flask_security import Security, current_user, hash_password, \
+     SQLAlchemySessionUserDatastore, utils
+import flask_security
+from vboa.security import auth_required, roles_accepted
+from uboa.datamodel.base import db_session
+from uboa.datamodel.users import User, Role
+
 def create_app():
     """
     Create and configure an instance of the Flask application.
     """
     app = Flask(__name__, instance_relative_config=True)
-    app.jinja_env.add_extension('jinja2.ext.do')
+    app.jinja_env.add_extension("jinja2.ext.do")
 
     # Get secret key
     web_server_secret_key_path = get_resources_path() + "/web_server_secret_key.txt"
@@ -55,6 +63,7 @@ def create_app():
 
     app.config.from_mapping(
         SECRET_KEY=secret_key,
+        SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
         SESSION_COOKIE_SECURE=True,
         REMEMBER_COOKIE_SECURE=True,
         SESSION_COOKIE_HTTPONLY=True,
@@ -78,8 +87,16 @@ def create_app():
     # end if
     
     # the toolbar is only enabled in debug mode:
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
+
+    # Setup Flask-Security
+    app.config["SECURITY_USER_IDENTITY_ATTRIBUTES"] = [
+        {"email": {"mapper": flask_security.uia_email_mapper, "case_insensitive": True}},
+        {"username": {"mapper": flask_security.uia_username_mapper}}
+    ]
+    user_datastore = SQLAlchemySessionUserDatastore(db_session, User, Role)
+    security = Security(app, user_datastore)
 
     ########
     # Error handeling
@@ -92,9 +109,9 @@ def create_app():
     def internal_server_error(e):
         return render_template("panel/error.html"), 500
 
-    @app.errorhandler(403)
-    def page_forbidden(e):
-        return render_template("panel/error.html"), 403
+    # @app.errorhandler(403)
+    # def page_forbidden(e):
+    #     return render_template("panel/error.html"), 403
     
     ########
     # Tests

@@ -23,11 +23,16 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 import rboa.engine.engine as rboa_engine
 from rboa.engine.engine import Engine
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 bp = Blueprint("panel", __name__)
 
 version="1.0"
 
 @bp.route("/")
+@auth_required()
+@roles_accepted("administrator", "operator")
 def index():
     """
     Show initial panel.
