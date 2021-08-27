@@ -237,14 +237,14 @@ def query_reports_and_render(start_filter = None, stop_filter = None, sliding_wi
         kwargs["order_by"] = {"field": "ingestion_time", "descending": True}
 
         # Obtain report alerts and then the reports
-        report_alerts = query.get_report_alerts(kwargs)
+        report_alerts = query.get_report_alerts(**kwargs)
         reports = query.get_reports(report_uuids = {"filter": [report_alert.report_uuid for report_alert in report_alerts], "op": "in"})
     elif template_name == "alerts_and_errors":
         # Set order by ingestion_time descending
         kwargs["order_by"] = {"field": "ingestion_time", "descending": True}
 
         # Obtain report alerts and then the reports
-        report_alerts = query.get_report_alerts(kwargs)
+        report_alerts = query.get_report_alerts(**kwargs)
         reports_from_report_alerts = query.get_reports(report_uuids = {"filter": [report_alert.report_uuid for report_alert in report_alerts], "op": "in"})
 
         # Set order by ingestion_time descending

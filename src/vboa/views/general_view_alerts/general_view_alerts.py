@@ -228,22 +228,22 @@ def query_and_render(start_filter = None, stop_filter = None, sliding_window = N
     kwargs["order_by"] = {"field": "notification_time", "descending": False}
 
     # Obtain source alerts and then the sources
-    source_alerts = query.get_source_alerts(kwargs)
+    source_alerts = query.get_source_alerts(**kwargs)
     
     # Remove filter by DIM signature
     del kwargs["dim_signatures"]
 
     # Obtain report alerts and then the reports
-    report_alerts = query.get_report_alerts(kwargs)
+    report_alerts = query.get_report_alerts(**kwargs)
 
     # Obtain event alerts and then the events
-    event_alerts = query.get_event_alerts(kwargs)
+    event_alerts = query.get_event_alerts(**kwargs)
 
     # Obtain annotation alerts and then the annotations
-    annotation_alerts = query.get_annotation_alerts(kwargs)
+    annotation_alerts = query.get_annotation_alerts(**kwargs)
 
     # Obtain explicit ref alerts and then the explicit refs
-    er_alerts = query.get_explicit_ref_alerts(kwargs)
+    er_alerts = query.get_explicit_ref_alerts(**kwargs)
     
     reporting_start = stop_filter["date"]
     reporting_stop = start_filter["date"]

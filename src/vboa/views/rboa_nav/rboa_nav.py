@@ -122,7 +122,7 @@ def query_report_alerts(filters):
     
     kwargs = set_filters_for_query_reports_or_report_alerts(filters)
     
-    reports = query.get_report_alerts(kwargs)
+    reports = query.get_report_alerts(**kwargs)
 
     return reports
 

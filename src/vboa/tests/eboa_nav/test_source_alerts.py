@@ -152,7 +152,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        sources_alerts = self.query_eboa.get_source_alerts(kwargs)
+        sources_alerts = self.query_eboa.get_source_alerts(**kwargs)
 
         assert len(sources_alerts) == 1
 

@@ -208,7 +208,7 @@ class TestReportAlertsTab(unittest.TestCase):
         # Check generated content for widgets
         kwargs ={}
         kwargs["order_by"] = {"field": "notification_time", "descending": False}
-        report_alerts = self.query_eboa.get_report_alerts(kwargs)
+        report_alerts = self.query_eboa.get_report_alerts(**kwargs)
 
         assert len(report_alerts) == 3
 
