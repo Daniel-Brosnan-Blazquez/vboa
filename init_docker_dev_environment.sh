@@ -324,7 +324,7 @@ if [ "$(docker images boa_$CONTAINERS_LABEL -q)" ];
 then
     echo -e "The image boa_$CONTAINERS_LABEL was already available. So, it is not going to be re-built."
 else
-    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP --build-arg PATH_TO_BOA_CERTIFICATES=$PATH_TO_BOA_CERTIFICATES -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 fi
 
 # Initialize the eboa database
@@ -344,11 +344,14 @@ do
     file_name=`basename $file`
     docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/config/$file_name /resources_path/$file_name"
 done
-for file in `find $PATH_TO_VBOA/src/config/ -name '*' -type f`;
-do
-    file_name=`basename $file`
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/config/$file_name /resources_path/$file_name"
-done
+if [ -d $PATH_TO_VBOA/src/config/ ];
+then
+    for file in `find $PATH_TO_VBOA/src/config/ -name '*' -type f`;
+    do
+        file_name=`basename $file`
+        docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/config/$file_name /resources_path/$file_name"
+    done
+fi
 #  (Change these operations to symbolic links)
 for file in `find $PATH_TO_BOA_TAILORING_CONFIGURATION -name '*' -type f`;
 do

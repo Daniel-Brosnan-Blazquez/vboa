@@ -39,9 +39,7 @@ RUN yum install -y rh-ruby25 \
     rh-ruby25-ruby-devel \
     rh-postgresql10-postgresql-devel
 
-RUN pip3 install wheel \
-    Flask \
-    gunicorn
+RUN pip3 install wheel
 
 # Create folders for BOA
 RUN mkdir /log
