@@ -391,7 +391,7 @@ docker restart $APP_CONTAINER
 
 # Install web packages
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER -c "npm --prefix /vboa/src/vboa/static run build"
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
 
 # Install scripts
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
