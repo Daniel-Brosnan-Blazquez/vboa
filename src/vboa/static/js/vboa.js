@@ -85,10 +85,13 @@ jQuery(document).ready(function(){
 
 /* Save the very same page in the div with id boa-html-page */
 jQuery(document).ready(function(){
-    var html_content = document.documentElement.innerHTML
-    var html = '<!doctype html>\n<html lang="en">\n' + html_content + "\n</html>"
-    var compressed_html = btoa(html)
-    document.getElementById("boa-html-page").innerHTML = compressed_html
+    var boa_html_page_node = document.getElementById("boa-html-page");
+    if (boa_html_page_node){
+        var html_content = document.documentElement.innerHTML;
+        var html = '<!doctype html>\n<html lang="en">\n' + html_content + "\n</html>";
+        var compressed_html = btoa(html);
+        boa_html_page_node.innerHTML = compressed_html;
+    }
 });
 
 setInterval(update_clock, 1000);
@@ -109,11 +112,14 @@ jQuery(document).ready(function(){
 
 /* Set clock */
 function update_clock() {
-    var date = new Date();
-    var local_date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-    document.getElementById("time-clock").innerHTML = "<div>" +
-        "<p>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
-        "</div>"
+    var time_clock_node = document.getElementById("time-clock");
+    if (time_clock_node){
+        var date = new Date();
+        var local_date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        time_clock_node.innerHTML = "<div>" +
+            "<p>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
+            "</div>"
+    }
 };
 
 /* Activate chosen for the multiple input selection */
@@ -646,10 +652,12 @@ request_and_update_orc_status(true)
 
 function request_and_update_orc_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
-        queryFunctions.request_info("/check-orc-status", update_orc_status, null);
+    var boa_management_menu_node = document.getElementById("boa-management-menu");
+    if (boa_management_menu_node){
+        if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
+            queryFunctions.request_info("/check-orc-status", update_orc_status, null);
+        }
     }
-    
 };
 
 function update_orc_status(parameters, orc_status) {
@@ -701,8 +709,11 @@ request_and_update_cron_status(true)
 
 function request_and_update_cron_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
-        queryFunctions.request_info("/check-cron-status", update_cron_status, null);
+    var boa_management_menu_node = document.getElementById("boa-management-menu");
+    if (boa_management_menu_node){
+        if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
+            queryFunctions.request_info("/check-cron-status", update_cron_status, null);
+        }
     }
     
 };
@@ -785,8 +796,11 @@ request_and_update_scheduler_status(true)
 
 function request_and_update_scheduler_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
-        queryFunctions.request_info("/check-scheduler-status", update_scheduler_status, null);
+    var boa_management_menu_node = document.getElementById("boa-management-menu");
+    if (boa_management_menu_node){
+        if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
+            queryFunctions.request_info("/check-scheduler-status", update_scheduler_status, null);
+        }
     }
     
 };

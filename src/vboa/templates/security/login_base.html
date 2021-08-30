@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% macro render_field_errors(field) %}
+{% if field.errors %}
+<div style="border: 1px solid lightgrey; padding: 5px; background-color:lightcoral; color:black">
+  <p>
+    <ul>
+      {% for error in field.errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </p>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% block styles %}
+<link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/boa_favicon_16x18.png') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+{% block boa_body_content %}
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center mb-5">
+        <h2>{% block login_text %}Please, sign in to access to VBOA{% endblock %}</h2>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-5">
+        <div class="login-wrap p-4 p-md-5">
+	  <div class="icon d-flex align-items-center justify-content-center">
+	    <span class="fa fa-user-o"></span>
+	  </div>
+	  <h3 class="text-center mb-4">Sign In</h3>
+          <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
+
+            {# This allows flask login to insert needed information in the HTML #}
+            {{ login_user_form.hidden_tag() }}
+
+
+            {# Define the needed fields with the corresponding name tag: email, password, remember #}
+            {# This tag has been added as a customazation: username #}
+
+	    <div class="form-group">
+              {{ render_field_errors(login_user_form.email) }}
+              {{ render_field_errors(login_user_form.password) }}
+              {{ render_field_errors(login_user_form.remember) }}
+              {{ render_field_errors(login_user_form.csrf_token) }}
+	    </div>
+
+	    <div class="form-group">
+              <!-- Email or username -->
+	      <input type="text" class="form-control rounded-left" placeholder="Email or username" name="email">
+	    </div>
+            
+            <!-- Password -->
+	    <div class="form-group d-flex">
+	      <input type="password" class="form-control rounded-left" placeholder="Password" name="password" required>
+	    </div>
+
+            <!-- Submit button -->
+	    <div class="form-group">
+	      <button type="submit" name="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>
+	    </div>
+
+            <!-- Remember me -->
+	    <div class="form-group d-md-flex">
+	      <div class="w-50">
+	        <label class="checkbox-wrap checkbox-primary">Remember Me
+		  <input type="checkbox" checked name="remember">
+		  <span class="checkmark"></span>
+	        </label>
+	      </div>
+	      <div class="w-50 text-md-right">
+	        <a href="#">Forgot Password</a>
+	      </div>
+	    </div>
+	  </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

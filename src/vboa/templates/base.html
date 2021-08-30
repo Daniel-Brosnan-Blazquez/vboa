@@ -12,6 +12,7 @@
     <title>BOA - Bussiness Operation Analysis</title>
     {% endblock %}
 
+    {% block styles %}
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/boa_favicon_16x18.png') }}"/>
     
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles.css') }}">
@@ -21,14 +22,17 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/vboa.css') }}">
 
+    {% endblock %}
+    
   </head>
 
   <body id="boa-body">
-    <div id="boa-html-page" hidden>
-    </div>    
     <div id="updating-page">
     </div>
     <div>{% block project_header %}{% endblock %}</div>
+    {% block boa_body_content %}
+    <div id="boa-html-page" hidden>
+    </div>    
     <div id="wrapper">
       <!-- Navigation bar -->
       <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -170,6 +174,7 @@
       <!-- /#page-wrapper -->
     </div>
     <!-- /#wrapper -->
+    {% endblock %}
     {% block scripts %}
 
     <!-- Load the bundle of scripts -->
