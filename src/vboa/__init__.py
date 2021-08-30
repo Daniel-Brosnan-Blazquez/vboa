@@ -17,6 +17,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 # Import contents
 from vboa import panel
+from vboa import service_management
+from vboa import screenshots
 from vboa.views.eboa_nav import eboa_nav
 from vboa.views.rboa_nav import rboa_nav
 from vboa.views.boa_health import boa_health
@@ -71,6 +73,8 @@ def create_app():
     )
 
     app.register_blueprint(panel.bp)
+    app.register_blueprint(service_management.bp)
+    app.register_blueprint(screenshots.bp)
     app.register_blueprint(eboa_nav.bp)
     app.register_blueprint(rboa_nav.bp)
     app.register_blueprint(boa_health.bp)
@@ -95,6 +99,7 @@ def create_app():
         {"email": {"mapper": flask_security.uia_email_mapper, "case_insensitive": True}},
         {"username": {"mapper": flask_security.uia_username_mapper}}
     ]
+    app.config["SECURITY_TRACKABLE"] = True
     user_datastore = SQLAlchemySessionUserDatastore(db_session, User, Role)
     security = Security(app, user_datastore)
 
