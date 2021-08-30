@@ -287,6 +287,7 @@ docker exec -it -u boa $APP_CONTAINER bash -c 'for script in /vboa/src/scripts/*
 # Copy datamodels
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/datamodel/eboa_data_model.sql /datamodel'
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/datamodel/sboa_data_model.sql /datamodel'
+docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/datamodel/uboa_data_model.sql /datamodel'
 
 # Copy schemas
 docker exec -it -u boa $APP_CONTAINER bash -c 'cp /eboa/src/schemas/* /schemas'
