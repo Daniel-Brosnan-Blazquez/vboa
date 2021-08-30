@@ -156,7 +156,7 @@
             </div>
             <!-- Ingestion completeness -->
             <div class="row">
-              <div class="col-xs-3 query-source-statuses">
+              <div class="col-xs-3 query-source-ingestion-completeness">
                 <label>Ingestion completeness</label>
                 <select style="width: 100%" name="ingestion_completeness" id="sources-ingestion-completeness">
                   <option></option>
@@ -166,10 +166,10 @@
               </div>
             </div>
             <!-- Statuses -->
-            <div class="row" id="sources-statuses-initial">
+            <div class="row">
               <div class="col-xs-3 query-source-statuses">
-                <label id="sources-statuses-initial-checkbox">Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="source_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-statuses-initial-in-text">
+                <label id="sources-statuses-in-checkbox">Statuses (<input type="checkbox" name="statuses_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="source_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-statuses-in-select">
                 </select>
               </div>
             </div>
@@ -225,6 +225,12 @@
                 <label>Limit</label>
                 <input type="text" class="form-control" style="width: 100%" name="limit" id="sources-limit" value="100"/>
               </div>
+            </div>
+            <!-- Specific alert filters -->
+            <div class="panel-group" style="margin-top: 12px">
+              {% with entity="source", url_prefix="eboa_nav" %}
+              {% include "eboa_nav/query_alerts_content.html" %}
+              {% endwith %}
             </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="sources-submit-button" name="query_sources">Query sources</button>

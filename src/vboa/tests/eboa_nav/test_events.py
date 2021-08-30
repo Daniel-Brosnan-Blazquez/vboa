@@ -1928,6 +1928,159 @@ class TestEventsTab(unittest.TestCase):
 
         assert number_of_elements == 1 and empty_element is False
 
+    def test_events_query_value_event_duration(self):
+
+        # Insert data
+        data = {"operations":[{
+                        "mode": "insert",
+                        "dim_signature": {"name": "dim_signature",
+                                          "exec": "exec",
+                                          "version": "1.0"},
+                        "source": {"name": "source.xml",
+                        "reception_time": "2018-07-05T02:07:03",
+                                   "generation_time": "2018-07-05T02:07:03",
+                                   "validity_start": "2018-06-05T02:07:03",
+                                   "validity_stop": "2018-06-05T08:07:36"},
+                        "events": [{"gauge": {"name": "GAUGE_NAME",
+                                              "system": "GAUGE_SYSTEM",
+                                              "insertion_type": "SIMPLE_UPDATE"},
+                                    "start": "2018-06-05T02:07:03",
+                                    "stop": "2018-06-05T08:07:36",
+                                    "values": [{"name": "VALUES",
+                                               "type": "object",
+                                               "values": [
+                                                   {"type": "double",
+                                                    "name": "double_name_1",
+                                                    "value": "3.5"
+                                                    }]
+                                                }]
+                        }]
+                    }]
+                }
+
+        # Check data is correctly inserted
+        self.engine_eboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
+
+        events = self.session.query(Event).all()
+        event_duration = str((events[0].stop - events[0].start).total_seconds())
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "==", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, ">", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, ">=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "<", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "<=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        events_table = wait.until(EC.visibility_of_element_located((By.ID,"events-table")))
+        number_of_elements = len(events_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(events_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/eboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Events")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
+        functions.click_no_graphs_events(self.driver)
+
+        functions.fill_any_duration(self.driver, wait, "events", "event", event_duration, "!=", 1)
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"events-nav-no-data")))
+
+        assert no_data
+    
     def test_events_query_ingestion_time(self):
 
         # Insert data

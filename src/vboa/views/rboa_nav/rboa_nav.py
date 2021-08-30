@@ -23,11 +23,13 @@ from flask import jsonify
 # Import eboa utilities
 from eboa.engine.query import Query
 import rboa.engine.engine as rboa_engine
+import eboa.engine.alerts as eboa_alerts
 from eboa.engine.engine import Engine
 
 # Import auxiliary functions
 from rboa.engine.functions import get_rboa_archive_path
 from rboa.triggering.rboa_triggering import get_reporting_conf
+from vboa.functions import set_specific_alert_filters
 
 archive_path = get_rboa_archive_path()
 
@@ -120,7 +122,11 @@ def query_report_alerts(filters):
     """
     current_app.logger.debug("Query report alerts")
     
-    kwargs = set_filters_for_query_reports_or_report_alerts(filters)
+    report_kwargs = set_filters_for_query_reports_or_report_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**report_kwargs, **alert_kwargs}
     
     reports = query.get_report_alerts(**kwargs)
 
@@ -138,7 +144,8 @@ def set_filters_for_query_reports_or_report_alerts(filters):
     if "query_report_alerts" in filters: 
         report_filter_name = "report_names"
         report_generetors_filter ="report_generators_filters"
-    
+    # end if
+
     # Get only generated reports
     kwargs["generated"] = True
     
@@ -241,15 +248,15 @@ def set_filters_for_query_reports_or_report_alerts(filters):
         # end for
     # end if
 
-    if "statuses" in filters and filters["statuses"][0] != "":
+    if "report_statuses" in filters and filters["report_statuses"][0] != "":
         op="notin"
         if not "status_notin_check" in filters:
             op="in"
         # end if
         kwargs["statuses"] = {"filter": [], "op": op}
         i = 0
-        for status in filters["statuses"]:
-            kwargs["statuses"]["filter"].append(status)
+        for status in filters["report_statuses"]:
+            kwargs["statuses"]["filter"].append(str(rboa_engine.exit_codes[status]["status"]))
             i+=1
         # end for
     # end if
@@ -600,3 +607,74 @@ def query_alerts_pages():
     template = "rboa_nav/report_alerts_nav.html"
     
     return render_template(template, alerts=alerts, filters=filters)
+
+@bp.route("/get-alert-severity")
+def get_alert_severities():
+    """
+    Get the alert severities defined in the EBOA component.
+    """
+    current_app.logger.debug("Get alert severities")
+    return jsonify(eboa_alerts.alert_severity_codes)
+
+@bp.route("/query-jsonify-alerts-by-name")
+def query_jsonify_alerts_by_name():
+    """
+    Query all the alerts by name.
+    """
+    current_app.logger.debug("Query alerts by name")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["names"] = {"filter": search, "op": "=="}
+
+    alerts = query.get_alerts(**kwargs)
+    jsonified_alerts = [alert.jsonify() for alert in alerts]
+    return jsonify(jsonified_alerts)
+
+@bp.route("/query-jsonify-alerts-by-group")
+def query_jsonify_alerts_by_group():
+    """
+    Query all the alerts by group.
+    """
+    current_app.logger.debug("Query alerts by group")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["groups"] = {"filter": search, "op": "=="}
+
+    alerts = query.get_alerts(**kwargs)
+    jsonified_alerts = [alert.jsonify() for alert in alerts]
+    return jsonify(jsonified_alerts)
+
+@bp.route("/query-jsonify-report-alerts-by-generator")
+def query_jsonify_entity_alerts_by_generator():
+    """
+    Query all the entity alerts by generator.
+    """
+    current_app.logger.debug("Query entity alerts by generator")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["generators"] = {"filter": search, "op": "=="}
+
+    report_alerts = query.get_report_alerts(**kwargs)
+    jsonified_alerts = [report_alert.jsonify() for report_alert in report_alerts]
+    return jsonify(jsonified_alerts)

@@ -112,10 +112,10 @@
             </div>
             <div id="more-triggering-time-query-reports">
             </div>
-            <div class="row" id="reports-statuses-initial">
-              <div class="col-xs-3">
-                <label id="reports-statuses-initial-checkbox">Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="report_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-statuses-initial-in-text">
+            <div class="row">
+              <div class="col-xs-3 query-report-statuses">
+                <label id="reports-statuses-in-checkbox">Statuses (<input type="checkbox" name="statuses_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="report_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="reports-statuses-in-select">
                 </select>
               </div>
             </div>
@@ -152,6 +152,12 @@
                 <label>Limit</label>
                 <input type="text" class="form-control" style="width: 100%" name="limit" id="reports-limit" value="100"/>
               </div>
+            </div>
+            <!-- Specific alert filters -->
+            <div class="panel-group" style="margin-top: 12px">
+              {% with entity="report", url_prefix="rboa_nav" %}
+              {% include "eboa_nav/query_alerts_content.html" %}
+              {% endwith %}
             </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="reports-submit-button" name="query_reports">Query reports</button>

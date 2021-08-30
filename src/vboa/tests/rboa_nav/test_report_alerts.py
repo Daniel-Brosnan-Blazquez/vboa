@@ -31,6 +31,7 @@ from eboa.engine.errors import UndefinedEventLink, DuplicatedEventLinkRef, Wrong
 from eboa.debugging import debug
 import rboa.engine.engine as rboa_engine
 from rboa.engine.engine import Engine as EngineReport
+from rboa.datamodel.alerts import ReportAlert
 
 class TestReportAlertsTab(unittest.TestCase):
 
@@ -200,7 +201,7 @@ class TestReportAlertsTab(unittest.TestCase):
         assert number_of_elements == 3
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("alerts-nav-timeline")
+        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -1884,3 +1885,1239 @@ class TestReportAlertsTab(unittest.TestCase):
         no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
 
         assert no_data
+
+    def test_report_alerts_name_alert_filter(self):
+
+        filename = "report.html"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+
+        filename1 = "report_1.html"
+        file_path1 = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:37",
+                            "alert_cnf":{
+                                "name":"alert_name",
+                                "severity":"warning",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            }
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename1,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path1,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test2",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name2",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group2"
+                            }
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_rboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## Like ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("report-alerts-name-text")
+        input_element.send_keys("alert_name")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not Like ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("report-alerts-name-text")
+        input_element.send_keys("alert_name")
+
+        menu = Select(self.driver.find_element_by_id("report-alerts-name-operator"))
+        menu.select_by_visible_text("notlike")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("report-alerts-names-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_name")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("report-alerts-names-in-select"))
+        options.select_by_visible_text("alert_name")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the name input
+        input_element = self.driver.find_element_by_id("report-alerts-names-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_name2")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("report-alerts-names-in-select"))
+        options.select_by_visible_text("alert_name2")
+
+        notInButton = self.driver.find_element_by_id("report-alerts-names-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+    def test_report_alerts_group_alert_filter(self):
+
+        filename = "report.html"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+
+        filename1 = "report_1.html"
+        file_path1 = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+        
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:37",
+                            "alert_cnf":{
+                                "name":"alert_name",
+                                "severity":"warning",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            }
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename1,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path1,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test2",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name2",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group2"
+                            }
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_rboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## Like ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("report-alerts-group-text")
+        input_element.send_keys("alert_group")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not Like ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("report-alerts-group-text")
+        input_element.send_keys("alert_group")
+
+        menu = Select(self.driver.find_element_by_id("report-alerts-group-operator"))
+        menu.select_by_visible_text("notlike")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("report-alerts-groups-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_group")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("report-alerts-groups-in-select"))
+        options.select_by_visible_text("alert_group")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the group input
+        input_element = self.driver.find_element_by_id("report-alerts-groups-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("alert_group2")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("report-alerts-groups-in-select"))
+        options.select_by_visible_text("alert_group2")
+
+        notInButton = self.driver.find_element_by_id("report-alerts-groups-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+    def test_report_alerts_generator_alert_filter(self):
+
+        filename = "report.html"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+
+        filename1 = "report_1.html"
+        file_path1 = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+        
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:37",
+                            "alert_cnf":{
+                                "name":"alert_name",
+                                "severity":"warning",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            }
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename1,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path1,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test2",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name2",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group2"
+                            }
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_rboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## Like ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("report-alerts-generator-text")
+        input_element.send_keys("test")
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## Not Like ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("report-alerts-generator-text")
+        input_element.send_keys("test")
+
+        menu = Select(self.driver.find_element_by_id("report-alerts-generator-operator"))
+        menu.select_by_visible_text("notlike")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("report-alerts-generators-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("test")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("report-alerts-generators-in-select"))
+        options.select_by_visible_text("test")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the generator input
+        input_element = self.driver.find_element_by_id("report-alerts-generators-in-text")
+        functions.click(input_element)
+
+        input_element.send_keys("test2")
+        input_element.send_keys(Keys.LEFT_SHIFT)
+
+        options = Select(self.driver.find_element_by_id("report-alerts-generators-in-select"))
+        options.select_by_visible_text("test2")
+
+        notInButton = self.driver.find_element_by_id("report-alerts-generators-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+    def test_report_alerts_query_ingestion_time_alert_filter(self):
+
+        filename = "report.html"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:00:00",
+                            "validity_stop":"2018-06-07T08:00:00",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name1",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            }
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_rboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
+
+        ingestion_time = self.session.query(ReportAlert).all()[0].ingestion_time.isoformat()
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "==", 1)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+    """ def test_report_alerts_query_solved_time_alert_filter(self):
+
+        filename = "report.html"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+        
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:00:00",
+                            "validity_stop":"2018-06-07T08:00:00",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name1",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            }
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_rboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
+
+        solved_time = "2018-06-05T10:07:37"
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "==", 1)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data """
+
+    def test_report_alerts_query_notification_time_alert_filter(self):
+
+        filename = "report.html"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+        
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:00:00",
+                            "validity_stop":"2018-06-07T08:00:00",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:37",
+                            "alert_cnf":{
+                                "name":"alert_name1",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            }
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_rboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
+
+        notification_time = "2018-06-05T08:07:37"
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## == ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "==", 1)
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## > ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, ">", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## >= ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, ">=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## < ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "<", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+        ## <= ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "<=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1 and empty_element is False
+
+        ## != ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "!=", 1)
+
+        # Click on query button
+        submitButton = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        functions.click(submitButton)
+
+        # Check table generated
+        no_data = wait.until(EC.visibility_of_element_located((By.ID,"alerts-nav-no-data")))
+
+        assert no_data
+
+    def test_report_alerts_severities_alert_filter(self):
+
+        filename = "report.html"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+
+        filename1 = "report_1.html"
+        file_path1 = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
+
+        # Insert data
+        data = {
+                "operations":[
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test",
+                            "notification_time":"2018-06-05T08:07:37",
+                            "alert_cnf":{
+                                "name":"alert_name",
+                                "severity":"warning",
+                                "description":"Alert description",
+                                "group":"alert_group"
+                            }
+                            }
+                        ]
+                    },
+                    {
+                        "mode":"insert",
+                        "report":{
+                            "name":filename1,
+                            "group":"report_group",
+                            "group_description":"Group of reports for testing",
+                            "path":file_path1,
+                            "compress":"true",
+                            "generation_mode":"MANUAL",
+                            "validity_start":"2018-06-05T02:07:03",
+                            "validity_stop":"2018-06-05T08:07:36",
+                            "triggering_time":"2018-07-05T02:07:03",
+                            "generation_start":"2018-07-05T02:07:10",
+                            "generation_stop":"2018-07-05T02:15:10",
+                            "generator":"report_generator",
+                            "generator_version":"1.0",
+                        },
+                        "alerts":[
+                            {
+                            "message":"Alert message",
+                            "generator":"test2",
+                            "notification_time":"2018-06-05T08:07:36",
+                            "alert_cnf":{
+                                "name":"alert_name2",
+                                "severity":"critical",
+                                "description":"Alert description",
+                                "group":"alert_group2"
+                            }
+                            }
+                        ]
+                    }
+                ]
+                }
+
+        # Check data is correctly inserted
+        self.engine_rboa.data = data
+        assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
+
+        wait = WebDriverWait(self.driver,5)
+
+        ## In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the select option
+        functions.select_option_dropdown(self.driver, "report-alerts-severities-in-select", "critical")
+        
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generated
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+
+        assert number_of_elements == 1
+
+        ## Not In ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the select option
+        functions.select_option_dropdown(self.driver, "report-alerts-severities-in-select", "critical")
+
+        notInButton = self.driver.find_element_by_id("report-alerts-severities-in-checkbox")
+        if not notInButton.find_element_by_xpath("input").is_selected():
+            functions.select_checkbox(notInButton)
+        # end if
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 1
+
+        ## Multiple selection ##
+        self.driver.get("http://localhost:5000/rboa_nav/")
+
+        # Go to tab
+        functions.goToTab(self.driver,"Reports")
+        submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
+        
+        functions.display_specific_alert_filters(self.driver)
+
+        # Fill the select option
+        functions.select_option_dropdown(self.driver, "report-alerts-severities-in-select", "critical")
+        functions.select_option_dropdown(self.driver, "report-alerts-severities-in-select", "warning")
+
+        # Click on query button
+        functions.click(submit_button)
+
+        # Check table generate
+        report_alerts_table = wait.until(EC.visibility_of_element_located((By.ID,"alerts-table")))
+        number_of_elements = len(report_alerts_table.find_elements_by_xpath("tbody/tr"))
+        empty_element = len(report_alerts_table.find_elements_by_xpath("tbody/tr/td[contains(@class,'dataTables_empty')]")) > 0
+
+        assert number_of_elements == 2

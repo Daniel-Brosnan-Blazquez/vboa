@@ -18,6 +18,7 @@ function create_reports_groups_by_report_group(reports){
         groups.push({
             id: report_group,
             content: report_group,
+            treeLevel: 1,
             options: {
                 drawPoints: {
                     style: "circle"

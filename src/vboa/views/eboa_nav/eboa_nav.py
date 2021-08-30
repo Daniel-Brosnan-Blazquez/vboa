@@ -21,9 +21,11 @@ from flask import jsonify
 from eboa.engine.query import Query
 import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
+import eboa.engine.alerts as eboa_alerts
 
-# Import triggering
+# Import auxiliary functions
 from eboa.triggering.eboa_triggering import get_triggering_conf
+from vboa.functions import set_specific_alert_filters
 
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 query = Query()
@@ -153,7 +155,11 @@ def query_event_alerts(filters):
     """
     current_app.logger.debug("Query event alerts")
 
-    kwargs = set_filters_for_query_events_or_event_alerts(filters)
+    event_kwargs = set_filters_for_query_events_or_event_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**event_kwargs, **alert_kwargs}
 
     event_alerts = query.get_event_alerts(**kwargs)
 
@@ -167,8 +173,10 @@ def set_filters_for_query_events_or_event_alerts(filters):
 
     # Wether is query event or query event alerts
     ingestion_time_filter_name = "ingestion_time_filters" 
-    if "query_event_alerts" in filters: ingestion_time_filter_name = "event_ingestion_time_filters"
-        
+    if "query_event_alerts" in filters: 
+        ingestion_time_filter_name = "event_ingestion_time_filters"
+    # end if
+
     if filters["key"][0] != "":
         kwargs["keys"] = {"filter": filters["key"][0], "op": filters["key_operator"][0]}
     # end if
@@ -500,7 +508,11 @@ def query_annotation_alerts(filters):
     """
     current_app.logger.debug("Query annotation alerts")
 
-    kwargs = set_filters_for_query_annotations_or_annotation_alerts(filters)
+    annotation_kwargs = set_filters_for_query_annotations_or_annotation_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**annotation_kwargs, **alert_kwargs}
 
     annotation_alerts = query.get_annotation_alerts(**kwargs)
 
@@ -514,7 +526,9 @@ def set_filters_for_query_annotations_or_annotation_alerts(filters):
 
     # Wether is query annotation or query alert annotations
     ingestion_time_filter_name = "ingestion_time_filters"
-    if "query_annotation_alerts" in filters: ingestion_time_filter_name = "annotation_ingestion_time_filters"
+    if "query_annotation_alerts" in filters: 
+        ingestion_time_filter_name = "annotation_ingestion_time_filters"
+    # end if
     
     if filters["annotation_value_name"][0] != "":
         value_operators = filters["annotation_value_operator"]
@@ -733,7 +747,11 @@ def query_source_alerts(filters):
     """
     current_app.logger.debug("Query source alerts")
 
-    kwargs = set_filters_for_query_sources_or_source_alerts(filters)
+    source_kwargs = set_filters_for_query_sources_or_source_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**source_kwargs, **alert_kwargs}
 
     source_alerts = query.get_source_alerts(**kwargs)
 
@@ -1690,7 +1708,11 @@ def query_er_alerts(filters):
     """
     current_app.logger.debug("Query explicit reference alerts")
 
-    kwargs = set_filters_for_query_ers_or_er_alerts(filters)
+    er_kwargs = set_filters_for_query_ers_or_er_alerts(filters)
+
+    alert_kwargs = set_specific_alert_filters(filters)
+
+    kwargs = {**er_kwargs, **alert_kwargs}
 
     er_alerts = query.get_explicit_ref_alerts(**kwargs)
 
@@ -1704,8 +1726,10 @@ def set_filters_for_query_ers_or_er_alerts(filters):
 
     # Wether is query er or query er alerts
     groups_filter_name = "groups" 
-    if "query_explicit_ref_alerts" in filters: groups_filter_name = "explicit_ref_groups"
-        
+    if "query_explicit_ref_alerts" in filters: 
+        groups_filter_name = "explicit_ref_groups"
+    # end if    
+    
     if filters["er"][0] != "":
         op="notlike"
         if not "er_notlike_check" in filters:
@@ -2186,3 +2210,84 @@ def query_alerts_pages():
         template = "eboa_nav/explicit_reference_alerts_nav.html"
     # end if
     return render_template(template, alerts=alerts, filters=filters)
+
+@bp.route("/get-alert-severity")
+def get_alert_severities():
+    """
+    Get the alert severities defined in the EBOA component.
+    """
+    current_app.logger.debug("Get alert severities")
+    return jsonify(eboa_alerts.alert_severity_codes)
+
+@bp.route("/query-jsonify-alerts-by-name")
+def query_jsonify_alerts_by_name():
+    """
+    Query all the alerts by name.
+    """
+    current_app.logger.debug("Query alerts by name")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["names"] = {"filter": search, "op": "=="}
+
+    alerts = query.get_alerts(**kwargs)
+    jsonified_alerts = [alert.jsonify() for alert in alerts]
+    return jsonify(jsonified_alerts)
+
+@bp.route("/query-jsonify-alerts-by-group")
+def query_jsonify_alerts_by_group():
+    """
+    Query all the alerts by group.
+    """
+    current_app.logger.debug("Query alerts by group")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["groups"] = {"filter": search, "op": "=="}
+
+    alerts = query.get_alerts(**kwargs)
+    jsonified_alerts = [alert.jsonify() for alert in alerts]
+    return jsonify(jsonified_alerts)
+
+@bp.route("/query-jsonify-<string:entity>-alerts-by-generator")
+def query_jsonify_entity_alerts_by_generator(entity):
+    """
+    Query all the entity alerts by generator.
+    """
+    current_app.logger.debug("Query entity alerts by generator")
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset
+    kwargs["generators"] = {"filter": search, "op": "=="}
+
+    if entity == "event":
+        event_alerts = query.get_event_alerts(**kwargs)
+        jsonified_alerts = [event_alert.jsonify() for event_alert in event_alerts]
+    elif entity == "annotation":
+        annotation_alerts = query.get_annotation_alerts(**kwargs)
+        jsonified_alerts = [annotation_alert.jsonify() for annotation_alert in annotation_alerts]
+    elif entity == "source":
+        source_alerts = query.get_source_alerts(**kwargs)
+        jsonified_alerts = [source_alert.jsonify() for source_alert in source_alerts]
+    elif entity == "explicit-ref":
+        er_alerts = query.get_explicit_ref_alerts(**kwargs)
+        jsonified_alerts = [er_alert.jsonify() for er_alert in er_alerts]
+    return jsonify(jsonified_alerts)

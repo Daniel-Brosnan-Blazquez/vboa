@@ -289,6 +289,12 @@
                 <input type="text" class="form-control" style="width: 100%" name="limit" id="explicit-refs-limit" value="100"/>
               </div>
             </div>
+            <!-- Specific alert filters -->
+            <div class="panel-group" style="margin-top: 12px">
+              {% with entity="explicit-ref", url_prefix="eboa_nav" %}
+              {% include "eboa_nav/query_alerts_content.html" %}
+              {% endwith %}
+            </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="explicit-refs-submit-button" name="query_explicit_refs">Query explicit references</button>
 	            <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="explicit-ref-alerts-submit-button" name="query_explicit_ref_alerts">Query explicit reference alerts</button>

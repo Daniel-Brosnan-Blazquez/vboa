@@ -1,5 +1,5 @@
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-alerts-pages", elements = alerts, filters = filters %}
+{% with route = route_pagination, elements = alerts, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -26,7 +26,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <div id="alerts-nav-timeline">
+    <div id="timeline-general-view-alerts">
     </div>
   </div>
   <!-- /.panel-body -->

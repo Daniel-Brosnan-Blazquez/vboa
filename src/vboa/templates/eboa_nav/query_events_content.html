@@ -144,10 +144,10 @@
             <div id="more-start-stop-query-events">
             </div>
             <!-- Event duration -->
-            <div class="row" id="events-duration-initial">
+            <div class="row" id="events-event-duration-initial">
               {% include "eboa_nav/event_duration.html" %}
               <div>
-                <span onclick="vboa.add_event_duration('more-event-duration-query-events')" id="events-add-duration">
+                <span onclick="vboa.add_event_duration('more-event-duration-query-events')" id="events-add-event-duration">
                   <span class="glyphicon glyphicon-plus"></span>
                 </span>
               </div>
@@ -192,6 +192,12 @@
                 <label>Limit</label>
                 <input type="text" class="form-control" style="width: 100%" name="limit" id="events-limit" value="100"/>
               </div>
+            </div>
+            <!-- Specific alert filters -->
+            <div class="panel-group" style="margin-top: 12px">
+              {% with entity="event", url_prefix="eboa_nav" %}
+              {% include "eboa_nav/query_alerts_content.html" %}
+              {% endwith %}
             </div>
             <div>
               <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="events-submit-button" name="query_events">Query events</button>

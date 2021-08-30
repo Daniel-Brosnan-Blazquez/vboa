@@ -200,6 +200,14 @@ export function add_ingestion_time(dom_id){
     dates.add_ingestion_time(dom_id);
 }
 
+export function add_solved_time(dom_id){
+    dates.add_solved_time(dom_id);
+}
+
+export function add_notification_time(dom_id){
+    dates.add_notification_time(dom_id);
+}
+
 export function add_processing_duration(dom_id){
     dates.add_processing_duration(dom_id);
 }
@@ -417,6 +425,9 @@ export function create_alert_timeline(alerts, dom_id){
     });
 
 };
+
+/* Fill alert severities */
+jQuery(".query-alert-severities").one("focusin", alertFunctions.fill_severities);
 
 /*
 * ANNOTATIONS *
