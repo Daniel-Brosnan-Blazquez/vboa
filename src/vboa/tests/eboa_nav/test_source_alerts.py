@@ -1658,7 +1658,25 @@ class TestSourceAlertsTab(unittest.TestCase):
                          "ingestion_completeness": {
                               "check": "false",
                               "message": "MISSING DEPENDENCIES"}
-                }
+                },
+                "alerts":[
+                    {
+                    "message":"Alert message",
+                    "generator":"test",
+                    "notification_time":"2018-06-05T08:07:36",
+                    "alert_cnf":{
+                        "name":"alert_name1",
+                        "severity":"critical",
+                        "description":"Alert description",
+                        "group":"alert_group"
+                    },
+                    "entity":{
+                        "reference_mode":"by_ref",
+                        "reference":"source_1.xml",
+                        "type":"source"
+                    }
+                    }
+                ]
             },{
                 "mode": "insert",
                 "dim_signature": {
@@ -1675,7 +1693,25 @@ class TestSourceAlertsTab(unittest.TestCase):
                          "ingestion_completeness": {
                               "check": "false",
                               "message": "MISSING DEPENDENCIES"}
-                }
+                },
+                "alerts":[
+                    {
+                    "message":"Alert message",
+                    "generator":"test",
+                    "notification_time":"2018-06-05T08:07:38",
+                    "alert_cnf":{
+                        "name":"alert_name2",
+                        "severity":"critical",
+                        "description":"Alert description",
+                        "group":"alert_group"
+                    },
+                    "entity":{
+                        "reference_mode":"by_ref",
+                        "reference":"source_2.xml",
+                        "type":"source"
+                    }
+                    }
+                ]
             },{
                 "mode": "insert",
                 "dim_signature": {
@@ -1692,7 +1728,25 @@ class TestSourceAlertsTab(unittest.TestCase):
                          "ingestion_completeness": {
                               "check": "false",
                               "message": "MISSING DEPENDENCIES"}
-                }
+                },
+                "alerts":[
+                    {
+                    "message":"Alert message",
+                    "generator":"test",
+                    "notification_time":"2018-06-05T08:07:40",
+                    "alert_cnf":{
+                        "name":"alert_name3",
+                        "severity":"critical",
+                        "description":"Alert description",
+                        "group":"alert_group"
+                    },
+                    "entity":{
+                        "reference_mode":"by_ref",
+                        "reference":"source_3.xml",
+                        "type":"source"
+                    }
+                    }
+                ]
             }
         ]}
 
@@ -2009,7 +2063,25 @@ class TestSourceAlertsTab(unittest.TestCase):
                             "ingestion_completeness": {
                                     "check": "false",
                                     "message": "MISSING DEPENDENCIES"}
-                }
+                },
+                "alerts":[
+                    {
+                    "message":"Alert message",
+                    "generator":"test",
+                    "notification_time":"2018-06-05T08:07:36",
+                    "alert_cnf":{
+                        "name":"alert_name1",
+                        "severity":"critical",
+                        "description":"Alert description",
+                        "group":"alert_group"
+                    },
+                    "entity":{
+                        "reference_mode":"by_ref",
+                        "reference":"source.xml",
+                        "type":"source"
+                    }
+                    }
+                ]
         }]}
 
         # Example value for processing duration field
@@ -2152,7 +2224,25 @@ class TestSourceAlertsTab(unittest.TestCase):
                             "ingestion_completeness": {
                                     "check": "false",
                                     "message": "MISSING DEPENDENCIES"}
-                }
+                },
+                "alerts":[
+                    {
+                    "message":"Alert message",
+                    "generator":"test",
+                    "notification_time":"2018-06-05T08:07:36",
+                    "alert_cnf":{
+                        "name":"alert_name1",
+                        "severity":"critical",
+                        "description":"Alert description",
+                        "group":"alert_group"
+                    },
+                    "entity":{
+                        "reference_mode":"by_ref",
+                        "reference":"source.xml",
+                        "type":"source"
+                    }
+                    }
+                ]
         }]}
 
 
@@ -2292,7 +2382,25 @@ class TestSourceAlertsTab(unittest.TestCase):
                             "ingestion_completeness": {
                                     "check": "false",
                                     "message": "MISSING DEPENDENCIES"}
-                }
+                },
+                "alerts":[
+                    {
+                    "message":"Alert message",
+                    "generator":"test",
+                    "notification_time":"2018-06-05T08:07:36",
+                    "alert_cnf":{
+                        "name":"alert_name1",
+                        "severity":"critical",
+                        "description":"Alert description",
+                        "group":"alert_group"
+                    },
+                    "entity":{
+                        "reference_mode":"by_ref",
+                        "reference":"source.xml",
+                        "type":"source"
+                    }
+                    }
+                ]
         }]}
 
 
