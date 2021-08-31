@@ -37,23 +37,21 @@ def set_dict_app_security(path_files):
                             else: 
                                 decorator_name = str(decorator.func.id)
                             # end if
-                        else:
-                            continue
-                        # end if
 
-                        # Insert the relevant decorators into the list
-                        if decorator_name in ["route", "auth_required", "roles_accepted"]:
-                            function_decorators.append(decorator_name)
-                        # end if
+                            # Insert the relevant decorators into the list
+                            if decorator_name in ["route", "auth_required", "roles_accepted"]:
+                                function_decorators.append(decorator_name)
+                            # end if
 
-                        # Check whether the decorator is @roles_accepted type to obtain the roles
-                        if decorator_name == "route":
-                            route = [str(arg.s) for arg in decorator.args][0]
-                        # end if
+                            # Check whether the decorator is @roles_accepted type to obtain the roles
+                            if decorator_name == "route":
+                                route = [str(arg.s) for arg in decorator.args][0]
+                            # end if
 
-                        # Check whether the decorator is @roles_accepted type to obtain the roles
-                        if decorator_name == "roles_accepted":
-                            roles = [str(arg.s) for arg in decorator.args]
+                            # Check whether the decorator is @roles_accepted type to obtain the roles
+                            if decorator_name == "roles_accepted":
+                                roles = [str(arg.s) for arg in decorator.args]
+                            # end if
                         # end if
 
                     # end for
