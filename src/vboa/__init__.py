@@ -114,9 +114,9 @@ def create_app():
     def internal_server_error(e):
         return render_template("panel/error.html"), 500
 
-    # @app.errorhandler(403)
-    # def page_forbidden(e):
-    #     return render_template("panel/error.html"), 403
+    @app.errorhandler(403)
+    def page_forbidden(e):
+        return render_template("panel/forbidden.html"), 403
     
     ########
     # Tests
