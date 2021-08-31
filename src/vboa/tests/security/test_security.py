@@ -30,7 +30,7 @@ class TestSecurity(unittest.TestCase):
 
         # Obtain the paths of the files containing decorators like "@.*route"
         module_path = os.path.dirname(vboa.__file__)
-        command = 'PYFILES=`find {} -name "*py"`; grep -sl "^[ \t]*@.*route" $PYFILES'.format(module_path)
+        command = 'PYFILES=`find {} -path {}/tests -prune -o -name "*py"`; grep -sl "^[ \t]*@.*route" $PYFILES'.format(module_path, module_path)
         path_files = subprocess.run(command, shell=True, stdout=PIPE).stdout.decode()
         
         # Expected dict and the actual dict of my app
