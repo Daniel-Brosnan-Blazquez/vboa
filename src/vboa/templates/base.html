@@ -52,15 +52,17 @@
         <ul class="nav navbar-top-links navbar-right">
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+              Welcome {{ current_user.username }}<i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
-              <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-              </li>
-              <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-              </li>
+              <li><i class="fa fa-user fa-fw"></i> {{ current_user.username }}</li>
+              <li><i class="fa fa-at fa-fw"></i> {{ current_user.email }}</li>
+              <li><i class="fa fa-users fa-fw"></i> {{ current_user.group }}</li>
+              {% for role in current_user.roles %}
+              <li>Role: {{ role.name }}</li>
+              {% endfor %}
               <li class="divider"></li>
-              <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+              <li><a href="{{ url_for_security('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
               </li>
             </ul>
             <!-- /.dropdown-user -->
