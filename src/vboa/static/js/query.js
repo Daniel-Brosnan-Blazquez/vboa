@@ -8,6 +8,9 @@ export function request_info(url, callback, parameters){
             if (this.readyState == 4 && this.status == 200) {
                 return callback(parameters, JSON.parse(this.responseText));
             }
+            else if (this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
+            }
         };
     }
     xmlhttp.open("GET", url, true);
@@ -32,6 +35,9 @@ export function request_info_no_args(url, callback, show_loader = false){
                 }
                 return returned_value
             }
+            else if (this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
+            }
         };
     }
     xmlhttp.open("GET", url, true);
@@ -55,6 +61,9 @@ export function request_info_json(url, callback, json, show_loader = false){
                     loader.className = ""
                 }
                 return returned_value
+            }
+            else if (this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
             }
         };
     }
@@ -97,6 +106,9 @@ export function request_info_form_data(url, callback, form_data){
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 return callback(this.responseText, form_data);
+            }
+            else if (this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
             }
         };
     }
