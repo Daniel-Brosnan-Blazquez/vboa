@@ -20,14 +20,13 @@ setup(name="vboa",
           "eboa",
           "Flask",
           "Flask-DebugToolbar",
-          "gunicorn"
+          "flask-security-too",
+          "bcrypt",
+          "gunicorn",
+          "bleach"
       ],
       extras_require={
           "tests" :[
-              "nose",
-              "before_after",
-              "coverage",
-              "termcolor",
               "selenium"
           ]
       },

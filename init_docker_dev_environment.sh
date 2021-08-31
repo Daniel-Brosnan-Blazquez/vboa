@@ -324,18 +324,18 @@ if [ "$(docker images boa_$CONTAINERS_LABEL -q)" ];
 then
     echo -e "The image boa_$CONTAINERS_LABEL was already available. So, it is not going to be re-built."
 else
-    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP --build-arg PATH_TO_BOA_CERTIFICATES=$PATH_TO_BOA_CERTIFICATES -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 fi
 
 # Initialize the eboa database
 if [ "$PATH_TO_TAILORED" != "" ] && [ "$PATH_TO_COMMON_BASE" != "" ];
 then
-    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP -v $PATH_TO_COMMON_BASE:/$COMMON_BASE_FOLDER boa_$CONTAINERS_LABEL
+    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP -v $PATH_TO_COMMON_BASE:/$COMMON_BASE_FOLDER boa_$CONTAINERS_LABEL
 elif [ "$PATH_TO_TAILORED" != "" ];
 then
-    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_$CONTAINERS_LABEL
+    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa -v $PATH_TO_TAILORED:/$APP boa_$CONTAINERS_LABEL
 else
-    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_$CONTAINERS_LABEL
+    docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_$CONTAINERS_LABEL
 fi
 
 # Link and copy configurations
@@ -344,11 +344,14 @@ do
     file_name=`basename $file`
     docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/config/$file_name /resources_path/$file_name"
 done
-for file in `find $PATH_TO_VBOA/src/config/ -name '*' -type f`;
-do
-    file_name=`basename $file`
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/config/$file_name /resources_path/$file_name"
-done
+if [ -d $PATH_TO_VBOA/src/config/ ];
+then
+    for file in `find $PATH_TO_VBOA/src/config/ -name '*' -type f`;
+    do
+        file_name=`basename $file`
+        docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/config/$file_name /resources_path/$file_name"
+    done
+fi
 #  (Change these operations to symbolic links)
 for file in `find $PATH_TO_BOA_TAILORING_CONFIGURATION -name '*' -type f`;
 do
@@ -388,6 +391,7 @@ docker restart $APP_CONTAINER
 
 # Install web packages
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
 
 # Install scripts
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
@@ -395,6 +399,7 @@ docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa
 # Link datamodels
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/eboa_data_model.sql /datamodel/'
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/sboa_data_model.sql /datamodel/'
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/datamodel/uboa_data_model.sql /datamodel/'
 
 # Install cron activities
 echo "Installing cron activities"
@@ -417,7 +422,7 @@ docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby
 while true
 do
     echo "Trying to initialize EBOA, SBOA, minArc and ORC databases..."
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; eboa_init.py -o -s -y"
+    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; boa_init.py -e -s -u -o -y"
     status=$?
     if [ $status -ne 0 ]
     then
