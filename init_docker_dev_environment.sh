@@ -362,6 +362,10 @@ do
     docker cp $file $APP_CONTAINER:/orc_packages
 done
 
+# Leave users configuration as the default for EBOA so that developers have always the same users to access to the system
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "rm /resources_path/users.json"
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/config/users.json /resources_path/users.json"
+
 # Copy BOA certificates for SSL connection
 if [ "$PATH_TO_BOA_CERTIFICATES" != "" ];
 then
