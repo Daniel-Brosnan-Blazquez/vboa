@@ -422,7 +422,7 @@ docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby
 while true
 do
     echo "Trying to initialize EBOA, SBOA, minArc and ORC databases..."
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; eboa_init.py -o -s -y"
+    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; eboa_init.py -o -s -u -y"
     status=$?
     if [ $status -ne 0 ]
     then
