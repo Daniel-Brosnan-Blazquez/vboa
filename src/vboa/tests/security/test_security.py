@@ -36,7 +36,7 @@ class TestSecurity(unittest.TestCase):
         # Expected dict and the actual dict of my app
         dict_app_security_actual = security_functions.set_dict_app_security(path_files)
         
-        path_json_file = "inputs/app_security.json"
+        path_json_file = os.path.dirname(os.path.abspath(__file__)) + "/inputs/app_security.json"
         dict_app_security_expected = json.load(open(path_json_file))
         
         assert dict_app_security_actual == dict_app_security_expected

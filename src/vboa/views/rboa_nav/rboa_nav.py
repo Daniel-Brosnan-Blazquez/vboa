@@ -31,6 +31,9 @@ from rboa.engine.functions import get_rboa_archive_path
 from rboa.triggering.rboa_triggering import get_reporting_conf
 from vboa.functions import set_specific_alert_filters
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 archive_path = get_rboa_archive_path()
 
 bp = Blueprint("rboa_nav", __name__, url_prefix="/rboa_nav")
@@ -42,6 +45,8 @@ engine = Engine()
 ##############
 
 @bp.route("/", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def navigate():
     """
     Initial panel for the RBOA navigation functionality.
@@ -54,6 +59,8 @@ def navigate():
     return render_template("rboa_nav/query_reports.html", filters = filters)
 
 @bp.route("/query-reports", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_reports_and_render():
     """
     Query reports amd render.
@@ -76,6 +83,8 @@ def query_reports_and_render():
     return render_template("rboa_nav/query_reports.html")
 
 @bp.route("/query-reports-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_reports_pages():
     """
     Query reports using pages and render.
@@ -281,6 +290,8 @@ def set_filters_for_query_reports_or_report_alerts(filters):
     return kwargs
 
 @bp.route("/query-report/<uuid:report_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_report(report_uuid):
     """
     Query report corresponding to the UUID received.
@@ -298,6 +309,8 @@ def query_report(report_uuid):
     return html
 
 @bp.route("/query-report-by-name/<string:report_name>", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_report_by_name(report_name):
     """
     Query report by name
@@ -354,6 +367,8 @@ def retrieve_report_content(report):
     return render_template("panel/error.html")
 
 @bp.route("/query-jsonify-reports")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_reports():
     """
     Query all the reports.
@@ -375,6 +390,8 @@ def query_jsonify_reports():
     return jsonify(jsonified_reports)
 
 @bp.route("/query-jsonify-reports-by-report-group")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_reports_by_report_group():
     """
     Query all the reports.
@@ -396,6 +413,8 @@ def query_jsonify_reports_by_report_group():
     return jsonify(jsonified_reports)
 
 @bp.route("/query-jsonify-report-groups")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_report_groups():
     """
     Query report groups.
@@ -417,6 +436,8 @@ def query_jsonify_report_groups():
     return jsonify(jsonified_report_groups)
 
 @bp.route("/query-jsonify-report-statuses/<uuid:report_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_report_statuses(report_uuid):
     """
     Query statuses related to the report with the corresponding received UUID.
@@ -427,6 +448,8 @@ def query_jsonify_report_statuses(report_uuid):
     return jsonify(jsonified_statuses)
 
 @bp.route("/get-report-status")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def get_report_status():
     """
     Get the report statuses defined in the RBOA component.
@@ -439,6 +462,8 @@ def get_report_status():
 #############
 
 @bp.route("/reporting_triggering", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst")
 def show_execute_reports():
     """
     Show the generators of reporting.
@@ -457,6 +482,8 @@ def show_execute_reports():
     return render_template("rboa_nav/execute_reports.html", generators=generators)
 
 @bp.route("/execute-reports", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst")
 def execute_reports():
     """
     Execute selected reports.
@@ -504,6 +531,8 @@ def trigger_generator(parameters):
 ###########
 ## Remove reports
 @bp.route("/remove_reports", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def remove_reports():
     """
     Remove selected reports.
@@ -552,6 +581,8 @@ def remove_report(report):
 
 ## Re-generate reports
 @bp.route("/re_generate_reports", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst")
 def re_generate_reports():
     """
     Re-generate selected reports.
@@ -596,6 +627,8 @@ def re_generate_report(report):
 # end def
 
 @bp.route("/query-alerts-pages", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_alerts_pages():
     """
     Query alerts using pages and render.
@@ -609,6 +642,8 @@ def query_alerts_pages():
     return render_template(template, alerts=alerts, filters=filters)
 
 @bp.route("/get-alert-severity")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def get_alert_severities():
     """
     Get the alert severities defined in the EBOA component.
@@ -617,6 +652,8 @@ def get_alert_severities():
     return jsonify(eboa_alerts.alert_severity_codes)
 
 @bp.route("/query-jsonify-alerts-by-name")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_alerts_by_name():
     """
     Query all the alerts by name.
@@ -638,6 +675,8 @@ def query_jsonify_alerts_by_name():
     return jsonify(jsonified_alerts)
 
 @bp.route("/query-jsonify-alerts-by-group")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_alerts_by_group():
     """
     Query all the alerts by group.
@@ -659,6 +698,8 @@ def query_jsonify_alerts_by_group():
     return jsonify(jsonified_alerts)
 
 @bp.route("/query-jsonify-report-alerts-by-generator")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_entity_alerts_by_generator():
     """
     Query all the entity alerts by generator.

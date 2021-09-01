@@ -25,6 +25,9 @@ from eboa.engine.engine import Engine
 # Import SQLAlchemy exceptions
 from sqlalchemy.orm.exc import DetachedInstanceError
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 bp = Blueprint("ingestion_control", __name__, url_prefix="/ingestion_control")
 query = Query()
 
@@ -70,6 +73,8 @@ def get_start_stop_filters(filters):
     return start_filter, stop_filter
 
 @bp.route("/ingestion_control", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def show_ingestion_control():
     """
     Ingestion control view of the BOA.
@@ -115,6 +120,8 @@ def show_ingestion_control():
     return query_sources_and_render(start_filter, stop_filter, template_name = template_name, filters = filters)
 
 @bp.route("/ingestion-control-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_ingestion_control_pages():
     """
     Ingestion control view of the BOA using pages.
@@ -128,6 +135,8 @@ def query_ingestion_control_pages():
     return query_sources_and_render(start_filter, stop_filter, template_name = template_name, filters = filters)
 
 @bp.route("/sliding_ingestion_control_parameters", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def show_sliding_ingestion_control_parameters():
     """
     Ingestion control view of the BOA.
@@ -157,6 +166,8 @@ def show_sliding_ingestion_control_parameters():
     return query_sources_and_render(start_filter, stop_filter, sliding_window, template_name = template_name)
     
 @bp.route("/sliding_ingestion_control", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def show_sliding_ingestion_control():
     """
     Ingestion control view of the BOA.

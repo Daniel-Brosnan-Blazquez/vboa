@@ -25,6 +25,9 @@ from eboa.engine.engine import Engine
 # Import SQLAlchemy exceptions
 from sqlalchemy.orm.exc import DetachedInstanceError
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 bp = Blueprint("general-view-alerts", __name__, url_prefix="/general-view-alerts")
 query = Query()
 engine = Engine()
@@ -71,6 +74,8 @@ def get_start_stop_filters(filters):
     return start_filter, stop_filter
 
 @bp.route("/", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def show_general_view_alerts():
     """
     General view of alerts view of the BOA.
@@ -109,6 +114,8 @@ def show_general_view_alerts():
     return query_and_render(start_filter, stop_filter, filters = filters)
 
 @bp.route("/general-view-alerts-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_general_view_alerts_pages():
     """
     General view of alerts view of the BOA using pages.
@@ -120,6 +127,8 @@ def query_general_view_alerts_pages():
     return query_and_render(start_filter, stop_filter, filters = filters)
 
 @bp.route("/sliding-general-view-alerts-parameters", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def show_sliding_general_view_alerts_parameters():
     """
     General view of alerts view of the BOA.
@@ -148,6 +157,8 @@ def show_sliding_general_view_alerts_parameters():
     return query_and_render(start_filter, stop_filter, sliding_window)
     
 @bp.route("/sliding-general-view-alerts", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def show_sliding_general_view_alerts():
     """
     General view of alerts view of the BOA.

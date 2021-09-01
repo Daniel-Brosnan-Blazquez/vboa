@@ -60,6 +60,8 @@ def execute_command(command):
 # ORC
 ###
 @bp.route("/check-orc-status")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def check_orc_status():
     """
     Check ORC status.
@@ -84,6 +86,8 @@ def check_orc_status():
     return jsonify(orc_status)
 
 @bp.route("/switch-on-orc")
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
 def switch_on_orc():
     """
     Switch on ORC.
@@ -96,6 +100,8 @@ def switch_on_orc():
     return jsonify(command_status)
 
 @bp.route("/switch-off-orc")
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
 def switch_off_orc():
     """
     Switch off ORC.
@@ -111,6 +117,8 @@ def switch_off_orc():
 # CRON
 ###
 @bp.route("/check-cron-status")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def check_cron_status():
     """
     Check CRON status.
@@ -128,6 +136,8 @@ def check_cron_status():
     return jsonify(cron_status)
 
 @bp.route("/switch-on-cron")
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
 def switch_on_cron():
     """
     Switch on CRON.
@@ -140,6 +150,8 @@ def switch_on_cron():
     return jsonify(command_status)
 
 @bp.route("/switch-off-cron")
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
 def switch_off_cron():
     """
     Switch off CRON.
@@ -155,6 +167,8 @@ def switch_off_cron():
 # Schduler
 ###
 @bp.route("/check-scheduler-status")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def check_scheduler_status():
     """
     Check scheduler status.
@@ -163,6 +177,8 @@ def check_scheduler_status():
     return jsonify(boa_scheduler.status_scheduler())
 
 @bp.route("/switch-on-scheduler")
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
 def switch_on_scheduler():
     """
     Switch on scheduler.
@@ -175,6 +191,8 @@ def switch_on_scheduler():
     return jsonify(command_status)
 
 @bp.route("/switch-off-scheduler")
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
 def switch_off_scheduler():
     """
     Switch off scheduler.

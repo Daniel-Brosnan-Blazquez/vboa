@@ -21,6 +21,9 @@ from eboa.engine.query import Query
 import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 bp = Blueprint("health", __name__, url_prefix="/health")
 query = Query()
 
@@ -68,6 +71,8 @@ def get_start_stop_filters(filters):
 
 
 @bp.route("/health", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def show_health():
     """
     Health monitoring view of the BOA.
@@ -109,6 +114,8 @@ def show_health():
     return query_health_and_render(start_filter, stop_filter, template_name = template_name, filters = filters)
 
 @bp.route("/health-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def query_health_pages():
     """
     Health monitoring view of the BOA using pages.
@@ -122,6 +129,8 @@ def query_health_pages():
     return query_health_and_render(start_filter, stop_filter, template_name = template_name, filters = filters)
 
 @bp.route("/sliding_health_parameters", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def show_sliding_health_parameters():
     """
     Health monitoring view of the BOA.
@@ -151,6 +160,8 @@ def show_sliding_health_parameters():
     return query_health_and_render(start_filter, stop_filter, sliding_window, template_name = template_name)
     
 @bp.route("/sliding_health", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def show_sliding_health():
     """
     Health monitoring view of the BOA.

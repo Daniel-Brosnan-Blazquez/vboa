@@ -25,7 +25,7 @@ path_files = subprocess.run(command, shell=True, stdout=PIPE).stdout.decode()
 # Generate dictionary with relevant security information
 dict_app_security = security_functions.set_dict_app_security(path_files)
 
-path_json_file = "inputs/app_security_to_review.json"
+path_json_file = os.path.dirname(os.path.abspath(__file__)) + "/inputs/app_security.json"
 
 with open(path_json_file, "w") as outfile:
     json.dump(dict_app_security, outfile, indent=4)

@@ -23,6 +23,9 @@ from rboa.engine.engine import Engine
 # Import vboa security
 from vboa.security import auth_required, roles_accepted
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 bp = Blueprint("screenshots", __name__)
 
 version="1.0"
@@ -31,6 +34,8 @@ version="1.0"
 # Screenshots
 ###
 @bp.route("/save-screenshot", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def save_screenshot():
     """
     Save screenshot.

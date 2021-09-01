@@ -8,8 +8,13 @@ export function request_info(url, callback, parameters){
             if (this.readyState == 4 && this.status == 200) {
                 return callback(parameters, JSON.parse(this.responseText));
             }
-            else if (this.status == 403){
-                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
+            else if (this.readyState == 4 && this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url);
+                var permission_denied_response = {
+                    "return_code": 403
+                };
+
+                return callback(parameters, permission_denied_response);
             }
         };
     }
@@ -35,8 +40,14 @@ export function request_info_no_args(url, callback, show_loader = false){
                 }
                 return returned_value
             }
-            else if (this.status == 403){
-                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
+            else if (this.readyState == 4 && this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url);
+                var permission_denied_response = {
+                    "return_code": 403
+                };
+
+                return callback(parameters, permission_denied_response);
+
             }
         };
     }
@@ -62,8 +73,13 @@ export function request_info_json(url, callback, json, show_loader = false){
                 }
                 return returned_value
             }
-            else if (this.status == 403){
-                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
+            else if (this.readyState == 4 && this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url);
+                var permission_denied_response = {
+                    "return_code": 403
+                };
+
+                return callback(parameters, permission_denied_response);
             }
         };
     }
@@ -107,8 +123,13 @@ export function request_info_form_data(url, callback, form_data){
             if (this.readyState == 4 && this.status == 200) {
                 return callback(this.responseText, form_data);
             }
-            else if (this.status == 403){
-                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url)
+            else if (this.readyState == 4 && this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url);
+                var permission_denied_response = {
+                    "return_code": 403
+                };
+
+                return callback(parameters, permission_denied_response);
             }
         };
     }

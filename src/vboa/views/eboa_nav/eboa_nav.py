@@ -27,11 +27,16 @@ import eboa.engine.alerts as eboa_alerts
 from eboa.triggering.eboa_triggering import get_triggering_conf
 from vboa.functions import set_specific_alert_filters
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 bp = Blueprint("eboa_nav", __name__, url_prefix="/eboa_nav")
 query = Query()
 engine = Engine()
 
 @bp.route("/", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def navigate():
     """
     Initial panel for the EBOA navigation functionality.
@@ -39,6 +44,8 @@ def navigate():
     return render_template("eboa_nav/query_events.html")
 
 @bp.route("/query-events", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_events_and_render():
     """
     Query events and render.
@@ -66,6 +73,8 @@ def query_events_and_render():
     return render_template("eboa_nav/query_events.html")
 
 @bp.route("/query-events-pages", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_events_pages():
     """
     Query events using pages and render.
@@ -98,6 +107,8 @@ def define_what_to_show_events(filters):
     return show
 
 @bp.route("/query-events-by-er/<string:er>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_events_by_er(er):
     """
     Query events associated to the explicit reference received.
@@ -118,6 +129,8 @@ def query_events_by_er(er):
     return render_template("eboa_nav/events_nav.html", events=events, events_geometries=events_geometries, show=show, filters=filters)
 
 @bp.route("/query-events-by-source-uuid/<string:source_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_events_by_source_uuid(source_uuid):
     """
     Query events associated to the source corresponding to the UUID received.
@@ -347,6 +360,8 @@ def set_filters_for_query_events_or_event_alerts(filters):
     return kwargs
 
 @bp.route("/query-event-links/<uuid:event_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_event_links_and_render(event_uuid):
     """
     Query events linked to the event corresponding to the UUID received and render.
@@ -367,6 +382,8 @@ def query_event_links(event_uuid):
     return links
 
 @bp.route("/query-jsonify-event-values/<uuid:event_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_event_values(event_uuid):
     """
     Query values related to the event with the corresponding received UUID.
@@ -377,6 +394,8 @@ def query_jsonify_event_values(event_uuid):
     return jsonify(jsonified_values)
 
 @bp.route("/query-annotations", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotations_and_render():
     """
     Query annotations and render.
@@ -404,6 +423,8 @@ def query_annotations_and_render():
     return render_template("eboa_nav/query_annotations.html")
 
 @bp.route("/query-annotations-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotations_pages():
     """
     Query annotations using pages and render.
@@ -433,6 +454,8 @@ def define_what_to_show_annotations(filters):
     return show
 
 @bp.route("/query-annotations-by-er/<string:er>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotations_by_er(er):
     """
     Query annotations associated to the explicit reference received.
@@ -451,6 +474,8 @@ def query_annotations_by_er(er):
     return render_template("eboa_nav/annotations_nav.html", annotations=annotations, annotations_geometries=annotations_geometries, show=show, filters=filters)
 
 @bp.route("/query-annotation/<uuid:annotation_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotation(annotation_uuid):
     """
     Query annotation corresponding to the UUID received.
@@ -472,6 +497,8 @@ def query_annotation(annotation_uuid):
     return render_template("eboa_nav/annotations_nav.html", annotations=annotation, annotations_geometries=annotation_geometries, show=show, filters=filters)
 
 @bp.route("/query-annotations-by-source-uuid/<string:source_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotations_by_source_uuid(source_uuid):
     """
     Query annotations associated to the source corresponding to the UUID received.
@@ -657,6 +684,8 @@ def set_filters_for_query_annotations_or_annotation_alerts(filters):
     return kwargs
 
 @bp.route("/query-jsonify-annotation-values/<uuid:annotation_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_annotation_values(annotation_uuid):
     """
     Query values related to the annotation with the corresponding received UUID.
@@ -667,6 +696,8 @@ def query_jsonify_annotation_values(annotation_uuid):
     return jsonify(jsonified_values)
 
 @bp.route("/query-sources", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_sources_and_render():
     """
     Query sources amd render.
@@ -689,6 +720,8 @@ def query_sources_and_render():
     return render_template("eboa_nav/query_sources.html")
 
 @bp.route("/query-sources-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_sources_pages():
     """
     Query sources using pages and render.
@@ -965,6 +998,8 @@ def set_filters_for_query_sources_or_source_alerts(filters):
     return kwargs
 
 @bp.route("/query-source/<uuid:source_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_source(source_uuid):
     """
     Query source corresponding to the UUID received.
@@ -985,6 +1020,8 @@ def query_source(source_uuid):
     return render_template("eboa_nav/sources_nav.html", sources=source, show=show, filters=filters)
 
 @bp.route("/query-sources-by-name/<string:name>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_sources_by_name(name):
     """
     Query sources corresponding to the name received.
@@ -1005,6 +1042,8 @@ def query_sources_by_name(name):
     return render_template("eboa_nav/sources_nav.html", sources=sources, show=show, filters=filters)
 
 @bp.route("/query-sources-by-dim/<uuid:dim_signature_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_sources_by_dim(dim_signature_uuid):
     """
     Query sources associated to the DIM signature corresponding to the UUID received.
@@ -1025,6 +1064,8 @@ def query_sources_by_dim(dim_signature_uuid):
     return render_template("eboa_nav/sources_nav.html", sources=sources, show=show, filters=filters)
 
 @bp.route("/query-jsonify-sources")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_sources():
     """
     Query all the sources.
@@ -1049,6 +1090,8 @@ def query_jsonify_sources():
     return jsonify(jsonified_sources)
 
 @bp.route("/query-jsonify-sources-by-processor")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_sources_by_processor():
     """
     Query all the sources.
@@ -1073,6 +1116,8 @@ def query_jsonify_sources_by_processor():
     return jsonify(jsonified_sources)
 
 @bp.route("/query-jsonify-source-statuses/<uuid:source_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_source_statuses(source_uuid):
     """
     Query statuses related to the source with the corresponding received UUID.
@@ -1083,6 +1128,8 @@ def query_jsonify_source_statuses(source_uuid):
     return jsonify(jsonified_statuses)
 
 @bp.route("/get-source-status")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def get_source_status():
     """
     Get the source statuses defined in the EBOA component.
@@ -1133,6 +1180,8 @@ def prepare_reingestion_of_sources_and_dependencies(sources, source_uuids_matchi
     return
 
 @bp.route("/prepare-reingestion-of-sources", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def prepare_reingestion_of_sources():
     """
     Prepare reingestion of selected sources.
@@ -1154,6 +1203,8 @@ def prepare_reingestion_of_sources():
     return render_template("eboa_nav/reingestion_of_sources.html", sources_matching_triggering_rule=sources_matching_triggering_rule, sources_not_matching_triggering_rule=sources_not_matching_triggering_rule)
 
 @bp.route("/prepare-deletion-of-sources", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def prepare_deletion_of_sources():
     """
     Prepare deletion of selected sources.
@@ -1167,6 +1218,8 @@ def prepare_deletion_of_sources():
     return render_template("eboa_nav/deletion_of_sources.html", sources=sources)
 
 @bp.route("/download-source/<string:source_name>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def download_source(source_name):
     """
     Download of selected source.
@@ -1186,6 +1239,8 @@ def download_source(source_name):
     return send_from_directory(filepath, filename, as_attachment=True)
 
 @bp.route("/delete-sources", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def delete_sources():
     """
     Delete selected sources.
@@ -1197,6 +1252,8 @@ def delete_sources():
     return {"status": "OK"}
 
 @bp.route("/query-gauges", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_gauges_and_render():
     """
     Query gauges amd render.
@@ -1220,6 +1277,8 @@ def query_gauges_and_render():
     return render_template("eboa_nav/query_gauges.html")
 
 @bp.route("/query-gauges-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_gauges_pages():
     """
     Query gauges using pages and render.
@@ -1250,6 +1309,8 @@ def define_what_to_show_gauges(filters):
     return show
     
 @bp.route("/query-gauges-by-dim/<uuid:dim_signature_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_gauges_by_dim(dim_signature_uuid):
     """
     Query gauges associated to the DIM signature corresponding to the UUID received.
@@ -1428,6 +1489,8 @@ def query_gauges(filters):
     return gauges
 
 @bp.route("/query-jsonify-gauges-by-name")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_gauges_by_name():
     """
     Query all the gauges.
@@ -1449,6 +1512,8 @@ def query_jsonify_gauges_by_name():
     return jsonify(jsonified_gauges)
 
 @bp.route("/query-jsonify-gauges-by-system")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_gauges_by_system():
     """
     Query all the gauges.
@@ -1470,6 +1535,8 @@ def query_jsonify_gauges_by_system():
     return jsonify(jsonified_gauges)
 
 @bp.route("/query-annotation-cnfs", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotation_cnfs_and_render():
     """
     Query annotation configurations amd render.
@@ -1486,6 +1553,8 @@ def query_annotation_cnfs_and_render():
     return render_template("eboa_nav/query_annotation_cnfs.html")
 
 @bp.route("/query-annotation-cnfs-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotation_cnfs_pages():
     """
     Query annotation configurations using pages and render.
@@ -1497,6 +1566,8 @@ def query_annotation_cnfs_pages():
     return render_template("eboa_nav/annotation_cnfs_nav.html", annotation_cnfs=annotation_cnfs, filters=filters)
 
 @bp.route("/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_annotation_cnfs_by_dim(dim_signature_uuid):
     """
     Query annotation configurations associated to the DIM signature corresponding to the UUID received.
@@ -1596,6 +1667,8 @@ def query_annotation_cnfs(filters):
     return annotation_cnfs
 
 @bp.route("/query-jsonify-annotation-cnfs-by-name")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_annotation_cnfs_by_name():
     """
     Query all the annotation configurations.
@@ -1617,6 +1690,8 @@ def query_jsonify_annotation_cnfs_by_name():
     return jsonify(jsonified_annotation_cnfs)
 
 @bp.route("/query-jsonify-annotation-cnfs-by-system")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_annotation_cnfs_by_system():
     """
     Query all the annotation configurations.
@@ -1638,6 +1713,8 @@ def query_jsonify_annotation_cnfs_by_system():
     return jsonify(jsonified_annotation_cnfs)
 
 @bp.route("/query-jsonify-keys")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_keys():
     """
     Query all the keys.
@@ -1659,6 +1736,8 @@ def query_jsonify_keys():
     return jsonify(jsonified_keys)
 
 @bp.route("/query-ers", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_ers_and_render():
     """
     Query explicit references and render.
@@ -1680,6 +1759,8 @@ def query_ers_and_render():
     return render_template("eboa_nav/query_explicit_references.html")
 
 @bp.route("/query-ers-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_ers_pages():
     """
     Query explicit references using pages and render.
@@ -1987,6 +2068,8 @@ def set_filters_for_query_ers_or_er_alerts(filters):
     return kwargs
 
 @bp.route("/query-er/<uuid:explicit_ref_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_er(explicit_ref_uuid):
     """
     Query explicit reference corresponding to the UUID received.
@@ -2001,6 +2084,8 @@ def query_er(explicit_ref_uuid):
     return render_template("eboa_nav/explicit_references_nav.html", ers=er, filters=filters)
 
 @bp.route("/query-er-by-name/<string:name>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_er_by_name(name):
     """
     Query explicit reference corresponding to the name received.
@@ -2015,6 +2100,8 @@ def query_er_by_name(name):
     return render_template("eboa_nav/explicit_references_nav.html", ers=er, filters=filters)
 
 @bp.route("/query-er-links/<uuid:explicit_ref_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_er_links_and_render(explicit_ref_uuid):
     """
     Query explicit references linked to the explicit reference corresponding to the UUID received and render.
@@ -2034,6 +2121,8 @@ def query_er_links(explicit_ref_uuid):
     return links
 
 @bp.route("/query-jsonify-ers")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_ers():
     """
     Query all the ers.
@@ -2055,6 +2144,8 @@ def query_jsonify_ers():
     return jsonify(jsonified_ers)
 
 @bp.route("/query-jsonify-er-groups")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_er_groups():
     """
     Query all the ers groups.
@@ -2076,6 +2167,8 @@ def query_jsonify_er_groups():
     return jsonify(jsonified_er_groups)
 
 @bp.route("/query-dim-signatures", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_dim_signatures_and_render():
     """
     Query DIM signatures amd render.
@@ -2092,6 +2185,8 @@ def query_dim_signatures_and_render():
     return render_template("eboa_nav/query_dim_signatures.html")
 
 @bp.route("/query-dim-signatures-pages", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_dim_signatures_pages():
     """
     Query DIM signatures using pages and render.
@@ -2151,6 +2246,8 @@ def query_dim_signatures(filters):
     return dim_signatures
 
 @bp.route("/query-jsonify-dim-signatures")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_dim_signatures():
     """
     Query all the DIM signatures.
@@ -2172,6 +2269,8 @@ def query_jsonify_dim_signatures():
     return jsonify(jsonified_dim_signatures)
 
 @bp.route("/treat-data", methods = ["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def treat_data():
     """
     Send data to the EBOA to be treated
@@ -2189,6 +2288,8 @@ def treat_data():
     return jsonify(exit_information)
 
 @bp.route("/query-alerts-pages", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_alerts_pages():
     """
     Query alerts using pages and render.
@@ -2212,6 +2313,8 @@ def query_alerts_pages():
     return render_template(template, alerts=alerts, filters=filters)
 
 @bp.route("/get-alert-severity")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def get_alert_severities():
     """
     Get the alert severities defined in the EBOA component.
@@ -2220,6 +2323,8 @@ def get_alert_severities():
     return jsonify(eboa_alerts.alert_severity_codes)
 
 @bp.route("/query-jsonify-alerts-by-name")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_alerts_by_name():
     """
     Query all the alerts by name.
@@ -2241,6 +2346,8 @@ def query_jsonify_alerts_by_name():
     return jsonify(jsonified_alerts)
 
 @bp.route("/query-jsonify-alerts-by-group")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_alerts_by_group():
     """
     Query all the alerts by group.
@@ -2262,6 +2369,8 @@ def query_jsonify_alerts_by_group():
     return jsonify(jsonified_alerts)
 
 @bp.route("/query-jsonify-<string:entity>-alerts-by-generator")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def query_jsonify_entity_alerts_by_generator(entity):
     """
     Query all the entity alerts by generator.

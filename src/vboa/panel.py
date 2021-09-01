@@ -17,7 +17,7 @@ version="1.0"
 
 @bp.route("/")
 @auth_required()
-@roles_accepted("administrator", "operator")
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer", "observer")
 def index():
     """
     Show initial panel.

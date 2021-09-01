@@ -22,6 +22,9 @@ from sboa.engine.engine import Engine
 from rboa.engine.functions import get_rboa_archive_path
 from rboa.triggering.rboa_triggering import get_reporting_conf
 
+# Import vboa security
+from vboa.security import auth_required, roles_accepted
+
 archive_path = get_rboa_archive_path()
 
 bp = Blueprint("sboa", __name__, url_prefix="/sboa")
@@ -36,6 +39,8 @@ simulation_size = 90
 ##############
 
 @bp.route("/navigate", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def navigate():
     """
     Panel for the BOA scheduler navigation functionality.
@@ -44,6 +49,8 @@ def navigate():
 
 
 @bp.route("/simulate", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst")
 def simulate():
     """
     Panel for the BOA scheduler simulation functionality.
@@ -56,6 +63,8 @@ def simulate():
     return render_template("boa_scheduler/simulate_agenda.html", tasks = list_tasks, t0 = t0, simulated_tasks = simulated_tasks, simulation_size = simulation_size)
 
 @bp.route("/simulate/<string:t0>", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst")
 def simulate_with_t0(t0):
     """
     Panel for the BOA scheduler simulation functionality.
@@ -118,6 +127,8 @@ def generate_task_lists(t0):
     return list_tasks, simulated_tasks
 
 @bp.route("/load-agenda/<string:t0>", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
 def load_agenda(t0):
     """
     Route for loading the agenda.

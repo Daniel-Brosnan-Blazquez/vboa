@@ -605,7 +605,7 @@ function handle_return_status(parameters, command_status){
         }
         toastr.success(message)
     }
-    else{
+    else if (command_status["return_code"] != 403){
         var message = parameters["error_message"]
         if (command_status["output"] || command_status["error"]){
             message += "</br>The output of the executed command was:</br>" + command_status["output"] + "</br>The error of the executed command was: " + command_status["error"]
