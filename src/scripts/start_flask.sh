@@ -2,7 +2,7 @@
 nohup npm --prefix /vboa/src/vboa/static run test &> /log/npm.log &
 
 # Start flask server on port 5000 for testing purposes
-export VBOA_DEBUG=FALSE; source scl_source enable rh-ruby25; nohup flask run --host=0.0.0.0 -p 5000 &> /log/flask_5000.log &
+export VBOA_DEBUG=FALSE; export VBOA_TEST=TRUE; source scl_source enable rh-ruby25; nohup flask run --host=0.0.0.0 -p 5000 &> /log/flask_5000.log &
 
 # Start flask server on port 5001 for SSL connection
 # Create certificates if they are not available
