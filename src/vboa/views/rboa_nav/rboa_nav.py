@@ -66,6 +66,7 @@ def query_reports_and_render():
     Query reports amd render.
     """
     current_app.logger.debug("Query reports and render")
+    filters = []
     if request.method == "POST":
         filters = request.form.to_dict(flat=False).copy()
         filters["offset"] = [""]
@@ -80,7 +81,7 @@ def query_reports_and_render():
         # end if
     
     # end if
-    return render_template("rboa_nav/query_reports.html")
+    return render_template("rboa_nav/query_reports.html", filters = filters)
 
 @bp.route("/query-reports-pages", methods=["POST"])
 @auth_required()
