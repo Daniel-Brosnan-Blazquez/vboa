@@ -100,12 +100,15 @@ setInterval(update_clock, 1000);
 jQuery(document).ready(function(){
     jQuery('#boa-management-menu').click(function(){
         setTimeout(function () {
-            // Remove attribute aria-expanded of the link element
-            var a = document.getElementById("boa-management-menu")
-            document.getElementById("boa-management-menu").removeAttributeNode(a.getAttributeNode("aria-expanded"));
-            // Remove collapse content
-            document.getElementById("boa-management-menu-li").classList.remove("mm-active");
-            document.getElementById("boa-management-menu-ul").classList.remove("mm-show");
+            try{
+                // Remove attribute aria-expanded of the link element
+                var a = document.getElementById("boa-management-menu")
+                document.getElementById("boa-management-menu").removeAttributeNode(a.getAttributeNode("aria-expanded"));
+                // Remove collapse content
+                document.getElementById("boa-management-menu-li").classList.remove("mm-active");
+                document.getElementById("boa-management-menu-ul").classList.remove("mm-show");
+            }catch (error){
+            }
         }, 60000);
     });
 });
