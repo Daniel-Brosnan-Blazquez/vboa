@@ -19,6 +19,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from vboa import panel
 from vboa import service_management
 from vboa import screenshots
+from vboa.views import users_management
 from vboa.views.eboa_nav import eboa_nav
 from vboa.views.rboa_nav import rboa_nav
 from vboa.views.boa_health import boa_health
@@ -26,6 +27,7 @@ from vboa.views.ingestion_control import ingestion_control
 from vboa.views.reporting_control import reporting_control
 from vboa.views.boa_scheduler import boa_scheduler
 from vboa.views.general_view_alerts import general_view_alerts
+from vboa.views.users_management import users_management
 
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
@@ -82,6 +84,7 @@ def create_app():
     app.register_blueprint(reporting_control.bp)
     app.register_blueprint(boa_scheduler.bp)
     app.register_blueprint(general_view_alerts.bp)
+    app.register_blueprint(users_management.bp)
 
     if "VBOA_DEBUG" in os.environ and os.environ["VBOA_DEBUG"] == "TRUE":
         app.debug = True

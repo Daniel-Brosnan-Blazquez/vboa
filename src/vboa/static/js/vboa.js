@@ -27,6 +27,7 @@ import * as annotationCnfsFunctions from "./annotation_confs.js";
 import * as eventFunctions from "./events.js";
 import * as alertFunctions from "./alerts.js";
 import * as annotationFunctions from "./annotations.js";
+import * as userFunctions from "./users.js";
 import * as eventKeyFunctions from "./event_keys.js";
 import * as dimSignatureFunctions from "./dim_signatures.js";
 import * as erFunctions from "./explicit_references.js";
@@ -556,6 +557,19 @@ export function show_selected_report(button){
     reportFunctions.show_selected_report(button);
 
 };
+
+/*
+* USERS *
+*/
+
+/* Function to expand the roles associated to a user */
+export function expand_user_roles(dom_id, user_uuid){
+    userFunctions.expand_user_roles(dom_id, user_uuid);
+}
+
+export function submit_request_for_users_management(form_id){
+    userFunctions.submit_request_for_users_management(form_id);
+}
 
 /*
 * QUERY *

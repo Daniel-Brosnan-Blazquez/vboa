@@ -1,0 +1,40 @@
+<thead>
+    <tr>
+      <th class="{{ checkbox_selected }}"></th>
+      <th></th>
+      <th>Email</th>
+      <th>Username</th>
+      <th>Group</th>
+      <th>Active</th>
+      <th>User UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr id="{{ user.user_uuid }}" class="{{ checkbox_selected }}">
+      <td></td>
+      <td><i id="expand-user-roles-{{ user.user_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_user_roles('expand-user-roles-{{ user.user_uuid }}', '{{ user.user_uuid }}')" data-toggle="tooltip" title="Click to show the related roles"></i></td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.group }}</td>
+      {% if user.active == True %}
+      <td><span class='bold-green'>{{ user.active }}</span></td>
+      {% else %}
+      <td><span class='bold-red'>{{ user.active }}</span></td>
+      {% endif %}
+      <td>{{ user.user_uuid }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+        <th></th>
+        <th></th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Group</th>
+        <th>Active</th>
+        <th>User UUID</th>
+    </tr>
+  </tfoot>
+  
