@@ -1,0 +1,122 @@
+<div class="col-lg-12" id="nav-users">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <form role="form" method=post action="/users-management/query-users">
+              <!-- Emails -->
+              <div class="row">
+                <div class="col-xs-3">
+                  <label>Email</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="email" id="users-email-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="email_operator" id="users-email-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <label id="users-emails-in-checkbox">Emails (<input type="checkbox" name="email_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-emails', 'email', 20, 0)" id="users-emails-in-text"/><i class="circle"></i>
+                  <select name="emails" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-emails-in-select">
+                  </select>
+                </div>
+              </div>
+              <!-- Usernames -->
+              <div class="row">
+                <div class="col-xs-3">
+                  <label>Username</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="username" id="users-username-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="username_operator" id="users-username-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <label id="users-usernames-in-checkbox">Usernames (<input type="checkbox" name="username_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-usernames', 'username', 20, 0)" id="users-usernames-in-text"/><i class="circle"></i>
+                  <select name="usernames" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-usernames-in-select">
+                  </select>
+                </div>
+              </div>
+              <!-- Groups -->
+              <div class="row">
+                <div class="col-xs-3">
+                  <label>Group</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="group" id="users-group-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="group_operator" id="users-group-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <label id="users-groups-in-checkbox">Groups (<input type="checkbox" name="group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-groups', 'group', 20, 0)" id="users-groups-in-text"/><i class="circle"></i>
+                  <select name="groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-groups-in-select">
+                  </select>
+                </div>
+              </div>
+              <!-- Roles -->
+              <div class="row">
+                <div class="col-xs-3">
+                  <label>Role</label>
+                  <div class="input-group" style="width: 100%">
+                    <input class="form-control" style="width: 80%" name="role" id="users-role-text"/>
+                    <select class="form-control" style="padding-left: 0; width: 20%" name="role_operator" id="users-role-operator">
+                      {% include "eboa_nav/operators.html" %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <label id="users-roles-in-checkbox">Roles (<input type="checkbox" name="role_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-roles', 'role', 20, 0)" id="users-roles-in-text"/><i class="circle"></i>
+                  <select name="roles" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-roles-in-select">
+                  </select>
+                </div>
+              </div>
+              <!-- Active -->
+              <div class="row">
+                <div class="col-xs-3 query-user-active">
+                  <label>Active</label>
+                  <select style="width: 100%" name="active" id="users-active">
+                    <option></option>
+                    <option>true</option>
+                    <option>false</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Query restrictions -->
+              <div class="row" id="users-query-restrictions">
+                <!-- Order by -->
+                <div class="col-xs-3">
+                    <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
+                    <select style="width: 100%" name="order_by" id="users-order-by">
+                      <option></option>
+                      <option>start</option>
+                      <option>stop</option>
+                      <option>ingestion_time</option>
+                    </select>
+                </div>
+                <!-- Limit -->
+                <div class="col-xs-3">
+                  <label>Limit</label>
+                  <input type="text" class="form-control" style="width: 100%" name="limit" id="users-limit" value="100"/>
+                </div>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="users-submit-button" name="query_users">Query users</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.col-lg-6 (nested) -->
+        </div>
+        <!-- /.row (nested) -->
+      </div>
+      <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+  </div>
+  <!-- /.panel -->
+  
