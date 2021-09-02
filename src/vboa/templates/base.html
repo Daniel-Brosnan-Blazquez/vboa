@@ -73,7 +73,7 @@
         <div id="sidebar" class="navbar-default sidebar collapse in" role="navigation">
           <div class="sidebar-nav navbar-collapse" id="navbar-left-side-menu">
             <ul class="nav" id="left-side-menu">
-              {% if not current_user.is_anonymous and current_user.has_one_of_these_roles(["administrator", "service_administrator", "operator"]) %}
+              {% if current_user.is_anonymous or current_user.has_one_of_these_roles(["administrator", "service_administrator", "operator"]) %}
               <li id="boa-management-menu-li">
                 <a href="#" id="boa-management-menu"><i class="fa fa-wrench fa-fw"></i> BOA management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level" id="boa-management-menu-ul">
@@ -102,7 +102,7 @@
                 <!-- /.nav-second-level -->
               </li>
               {% endif %}
-              {% if not current_user.is_anonymous and current_user.has_none_of_these_roles(["observer"]) %}
+              {% if current_user.is_anonymous or current_user.has_none_of_these_roles(["observer"]) %}
               <li>
                 <a href="#"><i class="fa fa-clock-o fa-fw"></i> BOA Scheduler<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
