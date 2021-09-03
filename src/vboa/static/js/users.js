@@ -51,7 +51,7 @@ function show_user_roles(parameters, roles){
     var table = '<table class="table">' +
         '<thead>' +
         '<tr>' +
-        '<th>Role</th>' +
+        '<th>Roles</th>' +
         '<th>Description</th>' +
         '</tr>' +
         '</thead>' +
