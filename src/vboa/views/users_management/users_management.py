@@ -345,16 +345,17 @@ def prepare_deletion_of_users():
 
     return render_template("users_management/deletion_of_users.html", users=users)
 
-@bp.route("/uboa-nav/delete-users", methods=["POST"])
+@bp.route("/uboa-nav/delete-users", methods=["GET", "POST"])
 @auth_required()
 @roles_accepted("administrator")
 def delete_users():
     """
     Delete selected users.
     """
-    current_app.logger.debug("Delete selected users")
-    filters = request.json
-    
-    query.get_users(user_uuids = {"filter": filters["users"], "op": "in"}, delete=True)
+    if request.method == "POST":
+        current_app.logger.debug("Delete selected users")
+        filters = request.json
+        
+        query.get_users(user_uuids = {"filter": filters["users"], "op": "in"}, delete=True)
 
     return render_template("users_management/query_users.html")
