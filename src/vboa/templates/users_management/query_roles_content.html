@@ -3,7 +3,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
-            <form role="form" method=post action="/users-management/query-roles">
+            <form role="form" method=post action="/users-management/uboa-nav/query-roles">
               <!-- Emails -->
               <div class="row">
                 <div class="col-xs-3">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="roles-emails-in-checkbox">Emails (<input type="checkbox" name="email_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-emails', 'email', 20, 0)" id="roles-emails-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-emails', 'email', 20, 0)" id="roles-emails-in-text"/><i class="circle"></i>
                   <select name="emails" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="roles-emails-in-select">
                   </select>
                 </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="roles-usernames-in-checkbox">Usernames (<input type="checkbox" name="username_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-usernames', 'username', 20, 0)" id="roles-usernames-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-usernames', 'username', 20, 0)" id="roles-usernames-in-text"/><i class="circle"></i>
                   <select name="usernames" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="roles-usernames-in-select">
                   </select>
                 </div>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="roles-groups-in-checkbox">Groups (<input type="checkbox" name="group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-groups', 'group', 20, 0)" id="roles-groups-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-groups', 'group', 20, 0)" id="roles-groups-in-text"/><i class="circle"></i>
                   <select name="groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="roles-groups-in-select">
                   </select>
                 </div>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="roles-roles-in-checkbox">Roles (<input type="checkbox" name="role_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/query-jsonify-roles', 'role', 20, 0)" id="roles-roles-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-roles', 'name', 20, 0)" id="roles-roles-in-text"/><i class="circle"></i>
                   <select name="roles" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="roles-roles-in-select">
                   </select>
                 </div>

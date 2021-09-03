@@ -82,6 +82,47 @@ def query_users(filters):
 
     return users
 
+@bp.route("/uboa-nav/query-roles", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator")
+def query_roles_and_render():
+    """
+    Query roles and render.
+    """
+    current_app.logger.debug("Query roles and render")
+    if request.method == "POST":
+        filters = request.form.to_dict(flat=False).copy()
+        filters["offset"] = [""]
+        roles = query_roles(filters)
+
+        return render_template("users_management/roles_nav.html", roles=roles, filters=filters)
+    # end if
+    return render_template("users_management/query_roles.html")
+
+@bp.route("/uboa-nav/query-roles-pages", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator")
+def query_roles_pages():
+    """
+    Query roles using pages and render.
+    """
+    current_app.logger.debug("Query roles using pages and render")
+    filters = request.json
+    roles = query_roles(filters)
+    
+    return render_template("users_management/roles_nav.html", roles=roles, filters=filters)
+
+def query_roles(filters):
+    """
+    Query roles.
+    """
+    current_app.logger.debug("Query roles")
+
+    kwargs = set_filters_for_query_users_or_roles(filters)
+    roles = query.get_roles(**kwargs)
+
+    return roles
+
 def set_filters_for_query_users_or_roles(filters):
     """
     Set filter for query users or query roles.
@@ -191,14 +232,46 @@ def set_filters_for_query_users_or_roles(filters):
 
     return kwargs
 
-@bp.route("/uboa-nav/query-jsonify-emails")
+@bp.route("/uboa-nav/query-users-by-group/<string:group>")
 @auth_required()
 @roles_accepted("administrator")
-def query_jsonify_emails():
+def query_user_by_group(group):
     """
-    Query all the emails.
+    Query users belonging to the group.
     """
-    current_app.logger.debug("Query email")
+    current_app.logger.debug("Query user by group")
+    users = query.get_users(groups={"filter": group, "op": "=="})
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("users_management/users_nav.html", users=users, filters=filters)
+
+@bp.route("/uboa-nav/query-users-by-role/<string:role>")
+@auth_required()
+@roles_accepted("administrator")
+def query_user_by_role(role):
+    """
+    Query users belonging to the role.
+    """
+    current_app.logger.debug("Query user by role")
+    users = query.get_users(roles={"filter": role, "op": "=="})
+
+    filters = {}
+    filters["offset"] = [""]
+    filters["limit"] = ["100"]
+    
+    return render_template("users_management/users_nav.html", users=users, filters=filters)
+
+@bp.route("/uboa-nav/query-jsonify-<string:filter>")
+@auth_required()
+@roles_accepted("administrator")
+def query_jsonify_filter(filter):
+    """
+    Query all the emails, usernames or groups
+    """
+    current_app.logger.debug("Query all the emails, usernames or groups")
 
     # Get limit and offset values
     limit = request.args.get("limit")
@@ -209,11 +282,41 @@ def query_jsonify_emails():
     kwargs = {}
     kwargs["limit"] = limit
     kwargs["offset"] = offset   
-    kwargs["emails"] = {"filter": search, "op": "=="}
+    
+    if filter == "emails":
+        kwargs["emails"] = {"filter": search, "op": "=="}
+    elif filter == "usernames":
+        kwargs["usernames"] = {"filter": search, "op": "=="}
+    elif filter == "groups":
+        kwargs["groups"] = {"filter": "%" + search + "%", "op": "like"}
 
     users = query.get_users(**kwargs)
     jsonified_users = [user.jsonify() for user in users]
     return jsonify(jsonified_users)
+
+@bp.route("/uboa-nav/query-jsonify-roles")
+@auth_required()
+@roles_accepted("administrator")
+def query_jsonify_roles():
+    """
+    Query all the roles
+    """
+    current_app.logger.debug("Query all the roles")
+
+    # Get limit and offset values
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    search = request.args.get("search")
+
+    # Set the filters for the query
+    kwargs = {}
+    kwargs["limit"] = limit
+    kwargs["offset"] = offset   
+    kwargs["roles"] = {"filter": "%" + search + "%", "op": "like"}
+    
+    roles = query.get_roles(**kwargs)
+    jsonified_roles = [role.jsonify() for role in roles]
+    return jsonify(jsonified_roles)
 
 @bp.route("/uboa-nav/query-jsonify-user-roles/<uuid:user_uuid>")
 @auth_required()
@@ -238,7 +341,6 @@ def prepare_deletion_of_users():
     filters = request.json
 
     users_from_uuids = query.get_users(user_uuids = {"filter": filters["users"], "op": "in"})
-
     users = query.get_users(usernames = {"filter": [user.username for user in users_from_uuids], "op": "in"})
 
     return render_template("users_management/deletion_of_users.html", users=users)
@@ -252,7 +354,7 @@ def delete_users():
     """
     current_app.logger.debug("Delete selected users")
     filters = request.json
-    print(filters, file=sys.stderr)
+    
     query.get_users(user_uuids = {"filter": filters["users"], "op": "in"}, delete=True)
 
-    return {"status": "OK"}
+    return render_template("users_management/query_users.html")
