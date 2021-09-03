@@ -1,4 +1,14 @@
+"""
+Functions module to help testing security
+
+Written by DEIMOS Space S.L.
+
+module vboa
+"""
+# Import python utilities
 import ast
+import subprocess
+from subprocess import PIPE
 
 def set_dict_app_security(path_files):
     """
@@ -113,3 +123,19 @@ def set_dict_app_security(path_files):
     # end for
 
     return dict_app_security
+
+def obtain_python_files_with_route_decorator(module_path):
+    """
+    Method to obtain a dict with information needed to test the security of the app
+    
+    :param module_path: str with the path to the module to check security on
+    :type module_path: str
+    
+    :return: path_files which contains the list of python files with at least one route decorator
+    :rtype: str
+    """
+
+    command = 'PYFILES=`find {} -path {}/tests -prune -o -name "*py"|sort`; grep -sl "^[ \t]*@.*route" $PYFILES'.format(module_path, module_path)
+    path_files = subprocess.run(command, shell=True, stdout=PIPE).stdout.decode()
+
+    return path_files

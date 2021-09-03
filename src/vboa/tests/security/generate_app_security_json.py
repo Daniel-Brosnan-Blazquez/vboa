@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Script for generating the expected authentication and authorization security layer applied to routes
 
@@ -6,8 +7,6 @@ Written by DEIMOS Space S.L.
 module vboa
 """
 # Import python utilities
-import subprocess
-from subprocess import PIPE
 import json
 import os
 
@@ -19,8 +18,7 @@ import vboa.tests.security.functions as security_functions
 
 # Obtain the paths of the files containing decorators like "@.*route"
 module_path = os.path.dirname(vboa.__file__)
-command = 'PYFILES=`find {} -path {}/tests -prune -o -name "*py"`; grep -sl "^[ \t]*@.*route" $PYFILES'.format(module_path, module_path)
-path_files = subprocess.run(command, shell=True, stdout=PIPE).stdout.decode()
+path_files = security_functions.obtain_python_files_with_route_decorator(module_path)
 
 # Generate dictionary with relevant security information
 dict_app_security = security_functions.set_dict_app_security(path_files)
