@@ -134,5 +134,12 @@ function notify_deletion(response){
     // Stop loader
     var loader = document.getElementById("updating-page");
     loader.className = ""
+
+    // Back to uboa navigation query page
+    setTimeout(function() {
+        queryFunctions.request_info_no_args("/users-management/uboa-nav/delete-users", renderFunctions.render_page, true);
+    }, 2000);
+    
+    
     
 }
