@@ -183,6 +183,9 @@ def switch_on_scheduler():
     """
     Switch on scheduler.
     """
+
+    # Set VBOA_TEST to TRUE to avoid authentication and authorization
+    os.environ["VBOA_TEST"] = "TRUE"
     
     command = "boa_scheduler.py -c start -o"
 
