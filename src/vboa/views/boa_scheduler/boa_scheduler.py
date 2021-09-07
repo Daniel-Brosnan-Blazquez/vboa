@@ -8,6 +8,7 @@ module vboa
 # Import python utilities
 import datetime
 from dateutil import parser
+import os
 
 # Import flask utilities
 from flask import Blueprint, current_app, render_template, request
@@ -128,12 +129,15 @@ def generate_task_lists(t0):
 
 @bp.route("/load-agenda/<string:t0>", methods=["GET"])
 @auth_required()
-@roles_accepted("administrator", "service_administrator", "operator")
+@roles_accepted("administrator", "service_administrator")
 def load_agenda(t0):
     """
     Route for loading the agenda.
     """
 
+    # Set VBOA_TEST to TRUE to avoid authentication and authorization
+    os.environ["VBOA_TEST"] = "TRUE"
+    
     try:
         parser.parse(t0)
     except:

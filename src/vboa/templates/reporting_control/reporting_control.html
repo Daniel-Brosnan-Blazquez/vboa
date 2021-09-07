@@ -14,7 +14,7 @@
 {% set alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 {% set reporting_errors = reports|selectattr("generation_error", "equalto", True)|list %}
 {% set reports_to_be_shown = reports|rejectattr("generation_error", "equalto", True)|list %}
-{% set successful_processings = sources|selectattr("generated", "equalto", True)|list %}
+{% set successful_processings = reports|selectattr("generated", "equalto", True)|list %}
 
 {% with show = {"expected": True, "successful": True, "errors": True, "alerts": True} %}
 {% include "reporting_control/reporting_control_summary_content.html" %}
