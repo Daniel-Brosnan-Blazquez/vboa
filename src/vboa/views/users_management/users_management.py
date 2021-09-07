@@ -6,24 +6,15 @@ Written by DEIMOS Space S.L.
 module vboa
 """
 # Import python utilities
-import sys
-import json
 from distutils import util
-import shlex
-from subprocess import Popen, PIPE
 
 # Import flask utilities
-from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for, send_from_directory
-from flask_debugtoolbar import DebugToolbarExtension
+from flask import Blueprint, current_app, render_template, request
 from flask import jsonify
 
-# Import eboa utilities
+# Import uboa utilities
 from uboa.engine.query import Query
-import uboa.engine.engine as uboa_engine
 from uboa.engine.engine import Engine
-
-# Import auxiliary functions
-from eboa.triggering.eboa_triggering import get_triggering_conf
 
 # Import vboa security
 from vboa.security import auth_required, roles_accepted
