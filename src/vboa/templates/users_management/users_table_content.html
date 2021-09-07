@@ -29,15 +29,27 @@
       {% endif %}
       {% if user.last_login_at  %}
       <td>{{ user.last_login_at.isoformat() }}</td>
-      <td>{{ user.current_login_at.isoformat() }}</td>
-      <td>{{ user.last_login_ip }}</td>
-      <td>{{ user.current_login_ip }}</td>
-      <td>{{ user.login_count }}</td>
       {% else %}
       <td>Never login</td>
+      {% endif %}
+      {% if user.current_login_at  %}
+      <td>{{ user.current_login_at.isoformat() }}</td>
+      {% else %}
       <td>Never login</td>
+      {% endif %}
+      {% if user.last_login_ip  %}
+      <td>{{ user.last_login_ip }}</td>
+      {% else %}
       <td>Never login</td>
+      {% endif %}
+      {% if user.current_login_ip  %}
+      <td>{{ user.current_login_ip }}</td>
+      {% else %}
       <td>Never login</td>
+      {% endif %}
+      {% if user.login_count  %}
+      <td>{{ user.login_count }}</td>
+      {% else %}
       <td>Never login</td>
       {% endif %}
       <td>{{ user.user_uuid }}</td>
