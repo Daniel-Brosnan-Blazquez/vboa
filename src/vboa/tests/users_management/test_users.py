@@ -106,14 +106,13 @@ class TestUsersTab(unittest.TestCase):
 
         wait = WebDriverWait(self.driver,5)
         
-        # Used port 5002 to test and make login
-        self.driver.get("http://localhost:5002/")
+        self.driver.get("http://localhost:5000/login")
         
         functions.login(self.driver, "administrator", "password")
 
         wait = WebDriverWait(self.driver,5)
 
-        self.driver.get("http://localhost:5002/users-management/uboa-nav")
+        self.driver.get("http://localhost:5000/users-management/uboa-nav")
 
         # Go to tab
         functions.goToTab(self.driver,"Users")

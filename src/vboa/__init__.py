@@ -65,14 +65,24 @@ def create_app():
         secret_key = os.urandom(24)
     # end if
 
-    app.config.from_mapping(
-        SECRET_KEY=secret_key,
-        SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
-        SESSION_COOKIE_SECURE=True,
-        REMEMBER_COOKIE_SECURE=True,
-        SESSION_COOKIE_HTTPONLY=True,
-        REMEMBER_COOKIE_HTTPONLY=True
-    )
+    if "VBOA_TEST" in os.environ and os.environ["VBOA_TEST"] == "TRUE":
+        app.config.from_mapping(
+            SECRET_KEY=secret_key,
+            SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
+            SESSION_COOKIE_SECURE=False,
+            REMEMBER_COOKIE_SECURE=False,
+            SESSION_COOKIE_HTTPONLY=True,
+            REMEMBER_COOKIE_HTTPONLY=True
+        )
+    else:
+        app.config.from_mapping(
+            SECRET_KEY=secret_key,
+            SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
+            SESSION_COOKIE_SECURE=True,
+            REMEMBER_COOKIE_SECURE=True,
+            SESSION_COOKIE_HTTPONLY=True,
+            REMEMBER_COOKIE_HTTPONLY=True
+        )
 
     app.register_blueprint(panel.bp)
     app.register_blueprint(service_management.bp)
