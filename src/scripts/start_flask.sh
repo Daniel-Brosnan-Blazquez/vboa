@@ -12,7 +12,4 @@ then
 fi
 export VBOA_DEBUG=TRUE; export VBOA_TEST=FALSE; source scl_source enable rh-ruby25; nohup flask run --cert=/resources_path/boa_certificate.pem --key=/resources_path/boa_key.pem  --host=0.0.0.0 -p 5001 &> /log/flask_5001.log &
 
-# Start flask server on port 5002 for testing login operations
-export VBOA_DEBUG=FALSE; export VBOA_TEST=FALSE; source scl_source enable rh-ruby25; nohup flask run --host=0.0.0.0 -p 5002 &> /log/flask_5002.log &
-
 sleep infinity
