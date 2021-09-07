@@ -405,3 +405,18 @@ def select_option_dropdown(driver, select_id, option):
 
     option_element = driver.find_element_by_xpath("//*[@id='" + chosen_id + "']/div/ul/li[contains(.,'" + option + "')]")
     click(option_element)
+
+def login(driver, user, password):
+    
+    # Fill the email or username 
+    input_element = driver.find_element_by_xpath("//*[@id='boa-body']/section/div/div[2]/div/div/form/div[2]/input")
+    input_element.send_keys(user)
+
+    # Fill the password
+    input_element = driver.find_element_by_xpath("//*[@id='boa-body']/section/div/div[2]/div/div/form/div[3]/input")
+    input_element.send_keys(password)
+    
+    login_button = driver.find_elements_by_xpath("//*[contains(text(), 'Login')]")
+    click(login_button[0])
+
+
