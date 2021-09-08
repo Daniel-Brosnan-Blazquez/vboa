@@ -571,6 +571,10 @@ export function submit_request_for_users_management(form_id){
     userFunctions.submit_request_for_users_management(form_id);
 }
 
+export function notify_import_file(message_type){
+    userFunctions.notify_import_file(message_type);
+}
+
 /*
 * QUERY *
 */

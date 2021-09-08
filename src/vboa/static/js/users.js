@@ -140,6 +140,25 @@ function notify_deletion(response){
         queryFunctions.request_info_no_args("/users-management/uboa-nav/delete-users", renderFunctions.render_page, true);
     }, 2000);
     
-    
+}
+
+/*
+* Import/export users functions
+*/
+
+export function notify_import_file(message_type){
+
+    if (message_type === "no file"){
+        toastr.error("No file was selected or the file extension is incorrect")
+    }
+    else if (message_type === "bad extension"){
+        toastr.error("The file extension is incorrect")
+    }
+    else if (message_type === "success"){
+        toastr.success("The users were imported successfully")
+    }
+    // Stop loader
+    var loader = document.getElementById("updating-page");
+    loader.className = ""
     
 }

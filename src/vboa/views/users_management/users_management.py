@@ -7,10 +7,11 @@ module vboa
 """
 # Import python utilities
 from distutils import util
+import json
 
 # Import flask utilities
-from flask import Blueprint, current_app, render_template, request
-from flask import jsonify
+from flask import Blueprint, current_app, render_template, request, send_from_directory, jsonify
+from werkzeug.utils import secure_filename
 
 # Import uboa utilities
 from uboa.engine.query import Query
@@ -22,6 +23,9 @@ from vboa.security import auth_required, roles_accepted
 bp = Blueprint("users-management", __name__, url_prefix="/users-management")
 query = Query()
 engine = Engine()
+
+# The extensions files that are allowed to import
+ALLOWED_EXTENSIONS = {'txt', 'json'}
 
 @bp.route("/uboa-nav", methods=["GET"])
 @auth_required()
@@ -350,3 +354,56 @@ def delete_users():
         query.get_users(user_uuids = {"filter": filters["users"], "op": "in"}, delete=True)
 
     return render_template("users_management/query_users.html")
+
+@bp.route("/import-users", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator")
+def import_users():
+    """
+    Initial panel for the import users functionality.
+    """
+    return render_template("users_management/import_users.html")
+
+def allowed_file(filename):
+    """
+    Function to check whether the file extension is correct
+    """
+    return "." in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@bp.route("/import-users/import-from-file", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator")
+def upload_file():
+    """
+    Upload file to import users.
+    """
+    
+    attempt_import_file = False
+    error = False
+    if request.method == "POST":
+
+        file = request.files["file"]
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            attempt_import_file = True
+            error = False
+        else:
+            attempt_import_file = True
+            error = True
+    
+    return render_template("users_management/import_users.html", attempt_import_file = attempt_import_file, message_type = message_type)
+
+@bp.route("/export-users")
+@auth_required()
+@roles_accepted("administrator")
+def export_users():
+    """
+    Export users as a JSON file.
+    """
+    users = query.get_users()
+    jsonified_roles = { "users":[user.jsonify() for user in users] }
+
+    with open("/tmp/users_exported.json", "w") as fp:
+        json.dump(jsonified_roles, fp, indent=4)
+    
+    return send_from_directory("/tmp/", "users_exported.json", as_attachment=True)

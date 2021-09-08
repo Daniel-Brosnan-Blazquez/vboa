@@ -1,0 +1,68 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Import users</h1>
+</div>
+<div class="row">
+  <!-- Import from file -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Import users from file</h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+      <p>
+        <b>The extensions files that are allowed are json and txt.</b>
+      </p>
+      <form method=post enctype=multipart/form-data action="/users-management/import-users/import-from-file">
+        <div class="row" >
+          <div align="center">
+            <label class="btn btn-default btn-file" style="margin-top: 12px">
+            Browse file <input type="file" name="file" style="display: none;">
+            </label>
+            <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="import-users-from-file-submit-button" name="import_users_from_file">Import users</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Import from editor -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Import users manually</h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+      <form role="form" id="import-users-operations" method=post action="/users-management/import-users">
+        <textarea id="import-users-textarea" name="import-users" rows="10" cols="100">
+"users": [
+    {
+        "email": "example@test.com",
+        "username": "example",
+        "password": "password",
+        "roles": ["example"],
+        "group": "BOA"
+    }
+]
+            </textarea>
+        <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+          <div align="center">
+            <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="import-users-from-editor-submit-button" name="import_users_from_editor">Import users</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+
+  {% if attempt_import_file == True %}
+  var message_type = {{ error }}
+  vboa.notify_import_file(message_type)
+  {% endif %}
+  
+</script>
+{% endblock %}
