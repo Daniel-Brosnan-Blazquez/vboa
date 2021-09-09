@@ -146,16 +146,13 @@ function notify_deletion(response){
 * Import/export users functions
 */
 
-export function notify_import_file(message_type){
+export function notify_import(message, error){
 
-    if (message_type === "no file"){
-        toastr.error("No file was selected or the file extension is incorrect")
+    if (error === true){
+        toastr.error(message)
     }
-    else if (message_type === "bad extension"){
-        toastr.error("The file extension is incorrect")
-    }
-    else if (message_type === "success"){
-        toastr.success("The users were imported successfully")
+    else {
+        toastr.success(message)
     }
     // Stop loader
     var loader = document.getElementById("updating-page");
