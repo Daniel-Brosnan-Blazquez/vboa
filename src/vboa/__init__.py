@@ -28,6 +28,7 @@ from vboa.views.reporting_control import reporting_control
 from vboa.views.boa_scheduler import boa_scheduler
 from vboa.views.general_view_alerts import general_view_alerts
 from vboa.views.users_management import users_management
+from vboa.views.user_profile import user_profile
 
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
@@ -95,6 +96,7 @@ def create_app():
     app.register_blueprint(boa_scheduler.bp)
     app.register_blueprint(general_view_alerts.bp)
     app.register_blueprint(users_management.bp)
+    app.register_blueprint(user_profile.bp)
 
     if "VBOA_DEBUG" in os.environ and os.environ["VBOA_DEBUG"] == "TRUE":
         app.debug = True
