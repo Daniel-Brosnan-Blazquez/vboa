@@ -430,7 +430,7 @@ def upload_manually():
     textarea_content = request.form["import_users_textarea"]
     try:
         data = json.loads(textarea_content)
-        # Treat data in json file
+        # Treat data
         engine_uboa = Engine()
         exit_status = engine_uboa.treat_data(data)
         # Check if is a valid data

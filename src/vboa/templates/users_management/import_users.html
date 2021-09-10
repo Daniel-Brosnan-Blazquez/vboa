@@ -33,17 +33,34 @@
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
+      <p>
+        <b>The following text is an example of a validated JSON schema:</b>
+      </p>
       <form role="form" id="import-users-operations" method=post action="/users-management/import-users/import-manually">
-        <textarea id="import-users-textarea" name="import_users_textarea" rows="10" cols="100">
-"users": [
-    {
-        "email": "example@test.com",
-        "username": "example",
-        "password": "password",
-        "roles": ["example"],
-        "group": "BOA"
-    }
-]
+        <textarea style="margin-top: 12px" id="import-users-textarea" name="import_users_textarea" rows="20" cols="100">
+{
+  "operations":[
+      {
+        "mode":"insert",
+        "users":[
+            {
+              "email":"example@example.com",
+              "username":"example",
+              "password":"example_hash_password",
+              "roles":[
+                  "example_role"
+              ]
+            }
+        ],
+        "roles":[
+            {
+              "name":"example_role",
+              "description":"This text is an example."
+            }
+        ]
+      }
+  ]
+}
             </textarea>
         <div class="row" style="margin-bottom: 20px; margin-top: 20px">
           <div align="center">
