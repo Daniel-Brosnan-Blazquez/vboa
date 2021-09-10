@@ -21,6 +21,9 @@
     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/vboa.css') }}">
+    
+    <!-- Custom CSS from https://www.bootdey.com/snippets/view/profile-with-data-and-skills#css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
 
     {% endblock %}
     
@@ -55,15 +58,9 @@
               Welcome {{ current_user.username }}<i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
-              <li><i class="fa fa-user fa-fw"></i> {{ current_user.username }}</li>
-              <li><i class="fa fa-at fa-fw"></i> {{ current_user.email }}</li>
-              <li><i class="fa fa-users fa-fw"></i> {{ current_user.group }}</li>
-              {% for role in current_user.roles %}
-              <li>Role: {{ role.name }}</li>
-              {% endfor %}
+              <li><a href="/user-profile/?user={{ current_user.username }}"><i class="fa fa-user fa-fw"></i> View profile</li></a>
               <li class="divider"></li>
-              <li><a href="{{ url_for_security('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-              </li>
+              <li><a href="{{ url_for_security('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</li></a>
             </ul>
             <!-- /.dropdown-user -->
           </li>
