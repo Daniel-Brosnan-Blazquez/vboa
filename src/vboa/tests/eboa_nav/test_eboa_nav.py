@@ -11,6 +11,9 @@ import os
 import shutil
 import pdb
 
+# Configure environment to avoid authentication and authorization
+os.environ["VBOA_TEST"] = "TRUE"
+
 from vboa.views.eboa_nav import eboa_nav
 
 # Import app
