@@ -517,8 +517,88 @@
         },
         {
             "method_name": "navigate",
+            "module_name": "/vboa/src/vboa/views/user_profile/user_profile.py",
+            "route": "/"
+        },
+        {
+            "method_name": "navigate",
             "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
             "route": "/uboa-nav"
+        },
+        {
+            "method_name": "query_users_and_render",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users"
+        },
+        {
+            "method_name": "query_users_pages",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users-pages"
+        },
+        {
+            "method_name": "query_roles_and_render",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-roles"
+        },
+        {
+            "method_name": "query_roles_pages",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-roles-pages"
+        },
+        {
+            "method_name": "query_user_by_group",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users-by-group/<string:group>"
+        },
+        {
+            "method_name": "query_user_by_role",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users-by-role/<string:role>"
+        },
+        {
+            "method_name": "query_jsonify_filter",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-jsonify-<string:filter>"
+        },
+        {
+            "method_name": "query_jsonify_roles",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-jsonify-roles"
+        },
+        {
+            "method_name": "query_jsonify_user_roles",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-jsonify-user-roles/<uuid:user_uuid>"
+        },
+        {
+            "method_name": "prepare_deletion_of_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/prepare-deletion-of-users"
+        },
+        {
+            "method_name": "delete_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/delete-users"
+        },
+        {
+            "method_name": "import_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/import-users"
+        },
+        {
+            "method_name": "upload_file",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/import-users/import-from-file"
+        },
+        {
+            "method_name": "upload_manually",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/import-users/import-manually"
+        },
+        {
+            "method_name": "export_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/export-users"
         }
     ],
     "authentication_not_required": [],
@@ -1043,6 +1123,81 @@
                 "method_name": "navigate",
                 "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
                 "route": "/uboa-nav"
+            },
+            {
+                "method_name": "query_users_and_render",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users"
+            },
+            {
+                "method_name": "query_users_pages",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users-pages"
+            },
+            {
+                "method_name": "query_roles_and_render",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-roles"
+            },
+            {
+                "method_name": "query_roles_pages",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-roles-pages"
+            },
+            {
+                "method_name": "query_user_by_group",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users-by-group/<string:group>"
+            },
+            {
+                "method_name": "query_user_by_role",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users-by-role/<string:role>"
+            },
+            {
+                "method_name": "query_jsonify_filter",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-jsonify-<string:filter>"
+            },
+            {
+                "method_name": "query_jsonify_roles",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-jsonify-roles"
+            },
+            {
+                "method_name": "query_jsonify_user_roles",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-jsonify-user-roles/<uuid:user_uuid>"
+            },
+            {
+                "method_name": "prepare_deletion_of_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/prepare-deletion-of-users"
+            },
+            {
+                "method_name": "delete_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/delete-users"
+            },
+            {
+                "method_name": "import_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/import-users"
+            },
+            {
+                "method_name": "upload_file",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/import-users/import-from-file"
+            },
+            {
+                "method_name": "upload_manually",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/import-users/import-manually"
+            },
+            {
+                "method_name": "export_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/export-users"
             }
         ],
         "service_administrator": [
@@ -1622,11 +1777,6 @@
                 "method_name": "simulate_with_t0",
                 "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
                 "route": "/simulate/<string:t0>"
-            },
-            {
-                "method_name": "load_agenda",
-                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
-                "route": "/load-agenda/<string:t0>"
             },
             {
                 "method_name": "navigate",
