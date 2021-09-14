@@ -49,6 +49,7 @@
         </div>
         <!-- /.navbar-header -->
         <!-- User menu -->
+        {% if current_user.is_authenticated %}
         <ul class="nav navbar-top-links navbar-right">
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -63,6 +64,7 @@
           </li>
           <!-- /.dropdown -->
         </ul>
+        {% endif %}
         <!-- /.navbar-top-links -->
         <div id="sidebar" class="navbar-default sidebar collapse in" role="navigation">
           <div class="sidebar-nav navbar-collapse" id="navbar-left-side-menu">
