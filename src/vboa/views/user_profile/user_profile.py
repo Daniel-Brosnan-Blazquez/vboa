@@ -9,9 +9,6 @@ module vboa
 # Import flask utilities
 from flask import Blueprint, render_template, request
 
-import sys
-
-
 # Import uboa utilities
 import uboa.engine.engine as uboa_engine
 from uboa.engine.query import Query
