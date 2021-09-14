@@ -70,6 +70,8 @@ def create_app():
         app.config.from_mapping(
             SECRET_KEY=secret_key,
             SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
+            SECURITY_CHANGEABLE=True,
+            SECURITY_SEND_PASSWORD_CHANGE_EMAIL=False,
             SESSION_COOKIE_SECURE=False,
             REMEMBER_COOKIE_SECURE=False,
             SESSION_COOKIE_HTTPONLY=True,
@@ -79,6 +81,8 @@ def create_app():
         app.config.from_mapping(
             SECRET_KEY=secret_key,
             SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
+            SECURITY_CHANGEABLE=True,
+            SECURITY_SEND_PASSWORD_CHANGE_EMAIL=False,
             SESSION_COOKIE_SECURE=True,
             REMEMBER_COOKIE_SECURE=True,
             SESSION_COOKIE_HTTPONLY=True,

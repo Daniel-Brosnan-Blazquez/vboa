@@ -1,13 +1,25 @@
 {% extends "panel/index.html" %}
 
+{% block styles %}
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/boa_favicon_16x18.png') }}"/>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles.css') }}">
+
+    <!-- Custom CSS from https://startbootstrap.com/template-overviews/sb-admin-2/ -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vboa.css') }}">
+    
+    <!-- Custom CSS from https://www.bootdey.com/snippets/view/profile-with-data-and-skills#css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+
+    {% endblock %}
+
 {% block content %}
 <div class="row panel-no-index">
   <h1 class="page-header">User profile</h1>
 </div>
 <div class="row">
-  <!-- Import from file -->
-  
-    <!-- /.panel-heading -->
     <div class="panel-body">
         <div class="row gutters-sm">
             <div class="col-md-4 mb-3">
@@ -20,18 +32,18 @@
                     <div class="mt-3">
                       <h4>{{ user.username }}</h4>
                       <p class="text-muted font-size-sm">{{ user.group }}</p>
-                      <button class="btn btn-success">Change password</button>
+                      <a class="btn btn-success" href="{{ url_for_security('change_password') }}">Change password</a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7">
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="row">
                     <div class="col-sm-3">
-                      <p class="mb-0">Email</p>
+                      <p><b class="mb-0">Email</b></p>
                     </div>
                     <div class="col-sm-9 text-muted">
                       <p>{{ user.email }}</p>
@@ -40,7 +52,7 @@
                   <hr>
                   <div class="row">
                     <div class="col-sm-3">
-                      <p class="mb-0">Username</p>
+                      <p><b class="mb-0">Username</b></p>
                     </div>
                     <div class="col-sm-9 text-muted">
                         <p>{{ user.username }}</p>
@@ -49,16 +61,7 @@
                   <hr>
                   <div class="row">
                     <div class="col-sm-3">
-                      <p class="mb-0">Password</p>
-                    </div>
-                    <div class="col-sm-9 text-muted">
-                        <p id="password">{{ user.password }}</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Group</p>
+                      <p><b class="mb-0">Group</b></p>
                     </div>
                     <div class="col-sm-9 text-muted">
                         <p>{{ user.group }}</p>
@@ -67,7 +70,7 @@
                   <hr>
                   <div class="row">
                     <div class="col-sm-3">
-                      <p class="mb-0">Roles</p>
+                      <p><b class="mb-0">Roles</b></p>
                     </div>
                     <div class="col-sm-9 text-muted">
                         {%for role in user.roles%}
@@ -83,10 +86,4 @@
     </div>
   </div>
 </div>
-{% endblock %}
-{% block scripts %}
-{{ super() }}
-<script type="text/javascript">
-  
-</script>
 {% endblock %}
