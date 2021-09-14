@@ -67,6 +67,23 @@
         <div id="sidebar" class="navbar-default sidebar collapse in" role="navigation">
           <div class="sidebar-nav navbar-collapse" id="navbar-left-side-menu">
             <ul class="nav" id="left-side-menu">
+              {% if current_user.is_anonymous or current_user.has_one_of_these_roles(["administrator"]) %}
+              <li>
+                <a href="#"><i class="fa fa-users fa-fw"></i> Users management<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="/users-management/uboa-nav"><i class="fa fa-fw fa-user"></i> UBOA navigation </a>
+                  </li>
+                  <li>
+                    <a href="/users-management/import-users"><i class="fa fa-fw fa-download"></i> Import users</a>
+                  </li>
+                  <li>
+                    <a href="/users-management/export-users"><i class="fa fa-fw fa-upload"></i> Export users</a>
+                  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+              {% endif %}
               {% if current_user.is_anonymous or current_user.has_one_of_these_roles(["administrator", "service_administrator", "operator"]) %}
               <li id="boa-management-menu-li">
                 <a href="#" id="boa-management-menu"><i class="fa fa-wrench fa-fw"></i> BOA management<span class="fa arrow"></span></a>
@@ -106,21 +123,6 @@
                   <!-- <li> -->
                   <!--   <a href="/sboa/navigate"><i class="fa fa-table fa-fw"></i> Navigate</a> -->
                   <!-- </li> -->
-                </ul>
-                <!-- /.nav-second-level -->
-              </li>
-              <li>
-                <a href="#"><i class="fa fa-users fa-fw"></i> Users management<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                  <li>
-                    <a href="/users-management/uboa-nav"><i class="fa fa-fw fa-user"></i> UBOA navigation </a>
-                  </li>
-                  <li>
-                    <a href="/users-management/import-users"><i class="fa fa-fw fa-download"></i> Import users</a>
-                  </li>
-                  <li>
-                    <a href="/users-management/export-users"><i class="fa fa-fw fa-upload"></i> Export users</a>
-                  </li>
                 </ul>
                 <!-- /.nav-second-level -->
               </li>
