@@ -110,8 +110,6 @@ class TestUsersTab(unittest.TestCase):
         
         functions.login(self.driver, "administrator", "password")
 
-        wait = WebDriverWait(self.driver,5)
-
         self.driver.get("http://localhost:5000/users-management/uboa-nav")
 
         # Go to tab
