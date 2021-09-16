@@ -430,6 +430,7 @@ def upload_manually():
     textarea_content = request.form["import_users_textarea"]
     try:
         data = json.loads(textarea_content)
+        textarea_content_to_show = json.dumps(data, indent=4)
         # Treat data
         engine_uboa = Engine()
         exit_status = engine_uboa.treat_data(data)
@@ -441,13 +442,15 @@ def upload_manually():
         else:
             attempt_import = True
             error_import = True
-            message = exit_status[0]["message"].format("data")
+            message = exit_status[0]["message"]
     except ValueError as e:
         attempt_import = True
         error_import = True
         message = "The data has an error:" + str(e)
+        textarea_content_to_show = None
+    # end try
     
-    return render_template("users_management/import_users.html", attempt_import = attempt_import, error_import = error_import, message = message)
+    return render_template("users_management/import_users.html", attempt_import = attempt_import, error_import = error_import, message = message, textarea_content = textarea_content_to_show)
 
 @bp.route("/export-users")
 @auth_required()

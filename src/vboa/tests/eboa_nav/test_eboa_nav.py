@@ -14,7 +14,10 @@ import pdb
 # Configure environment to avoid authentication and authorization
 os.environ["VBOA_TEST"] = "TRUE"
 
+# Load (and reload if it was loaded before with VBOA_TEST set to TRUE) eboa_nav module
 from vboa.views.eboa_nav import eboa_nav
+import importlib
+importlib.reload(eboa_nav)
 
 # Import app
 from vboa import create_app
