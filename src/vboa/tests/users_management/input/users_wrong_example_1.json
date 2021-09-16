@@ -1,0 +1,23 @@
+{
+  "operations":[
+      {
+          "mode":"insert",
+          "users":[
+              {
+              "email":"example@example.com",
+              "username":"administrator",
+              "password":"example_hash_password",
+              "roles":[
+                  "example_role_2"
+              ]
+              }
+          ],
+          "roles":[
+              {
+              "name":"example_role_2",
+              "description":"This text is an other example."
+              }
+          ]
+      }
+  ]
+}
