@@ -1,0 +1,2 @@
+graft #VIEWS_DIR#/templates
+graft #VIEWS_DIR#/static
