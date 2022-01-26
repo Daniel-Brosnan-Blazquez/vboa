@@ -419,8 +419,11 @@ docker exec -d -it -u root $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
 echo "Cron activities installed"
 
 # Install orc
+echo "Installing ORC and minArc"
 docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
 docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
+
+echo "ORC and minArc installed"
 
 # Initialize the EBOA database inside the postgis-database container
 while true
