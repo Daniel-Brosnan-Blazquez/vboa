@@ -3,11 +3,13 @@ import { DataSet } from "vis-data/peer/esm/vis-data"
 import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
 import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
 import * as chartjs from "chart.js/dist/Chart.js";
-import Map from 'ol/Map.js';
-import View from 'ol/View.js';
+import olMap from 'ol/Map.js';
+import olView from 'ol/View.js';
 import WKT from 'ol/format/WKT.js';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
+import olLayerTile from 'ol/layer/Tile.js';
+import olLayerVector from 'ol/layer/Vector.js';
+import olSourceOSM from 'ol/source/OSM.js';
+import olSourceVector from 'ol/source/Vector.js';
 import {fromLonLat} from 'ol/proj';
 import MousePosition from 'ol/control/MousePosition.js';
 import {createStringXY} from 'ol/coordinate.js';
@@ -308,12 +310,16 @@ function show_x_time_item_information(params, items, dom_id){
  * attach it and the polygons to show */
 export function display_map(dom_id, polygons){
 
-    var raster = new TileLayer({
-        source: new OSM()
+    /* Raster layer would be used to display images at specific
+     geographic locations Not used for the moment */
+    var raster = new olLayerTile({
+        source: new olSourceOSM()
     });
 
+    /* Format set to WKT (Well Known Text standard) */
     var format = new WKT();
-    
+
+    /* Build features containing polygons */
     var features = []
     for (const polygon of polygons){
         var feature = format.readFeature(polygon["polygon"], {
@@ -361,8 +367,8 @@ export function display_map(dom_id, polygons){
         features.push(feature);
     }
     
-    var vector = new VectorLayer({
-        source: new VectorSource({
+    var vector = new olLayerVector({
+        source: new olSourceVector({
             features: features
         })
     });
@@ -375,6 +381,12 @@ export function display_map(dom_id, polygons){
     });
 
     var map_div = document.getElementById(dom_id);
+
+    /* Specify height for div as newer versions of OpenLayers
+     * (since version 6.0.0) do not set this value */
+    map_div.style.height = "100vh";
+
+    /* Reset map and add new layers if the map was already available */
     if (map_div.data){
         map = map_div.data;
         map.getLayers().forEach(function (layer) {
@@ -385,11 +397,12 @@ export function display_map(dom_id, polygons){
         map.addLayer(vector);
     }
     else{
-        var map = new Map({
+        /* Create map */
+        var map = new olMap({
             controls: defaultControls().extend([mousePositionControl]),
             layers: [raster, vector],
             target: dom_id,
-            view: new View({
+            view: new olView({
                 center: [0, 0],
                 zoom: 2
             })
