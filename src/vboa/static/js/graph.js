@@ -404,7 +404,8 @@ export function display_map(dom_id, polygons){
             target: dom_id,
             view: new olView({
                 center: [0, 0],
-                zoom: 2
+                zoom: 2,
+                multiWorld: true
             })
         });
         map_div.data = map;
