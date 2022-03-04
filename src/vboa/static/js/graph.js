@@ -15,7 +15,7 @@ import MousePosition from 'ol/control/MousePosition.js';
 import {createStringXY} from 'ol/coordinate.js';
 import {defaults as defaultControls} from 'ol/control.js';
 import {Fill, Stroke, Style, Text} from 'ol/style.js';
-
+import OLCesium from 'olcs/OLCesium.js';
 
 /* Function to display a pie chart given the id of the DOM where to
  * attach it and the items to show */
@@ -310,8 +310,7 @@ function show_x_time_item_information(params, items, dom_id){
  * attach it and the polygons to show */
 export function display_map(dom_id, polygons){
 
-    /* Raster layer would be used to display images at specific
-     geographic locations Not used for the moment */
+    /* Raster layer used to display world map */
     var raster = new olLayerTile({
         source: new olSourceOSM()
     });
@@ -380,9 +379,34 @@ export function display_map(dom_id, polygons){
         projection: 'EPSG:4326',
     });
 
-    var map_div = document.getElementById(dom_id);
+    /* Get the maps container div */
+    var maps_container_div = document.getElementById(dom_id);
 
-    /* Specify height for div as newer versions of OpenLayers
+    /* Create div for maps options */
+    const maps_options_div = document.createElement("div");
+    maps_options_div.id = dom_id + "-maps-options"
+    maps_container_div.appendChild(maps_options_div);
+    maps_options_div.style.marginBottom = "10px";
+    
+    /* Create div including a button to change from 2D to 3D and viceversa */
+    const change_2d_3d_div = document.createElement("div");
+    change_2d_3d_div.id = dom_id + "-maps-options-change-2d-3d"
+    maps_options_div.appendChild(change_2d_3d_div);
+    const change_2d_3d_button = document.createElement("button");
+    change_2d_3d_button.id = dom_id + "-maps-button-2d-3d"
+    change_2d_3d_div.appendChild(change_2d_3d_button);
+    change_2d_3d_button.classList.add("btn");
+    change_2d_3d_button.classList.add("btn-primary");
+    change_2d_3d_button.innerHTML = "3D";
+    /* Annotate in data the option to display to the other visualization option (2D/3D) */
+    change_2d_3d_button.data = "3D";
+
+    /* Create div for 2D map */
+    const map_div = document.createElement("div");
+    map_div.id = dom_id + "-map"
+    maps_container_div.appendChild(map_div);
+
+    /* Specify height for map_div as newer versions of OpenLayers
      * (since version 6.0.0) do not set this value */
     map_div.style.height = "100vh";
 
@@ -397,11 +421,11 @@ export function display_map(dom_id, polygons){
         map.addLayer(vector);
     }
     else{
-        /* Create map */
+        /* Create 2D map */
         var map = new olMap({
             controls: defaultControls().extend([mousePositionControl]),
             layers: [raster, vector],
-            target: dom_id,
+            target: map_div.id,
             view: new olView({
                 center: [0, 0],
                 zoom: 2,
@@ -409,13 +433,19 @@ export function display_map(dom_id, polygons){
             })
         });
         map_div.data = map;
-    
+
+        /* Create 3D map */
+        const ol3d = new OLCesium({map});
+        const scene = ol3d.getCesiumScene();
+        scene.logarithmicDepthBuffer = false;
+        ol3d.setEnabled(false);
+        
         /**
-         * Add a click handler to the map to render the tooltip.
+         * Add a click handler to the 2D map to render the tooltip.
          */
         map.on('singleclick', function(event) {
             map.updateSize();
-            show_map_item_information(event, map, dom_id)
+            show_map_item_information(event, map, map_div.id)
         });
 
         /* Add sidepanel-change event handler to resize the map */
@@ -424,6 +454,25 @@ export function display_map(dom_id, polygons){
                 map.updateSize();
             }, 1);
         })
+
+        /**
+         * Add a click handler to the button to change from 2D to 3D and viceversa.
+         */
+        change_2d_3d_button.onclick = function(event) {
+            const button = event.explicitOriginalTarget;
+            ol3d.setEnabled(!ol3d.getEnabled());
+            if (button.data == "2D"){
+                /* Change to 2D visualization */
+                button.data = "3D";
+                button.innerHTML = "3D";
+            }
+            else{
+                /* Change to 3D visualization */
+                button.data = "2D";
+                button.innerHTML = "2D";
+            }
+        };
+
     }
 }
 
