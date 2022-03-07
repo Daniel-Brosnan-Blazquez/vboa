@@ -39,6 +39,8 @@ RUN yum install -y rh-ruby25 \
     rh-ruby25-ruby-devel \
     rh-postgresql10-postgresql-devel
 
+RUN yum update -y
+
 RUN pip3 install wheel
 
 # Create folders for BOA

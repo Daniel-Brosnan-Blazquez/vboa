@@ -379,12 +379,17 @@ docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_US
 
 # Generate the python archive
 docker exec -it -u root $APP_CONTAINER bash -c "pip3 install --upgrade pip"
+
+# Install EBOA
 docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e '/eboa/src[tests]'"
+# Install VBOA
 docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e '/vboa/src[tests]'"
+# Install application
 if [ "$PATH_TO_TAILORED" != "" ];
 then
     docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e /$APP/src"
 fi
+# Install common base
 if [ "$PATH_TO_COMMON_BASE" != "" ];
 then
     docker exec -it -u root $APP_CONTAINER bash -c "pip3 install -e /$COMMON_BASE_FOLDER/src"
@@ -396,6 +401,8 @@ docker restart $APP_CONTAINER
 # Install web packages
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
+# Copy cesium library for 3D world maps as ol-cesium needs this to be external
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist"
 
 # Install scripts
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'

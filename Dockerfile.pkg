@@ -12,4 +12,5 @@ RUN yum install -y python36 \
     gcc \
     python36-devel \
     npm
-    
+
+RUN yum update -y

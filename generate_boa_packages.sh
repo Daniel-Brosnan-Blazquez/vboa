@@ -175,19 +175,25 @@ else
 fi
 
 echo "Generating BOA packages"
-# Generate the python archive
+# Generate eboa package
 docker exec -it $PKG_CONTAINER bash -c "cd /eboa/src; python3 setup.py sdist -d /output/"
 
 # Generate the javascript and css necessary for VBOA
 docker exec -it $PKG_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
 docker exec -it $PKG_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
+# Copy cesium library for 3D world maps as ol-cesium needs this to be external
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist"
+
+# Generate vboa package
 docker exec -it $PKG_CONTAINER bash -c "cd /vboa/src; python3 setup.py sdist -d /output/"
 if [ "$PATH_TO_TAILORED" != "" ];
 then
+    # Generate the application package
     docker exec -it $PKG_CONTAINER bash -c "cd /$APP/src; python3 setup.py sdist -d /output/"
 fi
 if [ "$PATH_TO_COMMON_BASE" != "" ];
 then
+    # Generate the package common to several applications
     docker exec -it $PKG_CONTAINER bash -c "cd /$COMMON_BASE_FOLDER/src; python3 setup.py sdist -d /output/"
 fi
 
