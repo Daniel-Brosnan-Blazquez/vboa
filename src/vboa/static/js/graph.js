@@ -445,8 +445,19 @@ export function display_map(dom_id, polygons){
          */
         map.on('singleclick', function(event) {
             map.updateSize();
-            show_map_item_information(event, map, map_div.id)
+            show_2dmap_item_information(event, map, map_div.id)
         });
+
+        /**
+         * Add a click handler to the 3D map to render the tooltip.
+         */
+        const eventHandler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+        eventHandler.setInputAction(
+            function(event) {
+                show_3dmap_item_information(event, scene, map_div.id)
+            },
+            Cesium.ScreenSpaceEventType['LEFT_CLICK']
+        );
 
         /* Add sidepanel-change event handler to resize the map */
         window.addEventListener("sidepanel-change", function() {
@@ -476,7 +487,7 @@ export function display_map(dom_id, polygons){
     }
 }
 
-function show_map_item_information(event, map, dom_id){
+function show_2dmap_item_information(event, map, dom_id){
 
     var feature = map.forEachFeatureAtPixel(event.pixel, function(feature) {
         return feature;
@@ -489,6 +500,32 @@ function show_map_item_information(event, map, dom_id){
         const y = event.originalEvent.pageY;
 
         const div = create_div(dom_id, feature.getId(), header_content, body_content, x, y)
+        drag_element(div)
+    }
+}
+
+function show_3dmap_item_information(event, scene, dom_id){
+
+    var features = scene.drillPick(event.position);
+    if (features.length > 0) {
+        /* Pick first feature */
+        var feature = features[0];
+        var feature_id = feature.primitive.olFeature.id_;
+        var feature_tooltip = feature.primitive.olFeature.values_.tooltip;
+        const header_content = "Detailed information for polygon with id: " + feature_id;
+        const body_content = feature_tooltip;
+
+        /* Obtain coordinates understanding that event.position
+         * returns the position of the mouse inside the parent div */
+        const parent_div = document.getElementById(dom_id);
+        const parent_div_position = parent_div.getBoundingClientRect();
+        const parent_div_x = parent_div_position.x + pageXOffset;
+        const parent_div_y = parent_div_position.y + pageYOffset;
+        
+        const x = event.position.x + parent_div_x;
+        const y = event.position.y + parent_div_y;
+
+        const div = create_div(dom_id, feature_id, header_content, body_content, x, y)
         drag_element(div)
     }
 }
