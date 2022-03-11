@@ -136,8 +136,8 @@ mkdir -p $PATH_TO_TAILORED/src/boa_config
 # Setup and MANIFEST
 echo "Copying setup for the application"
 cp $PATH_TO_VBOA/tailoring/setup/* $PATH_TO_TAILORED/src
-sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/" $PATH_TO_TAILORED/src/MANIFEST.in
-sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/" $PATH_TO_TAILORED/src/setup.py
+sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/g" $PATH_TO_TAILORED/src/MANIFEST.in
+sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/g" $PATH_TO_TAILORED/src/setup.py
 
 ###########################
 # Ingestions
@@ -165,8 +165,12 @@ mkdir -p $PATH_TO_TAILORED/src/$VIEWS_DIR/static/images
 # Templates
 mkdir -p $PATH_TO_TAILORED/src/$VIEWS_DIR/templates
 mkdir -p $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/panel
+mkdir -p $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/security
 cp $PATH_TO_VBOA/tailoring/panel/* $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/panel
-sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/" $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/panel/index.html
+cp $PATH_TO_VBOA/tailoring/security/* $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/security
+sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/g" $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/panel/index.html
+sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/g" $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/security/login_user.html
+sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/g" $PATH_TO_TAILORED/src/$VIEWS_DIR/templates/security/change_password.html
 
 # Tests
 mkdir -p $PATH_TO_TAILORED/src/$VIEWS_DIR/tests
@@ -174,8 +178,8 @@ mkdir -p $PATH_TO_TAILORED/src/$VIEWS_DIR/tests
 # Views
 mkdir -p $PATH_TO_TAILORED/src/$VIEWS_DIR/views
 cp $PATH_TO_VBOA/tailoring/app/* $PATH_TO_TAILORED/src/$VIEWS_DIR
-sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/" $PATH_TO_TAILORED/src/$VIEWS_DIR/__init__.py
-sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/" $PATH_TO_TAILORED/src/$VIEWS_DIR/wsgi.py
+sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/g" $PATH_TO_TAILORED/src/$VIEWS_DIR/__init__.py
+sed -i "s/#VIEWS_DIR#/$VIEWS_DIR/g" $PATH_TO_TAILORED/src/$VIEWS_DIR/wsgi.py
 
 echo "The BOA instance has been created"
 echo "Now, you should review the documentation to complete the instantiation"
@@ -184,3 +188,6 @@ echo "$PATH_TO_TAILORED/src/setup.py"
 echo "$PATH_TO_TAILORED/src/MANIFEST.in"
 echo "$PATH_TO_TAILORED/src/$VIEWS_DIR/wsgi.py"
 echo "$PATH_TO_TAILORED/src/$VIEWS_DIR/templates/panel/index.html"
+echo "$PATH_TO_TAILORED/src/$VIEWS_DIR/templates/panel/project_header.html"
+echo "$PATH_TO_TAILORED/src/$VIEWS_DIR/templates/security/login_user.html"
+echo "$PATH_TO_TAILORED/src/$VIEWS_DIR/templates/security/change_password.html"
