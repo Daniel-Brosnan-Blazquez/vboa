@@ -612,7 +612,7 @@ export function display_czml_data_3dmap(dom_id, czml_data){
 
         /* Check that date is correct */
         if (julian_date.dayNumber == 0){
-            toastr.error("The introduced date ('" + julian_date_iso + "') has not got a valid format.")
+            toastr.error("The introduced date ('" + date + "') has not got a valid format.")
             return;
         }
 
