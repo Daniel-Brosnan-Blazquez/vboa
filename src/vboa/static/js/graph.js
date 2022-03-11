@@ -16,6 +16,8 @@ import {createStringXY} from 'ol/coordinate.js';
 import {defaults as defaultControls} from 'ol/control.js';
 import {Fill, Stroke, Style, Text} from 'ol/style.js';
 import OLCesium from 'olcs/OLCesium.js';
+import * as toastr from "toastr/toastr.js";
+import * as dates from "./dates.js";
 
 /* Function to display a pie chart given the id of the DOM where to
  * attach it and the items to show */
@@ -437,6 +439,9 @@ export function display_map(dom_id, polygons){
         /* Create 3D map */
         const ol3d = new OLCesium({map});
         const scene = ol3d.getCesiumScene();
+
+        /* Disable depth of buffer as it gives errors for old graphic cards
+           Check: https://community.cesium.com/t/rendering-problem-since-cesium-1-45/7211/3 */
         scene.logarithmicDepthBuffer = false;
         ol3d.setEnabled(false);
         
@@ -528,6 +533,112 @@ function show_3dmap_item_information(event, scene, dom_id){
         const div = create_div(dom_id, feature_id, header_content, body_content, x, y)
         drag_element(div)
     }
+}
+
+/* Function to display a czml in a 3D world map given the id of the
+ * DOM where to attach it and a czml structure */
+export function display_czml_data_3dmap(dom_id, czml_data){
+
+    /* Get the 3d map container div */
+    var map_container_div = document.getElementById(dom_id);
+
+    /* Create div for map options */
+    const map_options_div = document.createElement("div");
+    map_options_div.id = dom_id + "-map-options"
+    map_container_div.appendChild(map_options_div);
+    map_options_div.classList.add("row");
+    map_options_div.style.marginBottom = "10px";
+    map_options_div.style.marginTop = "10px";
+    map_options_div.style.marginLeft = "10px";
+    
+    /* Create div including date and button to set the position of the
+     * satellite relative to the specified timestamp */
+    const date_div = document.createElement("div");
+    date_div.id = dom_id + "-map-options-date"
+    map_options_div.appendChild(date_div);
+    date_div.innerHTML = "<div class='col-xs-2'>" +
+        "<div class='input-group date'>" +
+        "<input type='text' class='form-control' name='date' id='" + dom_id + "-map-options-input-date" + "' placeholder='Set date on timeline'/>" +
+        "<span class='input-group-addon'>" +
+        "<span class='glyphicon glyphicon-calendar'></span>" +
+        "</span>" +
+        "</div>" +
+        "</div>";
+    /* Activate calendar */
+    dates.activate_datetimepicker();
+    const set_date_button = document.createElement("button");
+    set_date_button.id = dom_id + "-worldmap-set-date-button"
+    map_options_div.appendChild(set_date_button);
+    set_date_button.classList.add("btn");
+    set_date_button.classList.add("btn-primary");
+    set_date_button.innerHTML = "Set date";
+
+    /* Create div for map */
+    const map_div = document.createElement("div");
+    map_div.id = dom_id + "-worldmap"
+    map_container_div.appendChild(map_div);
+    
+    /* Create viewer. The following options are explained here for better understanding:
+       sceneModePicker: true, to have the option to change the scene to 2D map
+    */
+    const viewer = new Cesium.Viewer(map_div, {
+        imageryProvider : Cesium.createOpenStreetMapImageryProvider(),
+        baseLayerPicker: false,
+        fullscreenButton: false,
+        geocoder: false,
+        homeButton: false,
+        infoBox: false,
+        sceneModePicker: true,
+        navigationHelpButton: false,
+        navigationInstructionsInitiallyVisible: false,
+        skyBox: false
+    });
+
+    /* Disable depth of buffer as it gives errors for old graphic cards
+       Check: https://community.cesium.com/t/rendering-problem-since-cesium-1-45/7211/3 */
+    viewer.scene.logarithmicDepthBuffer = false;
+
+    /* Add czml data to the viewer */
+    viewer.dataSources.add(czml_data);
+
+    /**
+     * Add a click handler to the set date button to change date on the timeline.
+     */
+    set_date_button.onclick = function(event) {
+        var date = document.getElementById(dom_id + "-map-options-input-date").value;
+
+        /* Add Z to the date to specify that the date is in UTC */
+        var julian_date = Cesium.JulianDate.fromIso8601(date + "Z");
+
+        /* Check that date is correct */
+        if (julian_date.dayNumber == 0){
+            toastr.error("The introduced date ('" + julian_date_iso + "') has not got a valid format.")
+            return;
+        }
+
+        var date_iso = Cesium.JulianDate.toIso8601(julian_date);
+        var start_period_iso = Cesium.JulianDate.toIso8601(viewer.clock.startTime);
+        var stop_period_iso = Cesium.JulianDate.toIso8601(viewer.clock.stopTime);
+
+        if (date_iso < start_period_iso){
+            toastr.error("The introduced date ('" + date_iso + "') is lower than the start of the period ('" + start_period_iso + "').")
+        }else if (date_iso > stop_period_iso){
+            toastr.error("The introduced date ('" + date_iso + "') is greater than the stop of the period ('" + stop_period_iso + "').")
+        }else{
+            viewer.clock.currentTime = julian_date;
+        }
+    }
+
+    return;
+}
+
+/* Function to display a czml in a 3D world map given the id of the
+ * DOM where to attach it and a czml file */
+export function display_czml_file_3dmap(dom_id, czml_file){
+
+    var czml_data = Cesium.CzmlDataSource.load(czml_file);
+
+    display_czml_data_3dmap(dom_id, czml_data);
 }
 
 function create_div(dom_id, element_id, header_content, body_content, x, y){
