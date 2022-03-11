@@ -626,6 +626,7 @@ export function display_czml_data_3dmap(dom_id, czml_data){
             toastr.error("The introduced date ('" + date_iso + "') is greater than the stop of the period ('" + stop_period_iso + "').")
         }else{
             viewer.clock.currentTime = julian_date;
+            toastr.success("The date of the timeline has been set to: " + date_iso)
         }
     }
 
