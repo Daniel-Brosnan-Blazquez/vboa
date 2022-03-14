@@ -8,6 +8,64 @@ module vboa
 # Import python utilities
 from tempfile import mkstemp
 from distutils import util
+import datetime
+
+# Import flask utilities
+from flask import request
+
+def get_start_stop_filters(filters, window_size, window_delay):
+    """
+    Get start and stop filters from the specified values in the corresponding form
+
+    :param filters: dictionary with the content of the submit form
+    :type filters: dict
+    :param window_size: size of the window in days (used in case there are no time filters)
+    :type window_size: float
+    :param window_delay: time in days between the current time and the stop of the window (used in case there are no time filters)
+    :type window_delay: float
+    """
+
+    # Initialize reporting period (now - window_size days, now)
+    start_filter = {
+        "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
+        "operator": "<="
+    }
+    stop_filter = {
+        "date": (datetime.datetime.now() - datetime.timedelta(days=(window_delay+window_size))).isoformat(),
+        "operator": ">="
+    }
+    
+    if request.method == "POST":
+
+        if filters["start"][0] != "":
+            stop_filter = {
+                "date": filters["start"][0],
+                "operator": ">="
+            }
+            if filters["stop"][0] == "":
+                start_filter = {
+                    "date": (parser.parse(filters["start"][0]) + datetime.timedelta(days=window_size)).isoformat(),
+                    "operator": "<="
+                }
+            # end if            
+        # end if
+
+        if filters["stop"][0] != "":
+            start_filter = {
+                "date": filters["stop"][0],
+                "operator": "<="
+            }
+            if filters["start"][0] == "":
+                stop_filter = {
+                    "date": (parser.parse(filters["stop"][0]) - datetime.timedelta(days=window_size)).isoformat(),
+                    "operator": ">="
+                }
+            # end if
+        # end if
+
+    # end if
+
+    return start_filter, stop_filter
 
 def export_html(response):
     html_file_path = None
