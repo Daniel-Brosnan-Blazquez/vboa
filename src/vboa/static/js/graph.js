@@ -639,7 +639,7 @@ export function display_czml_data_3dmap(dom_id, czml_data){
  * DOM where to attach it and a czml file */
 export function display_czml_file_3dmap(dom_id, czml_file){
 
-    var czml_data = Cesium.CzmlDataSource.load(czml_file);
+    const czml_data = Cesium.CzmlDataSource.load(czml_file);
 
     const viewer = display_czml_data_3dmap(dom_id, czml_data);
 

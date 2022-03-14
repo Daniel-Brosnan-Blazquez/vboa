@@ -364,19 +364,15 @@ export function display_map(dom_id, polygons){
  * DOM where to attach it and a czml structure */
 export function display_czml_data_3dmap(dom_id, czml_data){
 
-    jQuery(document).ready(function(){
-        graph.display_czml_data_3dmap(dom_id, czml_data);
-    });
+    return graph.display_czml_data_3dmap(dom_id, czml_data);
 
 };
 
 /* Function to display a czml in a 3D world map given the id of the
  * DOM where to attach it and a czml file */
-export function display_czml_file_3dmap(dom_id, czml_data){
+export function display_czml_file_3dmap(dom_id, czml_file){
 
-    jQuery(document).ready(function(){
-        graph.display_czml_file_3dmap(dom_id, czml_data);
-    });
+    return graph.display_czml_file_3dmap(dom_id, czml_file);
 
 };
 
