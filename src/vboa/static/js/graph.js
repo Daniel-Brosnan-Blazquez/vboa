@@ -535,9 +535,28 @@ function show_3dmap_item_information(event, scene, dom_id){
     }
 }
 
+function on_off_all_path(viewer, show_all_path){
+    const path = viewer.dataSources.get(0).entities.values[0].path;
+
+    /* Store original values of the lead and trail timings to modify
+     * it to allow show/hide all specified path */
+    if (!path.originalLeadTime){
+        path.originalLeadTime = path.leadTime;
+        path.originalTrailTime = path.trailTime;
+    }
+    
+    if (show_all_path){
+        path.leadTime = undefined;
+        path.trailTime = undefined;
+    }else{
+        path.leadTime = path.originalLeadTime;
+        path.trailTime = path.originalTrailTime;
+    }
+}
+
 /* Function to display a czml in a 3D world map given the id of the
  * DOM where to attach it and a czml structure */
-export function display_czml_data_3dmap(dom_id, czml_data){
+export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true){
 
     /* Get the 3d map container div */
     var map_container_div = document.getElementById(dom_id);
@@ -573,6 +592,19 @@ export function display_czml_data_3dmap(dom_id, czml_data){
     set_date_button.classList.add("btn-primary");
     set_date_button.innerHTML = "Set date";
 
+    /* Create div to allow the display of all the path or just the
+       corresponding orbit */
+    var checked = "";
+    if (show_all_path){
+        checked = "checked";
+    }
+    const on_off_all_path_div = document.createElement("div");
+    on_off_all_path_div.id = dom_id + "-map-options-checkbox-on-off-all-path"
+    map_options_div.appendChild(on_off_all_path_div);
+    on_off_all_path_div.innerHTML = '<label id="' + dom_id + "-map-options-checkbox-on-off-all-path-checkbox" + '"><input type="checkbox" ' + checked + '><span class="label-text"><b>Show all track</b></span></label>';
+    on_off_all_path_div.style.display = "inline";
+    on_off_all_path_div.style.marginLeft = "10px";
+
     /* Create div for map */
     const map_div = document.createElement("div");
     map_div.id = dom_id + "-worldmap"
@@ -599,8 +631,17 @@ export function display_czml_data_3dmap(dom_id, czml_data){
     viewer.scene.logarithmicDepthBuffer = false;
 
     /* Add czml data to the viewer */
-    viewer.dataSources.add(czml_data);
+    var data_source_promise = viewer.dataSources.add(czml_data);
 
+    /* Set the lead and trail timings in case the option to show all
+     * the path was requested */
+    /* Handle callback of dataSource.add to change the values of lead
+     * and trail time */
+    data_source_promise.then(
+        result => on_off_all_path(viewer, show_all_path),
+        error => toastr.error("Cesium was not able to add the data source due to: " + error),
+    );
+    
     /**
      * Add a click handler to the set date button to change date on the timeline.
      */
@@ -632,16 +673,30 @@ export function display_czml_data_3dmap(dom_id, czml_data){
         return;
     }
 
+    /**
+     * Add a click handler to the "Show all track" checkbox to
+     * show/hide all track
+     */
+    const on_off_all_path_checkbox = on_off_all_path_div.children[0].children[0];
+    on_off_all_path_checkbox.onclick = function(event) {
+        if (on_off_all_path_checkbox.checked){
+            on_off_all_path(viewer, true);
+        }else{
+            on_off_all_path(viewer, false);
+        }
+        
+    }
+    
     return viewer;
 }
 
 /* Function to display a czml in a 3D world map given the id of the
  * DOM where to attach it and a czml file */
-export function display_czml_file_3dmap(dom_id, czml_file){
+export function display_czml_file_3dmap(dom_id, czml_file, show_all_path = true){
 
     const czml_data = Cesium.CzmlDataSource.load(czml_file);
 
-    const viewer = display_czml_data_3dmap(dom_id, czml_data);
+    const viewer = display_czml_data_3dmap(dom_id, czml_data, show_all_path);
 
     return viewer;
 }
