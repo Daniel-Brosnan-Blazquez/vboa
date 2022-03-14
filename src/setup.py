@@ -23,7 +23,8 @@ setup(name="vboa",
           "flask-security-too",
           "bcrypt",
           "gunicorn",
-          "bleach"
+          "bleach",
+          "tle2czml"
       ],
       extras_require={
           "tests" :[
