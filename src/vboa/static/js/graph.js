@@ -628,9 +628,11 @@ export function display_czml_data_3dmap(dom_id, czml_data){
             viewer.clock.currentTime = julian_date;
             toastr.success("The date of the timeline has been set to: " + date_iso)
         }
+
+        return;
     }
 
-    return;
+    return viewer;
 }
 
 /* Function to display a czml in a 3D world map given the id of the
@@ -639,7 +641,9 @@ export function display_czml_file_3dmap(dom_id, czml_file){
 
     var czml_data = Cesium.CzmlDataSource.load(czml_file);
 
-    display_czml_data_3dmap(dom_id, czml_data);
+    const viewer = display_czml_data_3dmap(dom_id, czml_data);
+
+    return viewer;
 }
 
 function create_div(dom_id, element_id, header_content, body_content, x, y){
