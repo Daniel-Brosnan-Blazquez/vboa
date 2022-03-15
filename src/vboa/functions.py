@@ -9,10 +9,19 @@ module vboa
 from tempfile import mkstemp
 from distutils import util
 import datetime
+import json
+import tle2czml
+import pytz
 
 # Import flask utilities
 from flask import request
 
+# Import EBOA errors
+from eboa.engine.errors import ErrorParsingParameters
+
+########
+# Date functions
+########
 def get_start_stop_filters(filters, window_size, window_delay):
     """
     Get start and stop filters from the specified values in the corresponding form
@@ -67,6 +76,9 @@ def get_start_stop_filters(filters, window_size, window_delay):
 
     return start_filter, stop_filter
 
+########
+# Export functions
+########
 def export_html(response):
     html_file_path = None
     if response.status_code == 200:
@@ -79,6 +91,9 @@ def export_html(response):
 
     return html_file_path
 
+########
+# Alert functions
+########
 def set_specific_alert_filters(filters):
     """
     Set filter for query alerts.
@@ -189,3 +204,88 @@ def set_specific_alert_filters(filters):
     # end if
 
     return kwargs
+
+########
+# Czml functions
+########
+def events_to_czml_data(events, tle_string, include_track = True, width = 5, colors_by_gauge = {}):
+    """
+    Function to generate a czml data structure from the received events using the received TLE
+
+    PRE:
+    - The list of events is ordered by start in ascending
+
+    :param events: list of events from DDBB
+    :type events: list
+
+    :return: czml data structure associated to the events using the TLE received
+    :rtype: dict
+    """
+
+    if type(events) != list:
+        raise ErrorParsingParameters("The structure of events parameter has to be a list. Received structure is: {}".format(events))
+    # end if
+
+    if len(events) > 0:
+        # Get start of the period
+        start_period = events[0].start.isoformat()
+
+        # Get stop of the period
+        stop_period = events[-1].stop.isoformat()
+
+        # Set period
+        period = start_period + "Z/" + stop_period + "Z"
+    # end if
+
+    if include_track and len(events) > 0:
+        czml_data = json.loads(tle2czml.tle2czml.tles_to_czml(tle_string, start_time=events[0].start.replace(tzinfo=pytz.UTC), end_time=events[-1].stop.replace(tzinfo=pytz.UTC), silent=True))
+
+        czml_data[1]["path"]["material"]["solidColor"]["color"]["rgba"] = ["213", "255", "0", 150]
+    else:
+        czml_data = []
+    # end if
+    
+    for event in events:
+        czml_data_event = json.loads(tle2czml.tle2czml.tles_to_czml(tle_string, start_time=event.start.replace(tzinfo=pytz.UTC), end_time=event.stop.replace(tzinfo=pytz.UTC), silent=True))
+
+        new_object = czml_data_event[1]
+
+        # Set path interval
+        new_object["path"]["show"][0]["interval"] = period
+
+        # Change id
+        new_object["id"] = str(event.event_uuid)
+
+        # Set width
+        new_object["path"]["width"] = width
+
+        # Set color
+        color = ["46", "204", "113", 255]
+        gauge_name = event.gauge.name
+        gauge_system = event.gauge.system
+        if gauge_name in colors_by_gauge:
+            if gauge_system in colors_by_gauge[gauge_name]:
+                color = colors_by_gauge[gauge_name][gauge_system]
+            # end if
+        # end if
+        new_object["path"]["material"]["solidColor"]["color"]["rgba"] = color
+
+        # Delete leadTime
+        del new_object["path"]["leadTime"]
+        
+        # Delete trailTime
+        del new_object["path"]["trailTime"]
+
+        # Add new object associated to the current event to the czml data structure
+        czml_data.append(new_object)
+
+    # end for
+
+    if len(events) > 0:
+        
+        # Set interval
+        czml_data[0]["clock"]["interval"] = period
+        
+    # end if
+    
+    return czml_data
