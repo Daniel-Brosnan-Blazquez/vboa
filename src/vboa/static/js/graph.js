@@ -628,9 +628,49 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
         skyBox: false
     });
 
+    const scene = viewer.scene;
+
     /* Disable depth of buffer as it gives errors for old graphic cards
        Check: https://community.cesium.com/t/rendering-problem-since-cesium-1-45/7211/3 */
-    viewer.scene.logarithmicDepthBuffer = false;
+    scene.logarithmicDepthBuffer = false;
+
+    /* Show latitude and longitude when the mouse is over the 3D world */
+    const entity = viewer.entities.add({
+        label: {
+            show: false,
+            showBackground: true,
+            font: "14px monospace",
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP,
+            pixelOffset: new Cesium.Cartesian2(15, 0),
+        },
+    });
+    let handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+    handler.setInputAction(function (movement) {
+      const cartesian = viewer.camera.pickEllipsoid(
+        movement.endPosition,
+        scene.globe.ellipsoid
+      );
+      if (cartesian) {
+        const cartographic = Cesium.Cartographic.fromCartesian(
+          cartesian
+        );
+        const longitudeString = Cesium.Math.toDegrees(
+          cartographic.longitude
+        ).toFixed(2);
+        const latitudeString = Cesium.Math.toDegrees(
+          cartographic.latitude
+        ).toFixed(2);
+
+        entity.position = cartesian;
+        entity.label.show = true;
+        entity.label.text =
+          `Lon: ${`   ${longitudeString}`.slice(-7)}\u00B0` +
+          `\nLat: ${`   ${latitudeString}`.slice(-7)}\u00B0`;
+      } else {
+        entity.label.show = false;
+      }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
     /* Add czml data to the viewer */
     var data_source_promise = viewer.dataSources.add(czml_data);
