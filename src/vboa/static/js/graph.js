@@ -614,7 +614,9 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
        sceneModePicker: true, to have the option to change the scene to 2D map
     */
     const viewer = new Cesium.Viewer(map_div, {
-        imageryProvider : Cesium.createOpenStreetMapImageryProvider(),
+        imageryProvider : new Cesium.OpenStreetMapImageryProvider({
+            url : 'https://a.tile.openstreetmap.org/'
+        }),
         baseLayerPicker: false,
         fullscreenButton: false,
         geocoder: false,
