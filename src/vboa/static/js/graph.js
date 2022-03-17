@@ -456,8 +456,8 @@ export function display_map(dom_id, polygons){
         /**
          * Add a click handler to the 3D map to render the tooltip.
          */
-        const eventHandler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-        eventHandler.setInputAction(
+        const event_handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+        event_handler.setInputAction(
             function(event) {
                 show_3dmap_item_information(event, scene, map_div.id)
             },
@@ -634,7 +634,10 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
        Check: https://community.cesium.com/t/rendering-problem-since-cesium-1-45/7211/3 */
     scene.logarithmicDepthBuffer = false;
 
-    /* Show latitude and longitude when the mouse is over the 3D world */
+    /**
+     * Add a mouse over handler to show latitude and longitude when
+     * the mouse is over the 3D world.
+     */
     const entity = viewer.entities.add({
         label: {
             show: false,
@@ -642,13 +645,13 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
             font: "14px monospace",
             horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
             verticalOrigin: Cesium.VerticalOrigin.TOP,
-            pixelOffset: new Cesium.Cartesian2(15, 0),
+            pixelOffset: new Cesium.Cartesian2(-200, 0),
         },
     });
-    let handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-    handler.setInputAction(function (movement) {
+    const event_handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+    event_handler.setInputAction(function (event) {
       const cartesian = viewer.camera.pickEllipsoid(
-        movement.endPosition,
+        event.endPosition,
         scene.globe.ellipsoid
       );
       if (cartesian) {
@@ -671,6 +674,17 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
         entity.label.show = false;
       }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+    /**
+     * Add a click handler to the 3D map to render the tooltip.
+     */
+    event_handler.setInputAction(
+        function(event) {
+            show_3dmap_path_information(event, scene, map_div.id)
+        },
+        Cesium.ScreenSpaceEventType['LEFT_CLICK']
+    );
+
 
     /* Add czml data to the viewer */
     var data_source_promise = viewer.dataSources.add(czml_data);
@@ -741,6 +755,34 @@ export function display_czml_file_3dmap(dom_id, czml_file, show_all_path = true)
     const viewer = display_czml_data_3dmap(dom_id, czml_data, show_all_path);
 
     return viewer;
+}
+
+/* Function to show the tooltip corresponding to a path on a cesium
+ * widget (not OL-Cesium) */
+function show_3dmap_path_information(event, scene, dom_id){
+
+    var paths = scene.drillPick(event.position);
+    if (paths.length > 0) {
+        /* Pick first path */
+        var path = paths[0];
+        var path_id = path.id.id;
+        var path_tooltip = path.id.description.getValue();
+        const header_content = "Detailed information for path with id: " + path_id;
+        const body_content = path_tooltip;
+
+        /* Obtain coordinates understanding that event.position
+         * returns the position of the mouse inside the parent div */
+        const parent_div = document.getElementById(dom_id);
+        const parent_div_position = parent_div.getBoundingClientRect();
+        const parent_div_x = parent_div_position.x + pageXOffset;
+        const parent_div_y = parent_div_position.y + pageYOffset;
+        
+        const x = event.position.x + parent_div_x;
+        const y = event.position.y + parent_div_y;
+
+        const div = create_div(dom_id, path_id, header_content, body_content, x, y)
+        drag_element(div)
+    }
 }
 
 function create_div(dom_id, element_id, header_content, body_content, x, y){

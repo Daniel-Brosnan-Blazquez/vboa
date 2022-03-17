@@ -256,6 +256,9 @@ def events_to_czml_data(events, tle_string, include_track = True, width = 5, col
         # Change id
         new_object["id"] = str(event.event_uuid)
 
+        # Change description
+        new_object["description"] = create_event_tooltip_text(event)
+
         # Set width
         new_object["path"]["width"] = width
 
@@ -289,3 +292,35 @@ def events_to_czml_data(events, tle_string, include_track = True, width = 5, col
     # end if
     
     return czml_data
+
+def create_event_tooltip_text(event):
+    """
+    Function to create the text for the tooltip of the event information
+
+    :param event: event from DDBB
+    :type event: event from DDBB
+
+    :return: string with the tooltip
+    :rtype: str
+    """
+
+    # Check if the event has a defined explicit reference
+    explicit_ref_row = ""
+    if event.explicitRef:
+        explicit_ref_row = "<tr><td>Explicit reference</td><td><a href='/eboa_nav/query-er/" + str(event.explicitRef.explicit_ref_uuid) + "'>" + event.explicitRef.explicit_reference + "</a></td></tr>"
+    # end if
+    
+    return "<table border='1'>" + \
+        "<tr><td>UUID</td><td>" + str(event.event_uuid) + "</td></tr>" + \
+        explicit_ref_row + \
+        "<tr><td>Gauge name</td><td>" + event.gauge.name + "</td></tr>" + \
+        "<tr><td>Gauge system</td><td>" + event.gauge.system + "</td></tr>" + \
+        "<tr><td>Start</td><td>" + event.start.isoformat() + "</td></tr>" + \
+        "<tr><td>Stop</td><td>" + event.stop.isoformat() + "</td></tr>" + \
+        "<tr><td>Duration (m)</td><td>" + str(event.get_duration()) + "</td></tr>" + \
+        "<tr><td>Source</td><td><a href='/eboa_nav/query-source/" + str(event.source_uuid) + "'>" + event.source.name + "</a></td></tr>" + \
+        "<tr><td>Ingestion time</td><td>" + event.ingestion_time.isoformat() + "</td></tr>" + \
+        "<tr><td>Links</td><td><a href='/eboa_nav/query-event-links/" + str(event.event_uuid) + "'><i class='fa fa-link'></i></a></td></tr>" + \
+        "<tr id='expand-tooltip-values-event-" + str(event.event_uuid) + "'><td>Values</td><td><i class='fa fa-plus-square green' onclick='" + 'vboa.expand_event_values_in_tooltip(String(/expand-tooltip-values-event-' + str(event.event_uuid) + '/).substring(1).slice(0,-1), String(/' + str(event.event_uuid) + '/).substring(1).slice(0,-1))' + "' data-toggle='tooltip' title='Click to show the related values'></i></td></tr>" + \
+        "</table>"
+
