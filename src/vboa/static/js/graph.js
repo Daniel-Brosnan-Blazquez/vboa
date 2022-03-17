@@ -634,6 +634,9 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
        Check: https://community.cesium.com/t/rendering-problem-since-cesium-1-45/7211/3 */
     scene.logarithmicDepthBuffer = false;
 
+    /* Add czml data to the viewer */
+    var data_source_promise = viewer.dataSources.add(czml_data);
+    
     /**
      * Add a mouse over handler to show latitude and longitude when
      * the mouse is over the 3D world.
@@ -645,36 +648,26 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
             font: "14px monospace",
             horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
             verticalOrigin: Cesium.VerticalOrigin.TOP,
-            pixelOffset: new Cesium.Cartesian2(-200, 0),
+            pixelOffset: new Cesium.Cartesian2(-200, 0)
         },
     });
     const event_handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
     event_handler.setInputAction(function (event) {
-      const cartesian = viewer.camera.pickEllipsoid(
-        event.endPosition,
-        scene.globe.ellipsoid
-      );
-      if (cartesian) {
-        const cartographic = Cesium.Cartographic.fromCartesian(
-          cartesian
-        );
-        const longitudeString = Cesium.Math.toDegrees(
-          cartographic.longitude
-        ).toFixed(2);
-        const latitudeString = Cesium.Math.toDegrees(
-          cartographic.latitude
-        ).toFixed(2);
-
-        entity.position = cartesian;
-        entity.label.show = true;
-        entity.label.text =
-          `Lon: ${`   ${longitudeString}`.slice(-7)}\u00B0` +
-          `\nLat: ${`   ${latitudeString}`.slice(-7)}\u00B0`;
-      } else {
-        entity.label.show = false;
-      }
+        const cartesian_and_coordinates = cartesian_to_coordinates(event, scene);
+        const cartesian = cartesian_and_coordinates["cartesian"];
+        if (cartesian) {
+            const longitudeString = cartesian_and_coordinates["longitudeString"];
+            const latitudeString = cartesian_and_coordinates["latitudeString"];
+            entity.position = cartesian;
+            entity.label.show = true;
+            entity.label.text =
+                `Lon: ${`   ${longitudeString}`.slice(-7)}\u00B0` +
+                `\nLat: ${`   ${latitudeString}`.slice(-7)}\u00B0`;
+        } else {
+            entity.label.show = false;
+        }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
+    
     /**
      * Add a click handler to the 3D map to render the tooltip.
      */
@@ -682,12 +675,8 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
         function(event) {
             show_3dmap_path_information(event, scene, map_div.id)
         },
-        Cesium.ScreenSpaceEventType['LEFT_CLICK']
+        Cesium.ScreenSpaceEventType.LEFT_CLICK
     );
-
-
-    /* Add czml data to the viewer */
-    var data_source_promise = viewer.dataSources.add(czml_data);
 
     /* Set the lead and trail timings in case the option to show all
      * the path was requested */
@@ -757,12 +746,45 @@ export function display_czml_file_3dmap(dom_id, czml_file, show_all_path = true)
     return viewer;
 }
 
+/* Function to obtain coordinates from cartesian */
+function cartesian_to_coordinates(event, scene){
+    const cartesian = viewer.camera.pickEllipsoid(
+        event.endPosition,
+        scene.globe.ellipsoid
+    );
+
+    var longitudeString = "";
+    var latitudeString = "";
+    if (cartesian) {
+        const cartographic = Cesium.Cartographic.fromCartesian(
+            cartesian
+        );
+        longitudeString = Cesium.Math.toDegrees(
+            cartographic.longitude
+        ).toFixed(2);
+        latitudeString = Cesium.Math.toDegrees(
+            cartographic.latitude
+        ).toFixed(2);
+
+    }
+
+    const result = {
+        "cartesian": cartesian,
+        "longitudeString": longitudeString,
+        "latitudeString": latitudeString,
+    }
+
+    return result
+
+}
+
 /* Function to show the tooltip corresponding to a path on a cesium
  * widget (not OL-Cesium) */
 function show_3dmap_path_information(event, scene, dom_id){
 
     var paths = scene.drillPick(event.position);
     if (paths.length > 0) {
+        
         /* Pick first path */
         var path = paths[0];
         var path_id = path.id.id;
