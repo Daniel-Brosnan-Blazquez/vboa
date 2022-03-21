@@ -38,9 +38,9 @@ RUN yum install -y python36 \
     postgresql \
     openssl
 
-RUN yum install -y rh-ruby25 \
-    rh-ruby25-rubygem-bundler \
-    rh-ruby25-ruby-devel \
+RUN yum install -y rh-ruby27 \
+    rh-ruby27-rubygem-bundler \
+    rh-ruby27-ruby-devel \
     rh-postgresql10-postgresql-devel
 
 RUN yum update -y

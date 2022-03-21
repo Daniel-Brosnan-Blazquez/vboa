@@ -319,8 +319,8 @@ docker exec -d -it -u root $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
 echo "Cron activities installed"
 
 # Install orc
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install minarc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install orc*"
 
 if [ "$EXPORT_DOCKER_IMAGE" == "YES" ];
 then

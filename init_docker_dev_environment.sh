@@ -427,8 +427,8 @@ echo "Cron activities installed"
 
 # Install orc
 echo "Installing ORC and minArc"
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install minarc*"
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; cd /orc_packages/; gem install orc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install minarc*"
+docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install orc*"
 
 echo "ORC and minArc installed"
 
@@ -436,7 +436,7 @@ echo "ORC and minArc installed"
 while true
 do
     echo "Trying to initialize EBOA, SBOA, minArc and ORC databases..."
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; boa_init.py -e -s -u -o -y"
+    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; boa_init.py -e -s -u -o -y"
     status=$?
     if [ $status -ne 0 ]
     then
@@ -450,4 +450,4 @@ do
 done
 
 # Execute the ORC server
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby25; orcBolg -c start"
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; orcBolg -c start"
