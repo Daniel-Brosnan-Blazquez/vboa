@@ -244,7 +244,7 @@ function show_network_node_information(params, nodes, dom_id){
 
 /* Function to display an X-Time graph given the id of the DOM where to
  * attach it and the items to show with the corresponding groups */
-export function display_x_time(dom_id, items, groups, options){
+export function display_x_time(dom_id, items, groups, options, threshold = 1000){
 
     /* create timeline */
     const container = document.getElementById(dom_id);
@@ -255,7 +255,6 @@ export function display_x_time(dom_id, items, groups, options){
         };
     }
     
-    const threshold = 1000
     if (items.length > threshold){
         container.style.display = "none";
         const button_container = document.createElement("div");
@@ -535,6 +534,8 @@ function show_3dmap_item_information(event, scene, dom_id){
     }
 }
 
+/* Function to show/hide all the path of the first entity (ussually
+ * the orbit of a satellite) of the data sources */
 function on_off_all_path(viewer, show_all_path){
     const path = viewer.dataSources.get(0).entities.values[0].path;
 
@@ -552,6 +553,60 @@ function on_off_all_path(viewer, show_all_path){
         path.leadTime = path.originalLeadTime;
         path.trailTime = path.originalTrailTime;
     }
+
+}
+
+/* Function to obtain the ephemeris of the related position */
+function get_ephemeris(time, position_array, velocity_vector_property){
+
+    /* Get position in the inertial reference frame */
+    const position = position_array.getValueInReferenceFrame(time, Cesium.ReferenceFrame.INERTIAL);
+    /* Convert meters to kilometers */
+    const x = position.x / 1000;
+    const y = position.y / 1000;
+    const z = position.z / 1000;
+    
+    let ephemeris = "\nX: " + x + " km";
+    ephemeris += "\nY: " + y + " km";
+    ephemeris += "\nZ: " + z + " km";
+
+    return ephemeris;
+
+}
+
+/* Function to create an entity containing the ephemeris of the first entity (ussually
+ * the orbit of a satellite) of the data sources to allow the display */
+function create_entity_for_ephemeris(viewer){
+
+    const position_array = viewer.dataSources.get(0).entities.values[0].position
+    
+    var velocity_vector_property = new Cesium.VelocityVectorProperty(position_array, false);
+    
+    // Add our vehicle model.
+    const ephemeris_entity = viewer.entities.add({
+        position: position_array,
+        label: {
+            show: true,
+            showBackground: true,
+            font: "14px monospace",
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP,
+            text: new Cesium.CallbackProperty((time) => {
+                const ephemeris = get_ephemeris(time, position_array, velocity_vector_property);
+                return ephemeris;
+            }, false),
+        },
+    });
+    
+}
+
+/* Function to manage the data source included in the viewer */
+function manage_data_source(viewer, show_all_path){
+
+    on_off_all_path(viewer, show_all_path);
+
+    create_entity_for_ephemeris(viewer);
+    
 }
 
 /* Function to display a czml in a 3D world map given the id of the
@@ -683,7 +738,7 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
     /* Handle callback of dataSource.add to change the values of lead
      * and trail time */
     data_source_promise.then(
-        result => on_off_all_path(viewer, show_all_path),
+        result => manage_data_source(viewer, show_all_path),
         error => toastr.error("Cesium was not able to add the data source due to: " + error),
     );
     

@@ -342,10 +342,10 @@ export function display_network(dom_id, nodes, edges){
 
 /* Function to display an X-Time graph given the id of the DOM where to
  * attach it and the items to show with the corresponding groups */
-export function display_x_time(dom_id, items, groups, options){
+export function display_x_time(dom_id, items, groups, options, threshold){
 
     jQuery(document).ready(function(){
-        graph.display_x_time(dom_id, items, groups, options);
+        graph.display_x_time(dom_id, items, groups, options, threshold);
     });
 
 };
