@@ -59,12 +59,21 @@ def get_timeline_duration_statistics_from_events_json_definition(events):
 
     """
     stats = {}
-    durations = [event["duration"] for event in events]
-    stats["min"] = min(durations)
-    stats["max"] = max(durations)
-    stats["mean"] = statistics.mean(durations)
-    stats["std"] = statistics.stdev(durations)
-    stats["total"] = sum(durations)
+    stats["min"] = 0
+    stats["max"] = 0
+    stats["mean"] = 0
+    stats["std"] = 0
+
+    if len(events) > 0:
+        durations = [event["duration"] for event in events]
+        stats["min"] = min(durations)
+        stats["max"] = max(durations)
+        stats["mean"] = statistics.mean(durations)
+        if len(events) > 1:
+            stats["std"] = statistics.stdev(durations)
+        # end if
+        stats["total"] = sum(durations)
+    # end if
 
     return stats
 
