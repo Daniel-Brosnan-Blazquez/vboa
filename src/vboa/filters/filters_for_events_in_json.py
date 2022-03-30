@@ -8,6 +8,7 @@ module vboa
 # Import python utilities
 import datetime
 from dateutil import parser
+import statistics
 
 # Import filters for values
 from vboa.filters import filters_for_values_in_json
@@ -43,7 +44,29 @@ def get_timeline_duration_from_events_json_definition(events):
     :rtype: integer
 
     """
-    return sum([(parser.parse(event["stop"]) - parser.parse(event["start"])).total_seconds() for event in events])
+    return sum([event["duration"] for event in events])
+
+def get_timeline_duration_statistics_from_events_json_definition(events):
+    """
+    Method to get the statistics with respect to the duration of the received events:
+    total, minimum, maximum, mean and standard deviation
+
+    :param events: list of events in json format
+    :type events: list
+
+    :return: duration statistics
+    :rtype: dict
+
+    """
+    stats = {}
+    durations = [event["duration"] for event in events]
+    stats["min"] = min(durations)
+    stats["max"] = max(durations)
+    stats["mean"] = statistics.mean(durations)
+    stats["std"] = statistics.stdev(durations)
+    stats["total"] = sum(durations)
+
+    return stats
 
 def get_events_json_definition(data, list_uuids):
     """
@@ -54,11 +77,11 @@ def get_events_json_definition(data, list_uuids):
     :param list_uuids: list of UUIDs related to events
     :type list_uuids: list
 
-    :return: timeline duration
-    :rtype: integer
+    :return: list of events
+    :rtype: list
 
     """
-    return {"events": [data["events"][key] for key in list_uuids]}
+    return [data["events"][key] for key in list_uuids]
 
 def get_events_filtered_by_values_definition(events, value_filters):
     """
@@ -119,7 +142,11 @@ def add_filters(app):
     @app.template_filter()
     def get_timeline_duration_from_events_json(events):
         return get_timeline_duration_from_events_json_definition(events)
-    
+
+    @app.template_filter()
+    def get_timeline_duration_statistics_from_events_json(events):
+        return get_timeline_duration_statistics_from_events_json_definition(events)
+
     @app.template_filter()
     def get_events_json(data, list_uuids):
         return get_events_json_definition(data, list_uuids)
