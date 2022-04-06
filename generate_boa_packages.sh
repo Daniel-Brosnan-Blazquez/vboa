@@ -179,7 +179,7 @@ echo "Generating BOA packages"
 docker exec -it $PKG_CONTAINER bash -c "cd /eboa/src; python3 setup.py sdist -d /output/"
 
 # Generate the javascript and css necessary for VBOA
-docker exec -it $PKG_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static install"
+docker exec -it $PKG_CONTAINER bash -c "npm --force --prefix /vboa/src/vboa/static install"
 docker exec -it $PKG_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
 # Copy cesium library for 3D world maps as ol-cesium needs this to be external
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist"
