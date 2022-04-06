@@ -373,7 +373,9 @@ def calculate_and_display_visibility_mask(station_mask_path):
     ax.quiver(-3, 0, 0, max_axis, 0, 0, color='C1', arrow_length_ratio=0.05, label=r'$\vec{x}$') # x-axis
     ax.quiver(0, -3, 0, 0, max_axis, 0, color='C2', arrow_length_ratio=0.05, label=r'$\vec{y}$') # y-axis
     ax.quiver(0, 0, -3, 0, 0, max_z, color='C3', arrow_length_ratio=0.1, label=r'$\vec{z}$') # z-axis
-
+    ax.quiver(-3, 0, 0, max_axis, 0, 0, color='C4', arrow_length_ratio=0.05, label=r'$\vec{north}$') # north-axis
+    ax.quiver(0, 0, -3, 0, 0, max_z, color='C5', arrow_length_ratio=0.1, label=r'$\vec{gszz}$') # gsz-axis
+    
     plt.legend()
     # Set axist limits
     ax.set_xlim([min_axis, max_axis])
@@ -445,7 +447,7 @@ def place_satellite_positions(satellite_positions, station_mask_path):
         transformations[1].insert_position(x, y, z)
 
         # Rotate 90 degress around y axis
-        define_transformation_structure(2, "Second transformation: Rotate -90º around Y", transformations)
+        define_transformation_structure(2, "Second transformation: Rotate 90º around Y", transformations)
         new_position = rotation_90_y.apply(new_position)
         x = new_position[0]
         y = new_position[1]
