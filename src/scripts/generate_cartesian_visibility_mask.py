@@ -564,7 +564,7 @@ def main():
     global satellite_orbit
     satellite_orbit = semimajor - earth_radius
 
-    # # Display position of the station
+    # Display position of the station
     display_position_station(station_mask_path)
 
     # Calculate and display visibility mask of the station at the center of the Earth
