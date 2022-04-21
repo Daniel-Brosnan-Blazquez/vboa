@@ -209,6 +209,8 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     :type satellite_positions: list
     '''
 
+    print("Genearing footprint with the following configuration:\n\t- alpha: {}\n\t- roll: {}\n\t- pitch: {}\n\t- yaw: {}\n".format(alpha, roll, pitch, yaw))
+    
     create_figure = False
     # Creating an empty figure or plot
     if not ax:
@@ -223,7 +225,7 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     # end if
 
     # Set axis limits
-    ax.set_xlim([-1000, 1000])
+    ax.set_xlim([-7000, 7000])
     ax.set_ylim([-7000, 7000])
     ax.set_zlim([-7000, 7000])
 
@@ -257,6 +259,9 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     y_right_line = []
     z_right_line = []
     i = 0
+    satellite_coordinates = []
+    right_coordinates = []
+    left_coordinates = []
     while i < len(satellite_positions):
         # Get X, Y and Z position of the satellite
         satellite_x = satellite_positions[i]
@@ -278,6 +283,8 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
         satellite_projection_x = satellite_projection.earth_location.x.value
         satellite_projection_y = satellite_projection.earth_location.y.value
         satellite_projection_z = satellite_projection.earth_location.z.value
+
+        satellite_coordinates.append("{} {}".format(satellite_projection.earth_location.lon.value, satellite_projection.earth_location.lat.value))
 
         plot_vector(ax, satellite_projection_x, satellite_projection_y, satellite_projection_z, color = "C5", label=r'$\vec{PROJ}$')
         x_satellite_projection_line.append(satellite_projection_x)
@@ -306,16 +313,10 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
         # Get perpendicular vector to satellite positions
         x_roll = np.cross([satellite_x, satellite_y, satellite_z], [satellite_sibling_x, satellite_sibling_y, satellite_sibling_z])*rotation_axis_sign
 
-        print("SATELLITE POSITION -> x: {}, y: {}, z: {}".format(satellite_x, satellite_y, satellite_z))
-        print("SATELLITE SIBLING POSITION -> x: {}, y: {}, z: {}".format(satellite_sibling_x, satellite_sibling_y, satellite_sibling_z))
-        print("X_ROLL -> x: {}, y: {}, z: {}".format(x_roll[0], x_roll[1], x_roll[2]))
-
         plot_vector(ax, x_roll[0]/10000, x_roll[1]/10000, x_roll[2]/10000, color="C6", label=r'$\vec{xroll}$')
 
         # Get the other vector to build the orthogonal system
         y_roll = np.cross([satellite_x, satellite_y, satellite_z], [x_roll[0], x_roll[1], x_roll[2]])
-
-        print("Y_ROLL -> x: {}, y: {}, z: {}".format(y_roll[0], y_roll[1], y_roll[2]))
 
         plot_vector(ax, y_roll[0]/10000000, y_roll[1]/10000000, y_roll[2]/10000000, color="C7", label=r'$\vec{yroll}$')
 
@@ -339,6 +340,17 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
         x_left_line.append(satellite_projection_roll_b3[0])
         y_left_line.append(satellite_projection_roll_b3[1])
         z_left_line.append(satellite_projection_roll_b3[2])
+
+        # Obtain latitude and longitudes of the footprint
+        footprint_right_position = satellite_projection_roll_b1
+        footprint_left_position = satellite_projection_roll_b3
+
+        footprint_right_position = SkyCoord(x=satellite_projection_roll_b1[0], y=satellite_projection_roll_b1[1], z=satellite_projection_roll_b1[2], frame='itrs', unit=("km", "km", "km"), representation_type="cartesian")
+        right_coordinates.append("{} {}".format(footprint_right_position.earth_location.lon.value, footprint_right_position.earth_location.lat.value))
+
+        footprint_left_position = SkyCoord(x=satellite_projection_roll_b3[0], y=satellite_projection_roll_b3[1], z=satellite_projection_roll_b3[2], frame='itrs', unit=("km", "km", "km"), representation_type="cartesian")
+        left_coordinates.append("{} {}".format(footprint_left_position.earth_location.lon.value, footprint_left_position.earth_location.lat.value))
+
         
     # end while
 
@@ -353,6 +365,15 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     ax.plot(x_satellite_projection_line, y_satellite_projection_line, z_satellite_projection_line)
     ax.plot(x_right_line, y_right_line, z_right_line)
     ax.plot(x_left_line, y_left_line, z_left_line)
+
+    # Print coordinates
+    satellite_coordinates_to_reverse = satellite_coordinates.copy()
+    satellite_coordinates_to_reverse.reverse()
+    print("\nSATELLITE COORDINATES: {}".format(", ".join(satellite_coordinates) + ", " + ", ".join(satellite_coordinates_to_reverse)))
+
+    # Reverse left coordinates to join with right coordinates
+    left_coordinates.reverse()    
+    print("\nFOOTPRINT COORDINATES: {}".format(", ".join(right_coordinates) + ", " + ", ".join(left_coordinates) + ", " + right_coordinates[0]))
 
     return ax
 
@@ -380,10 +401,10 @@ def main():
     # TO CHANGE
     ############
     # Satellite positions to extract the footprint
-    satellite_positions = [-296.21575306040904, 4140.855703498794, 5432.194461466122, 51.132758229891624, 5685.677125894183, 3793.9918086159965, 392.77759064601094, 6598.242940775101, 1732.8505917276358, 690.6225570113636, 6775.21422817452, -521.91994838315167, 911.3418738829949, 6195.610155822812, -2718.2012027520733]
+    satellite_positions = [4116.4252784963965, 538.0266314184722, 5432.194461466122, 4297.5005885873, 505.3103680398974, 5293.470446356712, 4644.859880553402, 435.83463574374537, 4997.870033415377, 5125.7071730974985, 322.511890734203, 4512.100420156531, 5683.728487148855, 157.38304626969443, 3793.9918086159964, 6233.11228293895, -64.77305959268692, 2802.491287691588]
 
     # Display footprint of the satellite
-    display_satellite_footprint(satellite_positions, alpha = 0.705176738839256, roll = -45, pitch = 0, yaw = 0)
+    display_satellite_footprint(satellite_positions, alpha = 0.705176738839256, roll = 0, pitch = 0, yaw = 0)
     
     # Showing the above plot
     display_figures = args.display_figures
