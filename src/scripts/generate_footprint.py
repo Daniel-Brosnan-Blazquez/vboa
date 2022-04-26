@@ -366,7 +366,7 @@ def main():
         exit(-1)
     # end if
     
-    # Obtain satellite positions reference in the Earth fixed from
+    # Obtain satellite positions referenced in the Earth fixed frame
     satellite_positions = []
     i = 0
     j = 0
