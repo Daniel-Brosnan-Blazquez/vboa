@@ -14,8 +14,8 @@ pip3 install astropy
 pip3 install lxml
 pip3 install scipy
 
-For obtaining the desired output to be inserted in a CZML for cesium, execute the script as follows:
-python3 generate_cartesian_visibility_mask.py -s SEMIMAJOR_AXIS -p -f STATION_MASK_PATH|sed 's/(//g'|sed 's/)//g'
+For obtaining the desired output to be inserted in a POLYGON for BOA, execute the script as follows:
+python3 generate_footprint.py -s 6835.1440 -a 0.705176738839256 -r 45 -p 45 -y 0 -e "2022-07-09T10:37:10" -i 300 -x "[-296.21575306040904, 4140.855703498794, 5432.194461466122, 51.132758229891624, 5685.677125894183, 3793.9918086159965, 392.77759064601094, 6598.242940775101, 1732.8505917276358, 690.6225570113636, 6775.21422817452, -521.91994838315167, 911.3418738829949, 6195.610155822812, -2718.2012027520733]" -d
 
 """
 # Import python utilities
@@ -46,143 +46,6 @@ from scipy.spatial.transform import Rotation as R
 earth_radius = 6378.1370
 # Set the orbit of the satellite in km
 semimajor = earth_radius
-
-class Transformation():
-    '''
-    Class to manage transformations of the set of points
-    '''
-
-    def __init__(self, title = ""):
-        '''
-        Method to initialize the object
-
-        :param title: title of the figure showing the transformation
-        :type title: str
-        '''
-
-        # XYZ vectors
-        self.vectors = []
-        # X, Y and Z values for drawing a line that joins all of the corresponding points
-        self.x_line = []
-        self.y_line = []
-        self.z_line = []
-        # Minimum and maximum values for X, Y and Z
-        self.min_x = 0
-        self.max_x = 0
-        self.min_y = 0
-        self.max_y = 0
-        self.min_z = 0
-        self.max_z = 0
-        # Title of the figure showing the transformation
-        self.title = title
-
-    def insert_position(self, x, y, z, ox = 0, oy = 0, oz = 0):
-        '''
-        Method to populate the vector, line and set the minimum and maximum values
-
-        :param x: X value
-        :type x: float
-        :param y: Y value
-        :type y: float
-        :param z: Z value
-        :type z: float
-        :param ox: value for X at origin
-        :type ox: float
-        :param oy: value for Y at origin
-        :type oy: float
-        :param oz: value for Z at origin
-        :type oz: float
-        '''        
-
-        self.vectors.append([ox, oy, oz, x, y, z])
-        self.x_line.append(x)
-        self.y_line.append(y)
-        self.z_line.append(z)
-        self.min_x, self.min_y, self.min_z, self.max_x, self.max_y, self.max_z = get_max_min(x, y, z, self.min_x, self.min_y, self.min_z, self.max_x, self.max_y, self.max_z)
-
-    def plot(self):
-        """
-        Method to plot the vectors and line of a transformation
-
-        :return: Axes of the figure
-        :rtype: plt.axes
-        """
-        
-        # Creating an empty figure or plot
-        fig = plt.figure()
-        # Defining the axes as a 3D axes so that we can plot 3D data into it.
-        ax = plt.axes(projection="3d")
-
-        # Set title
-        ax.set_title(self.title)
-
-        # Defining the axes as a 3D axes so that we can plot 3D data into it.
-        ax = plt.axes(projection="3d")
-
-        soa = np.array(self.vectors)
-        X, Y, Z, U, V, W = zip(*soa)
-        ax.quiver(X, Y, Z, U, V, W, arrow_length_ratio = 0.03)
-
-        ax.plot(self.x_line, self.y_line, self.z_line)
-
-        min_x = self.min_x
-        if min_x > -3:
-            min_x = -3
-        # end if
-        max_x = self.max_x
-        if max_x <= 0:
-            max_x = -min_x
-        # end if
-        
-        min_y = self.min_y
-        if min_y > -3:
-            min_y = -3
-        # end if
-        max_y = self.max_y
-        if max_y <= 0:
-            max_y = -min_y
-        # end if
-                
-        min_z = self.min_z
-        if min_z > -3:
-            min_z = -3
-        # end if
-        max_z = self.max_z
-        if max_z <= 0:
-            max_z = -min_z
-        # end if
-
-        ax.quiver(-3, 0, 0, max_x, 0, 0, color='C1', arrow_length_ratio=0.05, label=r'$\vec{x}$') # x-axis
-        ax.quiver(0, -3, 0, 0, max_y, 0, color='C2', arrow_length_ratio=0.05, label=r'$\vec{y}$') # y-axis
-        ax.quiver(0, 0, -3, 0, 0, max_z, color='C3', arrow_length_ratio=0.1, label=r'$\vec{z}$') # z-axis
-
-        plt.legend()
-        # Set axist limits
-        ax.set_xlim([min_x, max_x])
-        ax.set_ylim([min_y, max_y])
-        ax.set_zlim([min_z, max_z])
-
-        return ax
-    
-def define_transformation_structure(key, title, transformations):
-    '''
-    Function to define the structure for a transformation
-    :param key: key of the relevant transformation
-    :type key: N/A
-    :param title: title of the figure showing the transformation
-    :type title: str
-    :param transformations: structure containing the transformations
-    :type transformations: dict
-
-    :return: structure of the transformations
-    :rtype: dict
-    '''
-    
-    if not key in transformations:
-        transformations[key] = Transformation(title)
-    # end if
-
-    return transformations
 
 def define_rotation_axis(axis, degrees):
     '''
