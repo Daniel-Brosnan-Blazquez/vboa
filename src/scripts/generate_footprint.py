@@ -24,12 +24,15 @@ import matplotlib.pyplot as plt
 import argparse
 import os
 import math
+from dateutil import parser
+import datetime
 
 # Import xml parser
 from lxml import etree
 
 # Import astropy utilities
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, ITRS
+from astropy.time import Time
 
 # Import scipy utilities
 from scipy.spatial.transform import Rotation as R
@@ -424,9 +427,29 @@ def main():
     ############
     # TO CHANGE
     ############
-    # Satellite positions to extract the footprint
-    satellite_positions = [4116.4252784963965, 538.0266314184722, 5432.194461466122, 4297.5005885873, 505.3103680398974, 5293.470446356712, 4644.859880553402, 435.83463574374537, 4997.870033415377, 5125.7071730974985, 322.511890734203, 4512.100420156531, 5683.728487148855, 157.38304626969443, 3793.9918086159964, 6233.11228293895, -64.77305959268692, 2802.491287691588]
+    epoch = "2022-07-09T10:37:10"
+    interval = 300
+    inertial_satellite_positions = [-296.21575306040904, 4140.855703498794, 5432.194461466122, 51.132758229891624, 5685.677125894183, 3793.9918086159965, 392.77759064601094, 6598.242940775101, 1732.8505917276358, 690.6225570113636, 6775.21422817452, -521.91994838315167, 911.3418738829949, 6195.610155822812, -2718.2012027520733]
+    
+    # Obtain satellite positions reference in the Earth fixed from
+    satellite_positions = []
+    i = 0
+    j = 0
+    while i < len(inertial_satellite_positions):
+        reference_time = parser.parse(epoch) + datetime.timedelta(seconds=j*interval)
+        print(reference_time)
+        time = Time(reference_time.isoformat(), format="isot", scale="utc")
+        inertial_satellite_position = SkyCoord(x=inertial_satellite_positions[i], y=inertial_satellite_positions[i+1], z=inertial_satellite_positions[i+2], frame="teme", unit=("km", "km", "km"), representation_type="cartesian", obstime=time)
+        fixed_satellite_position = inertial_satellite_position.transform_to(ITRS())
 
+        # Store X, Y, Z values referenced in the Earth fixed frame
+        satellite_positions.append(fixed_satellite_position.earth_location.x.value)
+        satellite_positions.append(fixed_satellite_position.earth_location.y.value)
+        satellite_positions.append(fixed_satellite_position.earth_location.z.value)
+        i += 3
+        j += 1
+    # end while
+    
     # Display footprint of the satellite
     display_satellite_footprint(satellite_positions, alpha = 0.705176738839256, roll = 0, pitch = 0, yaw = 0)
     
