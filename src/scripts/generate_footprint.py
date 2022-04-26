@@ -437,7 +437,6 @@ def main():
     j = 0
     while i < len(inertial_satellite_positions):
         reference_time = parser.parse(epoch) + datetime.timedelta(seconds=j*interval)
-        print(reference_time)
         time = Time(reference_time.isoformat(), format="isot", scale="utc")
         inertial_satellite_position = SkyCoord(x=inertial_satellite_positions[i], y=inertial_satellite_positions[i+1], z=inertial_satellite_positions[i+2], frame="teme", unit=("km", "km", "km"), representation_type="cartesian", obstime=time)
         fixed_satellite_position = inertial_satellite_position.transform_to(ITRS())
