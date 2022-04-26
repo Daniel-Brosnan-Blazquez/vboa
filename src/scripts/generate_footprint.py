@@ -229,22 +229,23 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     ax.set_ylim([-7000, 7000])
     ax.set_zlim([-7000, 7000])
 
-    # Calculate angles corresponding to the aperture of the instrument seen from ground
+    # Calculate angles corresponding to the aperture of the instrument seen from ground (using roll + alpha)
     alpha_radians = (alpha*2*math.pi)/360
     roll_radians = (roll*2*math.pi)/360
-    a1_radians = math.asin(((semimajor)*math.sin(roll_radians-alpha_radians))/earth_radius)
-    a1_degrees = 180-(a1_radians*360)/(2*math.pi)
-    a2_radians = math.asin(((semimajor)*math.sin(roll_radians))/earth_radius)
-    a2_degrees = 180-(a2_radians*360)/(2*math.pi)
-    a3_radians = math.asin(((semimajor)*math.sin(roll_radians+alpha_radians))/earth_radius)
-    a3_degrees = 180-(a3_radians*360)/(2*math.pi)
-    b1 = 180-a1_degrees-roll+alpha
-    b2 = 180-a2_degrees-roll
-    b3 = 180-a3_degrees-roll-alpha
+    roll_a1_radians = math.asin(((semimajor)*math.sin(roll_radians-alpha_radians))/earth_radius)
+    roll_a1_degrees = 180-(roll_a1_radians*360)/(2*math.pi)
+    roll_a2_radians = math.asin(((semimajor)*math.sin(roll_radians))/earth_radius)
+    roll_a2_degrees = 180-(roll_a2_radians*360)/(2*math.pi)
+    roll_a3_radians = math.asin(((semimajor)*math.sin(roll_radians+alpha_radians))/earth_radius)
+    roll_a3_degrees = 180-(roll_a3_radians*360)/(2*math.pi)
+    roll_b1 = 180-roll_a1_degrees-roll+alpha
+    roll_b2 = 180-roll_a2_degrees-roll
+    roll_b3 = 180-roll_a3_degrees-roll-alpha
 
-    print("a angles in radians -> a1: {}, a2: {}, a3: {}".format(a1_radians, a2_radians, a3_radians))
-    print("a angles in degrees -> a1: {}, a2: {}, a3: {}".format(a1_degrees, a2_degrees, a3_degrees))
-    print("Aperture angles from ground -> b1: {}, b2: {}, b3: {}".format(b1, b2, b3))
+    print("\n###Angles for roll###")
+    print("a angles in radians -> a1: {}, a2: {}, a3: {}".format(roll_a1_radians, roll_a2_radians, roll_a3_radians))
+    print("a angles in degrees -> a1: {}, a2: {}, a3: {}".format(roll_a1_degrees, roll_a2_degrees, roll_a3_degrees))
+    print("Aperture angles from ground -> b1: {}, b2: {}, b3: {}".format(roll_b1, roll_b2, roll_b3))
     
     x_satellite_line = []
     y_satellite_line = []
@@ -323,8 +324,8 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
         # Define rotations for roll + alpha
         y_roll_unit = y_roll / np.linalg.norm(y_roll)
 
-        rotation_roll_alpha_b1 = define_rotation_axis([y_roll_unit[0], y_roll_unit[1], y_roll_unit[2]], b1)
-        rotation_roll_alpha_b3 = define_rotation_axis([y_roll_unit[0], y_roll_unit[1], y_roll_unit[2]], b3)
+        rotation_roll_alpha_b1 = define_rotation_axis([y_roll_unit[0], y_roll_unit[1], y_roll_unit[2]], roll_b1)
+        rotation_roll_alpha_b3 = define_rotation_axis([y_roll_unit[0], y_roll_unit[1], y_roll_unit[2]], roll_b3)
 
         satellite_projection_roll_b1 = rotation_roll_alpha_b1.apply([satellite_projection_x, satellite_projection_y, satellite_projection_z])
         satellite_projection_roll_b3 = rotation_roll_alpha_b3.apply([satellite_projection_x, satellite_projection_y, satellite_projection_z])
