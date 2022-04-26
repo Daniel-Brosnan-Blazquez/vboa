@@ -26,6 +26,8 @@ import os
 import math
 from dateutil import parser
 import datetime
+import traceback
+import sys
 
 # Import xml parser
 from lxml import etree
@@ -407,9 +409,23 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
 def main():
 
     args_parser = argparse.ArgumentParser(description="Concept proof for generating the footprint of a satellite using the aperture angle of the instrument and the attitude of the satellite (roll, pitch and yaw).")
-    args_parser.add_argument('-s', dest='semimajor', type=float, nargs=1,
-                             help='Semimajor axis of the orbit of the satellite', required=True)
-    args_parser.add_argument("-p", "--print_output",
+    args_parser.add_argument("-s", dest="semimajor", type=float, nargs=1,
+                             help="Semimajor axis of the orbit of the satellite", required=True)
+    args_parser.add_argument("-a", dest="alpha", type=float, nargs=1,
+                             help="Aperture angle of the instrument", required=True)
+    args_parser.add_argument("-r", dest="roll", type=float, nargs=1,
+                             help="Roll angle of the attitude of the satellite", required=True)
+    args_parser.add_argument("-p", dest="pitch", type=float, nargs=1,
+                             help="Pitch angle of the attitude of the satellite", required=True)
+    args_parser.add_argument("-y", dest="yaw", type=float, nargs=1,
+                             help="Yaw angle of the attitude of the satellite", required=True)
+    args_parser.add_argument("-i", dest="interval", type=float, nargs=1,
+                             help="Interval of time between satellite positions", required=True)
+    args_parser.add_argument("-e", dest="epoch", type=str, nargs=1,
+                             help="Epoch associated to the first satellite position", required=True)
+    args_parser.add_argument("-x", dest="satellite_positions", type=str, nargs=1,
+                             help="List of satellite positions in the Earth inertial reference frame", required=True)
+    args_parser.add_argument("-t", "--print_output",
                              help="Print positions of the satellite at the limits of the visibility mask of the station", action="store_true")
     args_parser.add_argument("-d", "--display_figures",
                              help="Display figures showing the transformations done to obtain the positions of the satellite at the limits of the visibility mask of the station", action="store_true")
@@ -424,12 +440,39 @@ def main():
     global satellite_orbit
     satellite_orbit = semimajor - earth_radius
 
-    ############
-    # TO CHANGE
-    ############
-    epoch = "2022-07-09T10:37:10"
-    interval = 300
-    inertial_satellite_positions = [-296.21575306040904, 4140.855703498794, 5432.194461466122, 51.132758229891624, 5685.677125894183, 3793.9918086159965, 392.77759064601094, 6598.242940775101, 1732.8505917276358, 690.6225570113636, 6775.21422817452, -521.91994838315167, 911.3418738829949, 6195.610155822812, -2718.2012027520733]
+    # Alpha
+    alpha = args.alpha[0]
+
+    # Roll
+    roll = args.roll[0]
+
+    # Pitch
+    pitch = args.pitch[0]
+
+    # Yaw
+    yaw = args.yaw[0]
+
+    #####
+    # Transform satellite positions in the Earth inertial reference frame to the Earth fixed reference frame
+    #####
+    epoch = args.epoch[0]
+    interval = args.interval[0]
+    try:
+        inertial_satellite_positions = eval(args.satellite_positions[0])
+    except SyntaxError as e:
+        print("\nERROR: The list of satellite positions should be a string with the form [X, Y, Z, ..., X, Y, Z]. Exception raised while evaluating it: {}".format(e))
+        traceback.print_exc(file=sys.stdout)
+        exit(-1)
+    # end try
+
+    if type(inertial_satellite_positions) != list:
+        print("\nERROR: The list of satellite positions should be a string with the form [X, Y, Z, ..., X, Y, Z]. Received value has type: {}".format(type(inertial_satellite_positions)))
+        exit(-1)
+    # end if
+    if len(inertial_satellite_positions) % 3 != 0:
+        print("\nERROR: The list of satellite positions should be a list of groups of X, Y and Z coordinates. Received value has {} missing coordinate/s".format(3 - len(inertial_satellite_positions) % 3))
+        exit(-1)
+    # end if
     
     # Obtain satellite positions reference in the Earth fixed from
     satellite_positions = []
@@ -450,7 +493,7 @@ def main():
     # end while
     
     # Display footprint of the satellite
-    display_satellite_footprint(satellite_positions, alpha = 0.705176738839256, roll = 0, pitch = 0, yaw = 0)
+    display_satellite_footprint(satellite_positions, alpha = alpha, roll = roll, pitch = pitch, yaw = yaw)
     
     # Showing the above plot
     display_figures = args.display_figures
