@@ -209,7 +209,7 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     :type satellite_positions: list
     '''
 
-    print("Genearing footprint with the following configuration:\n\t- alpha: {}\n\t- roll: {}\n\t- pitch: {}\n\t- yaw: {}\n".format(alpha, roll, pitch, yaw))
+    print("Genearing footprint with the following configuration:\n\t- semimajor: {}\n\t- alpha: {}\n\t- roll: {}\n\t- pitch: {}\n\t- yaw: {}\n".format(semimajor, alpha, roll, pitch, yaw))
     
     create_figure = False
     # Creating an empty figure or plot
@@ -229,6 +229,18 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     ax.set_ylim([-7000, 7000])
     ax.set_zlim([-7000, 7000])
 
+    # Calculate angles corresponding to the effect of the pitch
+    if pitch != 0:
+        pitch_radians = (pitch*2*math.pi)/360
+        pitch_a_radians = math.asin(((semimajor)*math.sin(pitch_radians))/earth_radius)
+        pitch_a_degrees = 180-(pitch_a_radians*360)/(2*math.pi)
+        pitch_b_degrees = 180-pitch_a_degrees-pitch
+        pitch_b_radians = (pitch_b_degrees*2*math.pi)/360
+        print("\n###Angles for pitch###")
+        print("a angle in degrees: {}".format(pitch_a_degrees))
+        print("b angle in degrees: {}".format(pitch_b_degrees))
+    # end if
+
     # Calculate angles corresponding to the aperture of the instrument seen from ground (using roll + alpha)
     alpha_radians = (alpha*2*math.pi)/360
     roll_radians = (roll*2*math.pi)/360
@@ -241,7 +253,7 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
     roll_b1 = 180-roll_a1_degrees-roll+alpha
     roll_b2 = 180-roll_a2_degrees-roll
     roll_b3 = 180-roll_a3_degrees-roll-alpha
-
+    
     print("\n###Angles for roll###")
     print("a angles in radians -> a1: {}, a2: {}, a3: {}".format(roll_a1_radians, roll_a2_radians, roll_a3_radians))
     print("a angles in degrees -> a1: {}, a2: {}, a3: {}".format(roll_a1_degrees, roll_a2_degrees, roll_a3_degrees))
@@ -312,26 +324,37 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
         satellite_sibling_z = satellite_positions[z_position_sibling]
 
         # Get perpendicular vector to satellite positions
-        x_roll = np.cross([satellite_x, satellite_y, satellite_z], [satellite_sibling_x, satellite_sibling_y, satellite_sibling_z])*rotation_axis_sign
+        axis_pitch = np.cross([satellite_x, satellite_y, satellite_z], [satellite_sibling_x, satellite_sibling_y, satellite_sibling_z])*rotation_axis_sign
 
-        plot_vector(ax, x_roll[0]/10000, x_roll[1]/10000, x_roll[2]/10000, color="C6", label=r'$\vec{xroll}$')
+        plot_vector(ax, axis_pitch[0]/10000, axis_pitch[1]/10000, axis_pitch[2]/10000, color="C6", label=r'$\vec{PITCHAXIS}$')
 
-        # Get the other vector to build the orthogonal system
-        y_roll = np.cross([satellite_x, satellite_y, satellite_z], [x_roll[0], x_roll[1], x_roll[2]])
+        # Define rotations for pitch
+        if pitch != 0:
+            axis_pitch_unit = axis_pitch / np.linalg.norm(axis_pitch)
+            rotation_pitch_b = define_rotation_axis([axis_pitch_unit[0], axis_pitch_unit[1], axis_pitch_unit[2]], pitch_b_degrees)
 
-        plot_vector(ax, y_roll[0]/10000000, y_roll[1]/10000000, y_roll[2]/10000000, color="C7", label=r'$\vec{yroll}$')
+            satellite_projection_pitch_b = rotation_pitch_b.apply([satellite_projection_x, satellite_projection_y, satellite_projection_z])
+
+            axis_roll = np.cross([satellite_projection_pitch_b[0], satellite_projection_pitch_b[1], satellite_projection_pitch_b[2]], [axis_pitch[0], axis_pitch[1], axis_pitch[2]])
+        else:
+            satellite_projection_pitch_b = [satellite_projection_x, satellite_projection_y, satellite_projection_z]
+            axis_roll = np.cross([satellite_x, satellite_y, satellite_z], [axis_pitch[0], axis_pitch[1], axis_pitch[2]])
+        # end if
+
+        plot_vector(ax, satellite_projection_pitch_b[0], satellite_projection_pitch_b[1], satellite_projection_pitch_b[2], color="C7", label=r'$\vec{PITCHB}$')
+        plot_vector(ax, axis_roll[0]/10000000, axis_roll[1]/10000000, axis_roll[2]/10000000, color="C8", label=r'$\vec{ROLLAXIS}$')
 
         # Define rotations for roll + alpha
-        y_roll_unit = y_roll / np.linalg.norm(y_roll)
+        axis_roll_unit = axis_roll / np.linalg.norm(axis_roll)
 
-        rotation_roll_alpha_b1 = define_rotation_axis([y_roll_unit[0], y_roll_unit[1], y_roll_unit[2]], roll_b1)
-        rotation_roll_alpha_b3 = define_rotation_axis([y_roll_unit[0], y_roll_unit[1], y_roll_unit[2]], roll_b3)
+        rotation_roll_alpha_b1 = define_rotation_axis([axis_roll_unit[0], axis_roll_unit[1], axis_roll_unit[2]], roll_b1)
+        rotation_roll_alpha_b3 = define_rotation_axis([axis_roll_unit[0], axis_roll_unit[1], axis_roll_unit[2]], roll_b3)
 
-        satellite_projection_roll_b1 = rotation_roll_alpha_b1.apply([satellite_projection_x, satellite_projection_y, satellite_projection_z])
-        satellite_projection_roll_b3 = rotation_roll_alpha_b3.apply([satellite_projection_x, satellite_projection_y, satellite_projection_z])
+        satellite_projection_roll_b1 = rotation_roll_alpha_b1.apply([satellite_projection_pitch_b[0], satellite_projection_pitch_b[1], satellite_projection_pitch_b[2]])
+        satellite_projection_roll_b3 = rotation_roll_alpha_b3.apply([satellite_projection_pitch_b[0], satellite_projection_pitch_b[1], satellite_projection_pitch_b[2]])
 
-        plot_vector(ax, satellite_projection_roll_b1[0], satellite_projection_roll_b1[1], satellite_projection_roll_b1[2], color="C8", label=r'$\vec{ROLLB1}$')
-        plot_vector(ax, satellite_projection_roll_b3[0], satellite_projection_roll_b3[1], satellite_projection_roll_b3[2], color="C9", label=r'$\vec{ROLLB3}$')
+        plot_vector(ax, satellite_projection_roll_b1[0], satellite_projection_roll_b1[1], satellite_projection_roll_b1[2], color="C9", label=r'$\vec{ROLLB1}$')
+        plot_vector(ax, satellite_projection_roll_b3[0], satellite_projection_roll_b3[1], satellite_projection_roll_b3[2], color="C10", label=r'$\vec{ROLLB3}$')
 
         # Populate lines to plot
         x_right_line.append(satellite_projection_roll_b1[0])
