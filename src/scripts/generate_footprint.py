@@ -65,6 +65,22 @@ def define_rotation_axis(axis, degrees):
     return R.from_rotvec(rotation_vector)
 
 def plot_vector(ax, x, y, z, color = "C1", label = None):
+    '''
+    Function to plot the received vector in the received figure with the specified color and label
+
+    :param ax: axes of the figure
+    :type ax: plt.axes
+    :param x: X position of the vector
+    :type x: float
+    :param y: Y position of the vector
+    :type y: float
+    :param z: Z position of the vector
+    :type z: float
+    :param color: Color to associate to the vector
+    :type color: str
+    :param label: Label to associate to the vector
+    :type label: str
+    '''
     soa = np.array([[0, 0, 0, x, y, z]])
     X, Y, Z, U, V, W = zip(*soa)
     ax.quiver(X, Y, Z, U, V, W, color=color, arrow_length_ratio = 0.03, label=label)
@@ -75,6 +91,19 @@ def display_satellite_footprint(satellite_positions, alpha, roll, pitch, yaw, ax
 
     :param satellite_positions: list of satellite positions [x1, y1, z1, ..., xn, yn, zn]
     :type satellite_positions: list
+    :param alpha: aperture angle of the instrument
+    :type alpha: float
+    :param roll: roll angle of the attitude of the satellite
+    :type roll: float
+    :param pitch: pitch angle of the attitude of the satellite
+    :type pitch: float
+    :param yaw: yaw angle of the attitude of the satellite
+    :type yaw: float
+    :param ax: axes of the figure
+    :type ax: plt.axes
+
+    :return: axes of the figure
+    :rtype: plt.axes
     '''
 
     print("Genearing footprint with the following configuration:\n\t- semimajor: {}\n\t- alpha: {}\n\t- roll: {}\n\t- pitch: {}\n\t- yaw: {}\n".format(semimajor, alpha, roll, pitch, yaw))
@@ -323,13 +352,13 @@ def main():
     try:
         inertial_satellite_positions = eval(args.satellite_positions[0])
     except SyntaxError as e:
-        print("\nERROR: The list of satellite positions should be a string with the form [X, Y, Z, ..., X, Y, Z]. Exception raised while evaluating it: {}".format(e))
+        print("\nERROR: The list of satellite positions should be a string with the form [X1, Y1, Z1, ..., Xn, Yn, Zn]. Exception raised while evaluating it: {}".format(e))
         traceback.print_exc(file=sys.stdout)
         exit(-1)
     # end try
 
     if type(inertial_satellite_positions) != list:
-        print("\nERROR: The list of satellite positions should be a string with the form [X, Y, Z, ..., X, Y, Z]. Received value has type: {}".format(type(inertial_satellite_positions)))
+        print("\nERROR: The list of satellite positions should be a string with the form [X1, Y1, Z1, ..., Xn, Yn, Zn]. Received value has type: {}".format(type(inertial_satellite_positions)))
         exit(-1)
     # end if
     if len(inertial_satellite_positions) % 3 != 0:
