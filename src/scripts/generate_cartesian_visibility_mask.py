@@ -14,7 +14,7 @@ pip3 install lxml
 pip3 install scipy
 
 For obtaining the desired output to be inserted in a CZML for cesium, execute the script as follows:
-python3 generate_cartesian_visibility_mask.py -s SEMIMAJOR_AXIS -p -f STATION_MASK_PATH|sed 's/(//g'|sed 's/)//g'
+python3 generate_cartesian_visibility_mask.py -s SEMIMAJOR_AXIS -p -f STATION_MASK_PATH|grep "SATELLITE POSITIONS"|sed 's/(//g'|sed 's/)//g'
 """
 # Import python utilities
 import numpy as np
@@ -533,7 +533,35 @@ def place_satellite_positions(satellite_positions, station_mask_path):
     plt.legend()
 
     return transformations[5].vectors
-    
+
+def get_coordinates(satellite_positions):
+    '''
+    Function to obtain the Earth coordinates associated to the satellite positions
+
+    :param satellite_positions: list of the satellite positions relative to the center of the Earth
+    :type satellite_positions: list
+
+    :return: list of Earth coordinates 
+    :rtype: list
+    '''
+
+    coordinates = []
+    for satellite_position in satellite_positions:
+        # Get X, Y and Z position of the satellite
+        satellite_x = satellite_position[3]
+        satellite_y = satellite_position[4]
+        satellite_z = satellite_position[5]
+
+        position = SkyCoord(x=satellite_x, y=satellite_y, z=satellite_z, frame='itrs', unit=("km", "km", "km"), representation_type="cartesian")
+        latitude = position.earth_location.lat.value
+        longitude = position.earth_location.lon.value
+
+        coordinates.append("{} {}".format(longitude, latitude))
+
+    # end while        
+
+    return coordinates
+
 def main():
 
     args_parser = argparse.ArgumentParser(description="Concept proof for generating the 3D positions of the visibility mask of the station.")
@@ -573,9 +601,13 @@ def main():
     # Place satellite positions
     vectors = place_satellite_positions(satellite_positions, station_mask_path)
 
+    # Obtain coordinates associated to the satellite positions
+    coordinates = get_coordinates(vectors)
+
     print_output = args.print_output
     if print_output:
-        print([(vector[3]*1000,vector[4]*1000,vector[5]*1000) for vector in vectors])
+        print("\n\nSATELLITE POSITIONS: {}".format([(vector[3]*1000,vector[4]*1000,vector[5]*1000) for vector in vectors]))
+        print("\n\nCOORDINATES: {}".format(", ".join(coordinates) + ", " + coordinates[0]))
     # end if
 
     # Showing the above plot
