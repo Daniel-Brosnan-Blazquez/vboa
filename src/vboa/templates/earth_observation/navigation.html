@@ -1,0 +1,361 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Navigation for Earth observation</h1>
+</div>
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#input-interface">Input interface <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse" id="input-interface">
+        <div id="navigation-input-window">
+          <p>
+            <b>TLE to be used:</b>
+          </p>
+          <textarea style="font-family:monospace; border-color:green" id="tle-textarea" name="tle_textarea" rows="4" cols="70" onfocusout="update_map()">
+S1A
+1 39634U 14016A   22118.46476044  .00000028  00000-0  15717-4 0  9991
+2 39634  98.1821 126.7231 0001473  77.5009 282.6365 14.59198419429739</textarea>
+          <p id="tle-error" hidden>
+            <b style="font-size:12px; color:red; white-space: pre"></b>
+          </p>
+          <p style="margin-top:10px">
+            <b>Period to propagate the orbit of the satellite:</b>
+          </p>
+          <div class="col-xs-3">
+            <label>Start</label>
+            <div class="input-group date">
+              <input type="text" class="form-control" name="start" id="start-input" onfocusout="update_map()"/>
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+            </div>
+            <p id="start-error" hidden>
+              <b style="font-size:12px; color:red; white-space: pre"></b>
+            </p>
+          </div>
+          <div class="col-xs-3">
+            <label>Stop</label>
+            <div class="input-group date">
+              <input type="text" class="form-control"  name="stop" id="stop-input" onfocusout="update_map()"/>
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+            </div>
+            <p id="stop-error" hidden>
+              <b style="font-size:12px; color:red; white-space: pre"></b>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" id="navigation-window" hidden>
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#navigation">Navigation and footprint of the instrument <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse" id="navigation">
+        <div>
+          <div id="tle-details">
+            <p>
+              <b>Satellite: </b><span id="tle-satellite"></span><br/>
+              <b>Epoch: </b><span id="tle-epoch"></span><br/>
+              <b>Inclination (degrees): </b><span id="tle-inclination"></span><br/>
+              <b>Right ascension of the ascending node (degrees): </b><span id="tle-raan"></span><br/>
+              <b>Eccentricity: </b><span id="tle-eccentricity"></span><br/>
+              <b>Argument of perigee (degrees): </b><span id="tle-perigee"></span><br/>
+              <b>Mean anomaly (degrees): </b><span id="tle-mean-anomaly"></span><br/>
+              <b>Mean motion: </b><span id="tle-mean-motion"></span><br/>
+              <b>Orbit duration(m): </b><span id="tle-orbit-duration"></span><br/>
+              <b>Orbit at epoch: </b><span id="tle-orbit"></span><br/>
+              <b>Semimajor (km): </b><span id="tle-semimajor"></span>
+            </p>
+          </div>
+          <div id="map" hidden>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#cesium-map">Navigation map <span class="fa fa-angle-double-down"></span></a>
+                </h3>
+              </div>
+              <div class="panel-body panel-collapse" id="cesium-map">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+
+  let viewer = null;
+  
+  /**
+   * @description Function to update the TLE information displayed
+   */
+  function update_tle_information(){
+
+      /* Get TLE string */
+      const tle_string_container = document.getElementById("tle-textarea");
+      const tle_string = tle_string_container.value;
+
+      /* Parse TLE string */
+      const tle_fields = vboa.get_tle_fields(tle_string);
+
+      if (tle_fields["verifies"]){
+          
+          /* Fill satellite name */
+          const satellite_container = document.getElementById("tle-satellite");
+          satellite_container.textContent = tle_fields["satellite"];
+
+          /* Fill epoch */
+          const epoch_container = document.getElementById("tle-epoch");
+          epoch_container.textContent = tle_fields["epoch"];
+
+          /* Fill inclination */
+          const inclination_container = document.getElementById("tle-inclination");
+          inclination_container.textContent = tle_fields["inclination"];
+
+          /* Fill raan */
+          const raan_container = document.getElementById("tle-raan");
+          raan_container.textContent = tle_fields["raan"];
+
+          /* Fill eccentricity */
+          const eccentricity_container = document.getElementById("tle-eccentricity");
+          eccentricity_container.textContent = tle_fields["eccentricity"];
+
+          /* Fill perigee */
+          const perigee_container = document.getElementById("tle-perigee");
+          perigee_container.textContent = tle_fields["perigee"];
+
+          /* Fill mean anomaly */
+          const mean_anomaly_container = document.getElementById("tle-mean-anomaly");
+          mean_anomaly_container.textContent = tle_fields["mean_anomaly"];
+
+          /* Fill mean motion */
+          const mean_motion_container = document.getElementById("tle-mean-motion");
+          mean_motion_container.textContent = tle_fields["mean_motion"];
+
+          /* Fill orbit duration */
+          const orbit_duration_container = document.getElementById("tle-orbit-duration");
+          orbit_duration_container.textContent = tle_fields["orbit_duration"];
+
+          /* Fill orbit */
+          const orbit_container = document.getElementById("tle-orbit");
+          orbit_container.textContent = tle_fields["orbit"];
+
+          /* Fill semimajor */
+          const semimajor_container = document.getElementById("tle-semimajor");
+          semimajor_container.textContent = tle_fields["semimajor"];
+
+      }
+
+      return tle_fields;
+  }
+
+  function update_map(){
+
+      /* Input verification variables */
+      let tle_verifies = true;
+      let start_verifies = true;
+      let stop_verifies = true;
+
+      /* Information containers */
+      const navigation_window_container = document.getElementById("navigation-window");
+      const map_container = document.getElementById("map");
+      const tle_string_container = document.getElementById("tle-textarea");
+      const tle_string = tle_string_container.value;
+      const tle_error_container = document.getElementById("tle-error");
+      const start_container = document.getElementById("start-input");
+      const start_error_container = document.getElementById("start-error");
+      const stop_container = document.getElementById("stop-input");
+      const stop_error_container = document.getElementById("stop-error");
+      
+      /* Check TLE */
+      tle_fields = update_tle_information();
+      if (! tle_fields["verifies"]){
+
+          /* Deativate navigation window */
+          navigation_window_container.hidden = true;
+
+          /* Highlight error */
+          tle_string_container.style.borderColor="red";
+          tle_error_container.hidden = false;
+          tle_error_container.getElementsByTagName("b")[0].textContent = "TLE does not verify\r\nTLE should have the format:\r\nSATELLITE-INDICATOR\r\n1 NNNNNC NNNNNAAA NNNNN.NNNNNNNN +.NNNNNNNN +NNNNN-N +NNNNN-N N NNNNN\r\n2 NNNNN NNN.NNNN NNN.NNNN NNNNNNN NNN.NNNN NNN.NNNN NN.NNNNNNNNNNNNNN"
+          
+          /* Register verification error */
+          tle_verifies = false;
+
+      }else{
+          /* Deactivate error if there was any previously */
+          tle_string_container.style.borderColor="green";
+          tle_error_container.hidden = true;
+          navigation_window_container.hidden = false;
+
+      }
+
+      /* Check format of dates */
+      let start_error = "";
+      let stop_error = "";
+      if (start_container.value == ""){
+
+          start_error = "Start date should be defined";
+          
+          /* Register verification error */
+          start_verifies = false;
+      }else if (start_container.value.match(/....-..-..T..:..:../) == null){
+
+          start_error = "Date should have the format: YYYY-MM-DDThh:mm:ss";
+          
+          /* Register verification error */
+          start_verifies = false;
+
+      }
+
+      if (stop_container.value == ""){
+
+          stop_error = "Stop date should be defined";
+          
+          /* Register verification error */
+          stop_verifies = false;
+      }else if (stop_container.value.match(/....-..-..T..:..:../) == null){
+
+          stop_error = "Date should have the format: YYYY-MM-DDThh:mm:ss";
+          
+          /* Register verification error */
+          stop_verifies = false;
+      }
+
+      /* Check that start is lower or equal than stop */
+      if (start_verifies && stop_verifies && (start_container.value > stop_container.value)){
+
+          start_error = "Start should be lower or equal to stop";
+          
+          /* Register verification error */
+          start_verifies = false;
+          
+      }
+
+      /* Handle errors in dates */
+      if (! start_verifies){
+
+          /* Deativate map */
+          map_container.hidden = true;
+
+          /* Highlight error */
+          start_container.style.borderColor="red";
+          start_error_container.hidden = false;
+          start_error_container.getElementsByTagName("b")[0].textContent = start_error;
+          
+      }else{
+          
+          /* Deactivate error if there was any previously */
+          start_container.style.borderColor="green";
+          start_error_container.hidden = true;
+          
+      }
+      if (! stop_verifies){
+
+          /* Deativate map */
+          map_container.hidden = true;
+
+          /* Highlight error */
+          stop_container.style.borderColor="red";
+          stop_error_container.hidden = false;
+          stop_error_container.getElementsByTagName("b")[0].textContent = stop_error;
+          
+      }else{
+          
+          /* Deactivate error if there was any previously */
+          stop_container.style.borderColor="green";
+          stop_error_container.hidden = true;
+          
+      }
+      
+      /* Check if map could be updated */
+      if (tle_verifies && start_verifies && stop_verifies){
+
+          /* Show map section */
+          map_container.hidden = false;
+
+          const orbit_information = {
+              "tle": tle_string,
+              "start": start_container.value,
+              "stop": stop_container.value
+          }
+
+          vboa.request_info_json("/earth-observation/get-czml-orbit", do_update_map, orbit_information, true);
+          
+      }
+      
+  }
+
+  function do_update_map(czml){
+
+      /* Destroy previous map */
+      if (viewer != null){
+
+          /* Destroy cesium */
+          viewer.vboa_destroy();
+
+          /* Destroy Cesium HTML nodes */
+          const childs = document.getElementById("cesium-map").childNodes;
+          let i = childs.length - 1
+          while (i >= 0){
+
+              childs[i].remove();
+              i--;
+
+          }
+
+      }
+      
+      /* Display the czml data on the map */
+      const czml_json = JSON.parse(czml);
+      const czml_data = Cesium.CzmlDataSource.load(czml_json["czml"]);
+      viewer = vboa.display_czml_data_3dmap("cesium-map", czml_data, false);
+
+  }
+
+  function fill_dates(){
+
+      /* Date containers */
+      const start_container = document.getElementById("start-input");
+      const stop_container = document.getElementById("stop-input");
+
+      const now = new Date();
+
+      /* If start and stop are empty fill values with the following window
+      start = now
+      stop = now + 1 day
+      */
+      if (start_container.value == "" && stop_container.value == ""){
+          start_container.value = now.toISOString().split(".")[0];
+          const stop = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+          stop_container.value = stop.toISOString().split(".")[0];
+      }
+      
+      
+  }
+
+  /* Fill dates for the first time */
+  fill_dates()
+  
+  /* Update the map for the first time */
+  update_map()
+
+</script>
+{% endblock %}

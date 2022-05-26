@@ -169,6 +169,16 @@
                   </li>
                 </ul>
               </li>
+              {% if earth_observation %}
+              <li>
+                <a href="#"><i class="fa fa-globe"></i> Earth observation<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="/earth-observation/navigation"><i class="fa fa-map-pin"></i> Navigation </a>
+                  </li>
+                </ul>
+              </li>
+              {% endif %}
               {% endif %}
               {% block side_panel_plugins %}{% endblock %}
             </ul>

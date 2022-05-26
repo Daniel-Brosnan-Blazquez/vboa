@@ -29,6 +29,7 @@ from vboa.views.boa_scheduler import boa_scheduler
 from vboa.views.general_view_alerts import general_view_alerts
 from vboa.views.users_management import users_management
 from vboa.views.user_profile import user_profile
+from vboa.views.earth_observation import earth_observation
 
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
@@ -97,6 +98,7 @@ def create_app():
     app.register_blueprint(boa_health.bp)
     app.register_blueprint(ingestion_control.bp)
     app.register_blueprint(reporting_control.bp)
+    app.register_blueprint(earth_observation.bp)
     app.register_blueprint(boa_scheduler.bp)
     app.register_blueprint(general_view_alerts.bp)
     app.register_blueprint(users_management.bp)
