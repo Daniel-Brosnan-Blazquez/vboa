@@ -683,6 +683,24 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
         skyBox: false
     });
 
+    /* Function to destroy a viewer */
+    viewer.vboa_destroy = function(){
+        
+        /* Remove handlers */
+        for (const event of viewer.scene.vboa_events){
+            viewer.scene.event_handler.removeInputAction(event);
+        }
+        
+        /* Remove entities */
+        viewer.entities.removeAll();
+        
+        /* Destroy viewer */
+        viewer.destroy();
+        
+        return;
+        
+    }
+    
     const scene = viewer.scene;
 
     /* Disable depth of buffer as it gives errors for old graphic cards
@@ -691,7 +709,12 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
 
     /* Add czml data to the viewer */
     var data_source_promise = viewer.dataSources.add(czml_data);
-    
+
+    /* Create an event handler and add it to the scene */
+    const event_handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+    scene.event_handler = event_handler;
+    scene.vboa_events = [];
+
     /**
      * Add a mouse over handler to show latitude and longitude when
      * the mouse is over the 3D world.
@@ -706,9 +729,8 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
             pixelOffset: new Cesium.Cartesian2(-200, 0)
         },
     });
-    const event_handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
     event_handler.setInputAction(function (event) {
-        const cartesian_and_coordinates = cartesian_to_coordinates(event, scene);
+        const cartesian_and_coordinates = cartesian_to_coordinates(event, viewer);
         const cartesian = cartesian_and_coordinates["cartesian"];
         if (cartesian) {
             const longitudeString = cartesian_and_coordinates["longitudeString"];
@@ -722,7 +744,7 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
             entity.label.show = false;
         }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-    
+    scene.vboa_events.push(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
     /**
      * Add a click handler to the 3D map to render the tooltip.
      */
@@ -732,6 +754,7 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
         },
         Cesium.ScreenSpaceEventType.LEFT_CLICK
     );
+    scene.vboa_events.push(Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     /* Set the lead and trail timings in case the option to show all
      * the path was requested */
@@ -802,7 +825,10 @@ export function display_czml_file_3dmap(dom_id, czml_file, show_all_path = true)
 }
 
 /* Function to obtain coordinates from cartesian */
-function cartesian_to_coordinates(event, scene){
+function cartesian_to_coordinates(event, viewer){
+
+    const scene = viewer.scene;
+    
     const cartesian = viewer.camera.pickEllipsoid(
         event.endPosition,
         scene.globe.ellipsoid

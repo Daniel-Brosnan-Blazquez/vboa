@@ -19,6 +19,7 @@ import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
 import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
 import * as chartjs from "chart.js/dist/Chart.js";
 import "chartjs-plugin-labels/build/chartjs-plugin-labels.min.js";
+import * as orbit from "./orbit.js";
 import * as graph from "./graph.js";
 import * as sourceFunctions from "./sources.js";
 import * as reportFunctions from "./reports.js";
@@ -294,6 +295,18 @@ export function fill_elements_into_selector(input_node, route, field_name, limit
 export function fill_elements_into_selector_no_input(selector, route, search, field_name, limit, offset){
 
     selectorFunctions.fill_elements_into_selector_no_input(selector, route, search, field_name, limit, offset);
+
+};
+
+/*
+* Orbit functions
+*/
+/* Function get the fields contained in a TLE */
+export function get_tle_fields(tle_string){
+
+    const tle_fields = orbit.get_tle_fields(tle_string);
+
+    return tle_fields;
 
 };
 
