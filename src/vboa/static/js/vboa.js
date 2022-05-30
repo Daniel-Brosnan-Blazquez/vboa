@@ -38,6 +38,7 @@ import * as datatableFunctions from "./datatables.js";
 import * as selectorFunctions from "./selectors.js";
 import * as screenshotFunctions from "./screenshots.js";
 import * as renderFunctions from "./render.js";
+import * as nouislider from "nouislider/dist/nouislider.min.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -54,8 +55,10 @@ import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
 import "toastr/build/toastr.min.css";
+import "nouislider/dist/nouislider.min.css";
 
 export let math = mathjs;
+export let slider = nouislider;
 
 /* Make sidebar collapse and page content expand */
 jQuery(document).ready(function(){

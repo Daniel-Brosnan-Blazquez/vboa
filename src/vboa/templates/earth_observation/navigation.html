@@ -87,7 +87,41 @@ S1A
                   <a data-toggle="collapse" data-parent="#accordion" href="#cesium-map">Navigation map <span class="fa fa-angle-double-down"></span></a>
                 </h3>
               </div>
-              <div class="panel-body panel-collapse" id="cesium-map">
+              <div class="panel-body panel-collapse" id="cesium-map-and-controllers">
+                <div class="col-xs-3" style="margin-top:20px" id="map-controllers" style="display:inline">
+                  <div>
+                    <label style="display:block; text-align:center">Footprint configuration</label>
+                  </div>
+                  <div style="margin-top:20px">
+                    <label style="display:block; text-align:center">Roll</label>
+                    <div style="margin-top: 40px" id="roll-slider">
+                    </div>
+                  </div>
+                  <div style="margin-top:60px">
+                    <label style="display:block; text-align:center">Pîtch</label>
+                    <div style="margin-top: 40px" id="pitch-slider">
+                    </div>
+                  </div>
+                  <div style="margin-top:60px">
+                    <label style="display:block; text-align:center">Yaw</label>
+                    <div style="margin-top: 40px" id="yaw-slider">
+                    </div>
+                  </div>
+                  <div style="margin-top:60px">
+                    <label style="display:block; text-align:center">Start date for footprint</label>
+                    <div class="input-group date">
+                      <input type="text" class="form-control" name="start" id="start-input" onfocusout="update_map()"/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+                    </div>
+                    <p id="start-error" hidden>
+                      <b style="font-size:12px; color:red; white-space: pre"></b>
+                    </p>
+                  </div>
+                </div>
+                <div class="col-xs-9" id="cesium-map" style="border:2px; border-color=gray">
+                </div>
               </div>
             </div>
           </div>
@@ -347,15 +381,63 @@ S1A
           const stop = new Date(now.getTime() + 24 * 60 * 60 * 1000);
           stop_container.value = stop.toISOString().split(".")[0];
       }
+         
+  }
+
+  function activate_sliders(){
+
+      /* Roll slider */
+      var roll_slider = document.getElementById("roll-slider");
       
+      vboa.slider.create(roll_slider, {
+          range: {
+              "min": -45,
+              "max": 45
+          },
+          start: [0],
+          tooltips: [true],
+          pips: {mode: "count", values: 5}
+      });
+
+      /* Pitch slider */
+      var pitch_slider = document.getElementById("pitch-slider");
       
+      vboa.slider.create(pitch_slider, {
+          range: {
+              "min": -45,
+              "max": 45
+          },
+          start: [0],
+          tooltips: [true],
+          pips: {mode: "count", values: 5}
+      });
+
+      /* Yaw slider */
+      var yaw_slider = document.getElementById("yaw-slider");
+      
+      vboa.slider.create(yaw_slider, {
+          range: {
+              "min": -45,
+              "max": 45
+          },
+          start: [0],
+          tooltips: [true],
+          pips: {mode: "count", values: 5}
+      });
+
   }
 
   /* Fill dates for the first time */
   fill_dates()
+
+  /* Activate sliders */
+  activate_sliders()
   
   /* Update the map for the first time */
   update_map()
+
+  /* Update the footprint for the first time */
+//  update_footprint()
 
 </script>
 {% endblock %}
