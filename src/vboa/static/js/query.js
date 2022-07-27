@@ -74,12 +74,18 @@ export function request_info_json(url, callback, json, show_loader = false){
                 return returned_value
             }
             else if (this.readyState == 4 && this.status == 403){
-                toastr.error("Ups... Sorry it seems you don't have access to the resource: " + url);
                 var permission_denied_response = {
                     "return_code": 403
                 };
 
-                return callback(parameters, permission_denied_response);
+                return callback(permission_denied_response);
+            }
+            else if (this.readyState == 4 && this.status == 500){
+                var internal_server_error_response = {
+                    "return_code": 500
+                };
+
+                return callback(internal_server_error_response);
             }
         };
     }
