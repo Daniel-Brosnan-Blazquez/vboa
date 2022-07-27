@@ -41,7 +41,7 @@ from eboa.engine.alerts import alert_severity_codes
 from eboa.engine.functions import get_resources_path
 
 # Import filters
-from vboa.filters import filters_for_events_in_json, filters_for_annotations_in_json, filters_for_values_in_json, filters_for_dates_in_json
+from vboa.filters import filters_for_events_in_json, filters_for_annotations_in_json, filters_for_values_in_json, filters_for_dates_in_json, filters_for_lists
 
 # This is to be reviewed
 from flask_security import Security, current_user, hash_password, \
@@ -368,6 +368,8 @@ def create_app():
     ########
     # Filters for lists
     ########
+    filters_for_lists.add_filters(app)
+    
     @app.template_filter()
     def flatten(list_of_lists):
         return [item for list in list_of_lists for item in list]
