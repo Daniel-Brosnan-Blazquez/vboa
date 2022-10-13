@@ -59,6 +59,7 @@ import "nouislider/dist/nouislider.min.css";
 
 export let math = mathjs;
 export let slider = nouislider;
+export let messages = toastr;
 
 /* Make sidebar collapse and page content expand */
 jQuery(document).ready(function(){

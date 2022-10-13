@@ -11,7 +11,7 @@
           <a data-toggle="collapse" data-parent="#accordion" href="#input-interface">Input interface <span class="fa fa-angle-double-down"></span></a>
         </h3>
       </div>
-      <div class="panel-body panel-collapse" id="input-interface">
+      <div class="panel-body panel-collapse collapse in" id="input-interface">
         <div id="navigation-input-window">
           <p>
             <b>TLE to be used:</b>
@@ -60,10 +60,10 @@ S1A
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#navigation">Navigation and footprint of the instrument <span class="fa fa-angle-double-down"></span></a>
+          <a data-parent="#accordion" href="#navigation">Navigation and footprint of the instrument <span class="fa fa-angle-double-down"></span></a>
         </h3>
       </div>
-      <div class="panel-body panel-collapse" id="navigation">
+      <div class="panel-body panel-collapse collapse in" id="navigation">
         <div>
           <div id="tle-details">
             <p>
@@ -84,40 +84,51 @@ S1A
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h3 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#cesium-map">Navigation map <span class="fa fa-angle-double-down"></span></a>
+                  <a data-parent="#accordion" href="#cesium-map-and-controllers">Navigation map <span class="fa fa-angle-double-down"></span></a>
                 </h3>
               </div>
-              <div class="panel-body panel-collapse" id="cesium-map-and-controllers">
+              <div class="panel-body panel-collapse collapse in" id="cesium-map-and-controllers">
                 <div class="col-xs-3" style="margin-top:20px" id="map-controllers" style="display:inline">
                   <div>
                     <label style="display:block; text-align:center">Footprint configuration</label>
                   </div>
-                  <div style="margin-top:20px">
-                    <label style="display:block; text-align:center">Roll</label>
-                    <div style="margin-top: 40px" id="roll-slider">
+                  <div style="margin-top:10px; text-align:center">
+                    <label style="display:inline; text-align:center">Roll: </label><input style="display:inline; text-align:center" type="text" size="3" name="roll-value" id="roll-value-input" onfocusout="update_slider_value('roll', this.id, 'roll-slider')" value="0"/>
+                    <div style="margin-top: 45px" id="roll-slider">
                     </div>
                   </div>
-                  <div style="margin-top:60px">
-                    <label style="display:block; text-align:center">Pîtch</label>
+                  <div style="margin-top:40px; text-align:center">
+                    <label style="display:inline; text-align:center">Pîtch: </label><input style="display:inline; text-align:center" type="text" size="3" name="pitch-value" id="pitch-value-input" onfocusout="update_slider_value('pitch', this.id, 'pitch-slider')" value="0"/>
                     <div style="margin-top: 40px" id="pitch-slider">
                     </div>
                   </div>
-                  <div style="margin-top:60px">
-                    <label style="display:block; text-align:center">Yaw</label>
+                  <div style="margin-top:40px; text-align:center">
+                    <label style="display:inline; text-align:center">Yaw: </label><input style="display:inline; text-align:center" type="text" size="3" name="yaw-value" id="yaw-value-input" onfocusout="update_slider_value('yaw', this.id, 'yaw-slider')" value="0"/>
                     <div style="margin-top: 40px" id="yaw-slider">
                     </div>
                   </div>
-                  <div style="margin-top:60px">
+                  <div style="margin-top:40px">
                     <label style="display:block; text-align:center">Start date for footprint</label>
                     <div class="input-group date">
-                      <input type="text" class="form-control" name="start" id="start-input" onfocusout="update_map()"/>
+                      <input type="text" class="form-control" name="footprint_start" id="footprint-start-input" onfocusout="update_footprint()"/>
                       <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                       </span>
                     </div>
-                    <p id="start-error" hidden>
+                    <p id="footprint-start-error" hidden>
                       <b style="font-size:12px; color:red; white-space: pre"></b>
                     </p>
+                  </div>
+                  <div style="margin-top:10px">
+                    <label style="display:block">Aperture angle (degrees)</label>
+                    <input type="text" name="footprint_aperture" id="footprint-aperture-input" value="1.41035347767851" onfocusout="if (isNaN(parseFloat(this.value)) || parseFloat(this.value) < 0){vboa.messages.error('Aperture of footprint must be a positive float number'); this.style.borderColor='red'} else{update_footprint(); this.style.borderColor='green'}"/>
+                  </div>
+                  <div style="margin-top:10px">
+                    <label style="display:block">Duration (s)</label>
+                    <input type="text" name="footprint_duration" id="footprint-duration-input" value="300" onfocusout="if (isNaN(parseFloat(this.value)) || parseFloat(this.value) < 0){vboa.messages.error('Duration of footprint must be a positive float number'); this.style.borderColor='red'} else{update_footprint(); this.style.borderColor='green'}"/>
+                  </div>
+                  <div style="margin-top:10px">
+                    <p><b>Swath (kms): </b> <span id="swath-value">N/A</span></p>
                   </div>
                 </div>
                 <div class="col-xs-9" id="cesium-map" style="border:2px; border-color=gray">
@@ -369,6 +380,7 @@ S1A
       /* Date containers */
       const start_container = document.getElementById("start-input");
       const stop_container = document.getElementById("stop-input");
+      const footprint_start_container = document.getElementById("footprint-start-input");
 
       const now = new Date();
 
@@ -380,6 +392,9 @@ S1A
           start_container.value = now.toISOString().split(".")[0];
           const stop = new Date(now.getTime() + 24 * 60 * 60 * 1000);
           stop_container.value = stop.toISOString().split(".")[0];
+
+          /* Fix to start the start of the footprint */
+          footprint_start_container.value = now.toISOString().split(".")[0];
       }
          
   }
@@ -399,6 +414,9 @@ S1A
           pips: {mode: "count", values: 5}
       });
 
+      /* Associate handler on end */
+      roll_slider.noUiSlider.on('end', update_footprint);
+
       /* Pitch slider */
       var pitch_slider = document.getElementById("pitch-slider");
       
@@ -411,6 +429,9 @@ S1A
           tooltips: [true],
           pips: {mode: "count", values: 5}
       });
+
+      /* Associate handler on end */
+      pitch_slider.noUiSlider.on('end', update_footprint);
 
       /* Yaw slider */
       var yaw_slider = document.getElementById("yaw-slider");
@@ -425,8 +446,188 @@ S1A
           pips: {mode: "count", values: 5}
       });
 
+      /* Associate handler on end */
+      yaw_slider.noUiSlider.on('end', update_footprint);
+
   }
 
+  function update_slider_value (angle, input_id, slider_id){
+
+      /* Slider */
+      var slider = document.getElementById(slider_id);
+
+      /* Input */
+      var input = document.getElementById(input_id);
+
+      /* Check input */
+      if (vboa.math.abs(input.value) > 45){
+          vboa.messages.error("The introduced value for " + angle + " is out of the range [-45, 45]. Please correct it.")
+          input.style.borderColor="red";
+      }
+      else{
+          input.style.borderColor="green";
+          slider.noUiSlider.set(input.value);
+          update_footprint();
+      }
+      
+  }
+  
+  function update_footprint(){
+
+      /* Information containers */
+      const navigation_window_container = document.getElementById("navigation-window");
+
+      /* Check that navigation window is active
+       This would mean that TLE, start and stop inputs are correct */
+      if (! navigation_window_container.hidden){
+
+          /* Information containers */
+          const start_container = document.getElementById("start-input");
+          const stop_container = document.getElementById("stop-input");
+          const footprint_start_container = document.getElementById("footprint-start-input");
+          const footprint_start_error_container = document.getElementById("footprint-start-error");
+          const footprint_duration_container = document.getElementById("footprint-duration-input");
+          const footprint_aperture_container = document.getElementById("footprint-aperture-input");
+          
+          /* Input verification variables */
+          let footprint_start_verifies = true;
+
+          /* Check format of dates */
+          let footprint_start_error = "";
+          let stop_error = "";
+          if (footprint_start_container.value == ""){
+
+              footprint_start_error = "Footprint start date should be defined";
+              
+              /* Register verification error */
+              footprint_start_verifies = false;
+          }else if (footprint_start_container.value.match(/....-..-..T..:..:../) == null){
+
+              footprint_start_error = "Date should have the format: YYYY-MM-DDThh:mm:ss";
+              
+              /* Register verification error */
+              footprint_start_verifies = false;
+
+          }
+          
+          /* Check that start of the footprint is between start and stop */
+          if (footprint_start_verifies && (start_container.value > footprint_start_container.value || stop_container.value < footprint_start_container.value)){
+          
+              footprint_start_error = "Footprint start should be in the range\n [" + start_container.value + " - " + stop_container.value + "]";
+              
+              /* Register verification error */
+              footprint_start_verifies = false;
+              
+          }
+          
+          /* Handle errors in date */
+          if (! footprint_start_verifies){
+
+              /* Highlight error */
+              footprint_start_container.style.borderColor="red";
+              footprint_start_error_container.hidden = false;
+              footprint_start_error_container.getElementsByTagName("b")[0].textContent = footprint_start_error;
+              
+          }else{
+              
+              /* Deactivate error if there was any previously */
+              footprint_start_container.style.borderColor="green";
+              footprint_start_error_container.hidden = true;
+              
+          }
+
+          /* Check if footprint could be updated */
+          if (footprint_start_verifies){
+              
+              /* Information containers */
+              const roll_slider = document.getElementById("roll-slider");
+              const pitch_slider = document.getElementById("pitch-slider");
+              const yaw_slider = document.getElementById("yaw-slider");
+              const roll_input = document.getElementById("roll-value-input");
+              const pitch_input = document.getElementById("pitch-value-input");
+              const yaw_input = document.getElementById("yaw-value-input");
+
+              const roll_slider_value = roll_slider.noUiSlider.get();
+              roll_input.value = roll_slider_value;
+
+              const pitch_slider_value = pitch_slider.noUiSlider.get();
+              pitch_input.value = pitch_slider_value;
+
+              const yaw_slider_value = yaw_slider.noUiSlider.get();
+              yaw_input.value = yaw_slider_value;
+
+              const footprint_information = {
+                  "roll": roll_slider_value,
+                  "pitch": pitch_slider_value,
+                  "yaw": yaw_slider_value,
+                  "footprint_start": footprint_start_container.value,
+                  "footprint_duration": footprint_duration_container.value,
+                  "footprint_aperture": footprint_aperture_container.value
+              }
+              
+              vboa.request_info_json("/earth-observation/get-footprint", do_update_footprint, footprint_information, true);
+              
+          }
+          
+      }
+  }
+
+  function do_update_footprint(footprint){
+
+      if (footprint.hasOwnProperty("return_code") && footprint["return_code"] == 500){
+          vboa.messages.error("There was an error in the introduced inputs. It could be that the aperture angle is too high. Please check them again.")
+          return;
+      }
+
+      /* If the footprint was already created, remove it */
+      if (viewer.dataSources.getByName("footprint").length > 0){
+          for (const datasource of viewer.dataSources.getByName("footprint")){
+              viewer.dataSources.remove(datasource);
+          }
+      }
+      
+      const satellite_footprints = JSON.parse(footprint);
+
+      for (const satellite_foorprint of satellite_footprints["footprints"]){
+          const czml = [
+              {
+                  id: "document",
+                  name: "footprint",
+                  version: "1.0",
+              },
+              {
+                  id: "footprint",
+                  name: "footprint",
+                  polygon: {
+                      positions: {
+                          cartographicDegrees: satellite_foorprint
+                      },
+                      material: {
+                          solidColor: {
+                              color: {
+                                  rgba: [255, 0, 0, 255],
+                              }
+                          }
+                      }
+                  }
+              }
+          ];
+          const dataSourcePromise = Cesium.CzmlDataSource.load(czml);
+          viewer.dataSources.add(dataSourcePromise);
+      }
+
+      /* Update swath value */
+      const swath_span = document.getElementById("swath-value");
+      swath_span.textContent = parseFloat(satellite_footprints["swath"]).toFixed(3);
+
+      /* Update date of Cesium */
+      var date = document.getElementById("footprint-start-input").value;
+      /* Add Z to the date to specify that the date is in UTC */
+      var julian_date = Cesium.JulianDate.fromIso8601(date + "Z");
+      viewer.clock.currentTime = julian_date;
+
+  }
+  
   /* Fill dates for the first time */
   fill_dates()
 
@@ -437,7 +638,7 @@ S1A
   update_map()
 
   /* Update the footprint for the first time */
-//  update_footprint()
+  update_footprint()
 
 </script>
 {% endblock %}
