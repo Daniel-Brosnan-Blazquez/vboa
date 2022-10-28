@@ -57,6 +57,7 @@ import "metismenu/dist/metisMenu.min.css";
 import "toastr/build/toastr.min.css";
 import "nouislider/dist/nouislider.min.css";
 
+export let datatables = datatableFunctions;
 export let math = mathjs;
 export let slider = nouislider;
 export let messages = toastr;
@@ -363,6 +364,16 @@ export function display_x_time(dom_id, items, groups, options, threshold){
 
     jQuery(document).ready(function(){
         graph.display_x_time(dom_id, items, groups, options, threshold);
+    });
+
+};
+
+/* Function to display an X-Y graph given the id of the DOM where to
+ * attach it and the items to show with the corresponding groups */
+export function display_x_y(dom_id, items, groups, options, threshold){
+
+    jQuery(document).ready(function(){
+        graph.display_x_y(dom_id, items, groups, options, threshold);
     });
 
 };
