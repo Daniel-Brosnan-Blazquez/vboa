@@ -64,6 +64,44 @@ export function display_pie(dom_id, data, options){
 
 };
 
+/* Function to display an XY chart given the id of the DOM where to
+ * attach it and the items to show */
+export function display_x_y(dom_id, data, options){
+
+    /* create XY chart */
+    var container = document.getElementById(dom_id);
+
+    if (options == undefined){
+        var options = {
+            responsive: true,
+            maintainAspectRatio: true,
+            legend: {
+                display: false
+            },
+            plugins: {
+                labels: [
+                    {render: 'label',
+                     position: 'outside',
+                     fontSize: 14,
+                     fontStyle: "bold",
+                     fontColor: "black"},
+                    {render: 'percentage',
+                     fontSize: 14,
+                     fontStyle: "bold",
+                     fontColor: "white",
+                     precision: 2}]
+            }
+        }
+    }
+
+    var xy_chart = new chartjs.Chart(container, {
+        type: 'line',
+        data: data,
+        options: options
+    });
+
+};
+
 /* Function to display a bar chart given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
 export function display_bar_time(dom_id, items, groups, options){
