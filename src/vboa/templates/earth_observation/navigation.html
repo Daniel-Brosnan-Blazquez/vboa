@@ -16,7 +16,7 @@
           <p>
             <b>TLE to be used:</b>
           </p>
-          <textarea style="font-family:monospace; border-color:green" id="tle-textarea" name="tle_textarea" rows="4" cols="70" onfocusout="update_map()">
+          <textarea style="font-family:monospace; border-color:green" id="tle-textarea" name="tle_textarea" rows="4" cols="70" onfocusout="update_map(); update_swath_details()">
 S1A
 1 39634U 14016A   22118.46476044  .00000028  00000-0  15717-4 0  9991
 2 39634  98.1821 126.7231 0001473  77.5009 282.6365 14.59198419429739</textarea>
@@ -121,7 +121,7 @@ S1A
                   </div>
                   <div style="margin-top:10px">
                     <label style="display:block">Aperture angle (degrees)</label>
-                    <input type="text" name="footprint_aperture" id="footprint-aperture-input" value="1.41035347767851" onfocusout="if (isNaN(parseFloat(this.value)) || parseFloat(this.value) < 0){vboa.messages.error('Aperture of footprint must be a positive float number'); this.style.borderColor='red'} else{update_footprint(); this.style.borderColor='green'}"/>
+                    <input type="text" name="footprint_aperture" id="footprint-aperture-input" value="1.41035347767851" onfocusout="if (isNaN(parseFloat(this.value)) || parseFloat(this.value) < 0){vboa.messages.error('Aperture of footprint must be a positive float number'); this.style.borderColor='red'} else{update_footprint(); update_swath_details(); this.style.borderColor='green'}"/>
                   </div>
                   <div style="margin-top:10px">
                     <label style="display:block">Duration (s)</label>
@@ -141,11 +141,33 @@ S1A
     </div>
   </div>
 </div>
+<div class="row" id="swath-window" hidden>
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-parent="#accordion" href="#swath">Footprint swath of the instrument <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in" id="swath">
+        <p>
+          <b>The following table and graph show the evolution of the swath of the instrument of the satellite depending on the roll angle based on the aperture angle</b>:
+        </p>
+        <div class="col-xs-6" id="swath-evolution-table-div">
+        </div>
+        <div class="col-xs-6" id="swath-evolution-x-y-div">
+          <canvas id="swath-evolution-x-y" width="400" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript">
 
+  /* State variables */
   let viewer = null;
   
   /**
@@ -373,6 +395,8 @@ S1A
       const czml_data = Cesium.CzmlDataSource.load(czml_json["czml"]);
       viewer = vboa.display_czml_data_3dmap("cesium-map", czml_data, false);
 
+      update_footprint()
+
   }
 
   function fill_dates(){
@@ -578,7 +602,7 @@ S1A
           vboa.messages.error("There was an error in the introduced inputs. It could be that the aperture angle is too high. Please check them again.")
           return;
       }
-
+      
       /* If the footprint was already created, remove it */
       if (viewer.dataSources.getByName("footprint").length > 0){
           for (const datasource of viewer.dataSources.getByName("footprint")){
@@ -627,6 +651,131 @@ S1A
       viewer.clock.currentTime = julian_date;
 
   }
+
+  function update_swath_details(){
+
+      /* Information containers */
+      const map_container = document.getElementById("map");
+      const swath_window_container = document.getElementById("swath-window");
+      const tle_string_container = document.getElementById("tle-textarea");
+      const tle_string = tle_string_container.value;
+      const start_container = document.getElementById("start-input");
+
+      /* Parse TLE string */
+      const tle_fields = vboa.get_tle_fields(tle_string);
+
+      /* Check that the TLE is correct and that map is being displayed
+      (to have confirmation that the start of the orbit can be used)
+      */
+      if (tle_fields["verifies"] && ! map_container.hidden){
+
+          /* Ativate swath window */
+          swath_window_container.hidden = false;
+
+          /* Obtain aperture angle */
+          const footprint_aperture_container = document.getElementById("footprint-aperture-input");
+          
+          const footprint_information = {
+              "orbit_start": start_container.value,
+              "footprint_aperture": footprint_aperture_container.value
+          }
+          
+          vboa.request_info_json("/earth-observation/get-swath-details", do_update_swath_details, footprint_information, true);
+          
+      }else{
+
+          /* Deativate swath window */
+          swath_window_container.hidden = true;
+
+      }
+
+  }
+
+  function do_update_swath_details(swath_details){
+
+      if (swath_details.hasOwnProperty("return_code") && swath_details["return_code"] == 500){
+          vboa.messages.error("There was an error in the introduced inputs. It could be that the aperture angle is too high. Please check them again.")
+          return;
+      }
+
+      const swath_details_to_json = JSON.parse(swath_details)
+      console.log(JSON.parse(swath_details))
+
+      var data_xy_swath_evolution = {
+          datasets: [{
+              label: 'Swath evolution depending on roll angle',
+              data: swath_details_to_json["swath_evolution"],
+              borderColor: 'rgb(75, 192, 192)',
+              fill: false,
+          }],
+          labels: swath_details_to_json["roll_evolution"],
+      }
+
+      var options = {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+              labels: [
+                  {render: 'label',
+                   position: 'outside',
+                   fontSize: 14,
+                   fontStyle: "bold",
+                   fontColor: "black"},
+                  {render: 'percentage',
+                   fontSize: 14,
+                   fontStyle: "bold",
+                   fontColor: "white",
+                   precision: 2}]
+          }
+      }
+      
+      vboa.display_x_y("swath-evolution-x-y", data_xy_swath_evolution, options);
+
+      /* Update swath evolution table */
+      const swath_evolution_table_container = document.getElementById("swath-evolution-table-div");
+      swath_evolution_table_container.innerHTML = "<table width='100%' class='table table-striped table-bordered table-hover' id='swath-evolution-table'>" +
+          "<thead>" +
+          "<tr>" +
+          "<th>Roll</th>" +
+          "<th>Swath (km)</th>" +
+          "</tr>" +
+          "</thead>" +
+          "<tbody>" +
+          "</tbody>" +
+          "<tfoot>" +
+          "<tr>" +
+          "<th>Roll</th>" +
+          "<th>Swath (km)</th>" +
+          "</tr>" +
+          "</tfoot>" +
+          "</table>"
+
+      const swath_evolution_table = document.getElementById("swath-evolution-table");
+      
+      console.log(swath_evolution_table)
+      var i = 0;
+      for (const roll of swath_details_to_json["roll_evolution"]){
+
+          /* Create line */
+          var tr = document.createElement("tr");
+          var td_roll = document.createElement("td");
+          tr.appendChild(td_roll);
+          var td_swath = document.createElement("td");
+          tr.appendChild(td_swath);
+
+          /* Update line */
+          td_roll.textContent = roll;
+          td_swath.textContent = swath_details_to_json["swath_evolution"][i];
+          i++;
+
+          /* Insert line into table */
+          swath_evolution_table.tBodies[0].appendChild(tr);
+      }
+
+      /* Activate table */
+      swath_evolution_table.classList.add("table-search");
+      vboa.datatables.activate_search_on_columns();
+  }
   
   /* Fill dates for the first time */
   fill_dates()
@@ -637,8 +786,8 @@ S1A
   /* Update the map for the first time */
   update_map()
 
-  /* Update the footprint for the first time */
-  update_footprint()
-
+  /* Update the swath details for the first time */
+  update_swath_details()
+  
 </script>
 {% endblock %}

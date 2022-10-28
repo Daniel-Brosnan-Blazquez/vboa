@@ -96,7 +96,7 @@ def get_czml_orbit():
 @roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
 def get_footprint():
     """
-    Get czml orbit from the received TLE and start and stop values
+    Get footprint of the satellite
     """
 
     # Obtain parameters
@@ -127,14 +127,65 @@ def get_footprint():
         # end for
 
         # Calculate swath
-        coords_1 = (satellite_footprint[-5], satellite_footprint[-6])
-        coords_2 = (satellite_footprint[-2], satellite_footprint[-3])
+        coords_1 = (satellite_footprints[0][-5], satellite_footprints[0][-6])
+        coords_2 = (satellite_footprints[0][-2], satellite_footprints[0][-3])
         swath = geopy.distance.geodesic(coords_1, coords_2).km
     # end if
     
     result = {
         "footprints": satellite_footprints,
         "swath": swath
+    }
+    
+    return jsonify(result)
+
+@bp.route("/get-swath-details", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
+def get_swath_details():
+    """
+    Get swath details of the satellite
+    """
+
+    # Obtain parameters
+    filters = request.json
+    orbit_start = filters["orbit_start"]
+    footprint_aperture = float(filters["footprint_aperture"])
+    footprint_alpha = footprint_aperture / 2
+
+    # Default value of alpha angle for NAOS
+    # alpha = 0.705176738839256
+
+    # Footprint is being calculated with a interval of 30 seconds.
+    # To have just 4 coordinates any value under 30 seconds is ok.
+    footprint_duration = 20
+    footprint_stop = parser.parse(orbit_start) + datetime.timedelta(seconds=footprint_duration)
+
+    swath_evolution = []
+    roll_evolution = []
+    pitch = 0
+    yaw = 0
+    for roll in range (1,46):
+    
+        footprint = eboa_swath.get_footprint(orbit_start, footprint_stop.isoformat(), footprint_alpha, semimajor = semimajor, satellite_orbit = orbit,
+                                 roll = roll, pitch = pitch, yaw = yaw)
+
+        # Convert satellite footprint to an array [lon1, lat1, ..., lonN, latN] and calculate footprint
+        if len(footprint["satellite_footprints"]) > 0 and len(footprint["satellite_footprints"][0].split(",")) > 0:
+            satellite_footprint = [coordinate  for coordinates in footprint["satellite_footprints"][0].split(",") for coordinate in coordinates.split(" ") + ["0.0"]]
+
+            # Calculate swath
+            coords_1 = (satellite_footprint[-5], satellite_footprint[-6])
+            coords_2 = (satellite_footprint[-2], satellite_footprint[-3])
+            swath_evolution.append(geopy.distance.geodesic(coords_1, coords_2).km)
+            roll_evolution.append(roll)
+        # end if
+
+    # end for
+    
+    result = {
+        "swath_evolution": swath_evolution,
+        "roll_evolution": roll_evolution
     }
     
     return jsonify(result)
