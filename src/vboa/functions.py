@@ -34,7 +34,7 @@ def get_start_stop_filters(filters, window_size, window_delay):
     :type window_delay: float
     """
 
-    # Initialize reporting period (now - window_size days, now)
+    # Initialize reporting period (now  - window_delay days - window_size days, now - window_delay days)
     start_filter = {
         "date": (datetime.datetime.now() - datetime.timedelta(days=window_delay)).isoformat(),
         "operator": "<="
