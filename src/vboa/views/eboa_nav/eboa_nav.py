@@ -2312,6 +2312,43 @@ def query_alerts_pages():
     # end if
     return render_template(template, alerts=alerts, filters=filters)
 
+@bp.route("/query-<string:entity>-alerts/<uuid:entity_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
+def query_entity_alerts_and_render(entity, entity_uuid):
+    """
+    Query alerts associated to the entity with UUID entity_uuid.
+
+    :param entity: entity whose alerts are requested
+    :type entity: str
+    :param entity_uuid: UUID of the entity whose alerts are requested
+    :type entity_uuid: str
+
+    :return: list of alerts associated to the entity
+    :rtype: list
+    """
+
+    kwargs = {}
+    if entity == "event":
+        kwargs["event_uuids"] = {"filter": str(entity_uuid), "op": "=="}
+        alerts = query.get_event_alerts(**kwargs)
+        template = "eboa_nav/event_alerts_nav.html"
+    elif entity == "annotation":
+        kwargs["annotation_uuids"] = {"filter": str(entity_uuid), "op": "=="}
+        alerts = query.get_annotation_alerts(**kwargs)
+        template = "eboa_nav/annotation_alerts_nav.html"
+    elif entity == "source":
+        kwargs["source_uuids"] = {"filter": str(entity_uuid), "op": "=="}
+        alerts = query.get_source_alerts(**kwargs)
+        template = "eboa_nav/source_alerts_nav.html"
+    else:
+        kwargs["explicit_ref_uuids"] = {"filter": str(entity_uuid), "op": "=="}
+        alerts = query.get_explicit_ref_alerts(**kwargs)
+        template = "eboa_nav/explicit_reference_alerts_nav.html"
+    # end if
+    
+    return render_template(template, alerts=alerts, filters=kwargs)
+
 @bp.route("/get-alert-severity")
 @auth_required()
 @roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")

@@ -148,11 +148,13 @@ function show_bar_item_information(params, items, dom_id){
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
-export function display_timeline(dom_id, items, groups, options){
+export function display_timeline(dom_id, items, groups, options, show_hide = true){
 
-    /* create timeline */
+    var groups_dataset = new DataSet(groups);
+
+    /* Obtain timeline container */
     const container = document.getElementById(dom_id);
-
+    
     if (options == undefined){
         options = {
             groupOrder: 'content',
@@ -164,6 +166,23 @@ export function display_timeline(dom_id, items, groups, options){
         };
     };
 
+    if (show_hide){
+        options["groupTemplate"] = function(group){
+            var container = document.createElement('div');
+            var label = document.createElement('span');
+            label.innerHTML = group.content + ' ';
+            container.insertAdjacentElement('afterBegin',label);
+            var hide = document.createElement('button');
+            hide.innerHTML = 'hide';
+            hide.style.fontSize = 'small';
+            hide.addEventListener('click',function(){
+                groups_dataset.update({id: group.id, visible: false});
+            });
+            container.insertAdjacentElement('beforeEnd',hide);
+            return container;
+        }
+    }
+    
     const threshold = 1000
     if (items.length > threshold){
         container.style.display = "none";
@@ -177,18 +196,44 @@ export function display_timeline(dom_id, items, groups, options){
         button.onclick = function (){
             button.style.display = "none";
             container.style.display = "inherit";
-            show_timeline(dom_id, items, container, groups, options);
+            show_timeline(dom_id, items, container, groups_dataset, options, show_hide);
         };
     }
     else{
-        show_timeline(dom_id, items, container, groups, options);
+        show_timeline(dom_id, items, container, groups_dataset, options, show_hide);
     }
 };
-function show_timeline(dom_id, items, container, groups, options){
+function show_timeline(dom_id, items, container, groups_dataset, options, show_hide){
 
-    var groups_dataset = new DataSet(groups)
+    var timeline_container = container;
+    
+    if (show_hide){
+        
+        /* function to make all groups visible again */
+        function showAllGroups(){
+            groups_dataset.forEach(function(group){
+                groups_dataset.update({id: group.id, visible: true});
+            })
+        };
+        /* Create container for options */
+        const options_container = document.createElement("div");
+        container.appendChild(options_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Retore hidden elements";
+        options_container.appendChild(button);
+        button.onclick = function (){
+            showAllGroups();
+        };
+
+        /* Create container for timline */
+        timeline_container = document.createElement("div");
+        container.appendChild(timeline_container);
+    };
+    
     var items_dataset = new DataSet(items)
-    const timeline = new vis_timeline_graph2d.Timeline(container, items_dataset, groups_dataset, options);
+    const timeline = new vis_timeline_graph2d.Timeline(timeline_container, items_dataset, groups_dataset, options);
 
     timeline.on("click", function (params) {
         show_timeline_item_information(params, items, dom_id)

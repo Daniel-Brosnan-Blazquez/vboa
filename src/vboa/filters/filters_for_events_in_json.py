@@ -117,12 +117,12 @@ def get_events_filtered_by_values_definition(events, value_filters):
 
 def get_linking_event_definition(event, link_name, data):
     """
-    Method to get the events inside the data structure filtered by the received value parameter
+    Method to get the event inside the data structure linked to the received event 
 
     :param event: dictionary with the event
     :type event: dict
     :param link_name: name of the link
-    :type event: str
+    :type link_name: str
     :param data: dictionary where to locate the events in data["events"]
     :type data: dict
 
@@ -137,6 +137,26 @@ def get_linking_event_definition(event, link_name, data):
     # end if
 
     return event
+
+def get_linking_events_definition(event, link_name, data):
+    """
+    Method to get the events inside the data structure linked to the received event 
+
+    :param event: dictionary with the event
+    :type event: dict
+    :param link_name: name of the link
+    :type link_name: str
+    :param data: dictionary where to locate the events in data["events"]
+    :type data: dict
+
+    :return: found event or None
+    :rtype: dict
+
+    """
+    links = [link for link in event["links_to_me"] if link["name"] == link_name]
+    events = [data["events"][link["event_uuid_link"]] for link in links]
+
+    return events
 
 def add_filters(app):
     """
@@ -167,3 +187,7 @@ def add_filters(app):
     @app.template_filter()
     def get_linking_event(event, link_name, data):
         return get_linking_event_definition(event, link_name, data)
+
+    @app.template_filter()
+    def get_linking_events(event, link_name, data):
+        return get_linking_events_definition(event, link_name, data)

@@ -175,6 +175,10 @@ div.apply-timeliness-overflow .vis-item .vis-item-overflow {
     background: green;
     border-color: green;
 }
+.fill-green-border-darkgreen {
+    background: green;
+    border-color: darkgreen;
+}
 .fill-border-blue {
     background: blue;
     border-color: blue;
@@ -193,6 +197,10 @@ div.apply-timeliness-overflow .vis-item .vis-item-overflow {
 }
 .fill-border-red {
     background: red;
+    border-color: red;
+}
+.fill-darkred-border-red {
+    background: darkred;
     border-color: red;
 }
 .fill-border-orange {
