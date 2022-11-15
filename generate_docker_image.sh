@@ -148,13 +148,6 @@ then
     exit -1
 fi
 
-# Check that the path to the common base project exists
-if [ "$PATH_TO_COMMON_BASE" != "" ] && [ ! -d $PATH_TO_COMMON_BASE ];
-then
-    echo "ERROR: The directory $PATH_TO_COMMON_BASE provided does not exist"
-    exit -1
-fi
-
 # Check that the path to the boa tailoring congiguration exists
 if [ "$PATH_TO_BOA_TAILORING_CONFIGURATION" != "" ] && [ ! -d $PATH_TO_BOA_TAILORING_CONFIGURATION ];
 then
