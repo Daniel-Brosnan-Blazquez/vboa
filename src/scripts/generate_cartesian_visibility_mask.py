@@ -580,7 +580,7 @@ def main():
     station_mask_path = args.station_mask_path[0]
     # Check if file exists
     if not os.path.isfile(station_mask_path):
-        logger.error("The specified file {} does not exist".format(station_mask_path))
+        print("The specified file {} does not exist".format(station_mask_path))
         exit_code = -1
     # end if
 

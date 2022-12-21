@@ -156,7 +156,7 @@ S1A
         <div class="col-xs-6" id="swath-evolution-table-div">
         </div>
         <div class="col-xs-6" id="swath-evolution-x-y-div">
-          <canvas id="swath-evolution-x-y" width="400" height="300"></canvas>
+          
         </div>
       </div>
     </div>
@@ -699,7 +699,10 @@ S1A
       }
 
       const swath_details_to_json = JSON.parse(swath_details)
-      console.log(JSON.parse(swath_details))
+
+      /* Update swath evolution graph */
+      const swath_evolution_xy_container = document.getElementById("swath-evolution-x-y-div");
+      swath_evolution_xy_container.innerHTML = "<canvas id='swath-evolution-x-y'></canvas>"
 
       var data_xy_swath_evolution = {
           datasets: [{
@@ -752,7 +755,6 @@ S1A
 
       const swath_evolution_table = document.getElementById("swath-evolution-table");
       
-      console.log(swath_evolution_table)
       var i = 0;
       for (const roll of swath_details_to_json["roll_evolution"]){
 
