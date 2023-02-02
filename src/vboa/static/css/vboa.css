@@ -41,6 +41,12 @@ h3.panel-title {
     text-decoration: underline;
 }
 
+.page-metadata {
+    text-align: right;
+    font-family: "Helvetica Neue";
+    color: #23527c;
+}
+
 /* Styles for checkboxes in header of datatables */
 table.dataTable thead th.select-checkbox {
   position: relative;

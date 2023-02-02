@@ -198,7 +198,21 @@
         <div style="text-align:right" id="time-clock"></div>
       </div>
       <div id="page-wrapper" class="shrink-expand-content">
-        {% block content %}{% endblock %}
+        <div>
+          <!-- Page metadata space for views -->
+          <p class="page-metadata">
+            {% if data is defined and "metadata" in data and "version" in data["metadata"] %}
+            Version: {{ data["metadata"]["version"] }}
+            ||
+            {% endif %}
+            {% if data is defined %}
+            <a href="#" onclick="var json_data='data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({{ data }})); this.setAttribute('href', json_data); this.setAttribute('download', 'input_data.json');">Input data</a>
+            {% endif %}
+          </p>
+        </div>
+        <div>
+          {% block content %}{% endblock %}
+        </div>
       </div>
       <!-- /#page-wrapper -->
     </div>
