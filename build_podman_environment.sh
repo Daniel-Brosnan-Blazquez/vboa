@@ -224,6 +224,16 @@ fi
 ######
 podman network inspect $DOCKER_NETWORK &>/dev/null || podman network create --driver bridge $DOCKER_NETWORK
 
+# Check that the network could be created
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "The $DOCKER_NETWORK network could not be created :-("
+    exit -1
+else
+    echo "The $DOCKER_NETWORK network has been created successfully :-)"
+fi
+
 ######
 # Create database container
 ######
@@ -231,12 +241,45 @@ podman network inspect $DOCKER_NETWORK &>/dev/null || podman network create --dr
 # Check configuration of postgis/postgres with -> psql -U postgres -> show all;
 podman run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data --restart=always -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
 
+# Check that the DDBB container could be created
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "The $DATABASE_CONTAINER container could not be created :-("
+    exit -1
+else
+    echo "The $DATABASE_CONTAINER container has been created successfully :-)"
+fi
+
+# Get the IP of the DDBB container
+DATABASE_CONTAINER_IP=`podman inspect $DATABASE_CONTAINER|grep -E '"IPAddress": ".+"'| sed 's/.*"IPAddress": "\(.*\)".*/\1/'`
+
 ######
 # Create APP container
 ######
 podman load -i $PATH_TO_DOCKERIMAGE
 
-podman run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive -v $PATH_TO_LOG_FOLDER:/log --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+# Check that the BOA image could be loaded
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "The BOA image could not be loaded :-("
+    exit -1
+else
+    echo "The BOA image has been loaded successfully :-)"
+fi
+
+podman run --add-host=$DATABASE_CONTAINER:$DATABASE_CONTAINER_IP -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive -v $PATH_TO_LOG_FOLDER:/log --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+
+# Check that the APP container could be created
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "The $APP_CONTAINER container could not be created :-("
+    exit -1
+else
+    echo "The $APP_CONTAINER container has been created successfully :-)"
+fi
 
 # Copy certificates and secret key to the container
 podman cp $PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY/boa_certificate.pem $APP_CONTAINER:/resources_path
