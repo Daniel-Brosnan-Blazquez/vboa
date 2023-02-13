@@ -242,16 +242,17 @@ docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby
 
 if [ "$EXPORT_DOCKER_IMAGE" == "YES" ];
 then
-   # Docker commit and save image
-   docker commit $APP_CONTAINER boa:$VERSION
-   docker commit $APP_CONTAINER boa:latest
-   docker save boa > $TMP_DIR/boa.tar
-
-   echo "BOA image exported in: "$TMP_DIR/boa.tar
-
-   echo "Removing temporal docker container and image"
-
-   docker stop $APP_CONTAINER
-   docker rm $APP_CONTAINER
-   docker rmi -f $(docker images boa -q)
+    TMP_DIR=`mktemp -d`
+    # Docker commit and save image
+    docker commit $APP_CONTAINER boa:$VERSION
+    docker commit $APP_CONTAINER boa:latest
+    docker save boa > $TMP_DIR/boa.tar
+    
+    echo "BOA image exported in: "$TMP_DIR/boa.tar
+    
+    echo "Removing temporal docker container and image"
+    
+    docker stop $APP_CONTAINER
+    docker rm $APP_CONTAINER
+    docker rmi -f $(docker images boa -q)
 fi
