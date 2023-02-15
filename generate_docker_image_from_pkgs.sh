@@ -160,7 +160,7 @@ echo "Building BOA image..."
 docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$UID_HOST_USER_TO_MAP -t boa:$VERSION -t boa:latest -f $PATH_TO_DOCKERFILE `dirname $PATH_TO_DOCKERFILE`
 
 # Create container
-echo "Intantiating BOA image..."
+echo "Instantiating BOA image..."
 docker run -it --name $APP_CONTAINER -d -v $PATH_TO_BOA_PACKAGES:/boa_packages boa:$VERSION
 
 # Install BOA packages

@@ -130,8 +130,16 @@ mkdir -p $PATH_TO_TAILORED/doc/fig/
 mkdir -p $PATH_TO_TAILORED/src
 
 # BOA Configuration
-echo "Creating directories for configuration"
+echo "Creating directory for configuration"
 mkdir -p $PATH_TO_TAILORED/src/boa_config
+
+# BOA schemas
+echo "Creating directory for schemas"
+mkdir -p $PATH_TO_TAILORED/src/boa_schemas
+
+# BOA scripts
+echo "Creating directory for scripts"
+mkdir -p $PATH_TO_TAILORED/src/boa_scripts
 
 # Setup and MANIFEST
 echo "Copying setup for the application"

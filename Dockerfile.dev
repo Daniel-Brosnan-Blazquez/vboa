@@ -51,6 +51,7 @@ RUN pip3 install wheel
 RUN mkdir /log
 RUN mkdir /scripts
 RUN mkdir /resources_path
+RUN mkdir /schemas
 RUN mkdir /datamodel
 RUN mkdir /rboa_archive
 
@@ -61,7 +62,7 @@ RUN mkdir /minarc_root
 RUN mkdir /inputs
 
 # Change ownership to the $HOST_USER
-RUN chown -R $HOST_USER /log /scripts /resources_path /datamodel /rboa_archive /orc_packages /minarc_root /inputs /orc
+RUN chown -R $HOST_USER /log /scripts /resources_path /schemas /datamodel /rboa_archive /orc_packages /minarc_root /inputs /orc
 
 USER $HOST_USER
 
@@ -77,7 +78,7 @@ RUN ln -s /vboa/src/scripts/start_flask.sh /scripts/start_flask.sh
 # Environment Variables for BOA
 ENV EBOA_RESOURCES_PATH /resources_path
 ENV EBOA_LOG_PATH /log
-ENV EBOA_SCHEMAS_PATH /eboa/src/schemas
+ENV EBOA_SCHEMAS_PATH /schemas
 ENV FLASK_APP $FLASK_APP
 ENV FLASK_ENV development
 ENV LC_ALL en_US.utf-8

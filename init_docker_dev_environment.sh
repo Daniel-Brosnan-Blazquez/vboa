@@ -7,7 +7,7 @@
 # module vboa
 #################################################################
 
-USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets -u host_user_to_map [-p port] [-t path_to_tailored] [-b path_to_common_base] [-l containers_label] [-a app] [-c boa_tailoring_configuration_path] [-s path_to_boa_certificates] [-n] [-r]\n
+USAGE="Usage: `basename $0` -e path_to_eboa_src -v path_to_vboa_src -d path_to_dockerfile -o path_to_orc_packets -u host_user_to_map [-p port] [-t path_to_tailored] [-b path_to_common_base] [-l containers_label] [-a app] [-s path_to_boa_certificates] [-n] [-r]\n
 Where:\n
 -s path_to_boa_certificates: Path to SSL certificates which names should be boa_certificate.pem and boa_key.pem\n
 -n: disable DDBB port exposure (5432). Exposure of this port is needed for obtaining differences between data models
@@ -32,7 +32,7 @@ EXPOSE_DDBB_PORT="TRUE"
 PATH_TO_BOA_CERTIFICATES=""
 REMOVE_AVAILABLE_BOA_IMAGES="TRUE"
 
-while getopts e:v:d:o:u:p:t:b:l:a:c:s:nr option
+while getopts e:v:d:o:u:p:t:b:l:a:s:nr option
 do
     case "${option}"
         in
@@ -46,7 +46,6 @@ do
         b) PATH_TO_COMMON_BASE=${OPTARG}; COMMON_BASE_FOLDER=`basename $PATH_TO_COMMON_BASE`;;
         l) CONTAINERS_LABEL=${OPTARG};;
         a) APP=${OPTARG};;
-        c) PATH_TO_BOA_TAILORING_CONFIGURATION=${OPTARG};;
         s) PATH_TO_BOA_CERTIFICATES=${OPTARG};;
         n) EXPOSE_DDBB_PORT="FALSE";;
         r) REMOVE_AVAILABLE_BOA_IMAGES="FALSE";;
@@ -152,13 +151,6 @@ then
     exit -1
 fi
 
-# Check that the path to the boa tailoring congiguration exists
-if [ "$PATH_TO_BOA_TAILORING_CONFIGURATION" != "" ] && [ ! -d $PATH_TO_BOA_TAILORING_CONFIGURATION ];
-then
-    echo "ERROR: The directory $PATH_TO_BOA_TAILORING_CONFIGURATION provided does not exist"
-    exit -1
-fi
-
 # Check that option -u has been specified
 if [ "$HOST_USER_TO_MAP" == "" ];
 then
@@ -221,7 +213,6 @@ These are the configuration options that will be applied to initialize the envir
 - CONTAINERS_LABEL: $CONTAINERS_LABEL
 - APP: $APP
 - PATH_TO_ORC: $PATH_TO_ORC
-- PATH_TO_BOA_TAILORING_CONFIGURATION: $PATH_TO_BOA_TAILORING_CONFIGURATION
 - HOST_USER_TO_MAP: $HOST_USER_TO_MAP
 - PATH_TO_BOA_CERTIFICATES: $PATH_TO_BOA_CERTIFICATES
 - EXPOSE_DDBB_PORT: $EXPOSE_DDBB_PORT
@@ -304,6 +295,16 @@ else
     docker run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
 fi
 
+# Check that the DDBB container could be created
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "The container $DATABASE_CONTAINER could not be created :-("
+    exit -1
+else
+    echo "The container $DATABASE_CONTAINER has been created successfully :-)"
+fi
+
 ######
 # Create APP container
 ######
@@ -327,6 +328,16 @@ else
     docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 fi
 
+# Check that the APP image could be created
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "The image boa_$CONTAINERS_LABEL could not be created :-("
+    exit -1
+else
+    echo "The image boa_$CONTAINERS_LABEL has been created successfully :-)"
+fi
+
 # Initialize the eboa database
 if [ "$PATH_TO_TAILORED" != "" ] && [ "$PATH_TO_COMMON_BASE" != "" ];
 then
@@ -338,12 +349,26 @@ else
     docker run -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5001 -it --name $APP_CONTAINER -d -v $PATH_TO_EBOA:/eboa -v $PATH_TO_VBOA:/vboa boa_$CONTAINERS_LABEL
 fi
 
-# Link and copy configurations
+# Check that the APP container could be created
+status=$?
+if [ $status -ne 0 ]
+then
+    echo "The container $APP_CONTAINER could not be created :-("
+    exit -1
+else
+    echo "The container $APP_CONTAINER has been created successfully :-)"
+fi
+
+##################
+# CONFIGURATIONS #
+##################
+# Link to EBOA configurations
 for file in `find $PATH_TO_EBOA/src/config/ -name '*' -type f`;
 do
     file_name=`basename $file`
     docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/config/$file_name /resources_path/$file_name"
 done
+# Link to VBOA configurations
 if [ -d $PATH_TO_VBOA/src/config/ ];
 then
     for file in `find $PATH_TO_VBOA/src/config/ -name '*' -type f`;
@@ -352,15 +377,71 @@ then
         docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/config/$file_name /resources_path/$file_name"
     done
 fi
-#  (Change these operations to symbolic links)
-for file in `find $PATH_TO_BOA_TAILORING_CONFIGURATION -name '*' -type f`;
+# Link to tailored BOA configurations
+if [ "$PATH_TO_TAILORED" != "" ];
+then
+   for file in `find $PATH_TO_TAILORED/src/boa_config -name '*' -type f`;
+   do
+       file_name=`basename $file`
+       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "if [ -f /resources_path/$file_name ]; then rm /resources_path/$file_name; fi"
+       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /$APP/src/boa_config/$file_name /resources_path/$file_name"
+   done
+fi
+
+###########
+# SCHEMAS #
+###########
+# Link to EBOA schemas
+for file in `find $PATH_TO_EBOA/src/schemas/ -name '*' -type f`;
 do
-    docker cp $file $APP_CONTAINER:/resources_path
+    file_name=`basename $file`
+    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/schemas/$file_name /schemas/$file_name"
 done
-for file in `find $PATH_TO_ORC -name '*' -type f`;
-do
-    docker cp $file $APP_CONTAINER:/orc_packages
-done
+# Link to VBOA schemas
+if [ -d $PATH_TO_VBOA/src/schemas/ ];
+then
+    for file in `find $PATH_TO_VBOA/src/schemas/ -name '*' -type f`;
+    do
+        file_name=`basename $file`
+        docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/schemas/$file_name /schemas/$file_name"
+    done
+fi
+# Link to tailored BOA schemas
+if [ "$PATH_TO_TAILORED" != "" ] && [ -d $PATH_TO_TAILORED/src/boa_schemas ];
+then
+   for file in `find $PATH_TO_TAILORED/src/boa_schemas -name '*' -type f`;
+   do
+       file_name=`basename $file`
+       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "if [ -f /schemas/$file_name ]; then rm /schemas/$file_name; fi"
+       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /$APP/src/boa_schemas/$file_name /schemas/$file_name"
+   done
+fi
+   
+###########
+# SCRIPTS #
+###########
+# Link to EBOA scripts
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
+
+# Link to VBOA scripts
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /vboa/src/scripts/*; do if [ ! -f /scripts/`basename $script` ]; then ln -s $script /scripts/`basename $script`; fi; done'
+
+# Link to tailored BOA scripts
+if [ "$PATH_TO_TAILORED" != "" ] && [ -d $PATH_TO_TAILORED/src/boa_scripts ];
+then
+   for file in `find $PATH_TO_TAILORED/src/boa_scripts -name '*' -type f`;
+   do
+       file_name=`basename $file`
+       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "if [ -f /scripts/$file_name ]; then rm /scripts/$file_name; fi"
+       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /$APP/src/boa_scripts/$file_name /scripts/$file_name"
+   done
+fi
+
+##############
+# DATAMODELS #
+##############
+# Link to EBOA datamodels
+docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for datamodel in /eboa/src/datamodel/*sql; do ln -s $datamodel /datamodel/`basename $datamodel`; done'
 
 # Leave users configuration as the default for EBOA so that developers have always the same users to access to the system
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "rm /resources_path/users.json"
@@ -373,8 +454,13 @@ then
     docker cp $PATH_TO_BOA_CERTIFICATES/boa_key.pem $APP_CONTAINER:/resources_path
 fi
 
-# Change ownership
-docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /resources_path/*"
+# Copy ORC packages
+for file in `find $PATH_TO_ORC -name '*' -type f`;
+do
+    docker cp $file $APP_CONTAINER:/orc_packages
+done
+
+# Change ownership for the ORC packages
 docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /orc_packages//*"
 
 # Generate the python archive
@@ -403,14 +489,6 @@ docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --force --prefi
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
 # Copy cesium library for 3D world maps as ol-cesium needs this to be external
 docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist"
-
-# Install scripts
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
-
-# Link datamodels
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/src/datamodel/eboa_data_model.sql /datamodel/'
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/src/datamodel/sboa_data_model.sql /datamodel/'
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'ln -s /eboa/src/datamodel/uboa_data_model.sql /datamodel/'
 
 # Install cron activities
 echo "Installing cron activities"
