@@ -21,6 +21,7 @@ import * as chartjs from "chart.js/dist/Chart.js";
 import "chartjs-plugin-labels/build/chartjs-plugin-labels.min.js";
 import * as orbit from "./orbit.js";
 import * as graph from "./graph.js";
+import * as ingestionControlFunctions from "./ingestion_control.js";
 import * as sourceFunctions from "./sources.js";
 import * as reportFunctions from "./reports.js";
 import * as gaugeFunctions from "./gauges.js";
@@ -650,6 +651,13 @@ export function request_info_json_after_confirmation(url, json, confirmation_mes
 
 };
 
+/* Function to provide a way to request upload files from javascript */
+export function request_upload_files(url, callback, parameters){
+
+    queryFunctions.request_upload_files(url, callback, parameters);
+
+};
+
 /* Function render a received page */
 export function render_page(page){
 
@@ -972,3 +980,12 @@ document.addEventListener("keydown", function(event) {
         }
     }
 });
+
+
+/***
+ * INGESTION CONTROL
+ ***/
+
+export function submit_request_for_manual_ingestion_management(form_id){
+    ingestionControlFunctions.submit_request_for_manual_ingestion_management(form_id);
+}

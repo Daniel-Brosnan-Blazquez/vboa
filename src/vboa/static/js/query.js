@@ -153,3 +153,42 @@ export function request_info_form_data(url, callback, form_data){
     xmlhttp.setRequestHeader('content-type', 'application/json;charset=UTF-8');
     xmlhttp.send(JSON.stringify(json));
 }
+
+/* Function to request upload files, using FormData object from javascript for the parameters */
+export function request_upload_files(url, callback, form_data){
+    
+    var xmlhttp = new XMLHttpRequest();
+    if (callback){
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                return callback(this.responseText, form_data);
+            }
+            else if (this.readyState == 4 && this.status == 403){
+                toastr.error("Ups... Sorry it seems you don't have access to upload files: " + url);
+                var permission_denied_response = {
+                    "return_code": 403
+                };
+                return callback(parameters, permission_denied_response);
+            }
+        };
+    }
+    
+    xmlhttp.open("POST", url, true);
+    xmlhttp.send(form_data);
+}
+
+/* Function to request upload files and redirect to an url, using FormData object from javascript for the parameters */
+export function request_upload_files_and_redirect(url, url_to_redirect, form_data){
+    
+    var xmlhttp = new XMLHttpRequest();
+    
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 403){
+            toastr.error("Ups... Sorry it seems you don't have access to upload files: " + url);
+        }
+        window.location.assign(url_to_redirect)
+    };
+    
+    xmlhttp.open("POST", url, true);
+    xmlhttp.send(form_data);
+}
