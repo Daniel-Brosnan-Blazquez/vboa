@@ -13,14 +13,15 @@ from dateutil import parser
 import os
 
 # Import flask utilities
-from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, render_template, request, redirect, jsonify
+from werkzeug.utils import secure_filename
 from flask_debugtoolbar import DebugToolbarExtension
-from flask import jsonify
 
 # Import eboa utilities
 from eboa.engine.query import Query
 import eboa.engine.engine as eboa_engine
 from eboa.engine.engine import Engine
+import eboa.triggering.eboa_triggering as eboa_triggering
 
 # Import SQLAlchemy exceptions
 from sqlalchemy.orm.exc import DetachedInstanceError
@@ -291,3 +292,39 @@ def query_sources_and_render(start_filter = None, stop_filter = None, sliding_wi
     # end if
 
     return render_template(template, sources=sources, reporting_start=reporting_start, reporting_stop=reporting_stop, sliding_window=sliding_window, filters=filters)
+
+@bp.route("/manual-ingestion", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
+def show_manual_ingestion():
+    """
+    Initial panel for manually ingest products.
+    """
+    return render_template("ingestion_control/manual_ingestion.html")
+
+@bp.route("/manual-ingestion/ingest-files", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
+def manual_ingestion_files():
+    """
+    Ingest the selected files
+    """
+    current_app.logger.debug("Prepare ingestion of selected files")
+   
+    # Save files to /tmp
+    files = request.files.getlist("files")
+    for file in files:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join("/inputs", filename)
+        file.save(file_path)
+        
+        # Ingest file
+        try:
+            eboa_triggering.main(file_path, remove_input=True)
+        except SystemExit as e:
+            pass
+        # end try
+    # end for
+
+    return
+    
