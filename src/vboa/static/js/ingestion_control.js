@@ -33,7 +33,7 @@ export function submit_request_for_manual_ingestion_management(form_id){
         toastr.error("No source has been selected to perform the chosen operation.")
     }
     else{
-        relative_url_to_redirect = "/ingestion_control/sliding_ingestion_control_parameters?window_delay=0&window_size=1.0&repeat_cycle=1"
+        var relative_url_to_redirect = "/ingestion_control/sliding_ingestion_control_parameters?window_delay=0&window_size=1.0&repeat_cycle=1"
         queryFunctions.request_upload_files_and_redirect("manual-ingestion/ingest-files", relative_url_to_redirect, form_data)        
         toastr.success("Ingestion of selected file/s requested")
     }

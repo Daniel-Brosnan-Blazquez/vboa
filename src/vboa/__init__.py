@@ -138,7 +138,11 @@ def create_app():
     @app.errorhandler(403)
     def page_forbidden(e):
         return render_template("panel/forbidden.html"), 403
-    
+
+    @app.errorhandler(405)
+    def page_forbidden(e):
+        return render_template("panel/forbidden.html"), 403
+
     ########
     # Tests
     ########
