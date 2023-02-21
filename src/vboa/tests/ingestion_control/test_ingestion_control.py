@@ -721,3 +721,90 @@ class TestIngestionControl(unittest.TestCase):
         generation_to_ingestion_xy = self.driver.find_element_by_id("ingestion-control-generation-time-to-ingestion-time-xy")
 
         assert generation_to_ingestion_xy.is_displayed()
+
+    def test_manual_ingestion_one_file(self):
+
+        wait = WebDriverWait(self.driver,5)
+        
+        self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
+
+        # Browse file
+        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+
+        filename = "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
+    
+        browse_file.send_keys(file_path)
+
+        # Trigger input files table
+        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+
+        name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
+
+        assert name.text == "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+
+        size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
+
+        assert size.text == "0.02MB"
+
+        self.driver.save_screenshot('table.png')
+        
+        # Trigger ingestion
+        trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
+        trigger_ingestion_button.click()
+
+        time.sleep(180)
+        
+        self.driver.save_screenshot('complete_view.png')
+        
+        # Check number of widgets in summary
+        summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-ingestion-control")))
+        assert summary_section and len(summary_section.find_elements_by_xpath("div")) == 2
+
+        # Check summary expected
+        summary_expected = wait.until(EC.visibility_of_element_located((By.ID,"summary-ingestion-control-expected")))
+
+        assert summary_expected and summary_expected.text == "1"
+
+        # Check summary incomplete
+        summary_alert = wait.until(EC.visibility_of_element_located((By.ID,"summary-ingestion-control-alert")))
+
+        assert summary_alert and summary_alert.text == "1"
+
+    def test_manual_ingestion_remove_file(self):
+
+        wait = WebDriverWait(self.driver,5)
+
+        self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
+
+        # Browse file
+        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+
+        filename = "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
+    
+        browse_file.send_keys(file_path)
+
+        # Trigger input files table
+        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+
+        name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
+
+        assert name.text == "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+
+        size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
+
+        assert size.text == "0.02MB"
+
+        self.driver.save_screenshot('table.png')
+        
+        # Clear button
+        clear_button = self.driver.find_element_by_id("manual-ingestion-files-clear-button")
+        clear_button.click()
+
+        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+
+        empty_table = table.find_element_by_xpath("tbody/tr[last()]/td[1]")
+
+        assert empty_table.text == "No data available in table"
+
