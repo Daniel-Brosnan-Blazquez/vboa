@@ -38,3 +38,35 @@ export function submit_request_for_manual_ingestion_management(form_id){
         toastr.success("Ingestion of selected file/s requested")
     }
 }
+
+export function clean_selected_files_manual_ingestion(form_id){
+    var form = document.getElementById(form_id);
+    
+    /* Search table id */
+    var tables = form.getElementsByTagName("table");
+    var table_id = "";
+    for (const table of tables){
+        if (table.id != ""){
+            table_id = table.id;
+            break;
+        };
+    };
+
+    /* Delete files selected */
+    var table = jQuery("#" + table_id).dataTable();
+    table.$(".selected").each(function(){
+        /* Just take the files selected */
+        var file_name = jQuery("#" + this.id + " #name").text();
+        if (file_name in browse_files) {
+            delete browse_files[file_name]  
+        }
+        else{
+            toastr.error("No source has been selected to perform the chosen operation.")
+        }
+    })
+     
+    /* Reset value of the input to detect addEventListener'change' */
+    file_input.value = null
+    
+    show_files_to_ingest(browse_files)
+}

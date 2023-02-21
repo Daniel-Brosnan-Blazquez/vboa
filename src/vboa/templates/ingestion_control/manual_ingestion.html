@@ -16,9 +16,9 @@
           <b>Select files to be uploaded:</b>
           <div align="center">
             <label class="btn btn-default btn-file">
-                Browse files <input type="file" name="file" multiple="multiple" style="display: none;" id="manual-ingestion-browse-files">
+                Browse files <input type="file" name="file" multiple="multiple" style="display: none;" id="manual-ingestion-files-browse-files">
             </label>
-            <button type="submit" class="btn btn-primary" style="display: none; margin-top: 12px" id="manual-ingestion-files-clear-button">Clear selected files</button>
+            <button type="button" onclick="vboa.clean_selected_files_manual_ingestion('manual-ingestion-files-operations')" class="btn btn-primary" style="display: none; margin-top: 12px" id="manual-ingestion-files-clear-button">Clear selected files</button>
           </div>
         </p>      
         <div id="manual-ingestion-files-div"></div>
@@ -38,8 +38,10 @@
 {{ super() }}
 <script type="text/javascript">
 
-var file_input = document.getElementById("manual-ingestion-browse-files");
+var file_input = document.getElementById("manual-ingestion-files-browse-files");
+var clear_button = document.getElementById("manual-ingestion-files-clear-button");
 var trigger_button = document.getElementById("manual-ingestion-files-trigger-button");
+
 var browse_files = {};
 
 function prepare_browse_files() {
@@ -51,7 +53,8 @@ function prepare_browse_files() {
 };
 
 function show_files_to_ingest(files) {
-  trigger_button.style.display = "block"
+    trigger_button.style.display = "block"
+    clear_button.style.display = "block"
   
     /* Insert information about browse file to the table */
     const form_manual_ingestion_file = document.getElementById("manual-ingestion-files-div");

@@ -989,3 +989,7 @@ document.addEventListener("keydown", function(event) {
 export function submit_request_for_manual_ingestion_management(form_id){
     ingestionControlFunctions.submit_request_for_manual_ingestion_management(form_id);
 }
+
+export function clean_selected_files_manual_ingestion(form_id){
+    ingestionControlFunctions.clean_selected_files_manual_ingestion(form_id);
+}
