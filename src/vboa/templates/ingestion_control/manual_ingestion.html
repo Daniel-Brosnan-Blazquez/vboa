@@ -15,16 +15,16 @@
         <p style="display: inline; margin: 0;">
           <b>Select files to be uploaded:</b>
           <div align="center">
-            <label class="btn btn-default btn-file">
+            <label class="btn btn-primary">
                 Browse files <input type="file" name="file" multiple="multiple" style="display: none;" id="manual-ingestion-files-browse-files">
             </label>
-            <button type="button" onclick="vboa.clean_selected_files_manual_ingestion('manual-ingestion-files-operations')" class="btn btn-primary" style="display: none; margin-top: 12px" id="manual-ingestion-files-clear-button">Clear selected files</button>
+            <button type="button" onclick="vboa.clean_selected_files_manual_ingestion('manual-ingestion-files-operations')" class="btn btn-default" style="display: none" id="manual-ingestion-files-clear-button">Clear selected files</button>
           </div>
         </p>      
         <div id="manual-ingestion-files-div"></div>
         <div class="row" style="margin-bottom: 20px; margin-top: 20px">
           <div align="center">
-            <button type="submit" class="btn btn-primary" style="display: none; margin-top: 12px" id="manual-ingestion-files-trigger-button">Trigger ingestion</button>
+            <button type="submit" class="btn btn-success" style="display: none; margin-top: 12px" id="manual-ingestion-files-trigger-button">Trigger ingestion</button>
           </div>
         </div>
       </form>
@@ -44,17 +44,14 @@ var trigger_button = document.getElementById("manual-ingestion-files-trigger-but
 
 var browse_files = {};
 
-function prepare_browse_files() {
-    
-    for (var i = 0; i < file_input.files.length; i++) {
-      browse_files[file_input.files[i]["name"]] = file_input.files[i];
-    }
-    show_files_to_ingest(browse_files) 
-};
+function human_readable_size(size) {
+    var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
 
 function show_files_to_ingest(files) {
     trigger_button.style.display = "block"
-    clear_button.style.display = "block"
+    clear_button.style.display = "inline-block"
   
     /* Insert information about browse file to the table */
     const form_manual_ingestion_file = document.getElementById("manual-ingestion-files-div");
@@ -98,7 +95,7 @@ function show_files_to_ingest(files) {
 
           /* Update line */
           td_file.textContent = files[file_key]["name"];
-          td_size.textContent = (files[file_key]["size"] / (1024*1024)).toFixed(2) + "MB";
+          td_size.textContent = human_readable_size(files[file_key]["size"]);
           i++;
 
           /* Insert line into table */
@@ -110,7 +107,7 @@ function show_files_to_ingest(files) {
       vboa.datatables.activate_search_and_checkboxes_on_tables();
 }
 
-file_input.addEventListener('change', prepare_browse_files);
+file_input.addEventListener('change', vboa.prepare_browse_files);
 
 </script>
 {% endblock %}

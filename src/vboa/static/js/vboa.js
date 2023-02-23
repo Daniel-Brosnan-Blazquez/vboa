@@ -993,3 +993,7 @@ export function submit_request_for_manual_ingestion_management(form_id){
 export function clean_selected_files_manual_ingestion(form_id){
     ingestionControlFunctions.clean_selected_files_manual_ingestion(form_id);
 }
+
+export function prepare_browse_files(){
+    ingestionControlFunctions.prepare_browse_files();
+}

@@ -33,12 +33,18 @@ export function submit_request_for_manual_ingestion_management(form_id){
         toastr.error("No source has been selected to perform the chosen operation.")
     }
     else{
-        var relative_url_to_redirect = "/ingestion_control/sliding_ingestion_control_parameters?window_delay=0&window_size=1.0&repeat_cycle=1"
-        queryFunctions.request_upload_files_and_redirect("manual-ingestion/ingest-files", relative_url_to_redirect, form_data)        
-        toastr.success("Ingestion of selected file/s requested")
+        var redirection_confirmation = confirm("You are about to be redirect to the ingestion control complete view to monitor your ingestions. The page will be updated automatically every 1 minute. Do you want to continue with the operation?")
+        if (redirection_confirmation){
+            var relative_url_to_redirect = "/ingestion_control/sliding_ingestion_control_parameters?window_delay=0&window_size=1.0&repeat_cycle=1"
+            queryFunctions.request_upload_files_and_redirect("manual-ingestion/ingest-files", relative_url_to_redirect, form_data)        
+            toastr.success("Ingestion of selected file/s requested")
+        }else{
+            toastr.success("The ingestions of selected file/s has been cancelled")
+        };
     }
 }
 
+/* Function to clean selected file from table */
 export function clean_selected_files_manual_ingestion(form_id){
     var form = document.getElementById(form_id);
     
@@ -70,3 +76,23 @@ export function clean_selected_files_manual_ingestion(form_id){
     
     show_files_to_ingest(browse_files)
 }
+
+/* Function to prepare files to be uploaded */
+export function prepare_browse_files() {
+    for (var i = 0; i < file_input.files.length; i++) {
+        /* Check size bigger than 25 MB */
+        if (file_input.files[i].size > 26214400){
+            var size_confirmation = confirm("The size of the file " + file_input.files[i].name + " is bigger than 25MB. Do you want to continue with the operation?")
+            if (size_confirmation){
+                browse_files[file_input.files[i]["name"]] = file_input.files[i];
+            }else {
+                toastr.success("The upload of selected file with size bigger than 25MB has been cancelled")
+            };
+        }else {
+            browse_files[file_input.files[i]["name"]] = file_input.files[i];
+        };
+    }
+    if (!isEmpty(browse_files)) {
+        show_files_to_ingest(browse_files) 
+    }
+};
