@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oem xmlns="urn:ccsds:schema:ndmxml" id="CCSDS_OEM_VERS" version="2.0">
+	<header>
+		<COMMENT>This file was produced by Fly4EO</COMMENT>
+		<CREATION_DATE>2022-07-26T21:27:03.359</CREATION_DATE>
+		<ORIGINATOR>PLACE_HOLDER_UNTIL_SPACECRAFT_OPERATOR_IS_KNOWN</ORIGINATOR>
+	</header>
+	<body>
+		<segment>
+			<metadata>
+				<OBJECT_NAME>PLACE_HOLDER_UNTIL_SATELLITE_NAME_IS_KNOWN</OBJECT_NAME>
+				<OBJECT_ID>2022-001A</OBJECT_ID>
+				<CENTER_NAME>EARTH</CENTER_NAME>
+				<REF_FRAME>EME2000</REF_FRAME>
+				<TIME_SYSTEM>UTC</TIME_SYSTEM>
+				<START_TIME>2022-07-06T00:00:00.000</START_TIME>
+				<STOP_TIME>2022-07-09T00:00:00.000</STOP_TIME>
+			</metadata>
+			<data>
+				<COMMENT>This file was produced by Fly4EO</COMMENT>
+				<stateVector>
+					<EPOCH>2022-07-06T00:00:00.000</EPOCH>
+					<X>603.255746000000</X>
+					<Y>6073.38641999999</Y>
+					<Z>3058.76213000000</Z>
+					<X_DOT>1.38855909999999</X_DOT>
+					<Y_DOT>3.28064229999999</Y_DOT>
+					<Z_DOT>-6.7626748000000</Z_DOT>
+				</stateVector>
+			</data>
+		</segment>
+	</body>
+</oem>
