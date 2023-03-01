@@ -22,6 +22,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
+import shutil
 
 # Import engine of the DDBB
 import eboa.engine.engine as eboa_engine
@@ -40,6 +41,24 @@ from eboa.datamodel.gauges import Gauge
 from eboa.datamodel.sources import Source, SourceStatus
 from eboa.datamodel.explicit_refs import ExplicitRef, ExplicitRefGrp, ExplicitRefLink
 from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText, AnnotationDouble, AnnotationObject, AnnotationGeometry, AnnotationBoolean, AnnotationTimestamp
+
+def clear_shm():
+    """
+    Method to clear files inside folder /dev/shm This is needed for
+    the usage of the script eboa_triggering.py through the web server
+    which can lead to blockages after locking files
+
+    """
+    # Clear files in shared memory directory
+    print("Clearing shared memory directory to avoid issues with the eboa_triggering")
+    for file_name in os.listdir("/dev/shm"):
+        # Build file paths
+        file_path = "/dev/shm/" + file_name
+        if os.path.isfile(file_path):
+            print("Deleting file: {}".format(file_path))
+            os.remove(file_path)
+        # end if
+    # end for
 
 class TestIngestionControl(unittest.TestCase):
 
@@ -60,9 +79,14 @@ class TestIngestionControl(unittest.TestCase):
         self.session = Session()
 
         # Clear all tables before executing the test
-        self.query_eboa.clear_db()
+        self.query_eboa.clear_db()        
 
     def tearDown(self):
+        try:
+            os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+        except FileNotFoundError:
+            pass
+        # end try
         # Close connections to the DDBB
         self.engine_eboa.close_session()
         self.query_eboa.close_session()
@@ -724,12 +748,20 @@ class TestIngestionControl(unittest.TestCase):
 
     def test_manual_ingestion_one_file(self):
 
+        # Clear files in shared memory directory
+        clear_shm()
+        
+        # Move test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
+
+        wait = WebDriverWait(self.driver,5)
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -739,29 +771,50 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        assert name.text == "source.json"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
-        assert size.text == "1 B"
+        assert size.text == "467 B"
 
         # Trigger ingestion
         trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
         trigger_ingestion_button.click()
+
+        # Confirm ingestion
+        alert = self.driver.switch_to.alert
+        alert.accept()
         
         # Check ingested sources
-        time.sleep(60)
-        sources = self.query_eboa.get_sources()
+        time.sleep(1)
+
+        # Check sources inserted
+        sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
+                                              validity_stop_filters = [{"date": "2018-06-05T02:07:36", "op": "=="}],
+                                              processors = {"filter": "exec", "op": "=="},
+                                              dim_signatures = {"filter": "dim_signature", "op": "=="},
+                                              names = {"filter": "source.json", "op": "=="},
+                                              ingestion_completeness = True)
+
         assert len(sources) == 1
+
+        os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
     
     def test_manual_ingestion_two_files(self):
 
+        # Clear files in shared memory directory
+        clear_shm()
+
+        # Move test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
+        
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse first file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -771,16 +824,16 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        assert name.text == "source.json"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
-        assert size.text == "1 B"
+        assert size.text == "467 B"
 
         # Browse second file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_ORB_OEM____20220706T000000_20220709T000000_0001.xml"
+        filename = "source2.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -790,20 +843,43 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_ORB_OEM____20220706T000000_20220709T000000_0001.xml"
+        assert name.text == "source2.json"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
-        assert size.text == "0 B"
+        assert size.text == "468 B"
 
         # Trigger ingestion
         trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
         trigger_ingestion_button.click()
+
+        # Confirm ingestion
+        alert = self.driver.switch_to.alert
+        alert.accept()
         
         # Check ingested sources
-        time.sleep(60)
-        sources = self.query_eboa.get_sources()
-        assert len(sources) == 2
+        time.sleep(1)
+
+        # Check sources inserted
+        sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
+                                              validity_stop_filters = [{"date": "2018-06-05T02:07:36", "op": "=="}],
+                                              processors = {"filter": "exec", "op": "=="},
+                                              dim_signatures = {"filter": "dim_signature", "op": "=="},
+                                              names = {"filter": "source.json", "op": "=="},
+                                              ingestion_completeness = True)
+
+        assert len(sources) == 1
+
+        sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
+                                              validity_stop_filters = [{"date": "2018-06-05T02:07:36", "op": "=="}],
+                                              processors = {"filter": "exec", "op": "=="},
+                                              dim_signatures = {"filter": "dim_signature", "op": "=="},
+                                              names = {"filter": "source2.json", "op": "=="},
+                                              ingestion_completeness = True)
+
+        assert len(sources) == 1
+        
+        os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
         
     def test_manual_ingestion_remove_file(self):
 
@@ -826,7 +902,7 @@ class TestIngestionControl(unittest.TestCase):
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
-        assert size.text == "1 B"
+        assert size.text == "390 B"
 
         # Clear button
         clear_button = self.driver.find_element_by_id("manual-ingestion-files-clear-button")

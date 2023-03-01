@@ -1,5 +1,0 @@
-<MTL id="1657325994970" uploadVisibilityId="112" planId="1" planStart="2022-07-10T00:00:00.000Z" planEnd="2022-07-15T00:00:00.000Z" created="2022-07-09T00:19:54.970Z" fileName="NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml">
-    <Activity type="ChangeAOCSMode" id="0" time="2022-07-10T00:29:51.717Z">
-        <Argument name="arg_AocMode" value="NSP"/>
-    </Activity>
-</MTL>

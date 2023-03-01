@@ -92,7 +92,7 @@ export function prepare_browse_files() {
             browse_files[file_input.files[i]["name"]] = file_input.files[i];
         };
     }
-    if (!isEmpty(browse_files)) {
+    if (Object.keys(browse_files).length > 0) {
         show_files_to_ingest(browse_files) 
     }
 };
