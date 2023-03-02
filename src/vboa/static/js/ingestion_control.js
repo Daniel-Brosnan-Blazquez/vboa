@@ -33,15 +33,63 @@ export function submit_request_for_manual_ingestion_management(form_id){
         toastr.error("No source has been selected to perform the chosen operation.")
     }
     else{
-        var redirection_confirmation = confirm("You are about to be redirect to the ingestion control complete view to monitor your ingestions. The page will be updated automatically every 1 minute. Do you want to continue with the operation?")
-        if (redirection_confirmation){
-            var relative_url_to_redirect = "/ingestion_control/sliding_ingestion_control_parameters?window_delay=0&window_size=1.0&repeat_cycle=1"
-            queryFunctions.request_upload_files_and_redirect("manual-ingestion/ingest-files", relative_url_to_redirect, form_data)        
-            toastr.success("Ingestion of selected file/s requested")
+
+        const parameters = {
+            "form_data": form_data
+        }
+        queryFunctions.request_info("/check-orc-status", check_orc_status_and_ingest_files, parameters);
+    }
+}
+
+/* Function to check if ORC is enabled while trying to ingest files
+ * through the HMI and perform actions accordingly */
+function check_orc_status_and_ingest_files(parameters, orc_status){
+
+    if (orc_status["scheduler"]["status"] == "on" && orc_status["ingester"]["status"] == "on"){
+        ingest_files(parameters, null)
+    }else{
+        var switch_on_orc_confirmation = confirm("You are about to upload files into BOA but the orchestrator is switched off. Do you want to switch on the orchestrator?")
+        if (switch_on_orc_confirmation){
+
+            var loader = document.getElementById("updating-page");
+            loader.className = "loader-render"
+            /* Activate ORC */
+            queryFunctions.request_info("/switch-on-orc", ingest_files, parameters);
         }else{
-            toastr.success("The ingestions of selected file/s has been cancelled")
+            toastr.success("The ingestion of selected file/s has been cancelled")
         };
     }
+
+}
+
+/* Function to ingest the selected files */
+function ingest_files(parameters, command_status){
+
+    var loader = document.getElementById("updating-page");
+    loader.className = ""
+
+    if (command_status == null || command_status["return_code"] == 0){
+        if (command_status != null){
+            toastr.success("ORC was switched on sucessfully")
+        }
+        
+        var redirection_confirmation = confirm("You are about to be redirected to the ingestion control view to monitor the processing of the uploaded files. The page will be updated automatically every 1 minute. Do you want to continue with the operation?")
+        if (redirection_confirmation){
+            var relative_url_to_redirect = "/ingestion_control/sliding_ingestion_control_parameters?window_delay=0&window_size=1.0&repeat_cycle=1"
+            const parameters_query = {
+                "form_data": parameters["form_data"],
+                "delay_redirect": 30000
+            }
+            queryFunctions.request_upload_files_and_redirect("manual-ingestion/ingest-files", relative_url_to_redirect, parameters_query)
+            toastr.success("Ingestion of selected file/s requested")
+        }else{
+            toastr.success("The ingestion of selected file/s has been cancelled")
+        };
+    }
+    else if (command_status["return_code"] != 403){
+        toastr.error("ORC could not be switched on sucessfully")
+    }
+
 }
 
 /* Function to clean selected file from table */

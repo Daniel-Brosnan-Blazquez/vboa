@@ -163,9 +163,9 @@ jQuery(".responsive-tabs").responsiveTabs({
   accordionOn: ['xs', 'sm'] // xs, sm, md, lg
 });
 
-/* 
+/***
 * Datatables
-*/
+***/
 /* Activate search on every column for datatables */
 jQuery(document).ready(function() {
     datatableFunctions.activate_search_on_columns();
@@ -304,9 +304,9 @@ export function fill_elements_into_selector_no_input(selector, route, search, fi
 
 };
 
-/*
+/***
 * Orbit functions
-*/
+***/
 /* Function get the fields contained in a TLE */
 export function get_tle_fields(tle_string){
 
@@ -316,9 +316,9 @@ export function get_tle_fields(tle_string){
 
 };
 
-/*
+/***
 * Graph functions
-*/
+***/
 /* Function to display a pie chart given the id of the DOM where to
  * attach it and the items to show */
 export function display_pie(dom_id, data, options){
@@ -405,9 +405,9 @@ export function display_czml_file_3dmap(dom_id, czml_file, show_all_path){
 
 };
 
-/*
+/***
 * EVENTS *
-*/
+***/
 
 /* Function to show a bar graph of events */
 export function prepare_events_data_for_bar(events, items, groups){
@@ -462,9 +462,9 @@ export function create_event_map(geometries, dom_id){
 
 };
 
-/*
+/***
 * ALERTS *
-*/
+***/
 
 /* Function to show a timeline of alerts */
 export function create_alert_timeline(alerts, dom_id){
@@ -478,9 +478,9 @@ export function create_alert_timeline(alerts, dom_id){
 /* Fill alert severities */
 jQuery(".query-alert-severities").one("focusin", alertFunctions.fill_severities);
 
-/*
+/***
 * ANNOTATIONS *
-*/
+***/
 
 /* Function to show a map for annotations */
 export function create_annotation_map(geometries, dom_id){
@@ -491,9 +491,9 @@ export function create_annotation_map(geometries, dom_id){
 
 };
 
-/*
+/***
 * EXPLICIT REFERENCES *
-*/
+***/
 
 /* Function to show a network of explicit references */
 export function create_er_network(ers, dom_id){
@@ -504,9 +504,9 @@ export function create_er_network(ers, dom_id){
 
 };
 
-/*
+/***
 * GAUGES *
-*/
+***/
 
 /* Function to show a network of gauges */
 export function create_gauge_network(gauges, dom_id){
@@ -517,9 +517,9 @@ export function create_gauge_network(gauges, dom_id){
 
 };
 
-/*
+/***
 * SOURCES *
-*/
+***/
 
 /* Function to show a timeline of validities for the sources */
 export function create_source_validity_timeline(sources, dom_id){
@@ -571,9 +571,9 @@ export function submit_request_for_ingestion_management(form_id){
     sourceFunctions.submit_request_for_ingestion_management(form_id);
 }
 
-/*
+/***
 * REPORTS *
-*/
+***/
 
 /* Fill report statuses */
 jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
@@ -603,9 +603,9 @@ export function show_selected_report(button){
 
 };
 
-/*
+/***
 * USERS *
-*/
+***/
 
 /* Function to expand the roles associated to a user */
 export function expand_user_roles(dom_id, user_uuid){
@@ -620,9 +620,9 @@ export function notify_import(message, error){
     userFunctions.notify_import(message, error);
 }
 
-/*
+/***
 * QUERY *
-*/
+***/
 
 /* Function to provide a way to request information from database from javascript */
 export function request_info(url, callback, parameters){
@@ -996,4 +996,16 @@ export function clean_selected_files_manual_ingestion(form_id){
 
 export function prepare_browse_files(){
     ingestionControlFunctions.prepare_browse_files();
+}
+
+/***
+* AUXILIARY FUNCTIONS
+***/
+export function show_loader_countdown(number){
+    setTimeout(function(){
+        var loader_text = document.getElementById("updating-page-count-down");
+        loader_text.className = "loader-text";
+        loader_text.innerHTML = "<p>" + number + "</p>";
+        show_loader_countdown(number-1)
+    }, 1000);
 }

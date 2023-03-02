@@ -447,3 +447,13 @@ input[type="checkbox"]:disabled + .label-text:before{
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.loader-text {
+  position: fixed;
+  left: 50%;
+  top: 45%;
+  z-index: 10;
+  text-align: center;
+  width: 80px;
+  height: 80px;
+}

@@ -1,0 +1,61 @@
+<OrchestratorConfiguration>
+
+
+   <List_of_DataProviders>
+
+      <DataProvider isTriggerType="yes">
+	      <DataType>ANY</DataType>
+	      <FileType>*</FileType>
+	      <Directory>[update]/data/l0-in/</Directory>
+      </DataProvider>
+
+   </List_of_DataProviders>
+
+   <List_of_PriorityRules>
+      <PriorityRule rank="1"     class="DataType" type="ANY"        sort="DESC" />
+   </List_of_PriorityRules>
+
+   <!-- ====================================================== -->
+  
+   <List_of_ProcessingRules>
+   
+      <ProcessingRule dataType="ANY" triggerType="ANY" coverage="SAME">
+	      <executable>eboa_triggering.py -r -f %F</executable>
+	      <List_of_Inputs>
+	      </List_of_Inputs>
+      </ProcessingRule>   
+   </List_of_ProcessingRules>
+   
+   <List_of_Breakpoints>
+   <!--
+      <breakpoint key="Scenes_Vector_input" value="false" mandatory="false" valueType="boolean"/>
+      <breakpoint key="Scenes_Normalized" value="false" mandatory="false" valueType="boolean"/>
+      <breakpoint key="Scenes_Vector_output" value="false" mandatory="false" valueType="boolean"/>
+   -->
+   </List_of_Breakpoints>
+   
+   <Miscelanea>
+      <ArchiveHandler>NAOS</ArchiveHandler>
+      <PollingDir>/inputs</PollingDir>
+      <PollingFreq unit="s">3</PollingFreq>
+      <ParallelIngestions>1</ParallelIngestions>
+      <SchedulingFreq unit="s">10</SchedulingFreq>
+      <ResourceManager>orcResourceChecker</ResourceManager>
+      <ProcWorkingDir>/tmp/processorWd</ProcWorkingDir>
+      <SuccessDir>/tmp/success</SuccessDir>
+      <FailureDir>/tmp/failure</FailureDir>
+      <BreakPointDir>/tmp/breakpoints</BreakPointDir>
+      <TmpDir>/tmp/tmp</TmpDir>
+   </Miscelanea>
+
+   <Inventory>
+      <Database_Adapter>postgresql</Database_Adapter>
+      <Database_Host></Database_Host>
+      <Database_Port>5432</Database_Port>      
+      <Database_Name>minarc_orc_db</Database_Name>
+      <Database_User>minarc_orc</Database_User>
+      <Database_Password></Database_Password>
+   </Inventory>
+
+   
+</OrchestratorConfiguration>

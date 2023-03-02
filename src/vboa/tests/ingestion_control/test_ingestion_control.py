@@ -42,23 +42,8 @@ from eboa.datamodel.sources import Source, SourceStatus
 from eboa.datamodel.explicit_refs import ExplicitRef, ExplicitRefGrp, ExplicitRefLink
 from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText, AnnotationDouble, AnnotationObject, AnnotationGeometry, AnnotationBoolean, AnnotationTimestamp
 
-def clear_shm():
-    """
-    Method to clear files inside folder /dev/shm This is needed for
-    the usage of the script eboa_triggering.py through the web server
-    which can lead to blockages after locking files
-
-    """
-    # Clear files in shared memory directory
-    print("Clearing shared memory directory to avoid issues with the eboa_triggering")
-    for file_name in os.listdir("/dev/shm"):
-        # Build file paths
-        file_path = "/dev/shm/" + file_name
-        if os.path.isfile(file_path):
-            print("Deleting file: {}".format(file_path))
-            os.remove(file_path)
-        # end if
-    # end for
+# Import service management
+import vboa.service_management as service_management
 
 class TestIngestionControl(unittest.TestCase):
 
@@ -79,11 +64,28 @@ class TestIngestionControl(unittest.TestCase):
         self.session = Session()
 
         # Clear all tables before executing the test
-        self.query_eboa.clear_db()        
+        self.query_eboa.clear_db()
 
+        # Switch off ORC
+        status = service_management.execute_command("orcBolg --command stop")
+        assert status["return_code"] == 0
+
+        # Clear ORC tables
+        status = service_management.execute_command("boa_init.py -o -y")
+        assert status["return_code"] == 0
+        
     def tearDown(self):
+        status = service_management.execute_command("orcValidateConfig -C")
+        assert status["return_code"] == 0
+        path_to_orc_config = status["output"]
+
         try:
             os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+        except FileNotFoundError:
+            pass
+        # end try
+        try:
+            os.rename(path_to_orc_config + "/orchestratorConfigFile_bak.xml", path_to_orc_config + "/orchestratorConfigFile.xml")
         except FileNotFoundError:
             pass
         # end try
@@ -748,10 +750,14 @@ class TestIngestionControl(unittest.TestCase):
 
     def test_manual_ingestion_one_file(self):
 
-        # Clear files in shared memory directory
-        clear_shm()
-        
-        # Move test configuration for triggering
+        # Copy test configuration for ORC
+        status = service_management.execute_command("orcValidateConfig -C")
+        assert status["return_code"] == 0
+        path_to_orc_config = status["output"]
+        os.rename(path_to_orc_config + "/orchestratorConfigFile.xml", path_to_orc_config + "/orchestratorConfigFile_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/orchestratorConfigFile.xml", path_to_orc_config + "/orchestratorConfigFile.xml")
+
+        # Copy test configuration for triggering
         os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
         shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
 
@@ -761,7 +767,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "source.json"
+        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -771,7 +777,7 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "source.json"
+        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -781,12 +787,20 @@ class TestIngestionControl(unittest.TestCase):
         trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
         trigger_ingestion_button.click()
 
+        time.sleep(1)
+        
+        # Confirm ORC switch on
+        alert = self.driver.switch_to.alert
+        alert.accept()
+
+        time.sleep(40)
+        
         # Confirm ingestion
         alert = self.driver.switch_to.alert
         alert.accept()
         
         # Check ingested sources
-        time.sleep(1)
+        time.sleep(30)
 
         # Check sources inserted
         sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
@@ -799,13 +813,19 @@ class TestIngestionControl(unittest.TestCase):
         assert len(sources) == 1
 
         os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+        os.rename(path_to_orc_config + "/orchestratorConfigFile_bak.xml", path_to_orc_config + "/orchestratorConfigFile.xml")
     
     def test_manual_ingestion_two_files(self):
 
-        # Clear files in shared memory directory
-        clear_shm()
+        # Copy test configuration for ORC
+        status = service_management.execute_command("orcValidateConfig -C")
 
-        # Move test configuration for triggering
+        assert status["return_code"] == 0
+        path_to_orc_config = status["output"]
+        os.rename(path_to_orc_config + "/orchestratorConfigFile.xml", path_to_orc_config + "/orchestratorConfigFile_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/orchestratorConfigFile.xml", path_to_orc_config + "/orchestratorConfigFile.xml")
+
+        # Copy test configuration for triggering
         os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
         shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
         
@@ -814,7 +834,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse first file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "source.json"
+        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -824,7 +844,7 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "source.json"
+        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -833,7 +853,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse second file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "source2.json"
+        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0002.xml"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -843,7 +863,7 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "source2.json"
+        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0002.xml"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -853,12 +873,20 @@ class TestIngestionControl(unittest.TestCase):
         trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
         trigger_ingestion_button.click()
 
+        time.sleep(1)
+        
+        # Confirm ORC switch on
+        alert = self.driver.switch_to.alert
+        alert.accept()
+
+        time.sleep(40)
+        
         # Confirm ingestion
         alert = self.driver.switch_to.alert
         alert.accept()
         
         # Check ingested sources
-        time.sleep(1)
+        time.sleep(40)
 
         # Check sources inserted
         sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
@@ -878,8 +906,9 @@ class TestIngestionControl(unittest.TestCase):
                                               ingestion_completeness = True)
 
         assert len(sources) == 1
-        
+
         os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+        os.rename(path_to_orc_config + "/orchestratorConfigFile_bak.xml", path_to_orc_config + "/orchestratorConfigFile.xml")
         
     def test_manual_ingestion_remove_file(self):
 
@@ -888,7 +917,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -898,11 +927,11 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_PLA_OSC____20220710T000000_20220715T000000_0001.xml"
+        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
-        assert size.text == "390 B"
+        assert size.text == "467 B"
 
         # Clear button
         clear_button = self.driver.find_element_by_id("manual-ingestion-files-clear-button")

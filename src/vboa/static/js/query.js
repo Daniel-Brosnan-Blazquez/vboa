@@ -177,18 +177,32 @@ export function request_upload_files(url, callback, form_data){
     xmlhttp.send(form_data);
 }
 
-/* Function to request upload files and redirect to an url, using FormData object from javascript for the parameters */
-export function request_upload_files_and_redirect(url, url_to_redirect, form_data){
+/* Function to request upload files and redirect to an url
+parameters: dictionary containing the following keys:
+  form_data: FormData object from javascript
+  delay_redirect: number of ms */
+export function request_upload_files_and_redirect(url, url_to_redirect, parameters){
     
     var xmlhttp = new XMLHttpRequest();
-    
+
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 403){
             toastr.error("Ups... Sorry it seems you don't have access to upload files: " + url);
         }
-        window.location.assign(url_to_redirect)
+        if ("delay_redirect" in parameters){
+            var loader = document.getElementById("updating-page");
+            loader.className = "loader-render";
+            setTimeout(function(){
+                var loader = document.getElementById("updating-page");
+                loader.className = "";
+                window.location.assign(url_to_redirect)
+            }, parameters["delay_redirect"]);
+            vboa.show_loader_countdown(parameters["delay_redirect"]/1000)
+        }else{
+            window.location.assign(url_to_redirect)
+        }
     };
     
     xmlhttp.open("POST", url, true);
-    xmlhttp.send(form_data);
+    xmlhttp.send(parameters["form_data"]);
 }

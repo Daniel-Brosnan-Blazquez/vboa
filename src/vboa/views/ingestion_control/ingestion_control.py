@@ -11,6 +11,7 @@ import json
 import datetime
 from dateutil import parser
 import os
+import tempfile
 
 # Import flask utilities
 from flask import Blueprint, current_app, render_template, request, redirect, jsonify
@@ -314,17 +315,17 @@ def manual_ingestion_files():
     # Save files to /tmp
     files = request.files.getlist("files")
     for file in files:
+        # Save file into a temporary file
+        tmp_file = tempfile.mkstemp()
+        tmp_file_path = tmp_file[1]
+        file.save(tmp_file_path)
+
+        # Move file to the inputs folder so that ORC will get it
         filename = secure_filename(file.filename)
         file_path = os.path.join("/inputs", filename)
-        file.save(file_path)
-        
-        # Ingest file
-        try:
-            eboa_triggering.main(file_path, remove_input=True)
-        except SystemExit as e:
-            pass
-        # end try
+        os.rename(tmp_file_path, file_path)
+
     # end for
 
-    return
+    return {"status": "OK"}
     
