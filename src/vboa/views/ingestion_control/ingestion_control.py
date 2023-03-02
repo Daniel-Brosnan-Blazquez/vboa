@@ -14,7 +14,7 @@ import os
 import tempfile
 
 # Import flask utilities
-from flask import Blueprint, current_app, render_template, request, redirect, jsonify
+from flask import Blueprint, current_app, render_template, request, redirect, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -29,6 +29,9 @@ from sqlalchemy.orm.exc import DetachedInstanceError
 
 # Import vboa security
 from vboa.security import auth_required, roles_accepted
+
+# Import service management
+import vboa.service_management as service_management
 
 bp = Blueprint("ingestion_control", __name__, url_prefix="/ingestion_control")
 query = Query()
@@ -328,4 +331,31 @@ def manual_ingestion_files():
     # end for
 
     return {"status": "OK"}
+
+@bp.route("/download-triggering", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
+def download_triggering():
+    """
+    Method to allow the download of the triggering configuration
+    """
+    current_app.logger.debug("Download triggering configuration")
+
+    return send_from_directory("/resources_path", "triggering.xml", as_attachment=True)
+
+@bp.route("/download-orc-config", methods=["GET"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator")
+def download_orc_config():
+    """
+    Method to allow the download of the ORC configuration
+    """
+    current_app.logger.debug("Download ORC configuration")
+
+    # Get path to ORC configuration
+    status = service_management.execute_command("orcValidateConfig -C")
+    assert status["return_code"] == 0
+    path_to_orc_config = status["output"]
     
+    return send_from_directory(path_to_orc_config, "orchestratorConfigFile.xml", as_attachment=True)
+

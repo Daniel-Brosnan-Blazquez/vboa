@@ -14,13 +14,15 @@
       <form role="form" id="manual-ingestion-files-operations" method=post onSubmit="vboa.submit_request_for_manual_ingestion_management(this.id); return false;">
         <p style="display: inline; margin: 0;">
           <b>Select files to be uploaded:</b>
-          <div align="center">
-            <label class="btn btn-primary">
-                Browse files <input type="file" name="file" multiple="multiple" style="display: none;" id="manual-ingestion-files-browse-files">
-            </label>
-            <button type="button" onclick="vboa.clean_selected_files_manual_ingestion('manual-ingestion-files-operations')" class="btn btn-default" style="display: none" id="manual-ingestion-files-clear-button">Clear selected files</button>
-          </div>
+          <br/>
+          Note: the files will be processed depending on the <a href="/ingestion_control/download-orc-config">triggering</a> rules for <b>ORC</b> and the <a href="/ingestion_control/download-triggering">triggering</a> rules for <b>BOA</b>.
         </p>      
+        <div align="center">
+          <label class="btn btn-primary">
+            Browse files <input type="file" name="file" multiple="multiple" style="display: none;" id="manual-ingestion-files-browse-files">
+          </label>
+          <button type="button" onclick="vboa.clean_selected_files_manual_ingestion('manual-ingestion-files-operations')" class="btn btn-default" style="display: none" id="manual-ingestion-files-clear-button">Clear selected files</button>
+        </div>
         <div id="manual-ingestion-files-div"></div>
         <div class="row" style="margin-bottom: 20px; margin-top: 20px">
           <div align="center">
