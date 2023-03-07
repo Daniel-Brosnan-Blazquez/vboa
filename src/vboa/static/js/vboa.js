@@ -620,6 +620,18 @@ export function notify_import(message, error){
     userFunctions.notify_import(message, error);
 }
 
+export function submit_request_for_import_users_management(form_id){
+    userFunctions.submit_request_for_import_users_management(form_id);
+}
+
+export function submit_request_for_import_users_manually_management(form_id){
+    userFunctions.submit_request_for_import_users_manually_management(form_id);
+}
+
+export function prepare_browse_file(){
+    userFunctions.prepare_browse_file();
+}
+
 /***
 * QUERY *
 ***/

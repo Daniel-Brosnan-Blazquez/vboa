@@ -12,10 +12,11 @@ import sys
 import uuid
 import random
 import os
+import tempfile
+
 
 # Import flask utilities
-from flask import Blueprint, current_app, render_template, request, send_from_directory, jsonify
-from werkzeug.utils import secure_filename
+from flask import Blueprint, current_app, render_template, request, send_from_directory, jsonify, abort
 
 # Import uboa utilities
 import uboa.engine.engine as uboa_engine
@@ -240,7 +241,7 @@ def query_user_by_group(group):
     Query users belonging to the group.
     """
     current_app.logger.debug("Query user by group")
-    users = query.get_users(groups={"filter": group, "op": "=="})
+    users = query.get_users(groups={"filter": group, "op": "like"})
 
     filters = {}
     filters["offset"] = [""]
@@ -256,7 +257,7 @@ def query_user_by_role(role):
     Query users belonging to the role.
     """
     current_app.logger.debug("Query user by role")
-    users = query.get_users(roles={"filter": role, "op": "=="})
+    users = query.get_users(roles={"filter": role, "op": "like"})
 
     filters = {}
     filters["offset"] = [""]
@@ -378,42 +379,39 @@ def allowed_file(filename):
 @bp.route("/import-users/import-from-file", methods=["POST"])
 @auth_required()
 @roles_accepted("administrator")
-def upload_file():
+def import_users_from_file():
     """
-    Upload file to import users.
+    Import users from file.
     """ 
-    attempt_import = False
-    error_import = False
-    message = ""
+    current_app.logger.debug("Prepare import user/s operation")
     
     file = request.files["file"]
+    
     # Check if a file was selected and with allowed extension
     if file and allowed_file(file.filename):
-        attempt_import = True
-        filename = secure_filename(file.filename)
-        file.save(os.path.join("/tmp/", filename))
-        # Treat data in json file
+        # Save file into a temporary file
+        tmp_file = tempfile.mkstemp()
+        tmp_file_path = tmp_file[1]
+        file.save(tmp_file_path)
+        
+        # Treat data
         engine_uboa = Engine()
-        exit_status = engine_uboa.parse_data_from_json("/tmp/" + filename)
+        exit_status = engine_uboa.parse_data_from_json(tmp_file_path)
         # Check if is a valid file or not
         if exit_status["status"] == uboa_engine.exit_codes["FILE_VALID"]["status"]:
             exit_status = engine_uboa.treat_data()
             # Check if is a valid data
-            if (len([item for item in exit_status if item["status"] != uboa_engine.exit_codes["OK"]["status"]]) == 0):
-                error_import = False
-                message = "The file '{}' was imported successfully".format(filename)
-            else:
-                error_import = True
-                message = exit_status[0]["message"].format(filename)
+            if not (len([item for item in exit_status if item["status"] != uboa_engine.exit_codes["OK"]["status"]]) == 0):
+                abort(400)
+            # end if
         else:
-            error_import = True
-            message = exit_status["message"].format(filename)
+            abort(400)
+        # end if
     else:
-        attempt_import = True
-        error_import = True
-        message = "No file was selected or the extension of the file is incorrect"
-    
-    return render_template("users_management/import_users.html", attempt_import = attempt_import, error_import = error_import, message = message)
+        abort(400)
+    # end if
+
+    return {"status": "OK"}
 
 @bp.route("/import-users/import-manually", methods=["POST"])
 @auth_required()
@@ -422,35 +420,23 @@ def upload_manually():
     """
     Import users manually.
     """ 
-    attempt_import = False
-    error_import = False
-    message = ""
+    current_app.logger.debug("Prepare manually import user/s operation")
     
     # Retrieve data from textarea
     textarea_content = request.form["import_users_textarea"]
     try:
-        data = json.loads(textarea_content)
-        textarea_content_to_show = json.dumps(data, indent=4)
+        data = json.loads(textarea_content)  
         # Treat data
         engine_uboa = Engine()
         exit_status = engine_uboa.treat_data(data)
         # Check if is a valid data
-        if not error_import and (len([item for item in exit_status if item["status"] != uboa_engine.exit_codes["OK"]["status"]]) == 0):
-            attempt_import = True
-            error_import = False
-            message = "The data was imported successfully"
-        else:
-            attempt_import = True
-            error_import = True
-            message = exit_status[0]["message"]
+        if not (len([item for item in exit_status if item["status"] != uboa_engine.exit_codes["OK"]["status"]]) == 0):
+             abort(400)
     except ValueError as e:
-        attempt_import = True
-        error_import = True
-        message = "The data has an error:" + str(e)
-        textarea_content_to_show = None
+         abort(400)
     # end try
     
-    return render_template("users_management/import_users.html", attempt_import = attempt_import, error_import = error_import, message = message, textarea_content = textarea_content_to_show)
+    return {"status": "OK"}
 
 @bp.route("/export-users")
 @auth_required()

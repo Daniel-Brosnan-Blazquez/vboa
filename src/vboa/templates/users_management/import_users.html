@@ -11,16 +11,19 @@
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
-      <p>
-        <b>The extensions files that are allowed are json and txt.</b>
-      </p>
-      <form method=post enctype=multipart/form-data action="/users-management/import-users/import-from-file">
-        <div class="row" >
+      <form role="form" id="import-users-from-file-operations" method=post onSubmit="vboa.submit_request_for_import_users_management(this.id); return false;">
+        <p>
+          <b>Select file (json/txt extension) with the configuration to be imported:</b>
           <div align="center">
-            <label class="btn btn-default btn-file" style="margin-top: 12px">
-            Browse file <input type="file" name="file" style="display: none;" id="import-users-from-file-browse-file">
+            <label class="btn btn-primary">
+                Browse file <input type="file" name="file" style="display: none;" id="import-users-from-file-browse-file">
             </label>
-            <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="import-users-from-file-submit-button" name="import_users_from_file">Import users</button>
+          </div>
+        </p>
+        <div id="import-users-from-file-div"></div>
+        <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+          <div align="center">
+            <button type="submit" class="btn btn-success" style="display: none; margin-top: 12px" id="import-users-from-file-submit-button">Import users</button>
           </div>
         </div>
       </form>
@@ -34,42 +37,50 @@
     <!-- /.panel-heading -->
     <div class="panel-body">
       <p>
-        <b>The following text is an example of a validated JSON schema:</b>
-      </p>
-      <form role="form" id="import-users-operations" method=post action="/users-management/import-users/import-manually">
-        <textarea style="margin-top: 12px" id="import-users-textarea" name="import_users_textarea" rows="20" cols="100">
-{% if textarea_content %}{{ textarea_content }}
-{% else %}{
-  "operations":[
-      {
-        "mode":"insert",
-        "users":[
-            {
-              "email":"example@example.com",
-              "username":"example",
-              "password":"example_hash_password",
-              "roles":[
-                  "example_role"
-              ]
-            }
-        ],
-        "roles":[
-            {
-              "name":"example_role",
-              "description":"This text is an example."
-            }
-        ]
-      }
-  ]
-}
-          {% endif %}
-            </textarea>
-        <div class="row" style="margin-bottom: 20px; margin-top: 20px">
-          <div align="center">
-            <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="import-users-from-editor-submit-button" name="import_users_manually">Import users</button>
-          </div>
+        <b>Insert configuration manually:</b>
+        <div align="center">
+          <button type="button" onclick="show_insert_manually()" class="btn btn-primary" id="import-users-manually-button">Insert users manually</button>
         </div>
-      </form>
+      </p>
+      <div id="import-users-manually-div" style="display: none;">
+        <p>
+          <br/>The following text-area shows an example of a validated JSON schema. Confirm importing users:
+        </p>
+        <form role="form" id="import-users-operations" method=post onSubmit="vboa.submit_request_for_import_users_manually_management(this.id); return false;">
+          <textarea style="margin-top: 12px" id="import-users-textarea" name="import_users_textarea" rows="20" cols="100">
+  {% if textarea_content %}{{ textarea_content }}
+  {% else %}{
+    "operations":[
+        {
+          "mode":"insert",
+          "users":[
+              {
+                "email":"example@example.com",
+                "username":"example",
+                "password":"example_hash_password",
+                "roles":[
+                    "example_role"
+                ]
+              }
+          ],
+          "roles":[
+              {
+                "name":"example_role",
+                "description":"This text is an example."
+              }
+          ]
+        }
+    ]
+  }
+            {% endif %}
+              </textarea>
+          <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+            <div align="center">
+              <button type="submit" class="btn btn-success" style="margin-top: 12px" id="import-users-from-editor-submit-button" name="import_users_manually">Import users</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
@@ -78,15 +89,85 @@
 {{ super() }}
 <script type="text/javascript">
 
-  {% if attempt_import == True %}
-  {% if error_import == True %}
-  var error = true
-  {% else %}
-  var error = false
-  {% endif %}
-  message = "{{ message }}"
-  vboa.notify_import(message, error)
-  {% endif %}
+var file_input = document.getElementById("import-users-from-file-browse-file");
+var import_manually_button = document.getElementById("import-users-manually-button");
+var submit_button = document.getElementById("import-users-from-file-submit-button");
+var inser_manually_div = document.getElementById("import-users-manually-div");
+
+var browse_file = {};
+
+function human_readable_size(size) {
+    var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
+
+function show_insert_manually() {
+    if (inser_manually_div.style.display == 'block') {
+      inser_manually_div.style.display = 'none'
+    }
+    else {
+      inser_manually_div.style.display = 'block'
+    }
+}
+
+function show_file_to_import(file) {
+    submit_button.style.display = "block"
+  
+    /* Insert information about browse file to the table */
+    const form_import_users_file = document.getElementById("import-users-from-file-div");
+    form_import_users_file.innerHTML = "<p><br/>The following table shows the selected file to be uploaded. Confirm importing users:</p>" +
+          "<table width='100%' class='table table-striped table-bordered table-hover' id='import-users-from-file-table'>" +
+          "<thead>" +
+          "<tr>" +
+          "<th class='selected'></th>" +
+          "<th>File</th>" +
+          "<th>Size</th>" +
+          "</tr>" +
+          "</thead>" +
+          "<tbody>" +
+          "</tbody>" +
+          "<tfoot>" +
+          "<tr>" +
+          "<th></th>" +
+          "<th>File</th>" +
+          "<th>Size</th>" +
+          "</tr>" +
+          "</tfoot>" +
+          "</table>"
+
+      const import_users_table = document.getElementById("import-users-from-file-table");
+      
+      var i = 0;
+      for (const file_key in file){
+          
+          /* Create line */
+          var tr = document.createElement("tr");
+          tr.id = "import-users-from-file-table-tr-" + i
+          tr.classList.add("selected");
+          
+          var td_checkbox = document.createElement("td");
+          tr.appendChild(td_checkbox);
+          var td_file = document.createElement("td");
+          td_file.id = "name"
+          tr.appendChild(td_file);
+          var td_size = document.createElement("td");
+          tr.appendChild(td_size);
+
+          /* Update line */
+          td_file.textContent = file[file_key]["name"];
+          td_size.textContent = human_readable_size(file[file_key]["size"]);
+          i++;
+
+          /* Insert line into table */
+          import_users_table.tBodies[0].appendChild(tr);
+      }
+
+      /* Activate table */
+      import_users_table.classList.add("table-search-checkboxes");
+      vboa.datatables.activate_search_and_checkboxes_on_tables();
+}
+
+file_input.addEventListener('change', vboa.prepare_browse_file);
   
 </script>
 {% endblock %}

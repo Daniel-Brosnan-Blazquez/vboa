@@ -182,24 +182,29 @@ parameters: dictionary containing the following keys:
   form_data: FormData object from javascript
   delay_redirect: number of ms */
 export function request_upload_files_and_redirect(url, url_to_redirect, parameters){
-    
+
     var xmlhttp = new XMLHttpRequest();
 
     xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 403){
+        if (this.readyState == 4 && this.status == 200) {
+            if ("delay_redirect" in parameters){
+                var loader = document.getElementById("updating-page");
+                loader.className = "loader-render";
+                setTimeout(function(){
+                    var loader = document.getElementById("updating-page");
+                    loader.className = "";
+                    window.location.assign(url_to_redirect)
+                }, parameters["delay_redirect"]);
+                vboa.show_loader_countdown(parameters["delay_redirect"]/1000)
+            } else{
+                window.location.assign(url_to_redirect)
+            }
+        }
+        else if (this.readyState == 4 && this.status == 403){
             toastr.error("Ups... Sorry it seems you don't have access to upload files: " + url);
         }
-        if ("delay_redirect" in parameters){
-            var loader = document.getElementById("updating-page");
-            loader.className = "loader-render";
-            setTimeout(function(){
-                var loader = document.getElementById("updating-page");
-                loader.className = "";
-                window.location.assign(url_to_redirect)
-            }, parameters["delay_redirect"]);
-            vboa.show_loader_countdown(parameters["delay_redirect"]/1000)
-        }else{
-            window.location.assign(url_to_redirect)
+        else if (this.readyState == 4 && this.status == 400){
+            toastr.error("There is some error with the uploaded data. The requested operation could not be done");
         }
     };
     

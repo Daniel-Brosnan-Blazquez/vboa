@@ -159,3 +159,94 @@ export function notify_import(message, error){
     loader.className = ""
     
 }
+
+/* Function to prepare file to be uploaded */
+export function prepare_browse_file() {
+    
+    browse_file = {}
+    
+    /* Check size bigger than 25 MB */
+    if (file_input.files[0].size > 26214400){
+        var size_confirmation = confirm("The size of the file " + file_input.files[0].name + " is bigger than 25MB. Do you want to continue with the operation?")
+        if (size_confirmation){
+            browse_file[file_input.files[0]["name"]] = file_input.files[0];
+        }else {
+            toastr.success("The upload of selected file with size bigger than 25MB has been cancelled")
+        };
+    }else {
+        browse_file[file_input.files[0]["name"]] = file_input.files[0];
+    };
+    
+    if (Object.keys(browse_file).length > 0) {
+        show_file_to_import(browse_file) 
+    }
+};
+
+/* Function to submit the request from selected files in table */
+export function submit_request_for_import_users_management(form_id){
+    var form = document.getElementById(form_id);
+    
+    /* Search table id */
+    var tables = form.getElementsByTagName("table");
+    var table_id = "";
+    for (const table of tables){
+        if (table.id != ""){
+            table_id = table.id;
+            break;
+        };
+    };
+
+    /* Fill form data */
+    var form_data = new FormData(form);
+    var table = jQuery("#" + table_id).dataTable();
+    table.$(".selected").each(function(){
+        /* Just take the files selected */
+        var file_name = jQuery("#" + this.id + " #name").text();
+        if (file_name in browse_file) {
+            form_data.append("files", browse_file[file_name])        
+        }
+    })
+    if (!form_data.has("files")){
+        toastr.error("No source has been selected to perform the chosen operation.")
+    }
+    else{
+        var redirection_confirmation = confirm("You are about to be redirect to the UBOA navigation to monitor your imported users. Do you want to continue with the operation?")
+        if (redirection_confirmation){
+            var relative_url_to_redirect = "/users-management/uboa-nav/query-users-by-group/%"
+            toastr.success("Import operation of user/s requested")
+            const parameters_query = {
+                "form_data": form_data,
+                "delay_redirect": 10000
+            }
+            queryFunctions.request_upload_files_and_redirect("import-users/import-from-file", relative_url_to_redirect, parameters_query)        
+        }else{
+            toastr.success("The import operation of user/s has been cancelled")
+        };
+    }
+}
+
+/* Function to submit the request from selected files in table */
+export function submit_request_for_import_users_manually_management(form_id){
+    var form = document.getElementById(form_id);
+    
+    /* Fill form data */
+    var form_data = new FormData(form);
+    
+    if (form.value == ""){
+        toastr.error("The text-area is empty. No users to import")
+    }
+    else{
+        var redirection_confirmation = confirm("You are about to be redirect to the UBOA navigation to monitor your imported users. Do you want to continue with the operation?")
+        if (redirection_confirmation){
+            var relative_url_to_redirect = "/users-management/uboa-nav/query-users-by-group/%"
+            toastr.success("Manually import operation of user/s requested")
+            const parameters_query = {
+                "form_data": form_data,
+                "delay_redirect": 10000
+            }
+            queryFunctions.request_upload_files_and_redirect("import-users/import-manually", relative_url_to_redirect, parameters_query)        
+        }else{
+            toastr.success("The manually import operation of user/s has been cancelled")
+        };
+    }
+}
