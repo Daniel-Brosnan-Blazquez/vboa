@@ -8,7 +8,7 @@ module vboa
 from setuptools import setup, find_packages
 
 setup(name="vboa",
-      version="1.0.1",
+      version="1.0.2",
       description="Visualization tool for Business Operation Analysis",
       url="https://bitbucket.org/dbrosnan/vboa/",
       author="Daniel Brosnan",
