@@ -7,6 +7,8 @@ module vboa
 """
 import json
 import unittest
+import os
+import time
 import vboa.tests.functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -91,42 +93,94 @@ class TestImportUsers(unittest.TestCase):
         # Correct file
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-from-file-browse-file").send_keys("/vboa/src/vboa/tests/users_management/input/users_example.json")
-        self.driver.find_element_by_id("import-users-from-file-submit-button").click()
+        filename = "users_example.json"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
+    
+        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file.send_keys(file_path)
 
-        toast_text_expected = "The file 'users_example.json' was imported successfully"
+        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button.click()
+        
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        # Check imported users
+        time.sleep(15)
 
-        assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-success"))).text
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
 
-        # No file or wrong extension file
+        # Wrong extension file
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-from-file-browse-file").send_keys("/vboa/src/vboa/tests/users_management/input/users_example.xml")
-        self.driver.find_element_by_id("import-users-from-file-submit-button").click()
+        filename = "users_example.xml"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
+    
+        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file.send_keys(file_path)
 
-        toast_text_expected = "No file was selected or the extension of the file is incorrect"
+        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button.click()
 
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        toast_text_expected = "There is some error with the uploaded data. The requested operation could not be done"
         assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-error"))).text
+        
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
 
         # Wrong json schema (usernam instead of username)
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-from-file-browse-file").send_keys("/vboa/src/vboa/tests/users_management/input/users_wrong_example.json")
-        self.driver.find_element_by_id("import-users-from-file-submit-button").click()
+        filename = "users_wrong_example.json"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
+    
+        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file.send_keys(file_path)
 
-        toast_text_expected = "The source file with name users_wrong_example.json could not be loaded"
+        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button.click()
 
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        toast_text_expected = "There is some error with the uploaded data. The requested operation could not be done"
         assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-error"))).text
+        
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
 
         # With username same as one already in DDBB
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-from-file-browse-file").send_keys("/vboa/src/vboa/tests/users_management/input/users_wrong_example_1.json")
-        self.driver.find_element_by_id("import-users-from-file-submit-button").click()
+        filename = "users_wrong_example_1.json"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
+    
+        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file.send_keys(file_path)
 
-        toast_text_expected = "The metadata of the users information contains the definition of users already inserted in the DDBB"
+        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button.click()
 
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        toast_text_expected = "There is some error with the uploaded data. The requested operation could not be done"
         assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-error"))).text
+        
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
 
     def test_import_manually(self):
         
@@ -152,21 +206,45 @@ class TestImportUsers(unittest.TestCase):
         # Correct entry
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-from-editor-submit-button").click()
-
-        toast_text_expected = "The data was imported successfully"
-
-        assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-success"))).text
+        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button.click()
+        
+        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button.click()
+        
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        # Check imported users
+        time.sleep(15)
+        
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
 
         # No entry
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-textarea").clear()
-        self.driver.find_element_by_id("import-users-from-editor-submit-button").click()
+        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button.click()
+        
+        text_area = self.driver.find_element_by_id("import-users-textarea")
+        text_area.clear()
+        
+        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button.click()
 
-        toast_text_expected = "The data has an error:Expecting value: line 1 column 1 (char 0)"
-
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        toast_text_expected = "There is some error with the uploaded data. The requested operation could not be done"
         assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-error"))).text
+        
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
 
         # Wrong json schema (usernam instead of username)
         data_textarea = {
@@ -195,13 +273,26 @@ class TestImportUsers(unittest.TestCase):
         
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-textarea").clear()
-        self.driver.find_element_by_id("import-users-textarea").send_keys(json.dumps(data_textarea))
-        self.driver.find_element_by_id("import-users-from-editor-submit-button").click()
+        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button.click()
+        
+        text_area = self.driver.find_element_by_id("import-users-textarea")
+        text_area.clear()
+        text_area.send_keys(json.dumps(data_textarea))
+        
+        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button.click()
 
-        toast_text_expected = "The metadata of the users information does not pass the schema verification"
-
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        toast_text_expected = "There is some error with the uploaded data. The requested operation could not be done"
         assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-error"))).text
+        
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
 
         # With username same as one already in DDBB
         data_textarea = {
@@ -230,11 +321,24 @@ class TestImportUsers(unittest.TestCase):
         
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        self.driver.find_element_by_id("import-users-textarea").clear()
-        self.driver.find_element_by_id("import-users-textarea").send_keys(json.dumps(data_textarea))
-        self.driver.find_element_by_id("import-users-from-editor-submit-button").click()
+        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button.click()
+        
+        text_area = self.driver.find_element_by_id("import-users-textarea")
+        text_area.clear()
+        text_area.send_keys(json.dumps(data_textarea))
+        
+        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button.click()
 
-        toast_text_expected = "The metadata of the users information contains the definition of users already inserted in the DDBB"
-
+        # Confirm import
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        toast_text_expected = "There is some error with the uploaded data. The requested operation could not be done"
         assert toast_text_expected == wait.until(EC.presence_of_element_located((By.CLASS_NAME,"toast-error"))).text
+
+        # Usernames
+        users = self.query_uboa.get_users(usernames = {"filter": "example", "op": "=="})
+        assert len(users) == 1
         
