@@ -12,6 +12,7 @@ import datetime
 from dateutil import parser
 import os
 import tempfile
+import shutil
 
 # Import flask utilities
 from flask import Blueprint, current_app, render_template, request, redirect, jsonify, send_from_directory
@@ -314,7 +315,10 @@ def manual_ingestion_files():
     Ingest the selected files
     """
     current_app.logger.debug("Prepare ingestion of selected files")
-   
+
+    # Create intermediate destination folder
+    os.makedirs("/inputs/.boa_manual_ingestion", exist_ok=True)
+    
     # Save files to /tmp
     files = request.files.getlist("files")
     for file in files:
@@ -325,8 +329,12 @@ def manual_ingestion_files():
 
         # Move file to the inputs folder so that ORC will get it
         filename = secure_filename(file.filename)
-        file_path = os.path.join("/inputs", filename)
-        os.rename(tmp_file_path, file_path)
+        intermediate_file_path = os.path.join("/inputs/.boa_manual_ingestion", filename)
+        final_file_path = os.path.join("/inputs", filename)
+
+        # First move file to intermediate folder to avoid cross-device link failure
+        shutil.move(tmp_file_path, intermediate_file_path)
+        os.rename(intermediate_file_path, final_file_path)
 
     # end for
 
