@@ -46,8 +46,16 @@
             <td><a href="/eboa_nav/download-source/{{ source.name }}">{{ source.name }}</a></td>
             <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
             <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+            {% if source.validity_start %}
             <td>{{ source.validity_start.isoformat() }}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% if source.validity_stop %}
             <td>{{ source.validity_stop.isoformat() }}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
             {% if source.validity_stop and source.validity_start %}
             <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>
             {% else %}
