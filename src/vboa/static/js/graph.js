@@ -639,6 +639,17 @@ function on_off_all_path(viewer, show_all_path){
 
 }
 
+/* Function to show/hide the Sun light */
+function on_off_sun_light(viewer, show_sun_light){
+    
+    if (show_sun_light){
+        viewer.scene.globe.enableLighting = true;
+    }else{
+        viewer.scene.globe.enableLighting = false;
+    }
+
+}
+
 /* Function to obtain the ephemeris of the related position */
 function get_ephemeris(time, position_array, velocity_vector_property){
 
@@ -684,17 +695,22 @@ function create_entity_for_ephemeris(viewer){
 }
 
 /* Function to manage the data source included in the viewer */
-function manage_data_source(viewer, show_all_path){
+function manage_data_source(viewer, show_all_path, show_sun_light){
 
+    /* Manage show all path option */
     on_off_all_path(viewer, show_all_path);
 
+    /* Manage show Sun light option */
+    on_off_sun_light(viewer, show_sun_light);
+
+    /* Create the entity for the orbit ephemeris */
     create_entity_for_ephemeris(viewer);
     
 }
 
 /* Function to display a czml in a 3D world map given the id of the
  * DOM where to attach it and a czml structure */
-export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true){
+export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true, show_sun_light = false){
 
     /* Get the 3d map container div */
     var map_container_div = document.getElementById(dom_id);
@@ -743,6 +759,18 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
     on_off_all_path_div.style.display = "inline";
     on_off_all_path_div.style.marginLeft = "10px";
 
+    /* Create div to allow the display of the Sun light */
+    var checked = "";
+    if (show_sun_light){
+        checked = "checked";
+    }
+    const on_off_sun_light_div = document.createElement("div");
+    on_off_sun_light_div.id = dom_id + "-map-options-checkbox-on-off-sun-light"
+    map_options_div.appendChild(on_off_sun_light_div);
+    on_off_sun_light_div.innerHTML = '<label id="' + dom_id + "-map-options-checkbox-on-off-sun-light-checkbox" + '"><input type="checkbox" ' + checked + '><span class="label-text"><b>Show Sun light</b></span></label>';
+    on_off_sun_light_div.style.display = "inline";
+    on_off_sun_light_div.style.marginLeft = "10px";
+
     /* Create div for map */
     const map_div = document.createElement("div");
     map_div.id = dom_id + "-worldmap"
@@ -762,8 +790,7 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
         infoBox: false,
         sceneModePicker: true,
         navigationHelpButton: false,
-        navigationInstructionsInitiallyVisible: false,
-        skyBox: false
+        navigationInstructionsInitiallyVisible: false
     });
 
     /* Function to destroy a viewer */
@@ -844,10 +871,10 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
     /* Handle callback of dataSource.add to change the values of lead
      * and trail time */
     data_source_promise.then(
-        result => manage_data_source(viewer, show_all_path),
+        result => manage_data_source(viewer, show_all_path, show_sun_light),
         error => toastr.error("Cesium was not able to add the data source due to: " + error),
     );
-    
+
     /**
      * Add a click handler to the set date button to change date on the timeline.
      */
@@ -889,6 +916,20 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true)
             on_off_all_path(viewer, true);
         }else{
             on_off_all_path(viewer, false);
+        }
+        
+    }
+
+    /**
+     * Add a click handler to the "Show Sun light" checkbox to
+     * show/hide Sun light
+     */
+    const on_off_sun_light_checkbox = on_off_sun_light_div.children[0].children[0];
+    on_off_sun_light_checkbox.onclick = function(event) {
+        if (on_off_sun_light_checkbox.checked){
+            on_off_sun_light(viewer, true);
+        }else{
+            on_off_sun_light(viewer, false);
         }
         
     }

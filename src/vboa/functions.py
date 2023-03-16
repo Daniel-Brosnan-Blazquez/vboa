@@ -12,6 +12,10 @@ import datetime
 import json
 import tle2czml
 import pytz
+from dateutil import parser
+
+# Import orbit
+import eboa.ingestion.orbit as eboa_orbit
 
 # Import flask utilities
 from flask import request
@@ -290,6 +294,186 @@ def events_to_czml_data(events, tle_string, include_track = True, width = 5, col
         czml_data[0]["clock"]["interval"] = period
         
     # end if
+    
+    return czml_data
+
+def _calculate_lead_trail_intervals(orbit_duration, start_period, stop_period):
+    """
+    Function to calculate lean and trail intervals to be included in the czml data structure
+
+    :param orbit_duration: duration of the orbit of the satellite calculated from the TLE
+    :type orbit_duration: float
+    :param start_period: start date of the period to cover by the positions
+    :type start_period: datetime
+    :param stop_period: stop date of the period to cover by the positions
+    :type stop_period: datetime
+
+    :return: czml data structure associated to the TLE received
+    :rtype: dict
+    """
+
+    start_period_iso = start_period.replace(tzinfo=pytz.UTC).isoformat()
+    stop_period_iso = stop_period.replace(tzinfo=pytz.UTC).isoformat()
+    
+    minutes_in_sim = (stop_period - start_period).total_seconds()/60
+
+    left_over_minutes = minutes_in_sim % orbit_duration
+
+    orbit_duration_seconds = orbit_duration * 60
+
+    # Obtain the lead and trail intervals
+    interval_start = start_period_iso
+    interval_stop = (start_period + datetime.timedelta(minutes=left_over_minutes)).replace(tzinfo=pytz.UTC).isoformat()
+    j = 0
+    lead_intervals = []
+    trail_intervals = []
+    while interval_start < stop_period_iso:
+
+        lead_intervals.append({
+            "interval": interval_start + "/" + interval_stop,
+            "epoch": interval_start,
+            "number": [0, orbit_duration_seconds, orbit_duration_seconds, 0]
+        })
+        trail_intervals.append({
+            "interval": interval_start + "/" + interval_stop,
+            "epoch": interval_start,
+            "number": [0, 0, orbit_duration_seconds, orbit_duration_seconds]
+        })
+
+        j += 1
+
+        interval_start = interval_stop
+        interval_stop = (start_period + datetime.timedelta(minutes=left_over_minutes) + datetime.timedelta(minutes=j*orbit_duration)).replace(tzinfo=pytz.UTC).isoformat()
+        
+    # end while
+
+    return lead_intervals, trail_intervals
+
+def tle_to_czml_data(tle_string, start_period, stop_period, step):
+    """
+    Function to generate a czml data structure from the received TLE including positions in FIXED reference frame
+
+    :param tle_string: TLE of the satellite with the following format:
+    SATELLITE-INDICATOR
+    1 NNNNNC NNNNNAAA NNNNN.NNNNNNNN +.NNNNNNNN +NNNNN-N +NNNNN-N N NNNNN
+    2 NNNNN NNN.NNNN NNN.NNNN NNNNNNN NNN.NNNN NNN.NNNN NN.NNNNNNNNNNNNNN
+    :type tle_string: str
+    :param start_period: start date of the period to cover by the positions
+    :type start_period: datetime
+    :param stop_period: stop date of the period to cover by the positions
+    :type stop_period: datetime
+    :param step: duration in time between calculated positions
+    :type step: int
+
+    :return: czml data structure associated to the TLE received
+    :rtype: dict
+    """
+
+    start_period_iso = start_period.replace(tzinfo=pytz.UTC).isoformat()
+    stop_period_iso = stop_period.replace(tzinfo=pytz.UTC).isoformat()
+
+    start_period_iso_no_tzinfo = start_period.replace(tzinfo=None).isoformat()
+    stop_period_iso_no_tzinfo = stop_period.replace(tzinfo=None).isoformat()
+
+    # Set period
+    period = start_period_iso + "/" + stop_period_iso
+
+    # Get orbit
+    satellite_orbit = eboa_orbit.get_orbit(tle_string)
+
+    # Obtain the satellite position during the period in FIXED reference frame from the TLE
+    time = start_period_iso_no_tzinfo
+    j = 0
+    positions = []
+    while time < stop_period_iso_no_tzinfo:
+        time = (start_period + datetime.timedelta(seconds=j*step)).replace(tzinfo=None).isoformat(timespec="microseconds")
+        if time > stop_period_iso_no_tzinfo:
+            time = stop_period_iso_no_tzinfo
+        # end if
+        # Get position of the satellite associated to time in the Earth inertial frame
+        error, position, velocity = eboa_orbit.get_ephemeris(satellite_orbit, time)
+
+        # Transform to Earth fixed reference frame
+        fixed_satellite_position = eboa_orbit.satellite_positions_to_fixed([position[0], position[1], position[2]], [time])
+
+        # Register position
+        positions.append(j*step)
+        positions.append(fixed_satellite_position[0] * 1000)
+        positions.append(fixed_satellite_position[1] * 1000)
+        positions.append(fixed_satellite_position[2] * 1000)
+        
+        j += 1
+    # end while
+
+    # Get orbit duration
+    orbit_duration = eboa_orbit.get_orbit_duration(tle_string)
+
+    # Calculate lead and trail intervals
+    lead_intervals, trail_intervals = _calculate_lead_trail_intervals(orbit_duration, start_period, stop_period)
+    
+    czml_data = [
+        {
+            "id": "document",
+            "version": "1.0",
+            "clock": {
+                "currentTime": start_period_iso,
+                "multiplier": 60,
+                "interval": period,
+                "range": "LOOP_STOP",
+                "step": "SYSTEM_CLOCK_MULTIPLIER"
+            }
+        },
+        {
+            "id": "Satellite/NAOS",
+            "description": "Orbit of Satellite: NAOS",
+            "availability": period,
+            "billboard": {
+                "show": True,
+                "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADJSURBVDhPnZHRDcMgEEMZjVEYpaNklIzSEfLfD4qNnXAJSFWfhO7w2Zc0Tf9QG2rXrEzSUeZLOGm47WoH95x3Hl3jEgilvDgsOQUTqsNl68ezEwn1vae6lceSEEYvvWNT/Rxc4CXQNGadho1NXoJ+9iaqc2xi2xbt23PJCDIB6TQjOC6Bho/sDy3fBQT8PrVhibU7yBFcEPaRxOoeTwbwByCOYf9VGp1BYI1BA+EeHhmfzKbBoJEQwn1yzUZtyspIQUha85MpkNIXB7GizqDEECsAAAAASUVORK5CYII=",
+                "scale": 1.5
+            },
+            "position": {
+                "epoch": start_period_iso,
+                "cartesian": positions,
+                "interpolationAlgorithm": "LAGRANGE",
+                "interpolationDegree": 5,
+                "referenceFrame": "FIXED"
+            },
+            "label": {
+                "show": True,
+                "text": "NAOS",
+                "horizontalOrigin": "LEFT",
+                "pixelOffset": {
+                    "cartesian2": [12, 0]
+                },
+                "fillColor": {
+                    "rgba": ["213", "255", "0", 255]
+                },
+                "font": "11pt Lucida Console",
+                "outlineColor": {
+                    "rgba": [0, 0, 0, 255]
+                },
+                "outlineWidth": 2
+            },
+            "path": {
+                "show": [{
+                    "interval": period,
+                    "boolean": True
+                }],
+                "width": 1,
+                "leadTime": lead_intervals,
+                "trailTime": trail_intervals,
+                "resolution": 120,
+                "material": {
+                    "solidColor": {
+                        "color": {
+                            "rgba": ["213", "255", "0", 255]
+                        }
+                    }
+                }
+            }
+        }
+    ]
     
     return czml_data
 
