@@ -29,3 +29,10 @@ def add_filters(app):
         # end if
 
         return result
+
+    @app.template_filter()
+    def add_seconds_to_date(date, seconds):
+
+        result = (parser.parse(date) + datetime.timedelta(seconds=seconds)).isoformat()
+
+        return result
