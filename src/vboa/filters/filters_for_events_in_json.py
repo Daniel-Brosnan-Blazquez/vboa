@@ -115,6 +115,29 @@ def get_events_filtered_by_values_definition(events, value_filters):
 
     return list_filtered_events
 
+def get_linking_event_uuid_definition(event, link_name, data):
+    """
+    Method to get the event UUID inside the data structure linked to the received event 
+
+    :param event: dictionary with the event
+    :type event: dict
+    :param link_name: name of the link
+    :type link_name: str
+    :param data: dictionary where to locate the events in data["events"]
+    :type data: dict
+
+    :return: UUID of the found event link or None
+    :rtype: dict
+
+    """
+    link = [link for link in event["links_to_me"] if link["name"] == link_name]
+    event_uuid = None
+    if len(link) > 0:
+        event_uuid = link[0]["event_uuid_link"]
+    # end if
+
+    return event_uuid
+
 def get_linking_event_definition(event, link_name, data):
     """
     Method to get the event inside the data structure linked to the received event 
@@ -191,3 +214,7 @@ def add_filters(app):
     @app.template_filter()
     def get_linking_events(event, link_name, data):
         return get_linking_events_definition(event, link_name, data)
+
+    @app.template_filter()
+    def get_linking_event_uuid(event, link_name, data):
+        return get_linking_event_uuid_definition(event, link_name, data)

@@ -35,7 +35,7 @@
    </List_of_Breakpoints>
    
    <Miscelanea>
-      <ArchiveHandler>NAOS</ArchiveHandler>
+      <ArchiveHandler>DUMMY</ArchiveHandler>
       <PollingDir>/inputs</PollingDir>
       <PollingFreq unit="s">3</PollingFreq>
       <ParallelIngestions>1</ParallelIngestions>

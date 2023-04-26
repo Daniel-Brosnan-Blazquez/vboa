@@ -767,7 +767,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
+        filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -777,7 +777,7 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
+        assert name.text == "source.json"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -800,7 +800,7 @@ class TestIngestionControl(unittest.TestCase):
         alert.accept()
         
         # Check ingested sources
-        time.sleep(30)
+        time.sleep(60)
 
         # Check sources inserted
         sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
@@ -834,7 +834,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse first file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
+        filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -844,7 +844,7 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
+        assert name.text == "source.json"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -853,7 +853,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse second file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0002.xml"
+        filename = "source2.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -863,7 +863,7 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0002.xml"
+        assert name.text == "source2.json"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -886,7 +886,7 @@ class TestIngestionControl(unittest.TestCase):
         alert.accept()
         
         # Check ingested sources
-        time.sleep(40)
+        time.sleep(60)
 
         # Check sources inserted
         sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
@@ -917,7 +917,7 @@ class TestIngestionControl(unittest.TestCase):
         # Browse file
         browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
 
-        filename = "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
+        filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
     
         browse_file.send_keys(file_path)
@@ -927,7 +927,7 @@ class TestIngestionControl(unittest.TestCase):
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
-        assert name.text == "NS1_TEST_ORB_SOERT__20100824T000000_20100827T000000_0001.xml"
+        assert name.text == "source.json"
 
         size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
