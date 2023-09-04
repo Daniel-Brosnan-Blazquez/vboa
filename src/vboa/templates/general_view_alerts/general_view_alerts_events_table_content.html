@@ -54,7 +54,7 @@
     <td>{{ alert.generator }}</td>
     <td><span class="{{notified_class}}">{{ alert.notified }}</span></td>
     <td>{{ alert.ingestion_time.isoformat() }}</td>
-    <td><a href="/eboa_nav/query-alert/{{ alert.event_alert_uuid }}">{{ alert.event_alert_uuid }}</a></td>
+    <td><a href="/eboa_nav/query-event-alert/{{ alert.event_alert_uuid }}">{{ alert.event_alert_uuid }}</a></td>
     <td><a href="/eboa_nav/query-event-links/{{ alert.event_uuid }}">{{ alert.event_uuid }}</a></td>
   </tr>
   {% endfor %}

@@ -14,12 +14,12 @@
     <th>Notified</th>
     <th>Ingestion time</th>
     <th>Alert UUID</th>
-    <th>Event UUID</th>
+    <th>Report UUID</th>
   </tr>
 </thead>
 <tbody>
   {% for alert_uuid in alert_uuids %}
-  {% set alert = data["event_alerts"][alert_uuid] %}
+  {% set alert = data["report_alerts"][alert_uuid] %}
   <tr>
     {% if alert["solved"] == "True" %}
     {% set solved_class = "bold-green" %}
@@ -50,8 +50,8 @@
     <td>{{ alert["generator"] }}</td>
     <td><span class="{{ notified_class }}">{{ alert["notified"] }}</span></td>
     <td>{{ alert["ingestion_time"] }}</td>
-    <td><a href="/eboa_nav/query-event-alert/{{ alert['event_alert_uuid'] }}">{{ alert["event_alert_uuid"] }}</a></td>
-    <td><a href="/eboa_nav/query-event-links/{{ alert['event_uuid'] }}">{{ alert["event_uuid"] }}</a></td>
+    <td><a href="/rboa_nav/query-report-alert/{{ alert['report_alert_uuid'] }}">{{ alert["report_alert_uuid"] }}</a></td>
+    <td><a href="/rboa_nav/query-report-links/{{ alert['report_uuid'] }}">{{ alert["report_uuid"] }}</a></td>
   </tr>
   {% endfor %}
 </tbody>
@@ -71,6 +71,6 @@
     <th>Notified</th>
     <th>Ingestion time</th>
     <th>Alert UUID</th>
-    <th>Event UUID</th>
+    <th>Report UUID</th>
   </tr>
 </tfoot>

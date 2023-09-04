@@ -158,7 +158,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(sources_alerts[0].source_alert_uuid) + "'>" + str(sources_alerts[0].source_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-source-alert/" + str(sources_alerts[0].source_alert_uuid) + "'>" + str(sources_alerts[0].source_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Source",
                 "entity_uuid": "<a href='/eboa_nav/query-source/" + str(sources_alerts[0].source_uuid) + "'>" + str(sources_alerts[0].source_uuid) + "</a>",

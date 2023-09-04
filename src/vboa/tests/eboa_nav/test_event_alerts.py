@@ -177,7 +177,7 @@ class TestEventAlertsTab(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(events_alerts[0].event_alert_uuid) + "'>" + str(events_alerts[0].event_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-event-alert/" + str(events_alerts[0].event_alert_uuid) + "'>" + str(events_alerts[0].event_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Event",
                 "entity_uuid": "<a href='/eboa_nav/query-event-links/" + str(events_alerts[0].event_uuid) + "'>" + str(events_alerts[0].event_uuid) + "</a>",
@@ -200,7 +200,7 @@ class TestEventAlertsTab(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(events_alerts[1].event_alert_uuid) + "'>" + str(events_alerts[1].event_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-event-alert/" + str(events_alerts[1].event_alert_uuid) + "'>" + str(events_alerts[1].event_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Event",
                 "entity_uuid": "<a href='/eboa_nav/query-event-links/" + str(events_alerts[1].event_uuid) + "'>" + str(events_alerts[1].event_uuid) + "</a>",

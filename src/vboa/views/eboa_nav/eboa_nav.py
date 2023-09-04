@@ -1232,10 +1232,20 @@ def download_source(source_name):
     output, error = program.communicate()        
     return_code = program.returncode
 
+    # If remote minArc server does not give answer, try with the local server
+    if output.decode() == "":
+        command = "minArcStatus --noserver --file " + source_name
+        command_split = shlex.split(command)
+        program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        output, error = program.communicate()        
+        return_code = program.returncode
+    # end if
+    
     # Get filename and filepath from minArcStatus output
-    filename = output.decode().split(",")[1].split('=>')[1].replace('"', "")
-    filepath = output.decode().split(",")[2].split('=>')[1].replace('"', "")
-
+    output_json = json.loads(output.decode())
+    filename = output_json["filename"]
+    filepath = output_json["path"]
+    
     return send_from_directory(filepath, filename, as_attachment=True)
 
 @bp.route("/delete-sources", methods=["POST"])
@@ -2312,6 +2322,43 @@ def query_alerts_pages():
     # end if
     return render_template(template, alerts=alerts, filters=filters)
 
+@bp.route("/query-<string:entity>-alert/<uuid:alert_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
+def query_entity_alert_and_render(entity, alert_uuid):
+    """
+    Query alert associated to the entity with UUID alert_uuid.
+
+    :param entity: entity whose alerts are requested
+    :type entity: str
+    :param alert_uuid: UUID of the alert
+    :type alert_uuid: str
+
+    :return: template with the shown alert
+    :rtype: template
+    """
+
+    kwargs = {}
+    if entity == "event":
+        kwargs["event_alert_uuids"] = {"filter": str(alert_uuid), "op": "=="}
+        alerts = query.get_event_alerts(**kwargs)
+        template = "eboa_nav/event_alerts_nav.html"
+    elif entity == "annotation":
+        kwargs["annotation_alert_uuids"] = {"filter": str(alert_uuid), "op": "=="}
+        alerts = query.get_annotation_alerts(**kwargs)
+        template = "eboa_nav/annotation_alerts_nav.html"
+    elif entity == "source":
+        kwargs["source_alert_uuids"] = {"filter": str(alert_uuid), "op": "=="}
+        alerts = query.get_source_alerts(**kwargs)
+        template = "eboa_nav/source_alerts_nav.html"
+    else:
+        kwargs["explicit_ref_alert_uuids"] = {"filter": str(alert_uuid), "op": "=="}
+        alerts = query.get_explicit_ref_alerts(**kwargs)
+        template = "eboa_nav/explicit_reference_alerts_nav.html"
+    # end if
+    
+    return render_template(template, alerts=alerts, filters=kwargs)
+
 @bp.route("/query-<string:entity>-alerts/<uuid:entity_uuid>")
 @auth_required()
 @roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
@@ -2324,8 +2371,8 @@ def query_entity_alerts_and_render(entity, entity_uuid):
     :param entity_uuid: UUID of the entity whose alerts are requested
     :type entity_uuid: str
 
-    :return: list of alerts associated to the entity
-    :rtype: list
+    :return: template with the shown alerts
+    :rtype: template
     """
 
     kwargs = {}

@@ -202,7 +202,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(annotations_alerts[0].annotation_alert_uuid) + "'>" + str(annotations_alerts[0].annotation_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-annotation-alert/" + str(annotations_alerts[0].annotation_alert_uuid) + "'>" + str(annotations_alerts[0].annotation_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Annotation",
                 "entity_uuid": "<a href='/eboa_nav/query-annotation/" + str(annotations_alerts[0].annotation_uuid) + "'>" + str(annotations_alerts[0].annotation_uuid) + "</a>",
@@ -225,7 +225,7 @@ class TestAnnotationAlertsTab(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(annotations_alerts[1].annotation_alert_uuid) + "'>" + str(annotations_alerts[1].annotation_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-annotation-alert/" + str(annotations_alerts[1].annotation_alert_uuid) + "'>" + str(annotations_alerts[1].annotation_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Annotation",
                 "entity_uuid": "<a href='/eboa_nav/query-annotation/" + str(annotations_alerts[1].annotation_uuid) + "'>" + str(annotations_alerts[1].annotation_uuid) + "</a>",

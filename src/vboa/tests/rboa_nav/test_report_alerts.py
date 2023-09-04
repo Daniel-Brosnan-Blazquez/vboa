@@ -215,7 +215,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/rboa_nav/query-alert/" + str(report_alerts[0].report_alert_uuid) + "'>" + str(report_alerts[0].report_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/rboa_nav/query-report-alert/" + str(report_alerts[0].report_alert_uuid) + "'>" + str(report_alerts[0].report_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Report",
                 "entity_uuid": "<a href='/rboa_nav/query-report/" + str(report_alerts[0].report_uuid) + "'>" + str(report_alerts[0].report_uuid) + "</a>",
@@ -238,7 +238,7 @@ class TestReportAlertsTab(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/rboa_nav/query-alert/" + str(report_alerts[1].report_alert_uuid) + "'>" + str(report_alerts[1].report_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/rboa_nav/query-report-alert/" + str(report_alerts[1].report_alert_uuid) + "'>" + str(report_alerts[1].report_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Report",
                 "entity_uuid": "<a href='/rboa_nav/query-report/" + str(report_alerts[1].report_uuid) + "'>" + str(report_alerts[1].report_uuid) + "</a>",
@@ -261,7 +261,7 @@ class TestReportAlertsTab(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/rboa_nav/query-alert/" + str(report_alerts[2].report_alert_uuid) + "'>" + str(report_alerts[2].report_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/rboa_nav/query-report-alert/" + str(report_alerts[2].report_alert_uuid) + "'>" + str(report_alerts[2].report_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Report",
                 "entity_uuid": "<a href='/rboa_nav/query-report/" + str(report_alerts[2].report_uuid) + "'>" + str(report_alerts[2].report_uuid) + "</a>",

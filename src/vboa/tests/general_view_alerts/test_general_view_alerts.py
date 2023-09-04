@@ -187,7 +187,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(sources_alerts[0].source_alert_uuid) + "'>" + str(sources_alerts[0].source_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-source-alert/" + str(sources_alerts[0].source_alert_uuid) + "'>" + str(sources_alerts[0].source_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Source",
                 "entity_uuid": "<a href='/eboa_nav/query-source/" + str(sources_alerts[0].source_uuid) + "'>" + str(sources_alerts[0].source_uuid) + "</a>",
@@ -444,7 +444,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(events_alerts[0].event_alert_uuid) + "'>" + str(events_alerts[0].event_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-event-alert/" + str(events_alerts[0].event_alert_uuid) + "'>" + str(events_alerts[0].event_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Event",
                 "entity_uuid": "<a href='/eboa_nav/query-event-links/" + str(events_alerts[0].event_uuid) + "'>" + str(events_alerts[0].event_uuid) + "</a>",
@@ -467,7 +467,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(events_alerts[1].event_alert_uuid) + "'>" + str(events_alerts[1].event_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-event-alert/" + str(events_alerts[1].event_alert_uuid) + "'>" + str(events_alerts[1].event_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Event",
                 "entity_uuid": "<a href='/eboa_nav/query-event-links/" + str(events_alerts[1].event_uuid) + "'>" + str(events_alerts[1].event_uuid) + "</a>",
@@ -490,7 +490,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(events_alerts[2].event_alert_uuid) + "'>" + str(events_alerts[2].event_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-event-alert/" + str(events_alerts[2].event_alert_uuid) + "'>" + str(events_alerts[2].event_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Event",
                 "entity_uuid": "<a href='/eboa_nav/query-event-links/" + str(events_alerts[2].event_uuid) + "'>" + str(events_alerts[2].event_uuid) + "</a>",
@@ -865,7 +865,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(annotations_alerts[0].annotation_alert_uuid) + "'>" + str(annotations_alerts[0].annotation_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-annotation-alert/" + str(annotations_alerts[0].annotation_alert_uuid) + "'>" + str(annotations_alerts[0].annotation_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Annotation",
                 "entity_uuid": "<a href='/eboa_nav/query-annotation/" + str(annotations_alerts[0].annotation_uuid) + "'>" + str(annotations_alerts[0].annotation_uuid) + "</a>",
@@ -888,7 +888,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(annotations_alerts[1].annotation_alert_uuid) + "'>" + str(annotations_alerts[1].annotation_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-annotation-alert/" + str(annotations_alerts[1].annotation_alert_uuid) + "'>" + str(annotations_alerts[1].annotation_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Annotation",
                 "entity_uuid": "<a href='/eboa_nav/query-annotation/" + str(annotations_alerts[1].annotation_uuid) + "'>" + str(annotations_alerts[1].annotation_uuid) + "</a>",
@@ -1148,7 +1148,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-er-alert/" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Explicit reference",
                 "entity_uuid": "<a href='/eboa_nav/query-er/" + str(explicit_refs_alerts[0].explicit_ref_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_uuid) + "</a>",
@@ -1388,7 +1388,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/rboa_nav/query-alert/" + str(reports_alerts[0].report_alert_uuid) + "'>" + str(reports_alerts[0].report_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/rboa_nav/query-report-alert/" + str(reports_alerts[0].report_alert_uuid) + "'>" + str(reports_alerts[0].report_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Report",
                 "entity_uuid": "<a href='/rboa_nav/query-report/" + str(reports_alerts[0].report_uuid) + "'>" + str(reports_alerts[0].report_uuid) + "</a>",
@@ -1411,7 +1411,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/rboa_nav/query-alert/" + str(reports_alerts[1].report_alert_uuid) + "'>" + str(reports_alerts[1].report_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/rboa_nav/query-report-alert/" + str(reports_alerts[1].report_alert_uuid) + "'>" + str(reports_alerts[1].report_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Report",
                 "entity_uuid": "<a href='/rboa_nav/query-report/" + str(reports_alerts[1].report_uuid) + "'>" + str(reports_alerts[1].report_uuid) + "</a>",
@@ -1434,7 +1434,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/rboa_nav/query-alert/" + str(reports_alerts[2].report_alert_uuid) + "'>" + str(reports_alerts[2].report_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/rboa_nav/query-report-alert/" + str(reports_alerts[2].report_alert_uuid) + "'>" + str(reports_alerts[2].report_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Report",
                 "entity_uuid": "<a href='/rboa_nav/query-report/" + str(reports_alerts[2].report_uuid) + "'>" + str(reports_alerts[2].report_uuid) + "</a>",
@@ -1937,7 +1937,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(sources_alerts[0].source_alert_uuid) + "'>" + str(sources_alerts[0].source_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-source-alert/" + str(sources_alerts[0].source_alert_uuid) + "'>" + str(sources_alerts[0].source_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Source",
                 "entity_uuid": "<a href='/eboa_nav/query-source/" + str(sources_alerts[0].source_uuid) + "'>" + str(sources_alerts[0].source_uuid) + "</a>",
@@ -1960,7 +1960,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(events_alerts[0].event_alert_uuid) + "'>" + str(events_alerts[0].event_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-event-alert/" + str(events_alerts[0].event_alert_uuid) + "'>" + str(events_alerts[0].event_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Event",
                 "entity_uuid": "<a href='/eboa_nav/query-event-links/" + str(events_alerts[0].event_uuid) + "'>" + str(events_alerts[0].event_uuid) + "</a>",
@@ -1983,7 +1983,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(annotations_alerts[0].annotation_alert_uuid) + "'>" + str(annotations_alerts[0].annotation_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-annotation-alert/" + str(annotations_alerts[0].annotation_alert_uuid) + "'>" + str(annotations_alerts[0].annotation_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Annotation",
                 "entity_uuid": "<a href='/eboa_nav/query-annotation/" + str(annotations_alerts[0].annotation_uuid) + "'>" + str(annotations_alerts[0].annotation_uuid) + "</a>",
@@ -2006,7 +2006,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-er-alert/" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Explicit reference",
                 "entity_uuid": "<a href='/eboa_nav/query-er/" + str(explicit_refs_alerts[0].explicit_ref_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_uuid) + "</a>",
@@ -2029,7 +2029,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/rboa_nav/query-alert/" + str(reports_alerts[0].report_alert_uuid) + "'>" + str(reports_alerts[0].report_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/rboa_nav/query-report-alert/" + str(reports_alerts[0].report_alert_uuid) + "'>" + str(reports_alerts[0].report_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Report",
                 "entity_uuid": "<a href='/rboa_nav/query-report/" + str(reports_alerts[0].report_uuid) + "'>" + str(reports_alerts[0].report_uuid) + "</a>",

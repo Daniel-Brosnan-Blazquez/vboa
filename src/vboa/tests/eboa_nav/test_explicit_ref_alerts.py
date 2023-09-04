@@ -178,7 +178,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
 
         alerts = [
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-er-alert/" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Explicit reference",
                 "entity_uuid": "<a href='/eboa_nav/query-er/" + str(explicit_refs_alerts[0].explicit_ref_uuid) + "'>" + str(explicit_refs_alerts[0].explicit_ref_uuid) + "</a>",
@@ -201,7 +201,7 @@ class TestExplicitReferenceAlertsTab(unittest.TestCase):
                 "validated": "<span class='bold-orange'>None</span>"
             },
             {
-                "alert_uuid": "<a href='/eboa_nav/query-alert/" + str(explicit_refs_alerts[1].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[1].explicit_ref_alert_uuid) + "</a>",
+                "alert_uuid": "<a href='/eboa_nav/query-er-alert/" + str(explicit_refs_alerts[1].explicit_ref_alert_uuid) + "'>" + str(explicit_refs_alerts[1].explicit_ref_alert_uuid) + "</a>",
                 "description": "Alert description",
                 "entity": "Explicit reference",
                 "entity_uuid": "<a href='/eboa_nav/query-er/" + str(explicit_refs_alerts[1].explicit_ref_uuid) + "'>" + str(explicit_refs_alerts[1].explicit_ref_uuid) + "</a>",

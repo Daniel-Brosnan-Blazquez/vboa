@@ -330,6 +330,48 @@ def query_report_by_name(report_name):
     
     return html
 
+@bp.route("/query-report-alert/<uuid:alert_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
+def query_report_alert_and_render(alert_uuid):
+    """
+    Query alert associated to the report with UUID alert_uuid.
+
+    :param alert_uuid: UUID of the alert
+    :type alert_uuid: str
+
+    :return: template with the shown alert
+    :rtype: template
+    """
+
+    kwargs = {}
+    kwargs["report_alert_uuids"] = {"filter": str(alert_uuid), "op": "=="}
+    alerts = query.get_report_alerts(**kwargs)
+    template = "rboa_nav/report_alerts_nav.html"
+    
+    return render_template(template, alerts=alerts, filters=kwargs)
+
+@bp.route("/query-report-alerts/<uuid:entity_uuid>")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
+def query_report_alerts_and_render(entity_uuid):
+    """
+    Query alerts associated to the report with UUID entity_uuid.
+
+    :param entity_uuid: UUID of the entity whose alerts are requested
+    :type entity_uuid: str
+
+    :return: template with the shown alerts
+    :rtype: template
+    """
+
+    kwargs = {}
+    kwargs["report_uuids"] = {"filter": str(entity_uuid), "op": "=="}
+    alerts = query.get_report_alerts(**kwargs)
+    template = "eboa_nav/report_alerts_nav.html"
+    
+    return render_template(template, alerts=alerts, filters=kwargs)
+
 def retrieve_report_content(report):
     """
     Retrieve report from archive
