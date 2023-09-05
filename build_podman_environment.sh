@@ -158,7 +158,7 @@ then
     exit -1
 fi
 
-# Check that the docker image exists
+# Check that the log folder exists
 if [ ! -d $PATH_TO_LOG_FOLDER ];
 then
     echo "ERROR: The directory $PATH_TO_LOG_FOLDER provided does not exist"
@@ -167,7 +167,7 @@ fi
 
 DATABASE_CONTAINER="boa_database_$CONTAINERS_LABEL"
 APP_CONTAINER="boa_app_$CONTAINERS_LABEL"
-DOCKER_NETWORK="boa_network_$CONTAINERS_LABEL"
+PODMAN_NETWORK="boa_network_$CONTAINERS_LABEL"
 
 read -p "
 Welcome to the builder of the BOA environment :-)
@@ -183,6 +183,10 @@ These are the configuration options that will be applied to initialize the envir
 - PATH_TO_MINARC_ARCHIVE: $PATH_TO_MINARC_ARCHIVE
 - PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY: $PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY
 - PATH_TO_LOG_FOLDER: $PATH_TO_LOG_FOLDER
+
+Note: For the podman environment, the containers will work in the network defined by the subnet 192.168.0.0/24
+      DDBB container will work using IP address 192.168.0.100
+      APP container will work using IP address 192.168.0.101
 
 Do you wish to proceed with the building of the production environment?" answer
 
@@ -219,19 +223,34 @@ then
     done
 fi
 
+if [ "$(podman network inspect $PODMAN_NETWORK)" ];
+then
+    while true; do
+        read -p "There has been detected a network with the same name: $PODMAN_NETWORK. Do you wish to remove it and proceed with the new installation?" answer
+        case $answer in
+            [Yy]* )
+                # Remove boa network if it already exists
+                podman network rm $PODMAN_NETWORK
+                break;;
+            [Nn]* ) exit;;
+            * ) read -p "Please answer Y or y for yes or N or n for no: " answer;;
+        esac
+    done
+fi
+
 ######
 # Create network
 ######
-podman network inspect $DOCKER_NETWORK &>/dev/null || podman network create --driver bridge $DOCKER_NETWORK
+podman network create --driver bridge --subnet=192.168.0.0/24 $PODMAN_NETWORK
 
 # Check that the network could be created
 status=$?
 if [ $status -ne 0 ]
 then
-    echo "The $DOCKER_NETWORK network could not be created :-("
+    echo "The $PODMAN_NETWORK network could not be created :-("
     exit -1
 else
-    echo "The $DOCKER_NETWORK network has been created successfully :-)"
+    echo "The $PODMAN_NETWORK network has been created successfully :-)"
 fi
 
 ######
@@ -239,7 +258,7 @@ fi
 ######
 # Execute container
 # Check configuration of postgis/postgres with -> psql -U postgres -> show all;
-podman run --shm-size 512M --network=$DOCKER_NETWORK --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data --restart=always -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
+podman run --shm-size 512M --network=$PODMAN_NETWORK --ip=192.168.0.100 --name $DATABASE_CONTAINER -v $PATH_TO_BOA_DDBB:/var/lib/postgresql/data --restart=always -d mdillon/postgis -c 'max_connections=5000' -c 'max_locks_per_transaction=5000'
 
 # Check that the DDBB container could be created
 status=$?
@@ -269,7 +288,7 @@ else
     echo "The BOA image has been loaded successfully :-)"
 fi
 
-podman run --add-host=$DATABASE_CONTAINER:$DATABASE_CONTAINER_IP -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$DOCKER_NETWORK -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive -v $PATH_TO_LOG_FOLDER:/log --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+podman run --add-host=$DATABASE_CONTAINER:$DATABASE_CONTAINER_IP -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$PODMAN_NETWORK --ip=192.168.0.101 -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive -v $PATH_TO_LOG_FOLDER:/log --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
 
 # Check that the APP container could be created
 status=$?
@@ -290,4 +309,4 @@ podman cp $PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY/web_server_secret_key.txt $AP
 podman exec -d -it -u boa $APP_CONTAINER bash -c "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env"
 
 echo "
-Docker environment successfully built :-)"
+Podman environment successfully built :-)"
