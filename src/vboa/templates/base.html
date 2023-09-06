@@ -28,8 +28,6 @@
 
   <body id="boa-body">
 
-    {% block scripts %}
-
     <!-- Load the bundle of scripts -->
     <script src="{{ url_for('static', filename='dist/bundle.js') }}" type="text/javascript"></script>
 
@@ -38,8 +36,6 @@
 
     <!-- Load cesium library which needs to be external to the bundle -->
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/cesium/Build/Cesium/Widgets/widgets.css') }}"></script>
-
-    {% endblock %}
 
     <div id="updating-page-count-down">
     </div>
@@ -236,6 +232,10 @@
       <!-- /#page-wrapper -->
     </div>
     <!-- /#wrapper -->
+    {% endblock %}
+
+    {% block scripts %}
+
     {% endblock %}
    
   </body>
