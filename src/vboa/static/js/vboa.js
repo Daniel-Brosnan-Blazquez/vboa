@@ -159,8 +159,10 @@ jQuery(function () {
     dates.activate_datetimepicker();
 });
 
-jQuery(".responsive-tabs").responsiveTabs({
-  accordionOn: ['xs', 'sm'] // xs, sm, md, lg
+jQuery(document).ready(function(){
+    jQuery(".responsive-tabs").responsiveTabs({
+        accordionOn: ['xs', 'sm'] // xs, sm, md, lg
+    });
 });
 
 /***
