@@ -1023,3 +1023,18 @@ export function show_loader_countdown(number){
         show_loader_countdown(number-1)
     }, 1000);
 }
+
+/***
+* SHOW FUNCTIONS
+***/
+export function show_element_based_on_checkbox(checkbox, element_id){
+
+    var element = document.getElementById(element_id);
+    if (checkbox.checked){
+        element.hidden = false;
+    }
+    else{
+        element.hidden = true;
+    }
+    
+}
