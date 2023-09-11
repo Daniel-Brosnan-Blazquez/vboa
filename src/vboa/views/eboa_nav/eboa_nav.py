@@ -1232,6 +1232,9 @@ def download_source(source_name):
     output, error = program.communicate()        
     return_code = program.returncode
 
+    filename = ""
+    filepath = ""
+    
     # If remote minArc server does not give answer, try with the local server
     if output.decode() == "":
         command = "minArcStatus --noserver --file " + source_name
@@ -1240,11 +1243,13 @@ def download_source(source_name):
         output, error = program.communicate()        
         return_code = program.returncode
     # end if
-    
-    # Get filename and filepath from minArcStatus output
-    output_json = json.loads(output.decode())
-    filename = output_json["filename"]
-    filepath = output_json["path"]
+
+    if output.decode() != "":
+        # Get filename and filepath from minArcStatus output
+        output_json = json.loads(output.decode())
+        filename = output_json["filename"]
+        filepath = output_json["path"]
+    # end if
     
     return send_from_directory(filepath, filename, as_attachment=True)
 

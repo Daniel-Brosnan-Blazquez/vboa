@@ -1,7 +1,8 @@
 {% extends "panel/index.html" %}
 {% block content %}
 <div class="row panel-no-index">
-    <h1 class="page-header">Ups... Sorry the page you requested was not found or it is corrupted</h1>
+  <h1 class="page-header">Ups... Sorry the page you requested was not found or it is corrupted</h1>
+  <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">The page returned the error code: {{ error_code }}</a></p>
 </div>
 <div>
   <img style="display:inline" src="{{ url_for('static', filename='images/boa_favicon.png') }}"/>
