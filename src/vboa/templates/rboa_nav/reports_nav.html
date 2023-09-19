@@ -35,6 +35,7 @@
           <th>Generator</th>
           <th>Version</th>
           <th>UUID</th>
+          <th>Alerts</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -61,6 +62,7 @@
           <td>{{ report.reportGroup.name }}</td>
           <td>{{ report.generator }}</td>
           <td>{{ report.generator_version }}</td>
+          <td><a href="/eboa_nav/query-report-alerts/{{ report.report_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ report.report_uuid }}</td>
           <td>
             {% with report = report %}
@@ -84,6 +86,7 @@
           <th>Report group</th>
           <th>Generator</th>
           <th>Version</th>
+          <th>Alerts</th>
           <th>UUID</th>
           <th>Actions</th>
         </tr>
@@ -117,6 +120,7 @@
           <th>Generator</th>
           <th>Version</th>
           <th>UUID</th>
+          <th>Alerts</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -143,6 +147,7 @@
           <td>{{ report.reportGroup.name }}</td>
           <td>{{ report.generator }}</td>
           <td>{{ report.generator_version }}</td>
+          <td><a href="/eboa_nav/query-report-alerts/{{ report.report_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ report.report_uuid }}</td>
           <td>
             {% with report = report %}
@@ -166,6 +171,7 @@
           <th>Report group</th>
           <th>Generator</th>
           <th>Version</th>
+          <th>Alerts</th>
           <th>UUID</th>
           <th>Actions</th>
         </tr>

@@ -21,6 +21,7 @@
           <th>Annotations</th>
           <th>Ingestion time</th>
           <th>Linked explicit references</th>
+          <th>Alerts</th>
           <th>Explicit reference UUID</th>
         </tr>
       </thead>
@@ -48,6 +49,7 @@
           <td><a href="/eboa_nav/query-annotations-by-er/{{ er.explicit_ref }}"><i class="fa fa-link"></i></a></td>
           <td>{{ er.ingestion_time.isoformat() }}</td>
           <td><a href="/eboa_nav/query-er-links/{{ er.explicit_ref_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="/eboa_nav/query-er-alerts/{{ er.explicit_ref_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ er.explicit_ref_uuid }}</td>
         </tr>
         {% endfor %}
@@ -62,6 +64,7 @@
           <th>Annotations</th>
           <th>Ingestion time</th>
           <th>Linked explicit references</th>
+          <th>Alerts</th>
           <th>Explicit reference UUID</th>
         </tr>
       </tfoot>

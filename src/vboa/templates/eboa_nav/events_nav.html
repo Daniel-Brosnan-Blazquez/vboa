@@ -31,6 +31,7 @@
           <th>Source</th>
           <th>Explicit reference</th>
           <th>Linked events</th>
+          <th>Alerts</th>
           <th>Event UUID</th>
         </tr>
       </thead>
@@ -52,6 +53,7 @@
             {% endif %}
           </td>
           <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="/eboa_nav/query-event-alerts/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ event.event_uuid }}</td>
         </tr>
         {% endfor %}
@@ -68,6 +70,7 @@
           <th>Source</th>
           <th>Explicit reference</th>
           <th>Linked events</th>
+          <th>Alerts</th>
           <th>Event UUID</th>
         </tr>
       </tfoot>

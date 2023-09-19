@@ -221,7 +221,7 @@ class TestReportsTab(unittest.TestCase):
 
         assert version.text == "1.0"
 
-        report_uuid = reports_table.find_element_by_xpath("tbody/tr[1]/td[13]")
+        report_uuid = reports_table.find_element_by_xpath("tbody/tr[1]/td[14]")
 
         assert report_uuid.text == str(reports[0].report_uuid)
 

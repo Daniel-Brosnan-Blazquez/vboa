@@ -134,9 +134,11 @@ function update_clock() {
 };
 
 /* Activate chosen for the multiple input selection */
-jQuery(".chosen-select").chosen({
-    no_results_text: "Nothing found for the following criteria: ",
-    width: "100%"
+jQuery(document).ready(function(){
+    jQuery(".chosen-select").chosen({
+        no_results_text: "Nothing found for the following criteria: ",
+        width: "100%"
+    });
 });
 
 /* Activate tooltips */
@@ -145,7 +147,7 @@ jQuery(document).ready(function(){
 });
 
 /* Manage side menu */
-jQuery(function() {
+jQuery(document).ready(function() {
     jQuery('#left-side-menu').metisMenu();
 });
 
@@ -155,7 +157,7 @@ toastr.options.timeOut = 10000; // How long the toast will display without user 
 toastr.options.extendedTimeOut = 10000; // How long the toast will display after a user hovers over it (milliseconds)
 
 /* Associate datetimepicker functionality */
-jQuery(function () {
+jQuery(document).ready(function () {
     dates.activate_datetimepicker();
 });
 
@@ -178,7 +180,9 @@ jQuery(document).ready(function() {
 });
 
 /* Fill source statuses */
-jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
+jQuery(document).ready(function() {
+    jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
+});
 
 /* Update view */
 export function update_view(parameters, repeat_cycle, view){
@@ -478,7 +482,9 @@ export function create_alert_timeline(alerts, dom_id){
 };
 
 /* Fill alert severities */
-jQuery(".query-alert-severities").one("focusin", alertFunctions.fill_severities);
+jQuery(document).ready(function(){
+    jQuery(".query-alert-severities").one("focusin", alertFunctions.fill_severities);
+});
 
 /***
 * ANNOTATIONS *
@@ -578,7 +584,9 @@ export function submit_request_for_ingestion_management(form_id){
 ***/
 
 /* Fill report statuses */
-jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
+jQuery(document).ready(function(){
+    jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
+});
 
 /* Function to show a timeline of validities for the reports */
 export function create_report_validity_timeline(reports, dom_id){

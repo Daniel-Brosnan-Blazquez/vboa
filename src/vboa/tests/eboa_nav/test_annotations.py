@@ -174,7 +174,7 @@ class TestAnnotationsTab(unittest.TestCase):
         assert explicit_ref[0].text == "EXPLICIT_REFERENCE"
 
         # Check uuid
-        uuid = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[7]")
+        uuid = annotations_table.find_elements_by_xpath("tbody/tr[td[text() = 'NAME_1']]/td[8]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 

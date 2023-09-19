@@ -27,6 +27,7 @@
           <th>Ingestion time</th>
           <th>Source</th>
           <th>Explicit reference</th>
+          <th>Alerts</th>
           <th>Annotation UUID</th>
         </tr>
       </thead>
@@ -40,6 +41,7 @@
           {% set source_uuid = annotation.source.source_uuid %}
           <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ annotation.source.name }}</a></td>
           <td><a href="/eboa_nav/query-er/{{ annotation.explicitRef.explicit_ref_uuid }}">{{ annotation.explicitRef.explicit_ref }}</a></td>
+          <td><a href="/eboa_nav/query-annotation-alerts/{{ annotation.annotation_uuid }}"><i class="fa fa-link"></i></a></td>
           <td>{{ annotation.annotation_uuid }}</td>
         </tr>
         {% endfor %}
@@ -52,6 +54,7 @@
           <th>Ingestion time</th>
           <th>Source</th>
           <th>Explicit reference</th>
+          <th>Alerts</th>
           <th>Annotation UUID</th>
         </tr>
       </tfoot>

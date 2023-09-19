@@ -182,7 +182,7 @@ class TestEventsTab(unittest.TestCase):
         assert explicit_ref[0].text == "EXPLICIT_REFERENCE_EVENT"
 
         # Check uuid
-        uuid = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[11]")
+        uuid = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[12]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -313,7 +313,7 @@ class TestEventsTab(unittest.TestCase):
         assert explicit_ref[0].text == "EXPLICIT_REFERENCE_EVENT"
 
         # Check uuid
-        uuid = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[12]")
+        uuid = events_table.find_elements_by_xpath("tbody/tr[td[text() = 'GAUGE_NAME']]/td[13]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 

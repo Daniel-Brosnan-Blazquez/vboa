@@ -35,6 +35,7 @@
             <th>DIM signature</th>
             <th>Processor</th>
             <th>Version</th>
+            <th>Alerts</th>
             <th>UUID</th>
           </tr>
         </thead>
@@ -65,6 +66,7 @@
             <td>{{ source.dimSignature.dim_signature }}</td>
             <td>{{ source.processor }}</td>
             <td>{{ source.processor_version }}</td>
+            <td><a href="/eboa_nav/query-source-alerts/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
             <td>{{ source.source_uuid }}</td>
           </tr>
           {% endfor %}
@@ -82,6 +84,7 @@
             <th>DIM signature</th>
             <th>Processor</th>
             <th>Version</th>
+            <th>Alerts</th>
             <th>UUID</th>
           </tr>
         </tfoot>
@@ -133,6 +136,7 @@
             <th>DIM signature</th>
             <th>Processor</th>
             <th>Version</th>
+            <th>Alerts</th>
             <th>UUID</th>
           </tr>
         </thead>
@@ -166,6 +170,7 @@
             <td>{{ source.dimSignature.dim_signature }}</td>
             <td>{{ source.processor }}</td>
             <td>{{ source.processor_version }}</td>
+            <td><a href="/eboa_nav/query-source-alerts/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
             <td>{{ source.source_uuid }}</td>
           </tr>
           {% endfor %}
@@ -195,6 +200,7 @@
             <th>DIM signature</th>
             <th>Processor</th>
             <th>Version</th>
+            <th>Alerts</th>
             <th>UUID</th>
           </tr>
         </tfoot>

@@ -167,7 +167,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
 
         # Check uuid
-        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[td[text() = 'EXPLICIT_REFERENCE']]/td[7]")
+        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[td[text() = 'EXPLICIT_REFERENCE']]/td[8]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -206,7 +206,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
 
         # Check uuid
-        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[1]/td[8]")
+        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[1]/td[9]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -232,7 +232,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
 
         # Check uuid
-        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[2]/td[8]")
+        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[2]/td[9]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
@@ -258,7 +258,7 @@ class TestExplicitReferencesTab(unittest.TestCase):
         assert re.match("....-..-..T..:..:...*", ingestion_time[0].text)
 
         # Check uuid
-        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[3]/td[8]")
+        uuid = explicit_refs_table.find_elements_by_xpath("tbody/tr[3]/td[9]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 

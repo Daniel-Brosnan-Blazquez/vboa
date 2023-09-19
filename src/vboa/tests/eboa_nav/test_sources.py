@@ -226,7 +226,7 @@ class TestSourcesTab(unittest.TestCase):
         assert version[0].text == "1.0"
 
         # Check uuid
-        uuid = sources_table.find_elements_by_xpath("tbody/tr[1]/td[24]")
+        uuid = sources_table.find_elements_by_xpath("tbody/tr[1]/td[25]")
 
         assert re.match("........-....-....-....-............", uuid[0].text)
 
