@@ -62,6 +62,7 @@ export let datatables = datatableFunctions;
 export let math = mathjs;
 export let slider = nouislider;
 export let messages = toastr;
+export let jquery = jQuery;
 
 /* Make sidebar collapse and page content expand */
 jQuery(document).ready(function(){
