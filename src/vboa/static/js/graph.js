@@ -652,7 +652,7 @@ function on_off_sun_light(viewer, show_sun_light){
 
 /* Function to obtain the ephemeris of the related position */
 function get_ephemeris(time, position_array, velocity_vector_property){
-
+    
     /* Get position in the inertial reference frame */
     const position = position_array.getValueInReferenceFrame(time, Cesium.ReferenceFrame.INERTIAL);
     /* Convert meters to kilometers */
@@ -660,9 +660,19 @@ function get_ephemeris(time, position_array, velocity_vector_property){
     const y = position.y / 1000;
     const z = position.z / 1000;
     
+    /* Get velocity */
+    const velocity = velocity_vector_property.getValue(time);
+    /* Convert meters to kilometers */
+    const vx = velocity.x / 1000;
+    const vy = velocity.y / 1000;
+    const vz = velocity.z / 1000;
+    
     let ephemeris = "\nX: " + x + " km";
     ephemeris += "\nY: " + y + " km";
     ephemeris += "\nZ: " + z + " km";
+    ephemeris += "\nVX: " + vx + " km/s";
+    ephemeris += "\nVY: " + vy + " km/s";
+    ephemeris += "\nVZ: " + vz + " km/s";
 
     return ephemeris;
 
