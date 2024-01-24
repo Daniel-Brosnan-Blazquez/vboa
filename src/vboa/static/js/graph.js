@@ -650,6 +650,17 @@ function on_off_sun_light(viewer, show_sun_light){
 
 }
 
+/* Function to show/hide the ephemeris */
+function on_off_ephemeris(viewer, show_ephemeris){
+    
+    if (show_ephemeris){
+        viewer.entities.getById("ephemeris").show = true;
+    }else{
+        viewer.entities.getById("ephemeris").show = false;
+    }
+
+}
+
 /* Function to obtain the ephemeris of the related position */
 function get_ephemeris(time, position_array, velocity_vector_property){
     
@@ -688,6 +699,7 @@ function create_entity_for_ephemeris(viewer){
     
     // Add our vehicle model.
     const ephemeris_entity = viewer.entities.add({
+        id: "ephemeris",
         position: position_array,
         label: {
             show: true,
@@ -705,7 +717,10 @@ function create_entity_for_ephemeris(viewer){
 }
 
 /* Function to manage the data source included in the viewer */
-function manage_data_source(viewer, show_all_path, show_sun_light){
+function manage_data_source(viewer, show_all_path, show_sun_light, show_ephemeris){
+
+    /* Create the entity for the orbit ephemeris */
+    create_entity_for_ephemeris(viewer);
 
     /* Manage show all path option */
     on_off_all_path(viewer, show_all_path);
@@ -713,15 +728,15 @@ function manage_data_source(viewer, show_all_path, show_sun_light){
     /* Manage show Sun light option */
     on_off_sun_light(viewer, show_sun_light);
 
-    /* Create the entity for the orbit ephemeris */
-    create_entity_for_ephemeris(viewer);
+    /* Manage show ephemeris option */
+    on_off_ephemeris(viewer, show_ephemeris);
     
 }
 
 /* Function to display a czml in a 3D world map given the id of the
  * DOM where to attach it and a czml structure */
-export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true, show_sun_light = false){
-
+export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true, show_sun_light = false, show_ephemeris = true){
+    
     /* Get the 3d map container div */
     var map_container_div = document.getElementById(dom_id);
 
@@ -780,6 +795,18 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true,
     on_off_sun_light_div.innerHTML = '<label id="' + dom_id + "-map-options-checkbox-on-off-sun-light-checkbox" + '"><input type="checkbox" ' + checked + '><span class="label-text"><b>Show Sun light</b></span></label>';
     on_off_sun_light_div.style.display = "inline";
     on_off_sun_light_div.style.marginLeft = "10px";
+
+    /* Create div to allow the display of the ephemeris */
+    var checked = "";
+    if (show_ephemeris){
+        checked = "checked";
+    }
+    const on_off_ephemeris_div = document.createElement("div");
+    on_off_ephemeris_div.id = dom_id + "-map-options-checkbox-on-off-ephemeris"
+    map_options_div.appendChild(on_off_ephemeris_div);
+    on_off_ephemeris_div.innerHTML = '<label id="' + dom_id + "-map-options-checkbox-on-off-ephemeris-checkbox" + '"><input type="checkbox" ' + checked + '><span class="label-text"><b>Show ephemeris</b></span></label>';
+    on_off_ephemeris_div.style.display = "inline";
+    on_off_ephemeris_div.style.marginLeft = "10px";
 
     /* Create div for map */
     const map_div = document.createElement("div");
@@ -881,7 +908,7 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true,
     /* Handle callback of dataSource.add to change the values of lead
      * and trail time */
     data_source_promise.then(
-        result => manage_data_source(viewer, show_all_path, show_sun_light),
+        result => manage_data_source(viewer, show_all_path, show_sun_light, show_ephemeris),
         error => toastr.error("Cesium was not able to add the data source due to: " + error),
     );
 
@@ -943,17 +970,31 @@ export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true,
         }
         
     }
+
+    /**
+     * Add a click handler to the "Show ephemeris" checkbox to
+     * show/hide ephemeris
+     */
+    const on_off_ephemeris_checkbox = on_off_ephemeris_div.children[0].children[0];
+    on_off_ephemeris_checkbox.onclick = function(event) {
+        if (on_off_ephemeris_checkbox.checked){
+            on_off_ephemeris(viewer, true);
+        }else{
+            on_off_ephemeris(viewer, false);
+        }
+        
+    }
     
     return viewer;
 }
 
 /* Function to display a czml in a 3D world map given the id of the
  * DOM where to attach it and a czml file */
-export function display_czml_file_3dmap(dom_id, czml_file, show_all_path = true){
+export function display_czml_file_3dmap(dom_id, czml_file, show_all_path = true, show_sun_light = false, show_ephemeris = true){
 
     const czml_data = Cesium.CzmlDataSource.load(czml_file);
 
-    const viewer = display_czml_data_3dmap(dom_id, czml_data, show_all_path);
+    const viewer = display_czml_data_3dmap(dom_id, czml_data, show_all_path, show_sun_light, show_ephemeris);
 
     return viewer;
 }
