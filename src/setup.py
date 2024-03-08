@@ -24,7 +24,6 @@ setup(name="vboa",
           "bcrypt",
           "gunicorn",
           "bleach",
-          "tle2czml",
           "geopy"
       ],
       extras_require={

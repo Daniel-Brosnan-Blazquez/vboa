@@ -72,10 +72,10 @@ export function get_tle_fields(tle_string){
         const millennium = round(now.getUTCFullYear(), 100);
         const year = millennium + parseFloat(first_line.substring(18, 20));
         const days = parseFloat(first_line.substring(20, 32));
-        const year_date = new Date(String(year), 0, 1);
-        const epoch_date = new Date(year_date.getTime() + days * 24 * 60 * 60 * 1000);
+        const year_date = new Date(Date.UTC(String(year), 0, 1));
+        const epoch_date = new Date(year_date.getTime() + (days-1) * 24 * 60 * 60 * 1000);
         tle_fields["epoch"] = epoch_date.toISOString();
-
+        
         /* Get inclination */
         tle_fields["inclination"] = second_line.substring(8, 16);
 

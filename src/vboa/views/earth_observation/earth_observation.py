@@ -29,7 +29,6 @@ from sqlalchemy.orm.exc import DetachedInstanceError
 from vboa.security import auth_required, roles_accepted
 
 # Import TLE functions
-import tle2czml
 import pytz
 
 # Import EBOA Earth observation libraries
@@ -38,6 +37,9 @@ import eboa.ingestion.swath as eboa_swath
 
 # Import utilities for Earth observation analysis
 import geopy.distance
+
+# Import vboa views functions
+from vboa import functions as vboa_functions
 
 bp = Blueprint("earth-observation", __name__, url_prefix="/earth-observation")
 query = Query()
@@ -80,7 +82,7 @@ def get_czml_orbit():
     semimajor = eboa_orbit.get_semimajor(tle)
 
     # Obtain CZML
-    czml = json.loads(tle2czml.tle2czml.tles_to_czml(tle, start_time=start.replace(tzinfo=pytz.UTC), end_time=stop.replace(tzinfo=pytz.UTC), silent=True))
+    czml = vboa_functions.tle_to_czml_data(tle, start, stop, 300)
 
     result = {
         "czml": czml,
