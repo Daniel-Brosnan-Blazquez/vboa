@@ -356,18 +356,29 @@ export function submit_request_for_ingestion_management(form_id){
 
             toastr.success("Re-ingestion of selected source/s requested")
         }
+        else if (operation == "reingestion"){
+            var reingestion_confirmation = confirm("You are about to perform a reingestion operation. This will erase data from the DDBB and re-ingest the selected files. Do you want to continue with the operation?")
+            if (reingestion_confirmation){
+
+                queryFunctions.request_info("/check-orc-status", check_orc_status_and_reingest_files, form_data);
+
+            }else{
+                toastr.warning("Reingestion of selected source/s has been cancelled")
+                loader.className = ""
+            };
+        }
         else if (operation == "deletion_preparation"){
             queryFunctions.request_info_form_data("/eboa_nav/prepare-deletion-of-sources", renderFunctions.render_page, form_data)
             
             toastr.success("Deletion of selected source/s requested")
         }
         else if (operation == "deletion"){
-            var deletion_confirmation = confirm("You are about to perform a deletion operation. This will erase the data from the DDBB. Do you want to continue with the operation?")
+            var deletion_confirmation = confirm("You are about to perform a deletion operation. This will erase data from the DDBB. Do you want to continue with the operation?")
             if (deletion_confirmation){
                 queryFunctions.request_info_form_data("/eboa_nav/delete-sources", notify_deletion, form_data)
                 toastr.success("Deletion of selected source/s has been confirmed")
             }else{
-                toastr.success("Deletion of selected source/s has been cancelled")
+                toastr.warning("Deletion of selected source/s has been cancelled")
                 loader.className = ""
             };
         }
@@ -377,6 +388,37 @@ export function submit_request_for_ingestion_management(form_id){
         };
     };
     
+}
+
+/* Function to check if ORC is enabled while trying to re-ingest files
+ * through the HMI and perform actions accordingly */
+function check_orc_status_and_reingest_files(form_data, orc_status){
+
+    if (orc_status["scheduler"]["status"] == "on" && orc_status["ingester"]["status"] == "on"){
+        re_ingest_files(form_data)
+    }else{
+        var switch_on_orc_confirmation = confirm("You are about to re-ingest files into BOA but the orchestrator is switched off. Do you want to switch on the orchestrator?")
+        var loader = document.getElementById("updating-page");
+        if (switch_on_orc_confirmation){
+
+            loader.className = "loader-render"
+            /* Activate ORC */
+            queryFunctions.request_info("/switch-on-orc", re_ingest_files, form_data);
+        }else{
+            toastr.warning("The ingestion of selected file/s has been cancelled")
+            loader.className = ""
+        };
+    }
+
+}
+
+/* Function to re-ingest the selected files */
+function re_ingest_files(form_data){
+
+    // Re-ingest files
+    queryFunctions.request_info_form_data("/eboa_nav/reingest-sources", notify_reingestion, form_data)
+    toastr.success("Reingestion of selected source/s has been confirmed")
+
 }
 
 function notify_deletion(response){
@@ -389,21 +431,28 @@ function notify_deletion(response){
     
 }
 
+function notify_reingestion(response){
+
+    var json_response = JSON.parse(response);
+    
+    if (json_response["status"] == "OK"){
+        toastr.success("Reingestion operation has been completed");
+    }else{
+        toastr.error("Reingestion operation has failed with the following error (no changes are performed to the DDBB): " + json_response["error"]);
+    }
+
+    // Stop loader
+    var loader = document.getElementById("updating-page");
+    loader.className = ""
+    
+}
+
 function notify_download(response){
 
-    console.log(response)
     toastr.success("File should be ready to download")
-
-    // var blob = new Blob([response]);
-
-    // console.log(blob)
-
-    // var url = window.URL.createObjectURL(blob);
     
-    // //saveAs(blob, filename);
-    
-    // // Stop loader
-    // var loader = document.getElementById("updating-page");
-    // loader.className = ""
+    // Stop loader
+    var loader = document.getElementById("updating-page");
+    loader.className = ""
     
 }

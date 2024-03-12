@@ -49,14 +49,15 @@ function check_orc_status_and_ingest_files(parameters, orc_status){
         ingest_files(parameters, null)
     }else{
         var switch_on_orc_confirmation = confirm("You are about to upload files into BOA but the orchestrator is switched off. Do you want to switch on the orchestrator?")
+        var loader = document.getElementById("updating-page");
         if (switch_on_orc_confirmation){
 
-            var loader = document.getElementById("updating-page");
             loader.className = "loader-render"
             /* Activate ORC */
             queryFunctions.request_info("/switch-on-orc", ingest_files, parameters);
         }else{
             toastr.success("The ingestion of selected file/s has been cancelled")
+            loader.className = ""
         };
     }
 

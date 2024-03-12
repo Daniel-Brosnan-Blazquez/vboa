@@ -11,6 +11,8 @@ import json
 from distutils import util
 import shlex
 from subprocess import Popen, PIPE
+import tempfile
+import shutil
 
 # Import flask utilities
 from flask import Blueprint, flash, g, current_app, redirect, render_template, request, url_for, send_from_directory
@@ -1202,6 +1204,84 @@ def prepare_reingestion_of_sources():
 
     return render_template("eboa_nav/reingestion_of_sources.html", sources_matching_triggering_rule=sources_matching_triggering_rule, sources_not_matching_triggering_rule=sources_not_matching_triggering_rule)
 
+@bp.route("/reingest-sources", methods=["POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator")
+def reingest_sources():
+    """
+    Re-ingest selected sources.
+    """
+    current_app.logger.debug("Re-ingest selected sources")
+    filters = request.json
+
+    sources_to_reingest = set(filters["sources"])
+    
+    # Create temporal folder inside /inputs folder to copy sources there for ORC to re-ingest
+    temporal_folder = tempfile.TemporaryDirectory(prefix = ".", dir="/inputs/")
+    
+    # Get metadata of sources
+    sources_metadata = {}
+    for source_name in sources_to_reingest:
+        # Get source metadata from minArc
+        sources_metadata[source_name] = _get_metadata_source(source_name)
+
+        if "filename" not in sources_metadata[source_name] or "path" not in sources_metadata[source_name]:
+            return {"status": "NOK",
+                    "error": f"Source with name {source_name} is not available in the archive"}
+        # end if
+    # end for
+
+    # Copy sources to temporal folder and delete from ORC
+    for source_name in sources_to_reingest:
+
+        # Retrieve file from the archive
+        if sources_metadata[source_name]["remote_archive"]:
+            command = "minArcRetrieve --Location " + temporal_folder.name + " --Unpack --file " + source_name
+            command_split = shlex.split(command)
+            program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            output, error = program.communicate()        
+            return_code = program.returncode
+        else:
+            command = "minArcRetrieve --noserver --Location " + temporal_folder.name + " --Unpack --file " + source_name
+            command_split = shlex.split(command)
+            program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            output, error = program.communicate()        
+            return_code = program.returncode
+        # end if
+
+        if error:
+            return {"status": "NOK",
+                    "error": f"Source with name {source_name} could not be retrieved from minArc. minArc gave the following output: {output} and the following error: {error}"}
+        # end if
+
+        # Delete source from ORC
+        command = "orcQueueInput -d " + source_name
+        command_split = shlex.split(command)
+        program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        output, error = program.communicate()        
+        return_code = program.returncode
+
+        if error:
+            return {"status": "NOK",
+                    "error": f"Source with name {source_name} could not be removed inside ORC. ORC gave the following output: {output} and the following error: {error}"}
+        # end if
+
+    # end for
+
+    # Delete sources from BOA
+    query.get_sources(names = {"filter": list(sources_to_reingest), "op": "in"}, delete=True)
+
+    # Move sources to /inputs
+    for source_name in sources_to_reingest:
+        # Copy source to temporal folder
+        shutil.move(temporal_folder.name + "/" + source_name, "/inputs")
+    # end for
+
+    # Delete temporal folder
+    temporal_folder.cleanup()
+
+    return {"status": "OK"}
+
 @bp.route("/prepare-deletion-of-sources", methods=["POST"])
 @auth_required()
 @roles_accepted("administrator", "service_administrator", "operator")
@@ -1217,6 +1297,44 @@ def prepare_deletion_of_sources():
 
     return render_template("eboa_nav/deletion_of_sources.html", sources=sources)
 
+def _get_metadata_source(source_name):
+    """
+    Get metadata of the specified source.
+    :param source_name: string with the source name to get the associated metadata
+    :type source_name: str
+
+    :return: Dictionary with metadata
+    :rtype: dict
+    """
+
+    command = "minArcStatus --file " + source_name
+    command_split = shlex.split(command)
+    program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    output, error = program.communicate()        
+    return_code = program.returncode
+    remote_archive = True
+    
+    output_json = {}
+    
+    # If remote minArc server does not give answer, try with the local server
+    if output.decode() == "":
+        command = "minArcStatus --noserver --file " + source_name
+        command_split = shlex.split(command)
+        program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        output, error = program.communicate()        
+        return_code = program.returncode
+        remote_archive = False
+    # end if
+
+    if output.decode() != "":
+        # Get metadata from minArcStatus output
+        output_json = json.loads(output.decode())
+    # end if
+
+    output_json["remote_archive"] = remote_archive
+
+    return output_json
+
 @bp.route("/download-source/<string:source_name>")
 @auth_required()
 @roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
@@ -1226,27 +1344,12 @@ def download_source(source_name):
     """
     current_app.logger.debug("Download of selected source")
 
-    command = "minArcStatus --file " + source_name
-    command_split = shlex.split(command)
-    program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    output, error = program.communicate()        
-    return_code = program.returncode
-
+    output_json = _get_metadata_source(source_name)
     filename = ""
     filepath = ""
-    
-    # If remote minArc server does not give answer, try with the local server
-    if output.decode() == "":
-        command = "minArcStatus --noserver --file " + source_name
-        command_split = shlex.split(command)
-        program = Popen(command_split, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        output, error = program.communicate()        
-        return_code = program.returncode
-    # end if
 
-    if output.decode() != "":
+    if "filename" in output_json and "path" in output_json:
         # Get filename and filepath from minArcStatus output
-        output_json = json.loads(output.decode())
         filename = output_json["filename"]
         filepath = output_json["path"]
     # end if

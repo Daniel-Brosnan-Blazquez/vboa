@@ -886,7 +886,7 @@ class TestIngestionControl(unittest.TestCase):
         alert.accept()
         
         # Check ingested sources
-        time.sleep(60)
+        time.sleep(120)
 
         # Check sources inserted
         sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
@@ -943,3 +943,100 @@ class TestIngestionControl(unittest.TestCase):
 
         assert empty_table.text == "No data available in table"
 
+    def test_reingestion_one_file(self):
+
+        # Copy test configuration for ORC
+        status = service_management.execute_command("orcValidateConfig -C")
+        assert status["return_code"] == 0
+        path_to_orc_config = status["output"]
+        os.rename(path_to_orc_config + "/orchestratorConfigFile.xml", path_to_orc_config + "/orchestratorConfigFile_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/orchestratorConfigFile.xml", path_to_orc_config + "/orchestratorConfigFile.xml")
+
+        # Copy test configuration for triggering
+        os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
+        shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
+
+        wait = WebDriverWait(self.driver,5)
+        self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
+
+        # Browse file
+        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+
+        filename = "source.json"
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
+    
+        browse_file.send_keys(file_path)
+
+        # Trigger input files table
+        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+
+        name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
+
+        assert name.text == "source.json"
+
+        size = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
+
+        assert size.text == "467 B"
+
+        # Trigger ingestion
+        trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
+        trigger_ingestion_button.click()
+
+        time.sleep(1)
+        
+        # Confirm ORC switch on
+        alert = self.driver.switch_to.alert
+        alert.accept()
+
+        time.sleep(40)
+        
+        # Confirm ingestion
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        # Check ingested sources
+        time.sleep(60)
+
+        # Check sources inserted
+        sources = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
+                                              validity_stop_filters = [{"date": "2018-06-05T02:07:36", "op": "=="}],
+                                              processors = {"filter": "exec", "op": "=="},
+                                              dim_signatures = {"filter": "dim_signature", "op": "=="},
+                                              names = {"filter": "source.json", "op": "=="},
+                                              ingestion_completeness = True)
+
+        assert len(sources) == 1
+
+        self.driver.get("http://localhost:5000/eboa_nav/query-sources-by-name/source.json")
+
+        # Reingest file
+        source_tr = self.driver.find_element_by_id(str(sources[0].source_uuid))
+        source_tr.click()
+
+        reingest_button = self.driver.find_element_by_id("sources-reingetion-button")
+        reingest_button.click()
+
+        confirm_reingest_button = self.driver.find_element_by_id("ingestion-control-reingetion-confirmation-button")
+        confirm_reingest_button.click()
+        
+        # Confirm reingestion
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        
+        # Check ingested sources
+        time.sleep(60)
+
+        # Check sources inserted
+        sources_reingested = self.query_eboa.get_sources(validity_start_filters = [{"date": "2018-06-05T02:07:03", "op": "=="}],
+                                              validity_stop_filters = [{"date": "2018-06-05T02:07:36", "op": "=="}],
+                                              processors = {"filter": "exec", "op": "=="},
+                                              dim_signatures = {"filter": "dim_signature", "op": "=="},
+                                              names = {"filter": "source.json", "op": "=="},
+                                              ingestion_completeness = True)
+
+        assert len(sources_reingested) == 1
+
+        assert sources[0].ingestion_time < sources_reingested[0].ingestion_time
+        
+        os.rename("/resources_path/triggering_bak.xml", "/resources_path/triggering.xml")
+        os.rename(path_to_orc_config + "/orchestratorConfigFile_bak.xml", path_to_orc_config + "/orchestratorConfigFile.xml")
