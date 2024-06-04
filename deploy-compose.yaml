@@ -31,6 +31,7 @@ services:
       - ${PATH_TO_BOA_INPUTS}:/inputs 
       - ${PATH_TO_RBOA_ARCHIVE}:/rboa_archive 
       - ${PATH_TO_LOG_FOLDER}:/log
+      - /var/run/docker.sock:/var/run/docker.sock
     secrets:
       - source: boa-certificate
         target: /resources_path/boa_certificate.pem

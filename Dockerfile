@@ -32,7 +32,8 @@ RUN yum install -y python36 \
     libcurl-devel \
     postgresql-devel \
     postgresql \
-    openssl
+    openssl \
+    docker
 
 RUN yum install -y rh-ruby27 \
     rh-ruby27-rubygem-bundler \
@@ -50,6 +51,8 @@ RUN mkdir /resources_path
 RUN mkdir /datamodel
 RUN mkdir /schemas
 RUN mkdir /rboa_archive
+RUN mkdir /metrics
+RUN mkdir /metrics_to_publish
 
 # Create folders for ORC
 RUN mkdir /orc
@@ -58,7 +61,7 @@ RUN mkdir /minarc_root
 RUN mkdir /inputs
 
 # Change ownership to the boa user
-RUN chown boa /log /scripts /resources_path /datamodel /schemas /rboa_archive /orc_packages /minarc_root /inputs /orc
+RUN chown boa /log /scripts /resources_path /datamodel /schemas /rboa_archive /metrics /metrics_to_publish /orc_packages /minarc_root /inputs /orc
 
 USER boa
 

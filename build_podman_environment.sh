@@ -288,7 +288,8 @@ else
     echo "The BOA image has been loaded successfully :-)"
 fi
 
-podman run --add-host=$DATABASE_CONTAINER:$DATABASE_CONTAINER_IP -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$PODMAN_NETWORK --ip=192.168.0.101 -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive -v $PATH_TO_LOG_FOLDER:/log --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
+# BOA comes with the volume of docker.sock attached for allowing the monitoring of other containers in the same host
+podman run --add-host=$DATABASE_CONTAINER:$DATABASE_CONTAINER_IP -e EBOA_DDBB_HOST=$DATABASE_CONTAINER -e SBOA_DDBB_HOST=$DATABASE_CONTAINER -e UBOA_DDBB_HOST=$DATABASE_CONTAINER -e MINARC_DATABASE_HOST=$DATABASE_CONTAINER -e ORC_DATABASE_HOST=$DATABASE_CONTAINER --shm-size 512M --network=$PODMAN_NETWORK --ip=192.168.0.101 -p $PORT:5000 -it --name $APP_CONTAINER -v $PATH_TO_MINARC_ARCHIVE:/minarc_root -v $PATH_TO_BOA_INPUTS:/inputs -v $PATH_TO_RBOA_ARCHIVE:/rboa_archive -v $PATH_TO_LOG_FOLDER:/log -v /var/run/docker.sock:/var/run/docker.sock --restart=always -d `basename $PATH_TO_DOCKERIMAGE .tar`
 
 # Check that the APP container could be created
 status=$?

@@ -197,6 +197,7 @@ docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/eboa*/schemas/* 
 
 # Install EBOA cron activities
 echo "Installing EBOA cron activities..."
+docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/eboa*/cron/boa_cron /etc/cron.d/"
 
 # Copy RBOA reporting chain
 echo "Installing RBOA reporting chain..."
@@ -223,6 +224,10 @@ docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/*/boa_schemas/* 
 # Copy tailored BOA cron activities
 echo "Copying tailored BOA cron activities..."
 docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/*/boa_cron/boa_cron /etc/cron.d/"
+
+# Copy tailored BOA scripts
+echo "Copying tailored BOA scripts..."
+docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/*/boa_scripts/* /scripts"
 
 # Specify the ID of the HEAD versions used for EBOA, VBOA and the tailored BOA
 docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/eboa*/boa_package_versions/boa_package_versions /resources_path/boa_package_versions"
