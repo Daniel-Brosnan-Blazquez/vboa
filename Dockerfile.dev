@@ -3,12 +3,11 @@ FROM centos:centos7
 MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
-ARG HOST_USER
 ARG UID_HOST_USER
 
 USER root
 
-RUN useradd -m -o -r -u $UID_HOST_USER $HOST_USER
+RUN useradd -m -o -r -u $UID_HOST_USER boa
 
 RUN yum install -y epel-release
 
@@ -64,10 +63,10 @@ RUN mkdir /orc_packages
 RUN mkdir /minarc_root
 RUN mkdir /inputs
 
-# Change ownership to the $HOST_USER
-RUN chown -R $HOST_USER /log /scripts /resources_path /schemas /datamodel /rboa_archive /metrics /metrics_to_publish /orc_packages /minarc_root /inputs /orc
+# Change ownership to the boa user
+RUN chown -R boa /log /scripts /resources_path /schemas /datamodel /rboa_archive /metrics /metrics_to_publish /orc_packages /minarc_root /inputs /orc
 
-USER $HOST_USER
+USER boa
 
 # Install scripts
 RUN ln -s /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py

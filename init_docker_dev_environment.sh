@@ -325,7 +325,7 @@ if [ "$(docker images boa_$CONTAINERS_LABEL -q)" ];
 then
     echo -e "The image boa_$CONTAINERS_LABEL was already available. So, it is not going to be re-built."
 else
-    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP --build-arg HOST_USER=$HOST_USER_TO_MAP -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
+    docker build --build-arg FLASK_APP=$APP --build-arg UID_HOST_USER=$HOST_UID_USER_TO_MAP -t boa_$CONTAINERS_LABEL -f $PATH_TO_DOCKERFILE $PATH_TO_VBOA
 fi
 
 # Check that the APP image could be created
@@ -367,7 +367,7 @@ fi
 for file in `find $PATH_TO_EBOA/src/config/ -name '*' -type f`;
 do
     file_name=`basename $file`
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/config/$file_name /resources_path/$file_name"
+    docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /eboa/src/config/$file_name /resources_path/$file_name"
 done
 # Link to VBOA configurations
 if [ -d $PATH_TO_VBOA/src/config/ ];
@@ -375,7 +375,7 @@ then
     for file in `find $PATH_TO_VBOA/src/config/ -name '*' -type f`;
     do
         file_name=`basename $file`
-        docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/config/$file_name /resources_path/$file_name"
+        docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /vboa/src/config/$file_name /resources_path/$file_name"
     done
 fi
 # Link to tailored BOA configurations
@@ -384,8 +384,8 @@ then
    for file in `find $PATH_TO_TAILORED/src/boa_config -name '*' -type f`;
    do
        file_name=`basename $file`
-       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "if [ -f /resources_path/$file_name ]; then rm /resources_path/$file_name; fi"
-       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /$APP/src/boa_config/$file_name /resources_path/$file_name"
+       docker exec -it -u boa $APP_CONTAINER bash -c "if [ -f /resources_path/$file_name ]; then rm /resources_path/$file_name; fi"
+       docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /$APP/src/boa_config/$file_name /resources_path/$file_name"
    done
 fi
 
@@ -396,7 +396,7 @@ fi
 for file in `find $PATH_TO_EBOA/src/schemas/ -name '*' -type f`;
 do
     file_name=`basename $file`
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/schemas/$file_name /schemas/$file_name"
+    docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /eboa/src/schemas/$file_name /schemas/$file_name"
 done
 # Link to VBOA schemas
 if [ -d $PATH_TO_VBOA/src/schemas/ ];
@@ -404,7 +404,7 @@ then
     for file in `find $PATH_TO_VBOA/src/schemas/ -name '*' -type f`;
     do
         file_name=`basename $file`
-        docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /vboa/src/schemas/$file_name /schemas/$file_name"
+        docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /vboa/src/schemas/$file_name /schemas/$file_name"
     done
 fi
 # Link to tailored BOA schemas
@@ -413,8 +413,8 @@ then
    for file in `find $PATH_TO_TAILORED/src/boa_schemas -name '*' -type f`;
    do
        file_name=`basename $file`
-       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "if [ -f /schemas/$file_name ]; then rm /schemas/$file_name; fi"
-       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /$APP/src/boa_schemas/$file_name /schemas/$file_name"
+       docker exec -it -u boa $APP_CONTAINER bash -c "if [ -f /schemas/$file_name ]; then rm /schemas/$file_name; fi"
+       docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /$APP/src/boa_schemas/$file_name /schemas/$file_name"
    done
 fi
    
@@ -422,10 +422,10 @@ fi
 # SCRIPTS #
 ###########
 # Link to EBOA scripts
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
+docker exec -it -u boa $APP_CONTAINER bash -c 'for script in /eboa/src/scripts/*; do ln -s $script /scripts/`basename $script`; done'
 
 # Link to VBOA scripts
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for script in /vboa/src/scripts/*; do if [ ! -f /scripts/`basename $script` ]; then ln -s $script /scripts/`basename $script`; fi; done'
+docker exec -it -u boa $APP_CONTAINER bash -c 'for script in /vboa/src/scripts/*; do if [ ! -f /scripts/`basename $script` ]; then ln -s $script /scripts/`basename $script`; fi; done'
 
 # Link to tailored BOA scripts
 if [ "$PATH_TO_TAILORED" != "" ] && [ -d $PATH_TO_TAILORED/src/boa_scripts ];
@@ -433,8 +433,8 @@ then
    for file in `find $PATH_TO_TAILORED/src/boa_scripts -name '*' -type f`;
    do
        file_name=`basename $file`
-       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "if [ -f /scripts/$file_name ]; then rm /scripts/$file_name; fi"
-       docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /$APP/src/boa_scripts/$file_name /scripts/$file_name"
+       docker exec -it -u boa $APP_CONTAINER bash -c "if [ -f /scripts/$file_name ]; then rm /scripts/$file_name; fi"
+       docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /$APP/src/boa_scripts/$file_name /scripts/$file_name"
    done
 fi
 
@@ -442,11 +442,11 @@ fi
 # DATAMODELS #
 ##############
 # Link to EBOA datamodels
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c 'for datamodel in /eboa/src/datamodel/*sql; do ln -s $datamodel /datamodel/`basename $datamodel`; done'
+docker exec -it -u boa $APP_CONTAINER bash -c 'for datamodel in /eboa/src/datamodel/*sql; do ln -s $datamodel /datamodel/`basename $datamodel`; done'
 
 # Leave users configuration as the default for EBOA so that developers have always the same users to access to the system
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "rm /resources_path/users.json"
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "ln -s /eboa/src/config/users.json /resources_path/users.json"
+docker exec -it -u boa $APP_CONTAINER bash -c "rm /resources_path/users.json"
+docker exec -it -u boa $APP_CONTAINER bash -c "ln -s /eboa/src/config/users.json /resources_path/users.json"
 
 # Copy BOA certificates for SSL connection
 if [ "$PATH_TO_BOA_CERTIFICATES" != "" ];
@@ -462,7 +462,7 @@ do
 done
 
 # Change ownership for the ORC packages
-docker exec -it -u root $APP_CONTAINER bash -c "chown $HOST_USER_TO_MAP:$HOST_USER_TO_MAP /orc_packages//*"
+docker exec -it -u root $APP_CONTAINER bash -c "chown boa:boa /orc_packages//*"
 
 # Generate the python archive
 docker exec -it -u root $APP_CONTAINER bash -c "pip3 install --upgrade pip"
@@ -486,23 +486,23 @@ fi
 docker restart $APP_CONTAINER
 
 # Install web packages
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --force --prefix /vboa/src/vboa/static install"
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
+docker exec -it -u boa $APP_CONTAINER bash -c "npm --force --prefix /vboa/src/vboa/static install"
+docker exec -it -u boa $APP_CONTAINER bash -c "npm --prefix /vboa/src/vboa/static run build"
 # Copy cesium library for 3D world maps as ol-cesium needs this to be external
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist"
+docker exec -it -u boa $APP_CONTAINER bash -c "cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist"
 
 # Install cron activities
 echo "Installing cron activities"
 docker exec -d -it -u root $APP_CONTAINER bash -c "ln -s /eboa/src/cron/boa_cron /etc/cron.d/"
-if [ "$PATH_TO_TAILORED" != "" ] && [ -f "$PATH_TO_TAILORED/src/cron/boa_cron" ];
+if [ "$PATH_TO_TAILORED" != "" ] && [ -f "$PATH_TO_TAILORED/src/boa_cron/boa_cron" ];
 then
-    docker exec -d -it -u root $APP_CONTAINER bash -c "if [ -f /eboa/src/cron/boa_cron ]; then rm /eboa/src/cron/boa_cron; fi"
+    docker exec -d -it -u root $APP_CONTAINER bash -c "if [ -f /eboa/src/cron/boa_cron ]; then rm /etc/cron.d/boa_cron; fi"
     docker exec -d -it -u root $APP_CONTAINER bash -c "ln -s /$APP/src/boa_cron/boa_cron /etc/cron.d/"
 fi
 
 # Copy the environment variables to a file for later use of cron
 echo "Copy the environment variables to a file for later use of cron"
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env"
+docker exec -it -u boa $APP_CONTAINER bash -c "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env"
 
 # Copy cron to crontab
 docker exec -d -it -u root $APP_CONTAINER bash -c "crontab /etc/cron.d/boa_cron"
@@ -520,7 +520,7 @@ echo "ORC and minArc installed"
 while true
 do
     echo "Trying to initialize EBOA, SBOA, minArc and ORC databases..."
-    docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; boa_init.py -e -s -u -o -y"
+    docker exec -it -u boa $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; boa_init.py -e -s -u -o -y"
     status=$?
     if [ $status -ne 0 ]
     then
@@ -534,4 +534,4 @@ do
 done
 
 # Execute the ORC server
-docker exec -it -u $HOST_USER_TO_MAP $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; orcBolg -c start"
+docker exec -it -u boa $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; orcBolg -c start"
