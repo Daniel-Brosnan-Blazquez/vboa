@@ -221,7 +221,7 @@ function show_timeline(dom_id, items, container, groups_dataset, options, show_h
         const button = document.createElement("button");
         button.classList.add("btn");
         button.classList.add("btn-primary");
-        button.innerHTML = "Retore hidden elements";
+        button.innerHTML = "Restore hidden elements";
         options_container.appendChild(button);
         button.onclick = function (){
             showAllGroups();
