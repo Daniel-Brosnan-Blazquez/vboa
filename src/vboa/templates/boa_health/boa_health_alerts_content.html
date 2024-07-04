@@ -44,7 +44,7 @@
             <td>{{ alert.generator }}</td>
             <td>{{ alert.notified }}</td>
             <td>{{ alert.notification_time }}</td>
-            <td><a href="/eboa_nav/query-event-links/{{ alert.event_uuid }}">{{ alert.event_uuid }}</a></td>
+            <td><a href="{{ url_for('eboa_nav.query_event_links_and_render', event_uuid=alert.event_uuid) }}">{{ alert.event_uuid }}</a></td>
           </tr>
           {% endfor %}
         </tbody>

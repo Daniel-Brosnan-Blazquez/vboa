@@ -30,10 +30,10 @@
 <!-- Buttons -->
 <div class="row" align="center">
   <div style="margin-left:20px; display:inline">
-    <button type="button" class="btn btn-success" onclick="vboa.request_info_no_args('/sboa/simulate/' + document.getElementById('t0-input').value, vboa.render_page, true)">Simulate agenda</button>
+    <button type="button" class="btn btn-success" onclick="vboa.request_info_no_args('{{ url_for('sboa.simulate') }}/' + document.getElementById('t0-input').value, vboa.render_page, true)">Simulate agenda</button>
   </div>
   <div style="display:inline">
-    <button type="button" class="btn btn-primary" onclick="vboa.request_info_no_args('/sboa/load-agenda/' + document.getElementById('t0-input').value, vboa.handle_sboa_return_status)">Load agenda</button>
+    <button type="button" class="btn btn-primary" onclick="vboa.request_info_no_args('{{ url_for('sboa.simulate') }}/' + document.getElementById('t0-input').value, vboa.handle_sboa_return_status)">Load agenda</button>
   </div>
 </div>
 

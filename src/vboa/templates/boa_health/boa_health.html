@@ -8,7 +8,7 @@
 {% include "boa_health/boa_health_query.html" %}
 
 <!-- Pagination -->
-{% with route = "/health/health-pages", elements = health_events, filters = filters %}
+{% with route = url_for('boa_health.query_health_pages'), elements = health_events, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -239,7 +239,7 @@
               <td>{{ value }}</td>
               {% endfor %}
               <td>{{ health_events[0].start.isoformat() }}</td>
-              <td><a href="/eboa_nav/query-event-links/{{ health_events[0].event_uuid }}">{{ health_events[0].event_uuid }}</a></td>
+              <td><a href="{{ url_for('eboa_nav.query_event_links_and_render', event_uuid=health_events[0].event_uuid) }}">{{ health_events[0].event_uuid }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
@@ -488,7 +488,7 @@
   "window_size": "{{ sliding_window['window_size'] }}",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/health/sliding_health_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('health.show_sliding_health_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}

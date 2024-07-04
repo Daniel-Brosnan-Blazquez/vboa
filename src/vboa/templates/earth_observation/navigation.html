@@ -364,7 +364,7 @@ S1A
               "stop": stop_container.value
           }
 
-          vboa.request_info_json("/earth-observation/get-czml-orbit", do_update_map, orbit_information, true);
+          vboa.request_info_json("{{ url_for('earth-observation.get_czml_orbit') }}", do_update_map, orbit_information, true);
           
       }
       
@@ -589,7 +589,7 @@ S1A
                   "footprint_aperture": footprint_aperture_container.value
               }
               
-              vboa.request_info_json("/earth-observation/get-footprint", do_update_footprint, footprint_information, true);
+              vboa.request_info_json("{{ url_for('earth-observation.get_footprint') }}", do_update_footprint, footprint_information, true);
               
           }
           
@@ -680,7 +680,7 @@ S1A
               "footprint_aperture": footprint_aperture_container.value
           }
           
-          vboa.request_info_json("/earth-observation/get-swath-details", do_update_swath_details, footprint_information, true);
+          vboa.request_info_json("{{ url_for('earth-observation.get_swath_details') }}", do_update_swath_details, footprint_information, true);
           
       }else{
 

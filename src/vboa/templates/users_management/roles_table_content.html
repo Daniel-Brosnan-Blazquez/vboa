@@ -8,7 +8,7 @@
   <tbody>
     {% for role in roles %}
     <tr>
-      <td><a href="/users-management/uboa-nav/query-users-by-role/{{ role.name }}">{{ role.name }}</a></td>
+      <td><a href="{{ url_for('users-management.query_user_by_role', role=role.name) }}">{{ role.name }}</a></td>
       <td>{{ role.description }}</td>
       <td>{{ role.role_uuid }}</td>
     </tr>

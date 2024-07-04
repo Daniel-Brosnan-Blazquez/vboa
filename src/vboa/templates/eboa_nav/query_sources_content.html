@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method=post action="/eboa_nav/query-sources">
+          <form role="form" method=post action="{{ url_for('eboa_nav.query_sources_and_render') }}">
             <div class="row">
               <div class="col-xs-3">
                 <label>Name</label>
@@ -16,7 +16,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="sources-source-names-in-checkbox">Names (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'name', 20, 0)" id="sources-source-names-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_sources') }}', 'name', 20, 0)" id="sources-source-names-in-text"/><i class="circle"></i>
                 <select name="sources" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-source-names-in-select">
                 </select>
               </div>
@@ -33,7 +33,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="sources-processors-in-checkbox">Processors (<input type="checkbox" name="processor_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources-by-processor', 'processor', 20, 0)" id="sources-processors-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_sources_by_processor') }}', 'processor', 20, 0)" id="sources-processors-in-text"/><i class="circle"></i>
                 <select name="processors" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-processors-in-select">
                 </select>
               </div>
@@ -50,7 +50,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="sources-dim-signatures-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-dim-signatures', 'dim_signature', 20, 0)" id="sources-dim-signatures-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_dim_signatures') }}', 'dim_signature', 20, 0)" id="sources-dim-signatures-in-text"/><i class="circle"></i>
                 <select name="dim_signatures" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-dim-signatures-in-select">
                 </select>
               </div>

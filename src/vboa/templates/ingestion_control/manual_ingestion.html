@@ -15,7 +15,7 @@
         <p style="display: inline; margin: 0;">
           <b>Select files to be uploaded:</b>
           <br/>
-          Note: the files will be processed depending on the <a href="/ingestion_control/download-orc-config">triggering</a> rules for <b>ORC</b> and the <a href="/ingestion_control/download-triggering">triggering</a> rules for <b>BOA</b>.
+          Note: the files will be processed depending on the <a href="{{ url_for('ingestion_control.download_orc_config') }}">triggering</a> rules for <b>ORC</b> and the <a href="{{ url_for('ingestion_control.download_triggering') }}">triggering</a> rules for <b>BOA</b>.
         </p>      
         <div align="center">
           <label class="btn btn-primary">

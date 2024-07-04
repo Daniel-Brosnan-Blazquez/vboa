@@ -3,11 +3,11 @@
 {% block div_active_users %}active{% endblock %}
 {% block users_nav_content %}
 <div>
-  <a href="/users-management/uboa-nav/query-users"><p class="fa fa-chevron-left"> Back to query users</p></a>
+  <a href="{{ url_for('users-management.query_users_and_render') }}"><p class="fa fa-chevron-left"> Back to query users</p></a>
 </div>
 
 <!-- Pagination -->
-{% with route = "/users-management/uboa-nav/query-users-pages", elements = users, filters = filters %}
+{% with route = url_for('users-management.query_users_pages'), elements = users, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 

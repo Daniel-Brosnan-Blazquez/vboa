@@ -1,12 +1,12 @@
 {% extends "eboa_nav/eboa_nav.html" %}
 
 {% set alerts_html_table_file = "general_view_alerts/general_view_alerts_annotations_table_content.html" %}
-{% set route_pagination = "/eboa_nav/query-alerts-pages" %}
+{% set route_pagination = url_for('eboa_nav.query_alerts_pages') %}
 {% block li_active_annotations %}class="active"{% endblock %}
 {% block div_active_annotations %}active{% endblock %}
 {% block annotations_nav_content %}
 <div>
-  <a href="/eboa_nav/query-annotations"><p class="fa fa-chevron-left"> Back to query annotations</p></a>
+  <a href="{{ url_for('eboa_nav.query_annotations_and_render') }}"><p class="fa fa-chevron-left"> Back to query annotations</p></a>
 </div>
 <!-- Content -->
 {% include "eboa_nav/alerts_nav_content.html" %}

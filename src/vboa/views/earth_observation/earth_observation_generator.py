@@ -14,6 +14,9 @@ from vboa.functions import export_html
 # Import vboa app creator
 from vboa import create_app
 
+# Import flask utilities
+from flask import url_for
+
 version = "1.0"
 
 def generate_report(begin, end, metadata, parameters = None):
@@ -28,7 +31,7 @@ def generate_report(begin, end, metadata, parameters = None):
         # end if
     # end if
 
-    response = client.post("/reporting_control/reporting_control", data={
+    response = client.post(url_for("earth-observation.show_navigation"), data={
         "start": begin,
         "stop": end,
         "template": template_name

@@ -32,8 +32,8 @@
     <td></td>
     <td><i id="expand-source-ingestion-success-statuses-{{ source.source_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source.source_uuid }}', '{{ source.source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
     <td>{{ source.name }}</td>
-    <td><a href="/eboa_nav/query-events-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
-    <td><a href="/eboa_nav/query-annotations-by-source-uuid/{{ source.source_uuid }}"><i class="fa fa-link"></i></a></td>
+    <td><a href="{{ url_for('eboa_nav.query_events_by_source_uuid', source_uuid=source.source_uuid) }}"><i class="fa fa-link"></i></a></td>
+    <td><a href="{{ url_for('eboa_nav.query_annotations_by_source_uuid', source_uuid=source.source_uuid) }}"><i class="fa fa-link"></i></a></td>
     <td>{{ source.validity_start.isoformat() }}</td>
     <td>{{ source.validity_stop.isoformat() }}</td>
     <td>{{ (source.validity_stop - source.validity_start).total_seconds() }}</td>

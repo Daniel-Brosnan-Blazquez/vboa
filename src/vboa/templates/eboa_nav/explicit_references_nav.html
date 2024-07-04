@@ -3,11 +3,11 @@
 {% block div_active_explicit_references %}active{% endblock %}
 {% block explicit_references_nav_content %}
 <div>
-  <a href="/eboa_nav/query-ers"><p class="fa fa-chevron-left"> Back to query explicit references</p></a>
+  <a href="{{ url_for('eboa_nav.query_ers_and_render') }}"><p class="fa fa-chevron-left"> Back to query explicit references</p></a>
 </div>
 
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-ers-pages", elements = ers, filters = filters %}
+{% with route = url_for('eboa_nav.query_ers_pages'), elements = ers, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -36,11 +36,11 @@
         <tr>
           <td>{{ er.explicit_ref }}</td>
           <td>{{ er.group.name }}</td>
-          <td><a href="/eboa_nav/query-events-by-er/{{ er.explicit_ref }}"><i class="fa fa-link"></i></a></td>
-          <td><a href="/eboa_nav/query-annotations-by-er/{{ er.explicit_ref }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_events_by_er', er=er.explicit_ref) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_annotations_by_er', er=er.explicit_ref) }}"><i class="fa fa-link"></i></a></td>
           <td>{{ er.ingestion_time.isoformat() }}</td>
-          <td><a href="/eboa_nav/query-er-links/{{ er.explicit_ref_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td><a href="/eboa_nav/query-er-alerts/{{ er.explicit_ref_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_er_links_and_render', explicit_ref_uuid=er.explicit_ref_uuid) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_entity_alerts_and_render', entity='er', entity_uuid=er.explicit_ref_uuid) }}"><i class="fa fa-link"></i></a></td>
           <td>{{ er.explicit_ref_uuid }}</td>
         </tr>
         {% endfor %}

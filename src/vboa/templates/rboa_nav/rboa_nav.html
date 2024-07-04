@@ -9,12 +9,12 @@
       {% set button_load_more_query_pages = "Look for more query pages" %}
       {% set limit = 40 %}        
       <div style="margin-left:20px; display:inline">
-        <i class="circle"></i><select data-toggle="tooltip" title="Click to search for {{ limit }} maximum stored queries. If you don't find the one you would like, click on '{{ button_load_more_query_pages }}' button" style="font-size:18px" onclick="vboa.fill_elements_into_selector_no_input(this, '/rboa_nav/query-jsonify-reports-by-report-group', 'RBOA_NAV_QUERY_PAGE', 'name', {{ limit }}, 0)">
+        <i class="circle"></i><select data-toggle="tooltip" title="Click to search for {{ limit }} maximum stored queries. If you don't find the one you would like, click on '{{ button_load_more_query_pages }}' button" style="font-size:18px" onclick="vboa.fill_elements_into_selector_no_input(this, '{{ url_for('rboa_nav.query_jsonify_reports_by_report_group') }}', 'RBOA_NAV_QUERY_PAGE', 'name', {{ limit }}, 0)">
         </select>
         <button type="button" class="btn btn-success" onclick="vboa.show_selected_report(this)">Load query page</button>
       </div>
       <div style="display:inline">
-        <button type="button" class="btn btn-primary" onclick="vboa.request_info_json('/rboa_nav/', vboa.render_page, {report_group: 'RBOA_NAV_QUERY_PAGE'}, true)">{{ button_load_more_query_pages }}</button>
+        <button type="button" class="btn btn-primary" onclick="vboa.request_info_json('{{ url_for('rboa_nav.navigate') }}', vboa.render_page, {report_group: 'RBOA_NAV_QUERY_PAGE'}, true)">{{ button_load_more_query_pages }}</button>
       </div>
     </div>
   </h1>

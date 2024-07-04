@@ -223,7 +223,7 @@ docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/*/boa_schemas/* 
 
 # Copy tailored BOA cron activities
 echo "Copying tailored BOA cron activities..."
-docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/*/boa_cron/boa_cron /etc/cron.d/"
+docker exec -it -u root $APP_CONTAINER bash -c "cp /boa_packages/*/boa_cron/boa_cron /etc/cron.d/"
 
 # Copy tailored BOA scripts
 echo "Copying tailored BOA scripts..."

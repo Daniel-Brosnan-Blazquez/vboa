@@ -13,7 +13,7 @@ var events = [
             "<tr><td>Group</td><td>{{ disk_mountpoint }}</td></tr>" +
             "<tr><td>Notification time</td><td>{{ event.start.isoformat() }}</td></tr>" +
             "<tr><td>Value</td><td>{{ disk_usage|round(3) }}</td></tr>" +
-            '<tr><td>Details</td><td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}">{{ event.event_uuid }}"></a></td></tr>' +
+            '<tr><td>Details</td><td><a href="' + "{{ url_for('eboa_nav.query_event_links_and_render', event_uuid=event.event_uuid) }}" + '">{{ event.event_uuid }}"></a></td></tr>' +
             "</table>"
     },
     {% endfor %}

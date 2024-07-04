@@ -90,7 +90,7 @@ ENV ORC_DATABASE_NAME minarc_orc_db
 ENV ORC_DB_ADAPTER postgresql
 ENV ORC_DATABASE_USER minarc_orc
 
-RUN echo "source scl_source enable rh-ruby27; while true; do echo "Trying to start the web server..."; gunicorn --certfile /resources_path/boa_certificate.pem --keyfile /resources_path/boa_key.pem --worker-tmp-dir /dev/shm -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app --log-file /log/web_server -t 3600; if [[ $? != 0 ]]; then echo "Failed to start the web server..."; sleep 1; else echo "Web server started! :D"; fi; done; sleep infinity" > /scripts/start_gunicorn.sh
+RUN echo "source scl_source enable rh-ruby27; declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env; while true; do echo 'Trying to start the web server...'; gunicorn --certfile /resources_path/boa_certificate.pem --keyfile /resources_path/boa_key.pem --worker-tmp-dir /dev/shm -b 0.0.0.0:5001 -w 12 $FLASK_APP.wsgi:app --log-file /log/web_server -t 3600 --daemon; if [[ $? != 0 ]]; then echo 'Failed to start the web server...'; sleep 1; else echo 'Web server started! :D'; fi; SCRIPT_NAME="" VBOA_TEST=TRUE gunicorn --worker-tmp-dir /dev/shm -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app --log-file /log/internal_web_server -t 3600; if [[ $? != 0 ]]; then echo 'Failed to start the web server...'; sleep 1; else echo 'Internal web server started! :D'; fi; done; sleep infinity" > /scripts/start_gunicorn.sh
 
 RUN chmod u+x /scripts/start_gunicorn.sh
 

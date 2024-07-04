@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method=post action="/rboa_nav/query-reports">
+          <form role="form" method=post action="{{ url_for('rboa_nav.query_reports_and_render') }}">
             <div class="row">
               <div class="col-xs-3">
                 <label>Name</label>
@@ -16,7 +16,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="reports-report-names-in-checkbox">Names (<input type="checkbox" name="report_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'name', 20, 0)" id="reports-report-names-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('rboa_nav.query_jsonify_reports') }}', 'name', 20, 0)" id="reports-report-names-in-text"/><i class="circle"></i>
                 <select name="reports" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-names-in-select">
                 </select>
               </div>
@@ -33,7 +33,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="reports-generators-in-checkbox">Generators (<input type="checkbox" name="generator_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-reports', 'generator', 20, 0)" id="reports-generators-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('rboa_nav.query_jsonify_reports') }}', 'generator', 20, 0)" id="reports-generators-in-text"/><i class="circle"></i>
                 <select name="generators" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-generators-in-select">
                 </select>
               </div>
@@ -54,7 +54,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="reports-report-groups-in-checkbox">Report groups (<input type="checkbox" name="report_group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/rboa_nav/query-jsonify-report-groups', 'name', 20, 0)" id="reports-report-groups-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('rboa_nav.query_jsonify_report_groups') }}', 'name', 20, 0)" id="reports-report-groups-in-text"/><i class="circle"></i>
                 <select name="report_groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="reports-report-groups-in-select">
                 </select>
               </div>

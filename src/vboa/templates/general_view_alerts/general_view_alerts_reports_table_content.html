@@ -54,8 +54,8 @@
       <td>{{ alert.generator }}</td>
       <td><span class="{{notified_class}}">{{ alert.notified }}</span></td>
       <td>{{ alert.ingestion_time.isoformat() }}</td>
-      <td><a href="/rboa_nav/query-report-alert/{{ alert.report_alert_uuid }}">{{ alert.report_alert_uuid }}</a></td>
-      <td><a href="/rboa_nav/query-report/{{ alert.report_uuid }}">{{ alert.report_uuid }}</a></td>
+      <td><a href="{{ url_for('rboa_nav.query_report_alert_and_render', alert_uuid=alert.report_alert_uuid) }}">{{ alert.report_alert_uuid }}</a></td>
+      <td><a href="{{ url_for('rboa_nav.query_report', report_uuid=alert.report_uuid) }}">{{ alert.report_uuid }}</a></td>
     </tr>
     {% endfor %}
   </tbody>

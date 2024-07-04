@@ -3,11 +3,11 @@
 {% block div_active_roles %}active{% endblock %}
 {% block roles_nav_content %}
 <div>
-  <a href="/users-management/uboa-nav/query-roles"><p class="fa fa-chevron-left"> Back to query roles</p></a>
+  <a href="{{ url_for('users-management.query_roles_and_render') }}"><p class="fa fa-chevron-left"> Back to query roles</p></a>
 </div>
 
 <!-- Pagination -->
-{% with route = "/users-management/uboa-nav/query-roles-pages", elements = roles, filters = filters %}
+{% with route = url_for('users-management.query_roles_pages'), elements = roles, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 

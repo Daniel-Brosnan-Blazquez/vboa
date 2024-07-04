@@ -21,7 +21,7 @@
       <td><i id="expand-user-roles-{{ user.user_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_user_roles('expand-user-roles-{{ user.user_uuid }}', '{{ user.user_uuid }}')" data-toggle="tooltip" title="Click to show the related roles"></i></td>
       <td>{{ user.email }}</td>
       <td>{{ user.username }}</td>
-      <td><a href="/users-management/uboa-nav/query-users-by-group/{{ user.group }}">{{ user.group }}</a></td>
+      <td><a href="{{ url_for('users-management.query_user_by_group', group=user.group) }}">{{ user.group }}</a></td>
       {% if user.active == True %}
       <td><span class='bold-green'>{{ user.active }}</span></td>
       {% else %}

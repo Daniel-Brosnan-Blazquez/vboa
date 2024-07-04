@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method=post action="/eboa_nav/query-gauges">
+          <form role="form" method=post action="{{ url_for('eboa_nav.query_gauges_and_render') }}">
             <div>
               <div class="row">
                 <div class="col-xs-3">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="gauges-gauge-names-in-checkbox">Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-name', 'name', 20, 0)" id="gauges-gauge-names-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_gauges_by_name') }}', 'name', 20, 0)" id="gauges-gauge-names-in-text"/><i class="circle"></i>
                   <select name="gauge_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="gauges-gauge-names-in-select">
                   </select>
                 </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="gauges-gauge-systems-in-checkbox">Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-system', 'system', 20, 0)" id="gauges-gauge-systems-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_gauges_by_system') }}', 'system', 20, 0)" id="gauges-gauge-systems-in-text"/><i class="circle"></i>
                   <select name="gauge_systems" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="gauges-gauge-systems-in-select">
                   </select>
                 </div>
@@ -52,7 +52,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="gauges-dim-signatures-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-dim-signatures', 'dim_signature', 20, 0)" id="gauges-dim-signatures-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_dim_signatures') }}', 'dim_signature', 20, 0)" id="gauges-dim-signatures-in-text"/><i class="circle"></i>
                 <select name="dim_signatures" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="gauges-dim-signatures-in-select">
                 </select>
               </div>

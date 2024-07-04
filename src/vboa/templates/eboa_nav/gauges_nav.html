@@ -3,12 +3,11 @@
 {% block div_active_gauges %}active{% endblock %}
 {% block gauges_nav_content %}
 <div>
-  <a href="/eboa_nav/query-gauges"><p class="fa
-  fa-chevron-left"> Back to query gauges</p></a>
+  <a href="{{ url_for('eboa_nav.query_gauges_and_render') }}"><p class="fa fa-chevron-left"> Back to query gauges</p></a>
 </div>
 
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-gauges-pages", elements = gauges, filters = filters %}
+{% with route = url_for('eboa_nav.query_gauges_pages'), elements = gauges, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 

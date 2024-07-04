@@ -7,7 +7,7 @@
 {% include "ingestion_control/ingestion_control_query.html" %}
 
 <!-- Pagination -->
-{% with route = "/ingestion_control/ingestion-control-pages", elements = sources, filters = filters %}
+{% with route = url_for('ingestion_control.query_ingestion_control_pages'), elements = sources, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -181,7 +181,7 @@
   "window_size": "{{ sliding_window['window_size'] }}",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/ingestion_control/sliding_ingestion_control_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('ingestion_control.show_sliding_ingestion_control_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}

@@ -12,7 +12,7 @@
 {% include "general_view_alerts/general_view_alerts_query.html" %}
 
 <!-- Pagination -->
-{% with route = "/general-view-alerts/general-view-alerts-pages", elements = None, number_of_elements = number_of_elements, filters = filters %}
+{% with route = url_for('general-view-alerts.query_general_view_alerts_pages'), elements = None, number_of_elements = number_of_elements, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 

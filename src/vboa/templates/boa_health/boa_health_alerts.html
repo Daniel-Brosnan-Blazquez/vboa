@@ -9,7 +9,7 @@
 {% endwith %}
 
 <!-- Pagination -->
-{% with route = "/health/health-pages", elements = health_events, filters = filters %}
+{% with route = url_for('boa_health.query_health_pages'), elements = health_events, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -26,7 +26,7 @@
   "template": "alerts",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/health/sliding_health_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('health.show_sliding_health_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}

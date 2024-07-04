@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method=post action="/eboa_nav/query-events">
+          <form role="form" method=post action="{{ url_for('eboa_nav.query_events_and_render') }}">
             <!-- Sources -->
             <div class="row">
               <div class="col-xs-3">
@@ -17,7 +17,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="events-sources-in-checkbox">Sources (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'name', 20, 0)" id="events-sources-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_sources') }}', 'name', 20, 0)" id="events-sources-in-text"/><i class="circle"></i>
                 <select name="sources" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-sources-in-select">
                 </select>
               </div>
@@ -35,7 +35,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="events-ers-in-checkbox">Explicit references (<input type="checkbox" name="er_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-ers', 'explicit_ref', 20, 0)" id="events-ers-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_ers') }}', 'explicit_ref', 20, 0)" id="events-ers-in-text"/><i class="circle"></i>
                 <select name="ers" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-ers-in-select">
                 </select>
               </div>
@@ -53,7 +53,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="events-keys-in-checkbox">Keys (<input type="checkbox" name="key_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-keys', 'event_key', 20, 0)" id="events-keys-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_keys') }}', 'event_key', 20, 0)" id="events-keys-in-text"/><i class="circle"></i>
                 <select name="keys" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-keys-in-select">
                 </select>
               </div>
@@ -71,7 +71,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="events-gauge-names-in-checkbox">Gauge names (<input type="checkbox" name="gauge_name_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-name', 'name', 20, 0)" id="events-gauge-names-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_gauges_by_name') }}', 'name', 20, 0)" id="events-gauge-names-in-text"/><i class="circle"></i>
                 <select name="gauge_names" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-gauge-names-in-select">
                 </select>
               </div>
@@ -88,7 +88,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="events-gauge-systems-in-checkbox">Gauge systems (<input type="checkbox" name="gauge_system_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-gauges-by-system', 'system', 20, 0)" id="events-gauge-systems-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_gauges_by_system') }}', 'system', 20, 0)" id="events-gauge-systems-in-text"/><i class="circle"></i>
                 <select name="gauge_systems" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="events-gauge-systems-in-select">
                 </select>
               </div>

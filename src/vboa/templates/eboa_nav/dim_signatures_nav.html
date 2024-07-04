@@ -3,12 +3,12 @@
 {% block div_active_dim_signatures %}active{% endblock %}
 {% block dim_signatures_nav_content %}
 <div>
-  <a href="/eboa_nav/query-dim-signatures"><p class="fa
+  <a href="{{ url_for('eboa_nav.query_dim_signatures_and_render') }}"><p class="fa
   fa-chevron-left"> Back to query DIM signatures</p></a>
 </div>
 
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-dim-signatures-pages", elements = dim_signatures, filters = filters %}
+{% with route = url_for('eboa_nav.query_dim_signatures_pages'), elements = dim_signatures, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -33,9 +33,9 @@
         {% for dim_signature in dim_signatures %}
         <tr>
           <td>{{ dim_signature.dim_signature }}</td>
-          <td><a href="/eboa_nav/query-sources-by-dim/{{ dim_signature.dim_signature_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td><a href="/eboa_nav/query-gauges-by-dim/{{ dim_signature.dim_signature_uuid }}"><i class="fa fa-link"></i></a></td>
-          <td><a href="/eboa_nav/query-annotation-cnfs-by-dim/{{ dim_signature.dim_signature_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_sources_by_dim', dim_signature_uuid=dim_signature.dim_signature_uuid) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_gauges_by_dim', dim_signature_uuid=dim_signature.dim_signature_uuid) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_annotation_cnfs_by_dim', dim_signature_uuid=dim_signature.dim_signature_uuid) }}"><i class="fa fa-link"></i></a></td>
           <td>{{ dim_signature.dim_signature_uuid }}</td>
         </tr>
         {% endfor %}

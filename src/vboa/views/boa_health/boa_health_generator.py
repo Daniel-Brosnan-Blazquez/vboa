@@ -14,13 +14,16 @@ from vboa.functions import export_html
 # Import vboa app creator
 from vboa import create_app
 
+# Import flask utilities
+from flask import url_for
+
 version = "1.0"
 
 def generate_report(begin, end, metadata, parameters = None):
 
     app = create_app()
     client = app.test_client()
-    response = client.post("/health/health", data={
+    response = client.post(url_for("health.show_health"), data={
         "start": begin,
         "stop": end,
     })

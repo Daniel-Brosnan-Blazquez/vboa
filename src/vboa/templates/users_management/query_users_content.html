@@ -3,7 +3,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
-            <form role="form" method=post action="/users-management/uboa-nav/query-users">
+            <form role="form" method=post action="{{ url_for('users-management.query_users_and_render') }}">
               <!-- Emails -->
               <div class="row">
                 <div class="col-xs-3">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="users-emails-in-checkbox">Emails (<input type="checkbox" name="email_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-emails', 'email', 20, 0)" id="users-emails-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('users-management.query_jsonify_filter', filter='emails') }}', 'email', 20, 0)" id="users-emails-in-text"/><i class="circle"></i>
                   <select name="emails" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-emails-in-select">
                   </select>
                 </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="users-usernames-in-checkbox">Usernames (<input type="checkbox" name="username_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-usernames', 'username', 20, 0)" id="users-usernames-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('users-management.query_jsonify_filter', filter='usernames') }}', 'username', 20, 0)" id="users-usernames-in-text"/><i class="circle"></i>
                   <select name="usernames" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-usernames-in-select">
                   </select>
                 </div>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="users-groups-in-checkbox">Groups (<input type="checkbox" name="group_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-groups', 'group', 20, 0)" id="users-groups-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('users-management.query_jsonify_filter', filter='groups') }}', 'group', 20, 0)" id="users-groups-in-text"/><i class="circle"></i>
                   <select name="groups" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-groups-in-select">
                   </select>
                 </div>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="col-xs-3">
                   <label id="users-roles-in-checkbox">Roles (<input type="checkbox" name="role_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/users-management/uboa-nav/query-jsonify-roles', 'name', 20, 0)" id="users-roles-in-text"/><i class="circle"></i>
+                  <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('users-management.query_jsonify_filter', filter='roles') }}', 'name', 20, 0)" id="users-roles-in-text"/><i class="circle"></i>
                   <select name="roles" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="users-roles-in-select">
                   </select>
                 </div>

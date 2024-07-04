@@ -3,12 +3,12 @@
 {% block div_active_annotation_cnfs %}active{% endblock %}
 {% block annotation_cnfs_nav_content %}
 <div>
-  <a href="/eboa_nav/query-annotation-cnfs"><p class="fa
+  <a href="{{ url_for('eboa_nav.query_annotation_cnfs_and_render') }}"><p class="fa
   fa-chevron-left"> Back to query annotation configurations</p></a>
 </div>
 
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-annotation-cnfs-pages", elements = annotation_cnfs, filters = filters %}
+{% with route = url_for('eboa_nav.query_annotation_cnfs_pages'), elements = annotation_cnfs, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 

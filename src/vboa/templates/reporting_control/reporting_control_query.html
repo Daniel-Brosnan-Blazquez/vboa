@@ -13,7 +13,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="reporting-control-query-window">          
-            <form role="form" method=post action="/reporting_control/reporting_control{{ template }}">
+            <form role="form" method=post action="{{ url_for('reporting_control.show_reporting_control') }}{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">
@@ -43,7 +43,7 @@
             </form>
           </div>
           <div class="tab-pane" id="reporting-control-sliding-window">          
-            <form role="form" method=post action="/reporting_control/sliding_reporting_control{{ template }}">
+            <form role="form" method=post action="{{ url_for('reporting_control.show_sliding_reporting_control_parameters') }}{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">

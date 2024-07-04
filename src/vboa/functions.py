@@ -17,7 +17,7 @@ from dateutil import parser
 import eboa.ingestion.orbit as eboa_orbit
 
 # Import flask utilities
-from flask import request
+from flask import request, url_for
 
 # Import EBOA errors
 from eboa.engine.errors import ErrorParsingParameters
@@ -501,7 +501,7 @@ def create_event_tooltip_text(event):
     # Check if the event has a defined explicit reference
     explicit_ref_row = ""
     if event.explicitRef:
-        explicit_ref_row = "<tr><td>Explicit reference</td><td><a href='/eboa_nav/query-er/" + str(event.explicitRef.explicit_ref_uuid) + "'>" + event.explicitRef.explicit_reference + "</a></td></tr>"
+        explicit_ref_row = "<tr><td>Explicit reference</td><td><a href='" + url_for("eboa_nav.query_er", explicit_ref_uuid=str(event.explicitRef.explicit_ref_uuid)) + "'>" + event.explicitRef.explicit_reference + "</a></td></tr>"
     # end if
     
     return "<table border='1'>" + \
@@ -512,9 +512,9 @@ def create_event_tooltip_text(event):
         "<tr><td>Start</td><td>" + event.start.isoformat() + "</td></tr>" + \
         "<tr><td>Stop</td><td>" + event.stop.isoformat() + "</td></tr>" + \
         "<tr><td>Duration (m)</td><td>" + str(event.get_duration()) + "</td></tr>" + \
-        "<tr><td>Source</td><td><a href='/eboa_nav/query-source/" + str(event.source_uuid) + "'>" + event.source.name + "</a></td></tr>" + \
+        "<tr><td>Source</td><td><a href='" + url_for("eboa_nav.query_source", source_uuid=str(event.source_uuid)) + "'>" + event.source.name + "</a></td></tr>" + \
         "<tr><td>Ingestion time</td><td>" + event.ingestion_time.isoformat() + "</td></tr>" + \
-        "<tr><td>Links</td><td><a href='/eboa_nav/query-event-links/" + str(event.event_uuid) + "'><i class='fa fa-link'></i></a></td></tr>" + \
+        "<tr><td>Links</td><td><a href='" + url_for("eboa_nav.query_event_links_and_render", event_uuid=str(event.event_uuid)) + "'><i class='fa fa-link'></i></a></td></tr>" + \
         "<tr id='expand-tooltip-values-event-" + str(event.event_uuid) + "'><td>Values</td><td><i class='fa fa-plus-square green' onclick='" + 'vboa.expand_event_values_in_tooltip(String(/expand-tooltip-values-event-' + str(event.event_uuid) + '/).substring(1).slice(0,-1), String(/' + str(event.event_uuid) + '/).substring(1).slice(0,-1))' + "' data-toggle='tooltip' title='Click to show the related values'></i></td></tr>" + \
         "</table>"
 

@@ -50,8 +50,8 @@
     <td>{{ alert["generator"] }}</td>
     <td><span class="{{ notified_class }}">{{ alert["notified"] }}</span></td>
     <td>{{ alert["ingestion_time"] }}</td>
-    <td><a href="/eboa_nav/query-er-alert/{{ alert['explicit_ref_alert_uuid'] }}">{{ alert["explicit_ref_alert_uuid"] }}</a></td>
-    <td><a href="/eboa_nav/query-er-links/{{ alert['explicit_ref_uuid'] }}">{{ alert["explicit_ref_uuid"] }}</a></td>
+    <td><a href="{{ url_for('eboa_nav.query_entity_alert_and_render', entity='er', alert_uuid=alert.explicit_ref_alert_uuid) }}">{{ alert.explicit_ref_alert_uuid }}</a></td>
+    <td><a href="{{ url_for('eboa_nav.query_annotation', explicit_ref_uuid=alert.explicit_ref_uuid) }}">{{ alert.explicit_ref_uuid }}</a></td>
   </tr>
   {% endfor %}
 </tbody>

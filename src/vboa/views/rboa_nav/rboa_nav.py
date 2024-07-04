@@ -351,22 +351,22 @@ def query_report_alert_and_render(alert_uuid):
     
     return render_template(template, alerts=alerts, filters=kwargs)
 
-@bp.route("/query-report-alerts/<uuid:entity_uuid>")
+@bp.route("/query-report-alerts/<uuid:report_uuid>")
 @auth_required()
 @roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer")
-def query_report_alerts_and_render(entity_uuid):
+def query_report_alerts_and_render(report_uuid):
     """
-    Query alerts associated to the report with UUID entity_uuid.
+    Query alerts associated to the report with UUID report_uuid.
 
-    :param entity_uuid: UUID of the entity whose alerts are requested
-    :type entity_uuid: str
+    :param report_uuid: UUID of the report whose alerts are requested
+    :type report_uuid: str
 
     :return: template with the shown alerts
     :rtype: template
     """
 
     kwargs = {}
-    kwargs["report_uuids"] = {"filter": str(entity_uuid), "op": "=="}
+    kwargs["report_uuids"] = {"filter": str(report_uuid), "op": "=="}
     alerts = query.get_report_alerts(**kwargs)
     template = "eboa_nav/report_alerts_nav.html"
     

@@ -13,7 +13,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="health-query-window">          
-            <form role="form" method=post action="/health/health{{ template }}">
+            <form role="form" method=post action="{{ url_for('health.show_health') }}{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">
@@ -43,7 +43,7 @@
             </form>
           </div>
           <div class="tab-pane" id="health-sliding-window">          
-            <form role="form" method=post action="/health/sliding_health{{ template }}">
+            <form role="form" method=post action="{{ url_for('health.show_sliding_health') }}{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">

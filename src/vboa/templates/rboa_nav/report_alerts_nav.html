@@ -1,12 +1,12 @@
 {% extends "rboa_nav/rboa_nav.html" %}
 
 {% set alerts_html_table_file = "general_view_alerts/general_view_alerts_reports_table_content.html" %}
-{% set route_pagination = "/rboa_nav/query-alerts-pages" %}
+{% set route_pagination = url_for('rboa_nav.query_alerts_pages') %}
 {% block li_active_reports %}class="active"{% endblock %}
 {% block div_active_reports %}active{% endblock %}
 {% block reports_nav_content %}
 <div>
-  <a href="/rboa_nav/query-reports"><p class="fa fa-chevron-left"> Back to query reports</p></a>
+  <a href="{{ url_for('rboa_nav.query_reports_and_render') }}"><p class="fa fa-chevron-left"> Back to query reports</p></a>
 </div>
 <!-- Content -->
 {% include "eboa_nav/alerts_nav_content.html" %}

@@ -54,8 +54,8 @@
       <td>{{ alert.generator }}</td>
       <td><span class="{{notified_class}}">{{ alert.notified }}</span></td>
       <td>{{ alert.ingestion_time.isoformat() }}</td>
-      <td><a href="/eboa_nav/query-annotation-alert/{{ alert.annotation_alert_uuid }}">{{ alert.annotation_alert_uuid }}</a></td>
-      <td><a href="/eboa_nav/query-annotation/{{ alert.annotation_uuid }}">{{ alert.annotation_uuid }}</a></td>
+      <td><a href="{{ url_for('eboa_nav.query_entity_alert_and_render', entity='annotation', alert_uuid=alert.annotation_alert_uuid) }}">{{ alert.annotation_alert_uuid }}</a></td>
+      <td><a href="{{ url_for('eboa_nav.query_annotation', annotation_uuid=alert.annotation_uuid) }}">{{ alert.annotation_uuid }}</a></td>
     </tr>
     {% endfor %}
   </tbody>
