@@ -216,7 +216,7 @@ def set_filters_for_query_events_or_event_alerts(filters):
         kwargs["value_filters"] = []
         i = 0
         for value_name in filters["event_value_name"]:
-            if value_name[0] != "":
+            if len(value_name) > 0 and value_name[0] != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["value_filters"].append({"name": {"op": value_name_ops[i], "filter": value_name},
                                                           "type": value_types[i],
@@ -567,7 +567,7 @@ def set_filters_for_query_annotations_or_annotation_alerts(filters):
         kwargs["value_filters"] = []
         i = 0
         for value_name in filters["annotation_value_name"]:
-            if value_name[0] != "":
+            if len(value_name) > 0 and value_name[0] != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["value_filters"].append({"name": {"op": value_name_ops[i], "filter": value_name},
                                                           "type": value_types[i],
@@ -2026,7 +2026,7 @@ def set_filters_for_query_ers_or_er_alerts(filters):
         kwargs["event_value_filters"] = []
         i = 0
         for value_name in filters["event_value_name"]:
-            if value_name[0] != "":
+            if len(value_name) > 0 and value_name[0] != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["event_value_filters"].append({"name": {"op": value_name_ops[i], "filter": value_name},
                                                           "type": value_types[i],
@@ -2115,7 +2115,7 @@ def set_filters_for_query_ers_or_er_alerts(filters):
         kwargs["annotation_value_filters"] = []
         i = 0
         for value_name in filters["annotation_value_name"]:
-            if value_name[0] != "":
+            if len(value_name) > 0 and value_name[0] != "":
                 if (values[i] == "" and value_types[i] == "text") or (values[i][0] != "" and value_types[i] != "object"):
                     kwargs["annotation_value_filters"].append({"name": {"op": value_name_ops[i], "filter": value_name},
                                                           "type": value_types[i],
