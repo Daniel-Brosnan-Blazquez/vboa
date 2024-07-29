@@ -1,0 +1,100 @@
+{% extends "eboa_nav/eboa_nav.html" %}
+{% block li_active_explicit_references %}class="active"{% endblock %}
+{% block div_active_explicit_references %}active{% endblock %}
+{% block explicit_references_nav_content %}
+<div>
+  <a href="{{ url_for('eboa_nav.query_ers_and_render') }}"><p class="fa fa-chevron-left"> Back to query explicit references</p></a>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of linked explicit references
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="linked-explicit-refs-table">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Explicit reference</th>
+          <th>Group</th>
+          <th>Events</th>
+          <th>Annotations</th>
+          <th>Ingestion time</th>
+          <th>Linked explicit references</th>
+          <th>Alerts</th>
+          <th>Explicit reference UUID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key in links %}
+        {% for link in links[key] %}
+        <tr>
+          {% if key == "prime_explicit_refs" %}
+          {% set er = link %}
+          {% set description = "PRIME" %}
+          {% else %}
+          {% set er = link["explicit_ref"] %}
+          {% if key == "linked_explicit_refs" %}
+          {% set description = "LINK FROM: " + link["link_name"] %}
+          {% elif key == "explicit_refs_linking" %}
+          {% set description = "LINK TO: " + link["link_name"] %}
+          {% endif %}
+          {% endif %}
+          <td>
+            {{ description }}
+          </td>
+          <td>{{ er.explicit_ref }}</td>
+          <td>{{ er.group.name }}</td>
+          <td><a href="{{ url_for('eboa_nav.query_events_by_er', er=er.explicit_ref) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_annotations_by_er', er=er.explicit_ref) }}"><i class="fa fa-link"></i></a></td>
+          <td>{{ er.ingestion_time.isoformat() }}</td>
+          <td><a href="{{ url_for('eboa_nav.query_er_links_and_render', explicit_ref_uuid=er.explicit_ref_uuid) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_entity_alerts_and_render', entity='er', entity_uuid=er.explicit_ref_uuid) }}"><i class="fa fa-link"></i></a></td>
+          <td>{{ er.explicit_ref_uuid }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Description</th>
+          <th>Explicit reference</th>
+          <th>Group</th>
+          <th>Events</th>
+          <th>Annotations</th>
+          <th>Ingestion time</th>
+          <th>Linked explicit references</th>
+          <th>Alerts</th>
+          <th>Explicit reference UUID</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Network of explicit references
+  </div>
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div class="network" id="ers-nav-network">
+    </div>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+      {% with links=links %}
+      {% include "graphs/ers_to_json_for_network.js" %}
+      {% endwith %}
+      const ers_for_network = ers;
+
+      vboa.create_er_network(ers_for_network, "ers-nav-network");
+
+    </script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% if source_alerts|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#associated-general-view-alerts-sources" style="color:red">Alerts associated to sources<span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="associated-general-view-alerts-sources">
+      <div>
+        <h3 style="color:red"><u>Table of alerts</u></h3>
+      </div>
+      <p>
+        The following table shows the list of alerts associated to sources:
+        <br/>
+      </p>
+      <br/>
+      <br/>
+
+      <table width="100%" class="table table-striped table-bordered table-hover table-search" id="associated-general-view-alerts-sources-details-table">
+        {% with alerts = source_alerts %}
+        {% include "general_view_alerts/general_view_alerts_sources_table_content.html" %}
+        {% endwith %}
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#sources-alerts">Sources alerts <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <div class="panel-body panel-collapse collapse in" id="sources-alerts">
+      <div>
+        <p id="no-general-view-alerts-sources-data" style="text-indent: 1em">There are no alerts during the requested period.</p>
+        <br/>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

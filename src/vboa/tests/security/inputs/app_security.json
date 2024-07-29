@@ -1,0 +1,3029 @@
+{
+    "authentication_required": [
+        {
+            "method_name": "index",
+            "module_name": "/vboa/src/vboa/panel.py",
+            "route": "/"
+        },
+        {
+            "method_name": "save_screenshot",
+            "module_name": "/vboa/src/vboa/screenshots.py",
+            "route": "/save-screenshot"
+        },
+        {
+            "method_name": "check_orc_status",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/check-orc-status"
+        },
+        {
+            "method_name": "switch_on_orc",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/switch-on-orc"
+        },
+        {
+            "method_name": "switch_off_orc",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/switch-off-orc"
+        },
+        {
+            "method_name": "check_cron_status",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/check-cron-status"
+        },
+        {
+            "method_name": "switch_on_cron",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/switch-on-cron"
+        },
+        {
+            "method_name": "switch_off_cron",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/switch-off-cron"
+        },
+        {
+            "method_name": "check_scheduler_status",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/check-scheduler-status"
+        },
+        {
+            "method_name": "switch_on_scheduler",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/switch-on-scheduler"
+        },
+        {
+            "method_name": "switch_off_scheduler",
+            "module_name": "/vboa/src/vboa/service_management.py",
+            "route": "/switch-off-scheduler"
+        },
+        {
+            "method_name": "show_health",
+            "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+            "route": "/health"
+        },
+        {
+            "method_name": "query_health_pages",
+            "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+            "route": "/health-pages"
+        },
+        {
+            "method_name": "show_sliding_health_parameters",
+            "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+            "route": "/sliding_health_parameters"
+        },
+        {
+            "method_name": "show_sliding_health",
+            "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+            "route": "/sliding_health"
+        },
+        {
+            "method_name": "navigate",
+            "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+            "route": "/navigate"
+        },
+        {
+            "method_name": "simulate",
+            "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+            "route": "/simulate"
+        },
+        {
+            "method_name": "simulate_with_t0",
+            "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+            "route": "/simulate/<string:t0>"
+        },
+        {
+            "method_name": "load_agenda",
+            "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+            "route": "/load-agenda/<string:t0>"
+        },
+        {
+            "method_name": "navigate",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/"
+        },
+        {
+            "method_name": "query_events_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-events"
+        },
+        {
+            "method_name": "query_events_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-events-pages"
+        },
+        {
+            "method_name": "query_events_by_er",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-events-by-er/<string:er>"
+        },
+        {
+            "method_name": "query_events_by_source_uuid",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-events-by-source-uuid/<string:source_uuid>"
+        },
+        {
+            "method_name": "query_event_links_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-event-links/<uuid:event_uuid>"
+        },
+        {
+            "method_name": "query_jsonify_event_values",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-event-values/<uuid:event_uuid>"
+        },
+        {
+            "method_name": "query_annotations_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotations"
+        },
+        {
+            "method_name": "query_annotations_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotations-pages"
+        },
+        {
+            "method_name": "query_annotations_by_er",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotations-by-er/<string:er>"
+        },
+        {
+            "method_name": "query_annotation",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotation/<uuid:annotation_uuid>"
+        },
+        {
+            "method_name": "query_annotations_by_source_uuid",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotations-by-source-uuid/<string:source_uuid>"
+        },
+        {
+            "method_name": "query_jsonify_annotation_values",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-annotation-values/<uuid:annotation_uuid>"
+        },
+        {
+            "method_name": "query_sources_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-sources"
+        },
+        {
+            "method_name": "query_sources_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-sources-pages"
+        },
+        {
+            "method_name": "query_source",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-source/<uuid:source_uuid>"
+        },
+        {
+            "method_name": "query_sources_by_name",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-sources-by-name/<string:name>"
+        },
+        {
+            "method_name": "query_sources_by_dim",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-sources-by-dim/<uuid:dim_signature_uuid>"
+        },
+        {
+            "method_name": "query_jsonify_sources",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-sources"
+        },
+        {
+            "method_name": "query_jsonify_sources_by_processor",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-sources-by-processor"
+        },
+        {
+            "method_name": "query_jsonify_source_statuses",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-source-statuses/<uuid:source_uuid>"
+        },
+        {
+            "method_name": "get_source_status",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/get-source-status"
+        },
+        {
+            "method_name": "prepare_reingestion_of_sources",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/prepare-reingestion-of-sources"
+        },
+        {
+            "method_name": "prepare_deletion_of_sources",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/prepare-deletion-of-sources"
+        },
+        {
+            "method_name": "download_source",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/download-source/<string:source_name>"
+        },
+        {
+            "method_name": "delete_sources",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/delete-sources"
+        },
+        {
+            "method_name": "query_gauges_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-gauges"
+        },
+        {
+            "method_name": "query_gauges_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-gauges-pages"
+        },
+        {
+            "method_name": "query_gauges_by_dim",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-gauges-by-dim/<uuid:dim_signature_uuid>"
+        },
+        {
+            "method_name": "query_jsonify_gauges_by_name",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-gauges-by-name"
+        },
+        {
+            "method_name": "query_jsonify_gauges_by_system",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-gauges-by-system"
+        },
+        {
+            "method_name": "query_annotation_cnfs_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotation-cnfs"
+        },
+        {
+            "method_name": "query_annotation_cnfs_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotation-cnfs-pages"
+        },
+        {
+            "method_name": "query_annotation_cnfs_by_dim",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>"
+        },
+        {
+            "method_name": "query_jsonify_annotation_cnfs_by_name",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-annotation-cnfs-by-name"
+        },
+        {
+            "method_name": "query_jsonify_annotation_cnfs_by_system",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-annotation-cnfs-by-system"
+        },
+        {
+            "method_name": "query_jsonify_keys",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-keys"
+        },
+        {
+            "method_name": "query_ers_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-ers"
+        },
+        {
+            "method_name": "query_ers_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-ers-pages"
+        },
+        {
+            "method_name": "query_er",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-er/<uuid:explicit_ref_uuid>"
+        },
+        {
+            "method_name": "query_er_by_name",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-er-by-name/<string:name>"
+        },
+        {
+            "method_name": "query_er_links_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-er-links/<uuid:explicit_ref_uuid>"
+        },
+        {
+            "method_name": "query_jsonify_ers",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-ers"
+        },
+        {
+            "method_name": "query_jsonify_er_groups",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-er-groups"
+        },
+        {
+            "method_name": "query_dim_signatures_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-dim-signatures"
+        },
+        {
+            "method_name": "query_dim_signatures_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-dim-signatures-pages"
+        },
+        {
+            "method_name": "query_jsonify_dim_signatures",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-dim-signatures"
+        },
+        {
+            "method_name": "treat_data",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/treat-data"
+        },
+        {
+            "method_name": "query_alerts_pages",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-alerts-pages"
+        },
+        {
+            "method_name": "get_alert_severities",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/get-alert-severity"
+        },
+        {
+            "method_name": "query_jsonify_alerts_by_name",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-alerts-by-name"
+        },
+        {
+            "method_name": "query_jsonify_alerts_by_group",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-alerts-by-group"
+        },
+        {
+            "method_name": "query_jsonify_entity_alerts_by_generator",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-jsonify-<string:entity>-alerts-by-generator"
+        },
+        {
+            "method_name": "show_general_view_alerts",
+            "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+            "route": "/"
+        },
+        {
+            "method_name": "query_general_view_alerts_pages",
+            "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+            "route": "/general-view-alerts-pages"
+        },
+        {
+            "method_name": "show_sliding_general_view_alerts_parameters",
+            "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+            "route": "/sliding-general-view-alerts-parameters"
+        },
+        {
+            "method_name": "show_sliding_general_view_alerts",
+            "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+            "route": "/sliding-general-view-alerts"
+        },
+        {
+            "method_name": "show_ingestion_control",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/ingestion_control"
+        },
+        {
+            "method_name": "query_ingestion_control_pages",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/ingestion-control-pages"
+        },
+        {
+            "method_name": "show_sliding_ingestion_control_parameters",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/sliding_ingestion_control_parameters"
+        },
+        {
+            "method_name": "show_sliding_ingestion_control",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/sliding_ingestion_control"
+        },
+        {
+            "method_name": "navigate",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/"
+        },
+        {
+            "method_name": "query_reports_and_render",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-reports"
+        },
+        {
+            "method_name": "query_reports_pages",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-reports-pages"
+        },
+        {
+            "method_name": "query_report",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-report/<uuid:report_uuid>"
+        },
+        {
+            "method_name": "query_report_by_name",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-report-by-name/<string:report_name>"
+        },
+        {
+            "method_name": "query_jsonify_reports",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-jsonify-reports"
+        },
+        {
+            "method_name": "query_jsonify_reports_by_report_group",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-jsonify-reports-by-report-group"
+        },
+        {
+            "method_name": "query_jsonify_report_groups",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-jsonify-report-groups"
+        },
+        {
+            "method_name": "query_jsonify_report_statuses",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-jsonify-report-statuses/<uuid:report_uuid>"
+        },
+        {
+            "method_name": "get_report_status",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/get-report-status"
+        },
+        {
+            "method_name": "show_execute_reports",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/reporting_triggering"
+        },
+        {
+            "method_name": "execute_reports",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/execute-reports"
+        },
+        {
+            "method_name": "remove_reports",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/remove_reports"
+        },
+        {
+            "method_name": "re_generate_reports",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/re_generate_reports"
+        },
+        {
+            "method_name": "query_alerts_pages",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-alerts-pages"
+        },
+        {
+            "method_name": "get_alert_severities",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/get-alert-severity"
+        },
+        {
+            "method_name": "query_jsonify_alerts_by_name",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-jsonify-alerts-by-name"
+        },
+        {
+            "method_name": "query_jsonify_alerts_by_group",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-jsonify-alerts-by-group"
+        },
+        {
+            "method_name": "query_jsonify_entity_alerts_by_generator",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-jsonify-report-alerts-by-generator"
+        },
+        {
+            "method_name": "show_reporting_control",
+            "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+            "route": "/reporting_control"
+        },
+        {
+            "method_name": "query_reporting_control_pages",
+            "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+            "route": "/reporting-control-pages"
+        },
+        {
+            "method_name": "show_sliding_reporting_control_parameters",
+            "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+            "route": "/sliding_reporting_control_parameters"
+        },
+        {
+            "method_name": "show_sliding_reporting_control",
+            "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+            "route": "/sliding_reporting_control"
+        },
+        {
+            "method_name": "navigate",
+            "module_name": "/vboa/src/vboa/views/user_profile/user_profile.py",
+            "route": "/"
+        },
+        {
+            "method_name": "navigate",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav"
+        },
+        {
+            "method_name": "query_users_and_render",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users"
+        },
+        {
+            "method_name": "query_users_pages",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users-pages"
+        },
+        {
+            "method_name": "query_roles_and_render",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-roles"
+        },
+        {
+            "method_name": "query_roles_pages",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-roles-pages"
+        },
+        {
+            "method_name": "query_user_by_group",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users-by-group/<string:group>"
+        },
+        {
+            "method_name": "query_user_by_role",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-users-by-role/<string:role>"
+        },
+        {
+            "method_name": "query_jsonify_filter",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-jsonify-<string:filter>"
+        },
+        {
+            "method_name": "query_jsonify_roles",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-jsonify-roles"
+        },
+        {
+            "method_name": "query_jsonify_user_roles",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/query-jsonify-user-roles/<uuid:user_uuid>"
+        },
+        {
+            "method_name": "prepare_deletion_of_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/prepare-deletion-of-users"
+        },
+        {
+            "method_name": "delete_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/uboa-nav/delete-users"
+        },
+        {
+            "method_name": "import_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/import-users"
+        },
+        {
+            "method_name": "upload_file",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/import-users/import-from-file"
+        },
+        {
+            "method_name": "upload_manually",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/import-users/import-manually"
+        },
+        {
+            "method_name": "export_users",
+            "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+            "route": "/export-users"
+        }
+    ],
+    "authentication_not_required": [],
+    "roles": {
+        "administrator": [
+            {
+                "method_name": "index",
+                "module_name": "/vboa/src/vboa/panel.py",
+                "route": "/"
+            },
+            {
+                "method_name": "save_screenshot",
+                "module_name": "/vboa/src/vboa/screenshots.py",
+                "route": "/save-screenshot"
+            },
+            {
+                "method_name": "check_orc_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-orc-status"
+            },
+            {
+                "method_name": "switch_on_orc",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-on-orc"
+            },
+            {
+                "method_name": "switch_off_orc",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-off-orc"
+            },
+            {
+                "method_name": "check_cron_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-cron-status"
+            },
+            {
+                "method_name": "switch_on_cron",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-on-cron"
+            },
+            {
+                "method_name": "switch_off_cron",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-off-cron"
+            },
+            {
+                "method_name": "check_scheduler_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-scheduler-status"
+            },
+            {
+                "method_name": "switch_on_scheduler",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-on-scheduler"
+            },
+            {
+                "method_name": "switch_off_scheduler",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-off-scheduler"
+            },
+            {
+                "method_name": "show_health",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/health"
+            },
+            {
+                "method_name": "query_health_pages",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/health-pages"
+            },
+            {
+                "method_name": "show_sliding_health_parameters",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/sliding_health_parameters"
+            },
+            {
+                "method_name": "show_sliding_health",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/sliding_health"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/navigate"
+            },
+            {
+                "method_name": "simulate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate"
+            },
+            {
+                "method_name": "simulate_with_t0",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate/<string:t0>"
+            },
+            {
+                "method_name": "load_agenda",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/load-agenda/<string:t0>"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_events_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events"
+            },
+            {
+                "method_name": "query_events_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-pages"
+            },
+            {
+                "method_name": "query_events_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_events_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_event_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-event-links/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_event_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-event-values/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_annotations_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations"
+            },
+            {
+                "method_name": "query_annotations_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-pages"
+            },
+            {
+                "method_name": "query_annotations_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_annotation",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_annotations_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-values/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_sources_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources"
+            },
+            {
+                "method_name": "query_sources_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-pages"
+            },
+            {
+                "method_name": "query_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-source/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "query_sources_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_sources_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources"
+            },
+            {
+                "method_name": "query_jsonify_sources_by_processor",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources-by-processor"
+            },
+            {
+                "method_name": "query_jsonify_source_statuses",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-source-statuses/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "get_source_status",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-source-status"
+            },
+            {
+                "method_name": "prepare_reingestion_of_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/prepare-reingestion-of-sources"
+            },
+            {
+                "method_name": "prepare_deletion_of_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/prepare-deletion-of-sources"
+            },
+            {
+                "method_name": "download_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/download-source/<string:source_name>"
+            },
+            {
+                "method_name": "delete_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/delete-sources"
+            },
+            {
+                "method_name": "query_gauges_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges"
+            },
+            {
+                "method_name": "query_gauges_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-pages"
+            },
+            {
+                "method_name": "query_gauges_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-name"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-system"
+            },
+            {
+                "method_name": "query_annotation_cnfs_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs"
+            },
+            {
+                "method_name": "query_annotation_cnfs_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-pages"
+            },
+            {
+                "method_name": "query_annotation_cnfs_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-name"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-system"
+            },
+            {
+                "method_name": "query_jsonify_keys",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-keys"
+            },
+            {
+                "method_name": "query_ers_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers"
+            },
+            {
+                "method_name": "query_ers_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers-pages"
+            },
+            {
+                "method_name": "query_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_er_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_er_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-links/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_ers",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-ers"
+            },
+            {
+                "method_name": "query_jsonify_er_groups",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-er-groups"
+            },
+            {
+                "method_name": "query_dim_signatures_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures"
+            },
+            {
+                "method_name": "query_dim_signatures_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures-pages"
+            },
+            {
+                "method_name": "query_jsonify_dim_signatures",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-dim-signatures"
+            },
+            {
+                "method_name": "treat_data",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/treat-data"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-<string:entity>-alerts-by-generator"
+            },
+            {
+                "method_name": "show_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_general_view_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/general-view-alerts-pages"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts_parameters",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts-parameters"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts"
+            },
+            {
+                "method_name": "show_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion_control"
+            },
+            {
+                "method_name": "query_ingestion_control_pages",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion-control-pages"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control_parameters",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_reports_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports"
+            },
+            {
+                "method_name": "query_reports_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports-pages"
+            },
+            {
+                "method_name": "query_report",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "query_report_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_jsonify_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports"
+            },
+            {
+                "method_name": "query_jsonify_reports_by_report_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports-by-report-group"
+            },
+            {
+                "method_name": "query_jsonify_report_groups",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-groups"
+            },
+            {
+                "method_name": "query_jsonify_report_statuses",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-statuses/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "get_report_status",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-report-status"
+            },
+            {
+                "method_name": "show_execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/reporting_triggering"
+            },
+            {
+                "method_name": "execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/execute-reports"
+            },
+            {
+                "method_name": "remove_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/remove_reports"
+            },
+            {
+                "method_name": "re_generate_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/re_generate_reports"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-alerts-by-generator"
+            },
+            {
+                "method_name": "show_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting_control"
+            },
+            {
+                "method_name": "query_reporting_control_pages",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting-control-pages"
+            },
+            {
+                "method_name": "show_sliding_reporting_control_parameters",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav"
+            },
+            {
+                "method_name": "query_users_and_render",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users"
+            },
+            {
+                "method_name": "query_users_pages",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users-pages"
+            },
+            {
+                "method_name": "query_roles_and_render",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-roles"
+            },
+            {
+                "method_name": "query_roles_pages",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-roles-pages"
+            },
+            {
+                "method_name": "query_user_by_group",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users-by-group/<string:group>"
+            },
+            {
+                "method_name": "query_user_by_role",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-users-by-role/<string:role>"
+            },
+            {
+                "method_name": "query_jsonify_filter",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-jsonify-<string:filter>"
+            },
+            {
+                "method_name": "query_jsonify_roles",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-jsonify-roles"
+            },
+            {
+                "method_name": "query_jsonify_user_roles",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/query-jsonify-user-roles/<uuid:user_uuid>"
+            },
+            {
+                "method_name": "prepare_deletion_of_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/prepare-deletion-of-users"
+            },
+            {
+                "method_name": "delete_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/uboa-nav/delete-users"
+            },
+            {
+                "method_name": "import_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/import-users"
+            },
+            {
+                "method_name": "upload_file",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/import-users/import-from-file"
+            },
+            {
+                "method_name": "upload_manually",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/import-users/import-manually"
+            },
+            {
+                "method_name": "export_users",
+                "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
+                "route": "/export-users"
+            }
+        ],
+        "service_administrator": [
+            {
+                "method_name": "index",
+                "module_name": "/vboa/src/vboa/panel.py",
+                "route": "/"
+            },
+            {
+                "method_name": "save_screenshot",
+                "module_name": "/vboa/src/vboa/screenshots.py",
+                "route": "/save-screenshot"
+            },
+            {
+                "method_name": "check_orc_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-orc-status"
+            },
+            {
+                "method_name": "switch_on_orc",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-on-orc"
+            },
+            {
+                "method_name": "switch_off_orc",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-off-orc"
+            },
+            {
+                "method_name": "check_cron_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-cron-status"
+            },
+            {
+                "method_name": "switch_on_cron",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-on-cron"
+            },
+            {
+                "method_name": "switch_off_cron",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-off-cron"
+            },
+            {
+                "method_name": "check_scheduler_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-scheduler-status"
+            },
+            {
+                "method_name": "switch_on_scheduler",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-on-scheduler"
+            },
+            {
+                "method_name": "switch_off_scheduler",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/switch-off-scheduler"
+            },
+            {
+                "method_name": "show_health",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/health"
+            },
+            {
+                "method_name": "query_health_pages",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/health-pages"
+            },
+            {
+                "method_name": "show_sliding_health_parameters",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/sliding_health_parameters"
+            },
+            {
+                "method_name": "show_sliding_health",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/sliding_health"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/navigate"
+            },
+            {
+                "method_name": "simulate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate"
+            },
+            {
+                "method_name": "simulate_with_t0",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate/<string:t0>"
+            },
+            {
+                "method_name": "load_agenda",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/load-agenda/<string:t0>"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_events_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events"
+            },
+            {
+                "method_name": "query_events_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-pages"
+            },
+            {
+                "method_name": "query_events_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_events_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_event_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-event-links/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_event_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-event-values/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_annotations_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations"
+            },
+            {
+                "method_name": "query_annotations_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-pages"
+            },
+            {
+                "method_name": "query_annotations_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_annotation",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_annotations_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-values/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_sources_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources"
+            },
+            {
+                "method_name": "query_sources_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-pages"
+            },
+            {
+                "method_name": "query_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-source/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "query_sources_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_sources_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources"
+            },
+            {
+                "method_name": "query_jsonify_sources_by_processor",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources-by-processor"
+            },
+            {
+                "method_name": "query_jsonify_source_statuses",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-source-statuses/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "get_source_status",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-source-status"
+            },
+            {
+                "method_name": "prepare_reingestion_of_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/prepare-reingestion-of-sources"
+            },
+            {
+                "method_name": "prepare_deletion_of_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/prepare-deletion-of-sources"
+            },
+            {
+                "method_name": "download_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/download-source/<string:source_name>"
+            },
+            {
+                "method_name": "delete_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/delete-sources"
+            },
+            {
+                "method_name": "query_gauges_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges"
+            },
+            {
+                "method_name": "query_gauges_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-pages"
+            },
+            {
+                "method_name": "query_gauges_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-name"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-system"
+            },
+            {
+                "method_name": "query_annotation_cnfs_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs"
+            },
+            {
+                "method_name": "query_annotation_cnfs_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-pages"
+            },
+            {
+                "method_name": "query_annotation_cnfs_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-name"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-system"
+            },
+            {
+                "method_name": "query_jsonify_keys",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-keys"
+            },
+            {
+                "method_name": "query_ers_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers"
+            },
+            {
+                "method_name": "query_ers_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers-pages"
+            },
+            {
+                "method_name": "query_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_er_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_er_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-links/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_ers",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-ers"
+            },
+            {
+                "method_name": "query_jsonify_er_groups",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-er-groups"
+            },
+            {
+                "method_name": "query_dim_signatures_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures"
+            },
+            {
+                "method_name": "query_dim_signatures_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures-pages"
+            },
+            {
+                "method_name": "query_jsonify_dim_signatures",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-dim-signatures"
+            },
+            {
+                "method_name": "treat_data",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/treat-data"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-<string:entity>-alerts-by-generator"
+            },
+            {
+                "method_name": "show_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_general_view_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/general-view-alerts-pages"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts_parameters",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts-parameters"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts"
+            },
+            {
+                "method_name": "show_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion_control"
+            },
+            {
+                "method_name": "query_ingestion_control_pages",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion-control-pages"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control_parameters",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_reports_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports"
+            },
+            {
+                "method_name": "query_reports_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports-pages"
+            },
+            {
+                "method_name": "query_report",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "query_report_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_jsonify_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports"
+            },
+            {
+                "method_name": "query_jsonify_reports_by_report_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports-by-report-group"
+            },
+            {
+                "method_name": "query_jsonify_report_groups",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-groups"
+            },
+            {
+                "method_name": "query_jsonify_report_statuses",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-statuses/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "get_report_status",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-report-status"
+            },
+            {
+                "method_name": "show_execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/reporting_triggering"
+            },
+            {
+                "method_name": "execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/execute-reports"
+            },
+            {
+                "method_name": "remove_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/remove_reports"
+            },
+            {
+                "method_name": "re_generate_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/re_generate_reports"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-alerts-by-generator"
+            },
+            {
+                "method_name": "show_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting_control"
+            },
+            {
+                "method_name": "query_reporting_control_pages",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting-control-pages"
+            },
+            {
+                "method_name": "show_sliding_reporting_control_parameters",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control"
+            }
+        ],
+        "operator": [
+            {
+                "method_name": "index",
+                "module_name": "/vboa/src/vboa/panel.py",
+                "route": "/"
+            },
+            {
+                "method_name": "save_screenshot",
+                "module_name": "/vboa/src/vboa/screenshots.py",
+                "route": "/save-screenshot"
+            },
+            {
+                "method_name": "check_orc_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-orc-status"
+            },
+            {
+                "method_name": "check_cron_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-cron-status"
+            },
+            {
+                "method_name": "check_scheduler_status",
+                "module_name": "/vboa/src/vboa/service_management.py",
+                "route": "/check-scheduler-status"
+            },
+            {
+                "method_name": "show_health",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/health"
+            },
+            {
+                "method_name": "query_health_pages",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/health-pages"
+            },
+            {
+                "method_name": "show_sliding_health_parameters",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/sliding_health_parameters"
+            },
+            {
+                "method_name": "show_sliding_health",
+                "module_name": "/vboa/src/vboa/views/boa_health/boa_health.py",
+                "route": "/sliding_health"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/navigate"
+            },
+            {
+                "method_name": "simulate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate"
+            },
+            {
+                "method_name": "simulate_with_t0",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate/<string:t0>"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_events_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events"
+            },
+            {
+                "method_name": "query_events_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-pages"
+            },
+            {
+                "method_name": "query_events_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_events_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_event_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-event-links/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_event_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-event-values/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_annotations_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations"
+            },
+            {
+                "method_name": "query_annotations_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-pages"
+            },
+            {
+                "method_name": "query_annotations_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_annotation",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_annotations_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-values/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_sources_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources"
+            },
+            {
+                "method_name": "query_sources_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-pages"
+            },
+            {
+                "method_name": "query_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-source/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "query_sources_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_sources_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources"
+            },
+            {
+                "method_name": "query_jsonify_sources_by_processor",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources-by-processor"
+            },
+            {
+                "method_name": "query_jsonify_source_statuses",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-source-statuses/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "get_source_status",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-source-status"
+            },
+            {
+                "method_name": "prepare_reingestion_of_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/prepare-reingestion-of-sources"
+            },
+            {
+                "method_name": "prepare_deletion_of_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/prepare-deletion-of-sources"
+            },
+            {
+                "method_name": "download_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/download-source/<string:source_name>"
+            },
+            {
+                "method_name": "delete_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/delete-sources"
+            },
+            {
+                "method_name": "query_gauges_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges"
+            },
+            {
+                "method_name": "query_gauges_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-pages"
+            },
+            {
+                "method_name": "query_gauges_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-name"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-system"
+            },
+            {
+                "method_name": "query_annotation_cnfs_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs"
+            },
+            {
+                "method_name": "query_annotation_cnfs_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-pages"
+            },
+            {
+                "method_name": "query_annotation_cnfs_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-name"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-system"
+            },
+            {
+                "method_name": "query_jsonify_keys",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-keys"
+            },
+            {
+                "method_name": "query_ers_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers"
+            },
+            {
+                "method_name": "query_ers_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers-pages"
+            },
+            {
+                "method_name": "query_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_er_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_er_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-links/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_ers",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-ers"
+            },
+            {
+                "method_name": "query_jsonify_er_groups",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-er-groups"
+            },
+            {
+                "method_name": "query_dim_signatures_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures"
+            },
+            {
+                "method_name": "query_dim_signatures_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures-pages"
+            },
+            {
+                "method_name": "query_jsonify_dim_signatures",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-dim-signatures"
+            },
+            {
+                "method_name": "treat_data",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/treat-data"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-<string:entity>-alerts-by-generator"
+            },
+            {
+                "method_name": "show_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_general_view_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/general-view-alerts-pages"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts_parameters",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts-parameters"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts"
+            },
+            {
+                "method_name": "show_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion_control"
+            },
+            {
+                "method_name": "query_ingestion_control_pages",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion-control-pages"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control_parameters",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_reports_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports"
+            },
+            {
+                "method_name": "query_reports_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports-pages"
+            },
+            {
+                "method_name": "query_report",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "query_report_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_jsonify_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports"
+            },
+            {
+                "method_name": "query_jsonify_reports_by_report_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports-by-report-group"
+            },
+            {
+                "method_name": "query_jsonify_report_groups",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-groups"
+            },
+            {
+                "method_name": "query_jsonify_report_statuses",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-statuses/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "get_report_status",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-report-status"
+            },
+            {
+                "method_name": "show_execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/reporting_triggering"
+            },
+            {
+                "method_name": "execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/execute-reports"
+            },
+            {
+                "method_name": "remove_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/remove_reports"
+            },
+            {
+                "method_name": "re_generate_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/re_generate_reports"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-alerts-by-generator"
+            },
+            {
+                "method_name": "show_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting_control"
+            },
+            {
+                "method_name": "query_reporting_control_pages",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting-control-pages"
+            },
+            {
+                "method_name": "show_sliding_reporting_control_parameters",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control"
+            }
+        ],
+        "analyst": [
+            {
+                "method_name": "index",
+                "module_name": "/vboa/src/vboa/panel.py",
+                "route": "/"
+            },
+            {
+                "method_name": "save_screenshot",
+                "module_name": "/vboa/src/vboa/screenshots.py",
+                "route": "/save-screenshot"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/navigate"
+            },
+            {
+                "method_name": "simulate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate"
+            },
+            {
+                "method_name": "simulate_with_t0",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/simulate/<string:t0>"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_events_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events"
+            },
+            {
+                "method_name": "query_events_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-pages"
+            },
+            {
+                "method_name": "query_events_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_events_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_event_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-event-links/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_event_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-event-values/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_annotations_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations"
+            },
+            {
+                "method_name": "query_annotations_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-pages"
+            },
+            {
+                "method_name": "query_annotations_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_annotation",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_annotations_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-values/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_sources_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources"
+            },
+            {
+                "method_name": "query_sources_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-pages"
+            },
+            {
+                "method_name": "query_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-source/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "query_sources_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_sources_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources"
+            },
+            {
+                "method_name": "query_jsonify_sources_by_processor",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources-by-processor"
+            },
+            {
+                "method_name": "query_jsonify_source_statuses",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-source-statuses/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "get_source_status",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-source-status"
+            },
+            {
+                "method_name": "download_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/download-source/<string:source_name>"
+            },
+            {
+                "method_name": "query_gauges_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges"
+            },
+            {
+                "method_name": "query_gauges_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-pages"
+            },
+            {
+                "method_name": "query_gauges_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-name"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-system"
+            },
+            {
+                "method_name": "query_annotation_cnfs_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs"
+            },
+            {
+                "method_name": "query_annotation_cnfs_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-pages"
+            },
+            {
+                "method_name": "query_annotation_cnfs_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-name"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-system"
+            },
+            {
+                "method_name": "query_jsonify_keys",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-keys"
+            },
+            {
+                "method_name": "query_ers_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers"
+            },
+            {
+                "method_name": "query_ers_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers-pages"
+            },
+            {
+                "method_name": "query_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_er_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_er_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-links/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_ers",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-ers"
+            },
+            {
+                "method_name": "query_jsonify_er_groups",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-er-groups"
+            },
+            {
+                "method_name": "query_dim_signatures_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures"
+            },
+            {
+                "method_name": "query_dim_signatures_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures-pages"
+            },
+            {
+                "method_name": "query_jsonify_dim_signatures",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-dim-signatures"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-<string:entity>-alerts-by-generator"
+            },
+            {
+                "method_name": "show_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_general_view_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/general-view-alerts-pages"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts_parameters",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts-parameters"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts"
+            },
+            {
+                "method_name": "show_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion_control"
+            },
+            {
+                "method_name": "query_ingestion_control_pages",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion-control-pages"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control_parameters",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_reports_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports"
+            },
+            {
+                "method_name": "query_reports_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports-pages"
+            },
+            {
+                "method_name": "query_report",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "query_report_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_jsonify_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports"
+            },
+            {
+                "method_name": "query_jsonify_reports_by_report_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports-by-report-group"
+            },
+            {
+                "method_name": "query_jsonify_report_groups",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-groups"
+            },
+            {
+                "method_name": "query_jsonify_report_statuses",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-statuses/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "get_report_status",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-report-status"
+            },
+            {
+                "method_name": "show_execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/reporting_triggering"
+            },
+            {
+                "method_name": "execute_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/execute-reports"
+            },
+            {
+                "method_name": "re_generate_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/re_generate_reports"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-alerts-by-generator"
+            },
+            {
+                "method_name": "show_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting_control"
+            },
+            {
+                "method_name": "query_reporting_control_pages",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting-control-pages"
+            },
+            {
+                "method_name": "show_sliding_reporting_control_parameters",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control"
+            }
+        ],
+        "operator_observer": [
+            {
+                "method_name": "index",
+                "module_name": "/vboa/src/vboa/panel.py",
+                "route": "/"
+            },
+            {
+                "method_name": "save_screenshot",
+                "module_name": "/vboa/src/vboa/screenshots.py",
+                "route": "/save-screenshot"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
+                "route": "/navigate"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_events_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events"
+            },
+            {
+                "method_name": "query_events_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-pages"
+            },
+            {
+                "method_name": "query_events_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_events_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-events-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_event_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-event-links/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_event_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-event-values/<uuid:event_uuid>"
+            },
+            {
+                "method_name": "query_annotations_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations"
+            },
+            {
+                "method_name": "query_annotations_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-pages"
+            },
+            {
+                "method_name": "query_annotations_by_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-er/<string:er>"
+            },
+            {
+                "method_name": "query_annotation",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_annotations_by_source_uuid",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotations-by-source-uuid/<string:source_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_values",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-values/<uuid:annotation_uuid>"
+            },
+            {
+                "method_name": "query_sources_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources"
+            },
+            {
+                "method_name": "query_sources_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-pages"
+            },
+            {
+                "method_name": "query_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-source/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "query_sources_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_sources_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-sources-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources"
+            },
+            {
+                "method_name": "query_jsonify_sources_by_processor",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-sources-by-processor"
+            },
+            {
+                "method_name": "query_jsonify_source_statuses",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-source-statuses/<uuid:source_uuid>"
+            },
+            {
+                "method_name": "get_source_status",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-source-status"
+            },
+            {
+                "method_name": "download_source",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/download-source/<string:source_name>"
+            },
+            {
+                "method_name": "query_gauges_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges"
+            },
+            {
+                "method_name": "query_gauges_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-pages"
+            },
+            {
+                "method_name": "query_gauges_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-gauges-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-name"
+            },
+            {
+                "method_name": "query_jsonify_gauges_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-gauges-by-system"
+            },
+            {
+                "method_name": "query_annotation_cnfs_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs"
+            },
+            {
+                "method_name": "query_annotation_cnfs_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-pages"
+            },
+            {
+                "method_name": "query_annotation_cnfs_by_dim",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-annotation-cnfs-by-dim/<uuid:dim_signature_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-name"
+            },
+            {
+                "method_name": "query_jsonify_annotation_cnfs_by_system",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-annotation-cnfs-by-system"
+            },
+            {
+                "method_name": "query_jsonify_keys",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-keys"
+            },
+            {
+                "method_name": "query_ers_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers"
+            },
+            {
+                "method_name": "query_ers_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-ers-pages"
+            },
+            {
+                "method_name": "query_er",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_er_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-by-name/<string:name>"
+            },
+            {
+                "method_name": "query_er_links_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-er-links/<uuid:explicit_ref_uuid>"
+            },
+            {
+                "method_name": "query_jsonify_ers",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-ers"
+            },
+            {
+                "method_name": "query_jsonify_er_groups",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-er-groups"
+            },
+            {
+                "method_name": "query_dim_signatures_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures"
+            },
+            {
+                "method_name": "query_dim_signatures_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-dim-signatures-pages"
+            },
+            {
+                "method_name": "query_jsonify_dim_signatures",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-dim-signatures"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-jsonify-<string:entity>-alerts-by-generator"
+            },
+            {
+                "method_name": "show_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_general_view_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/general-view-alerts-pages"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts_parameters",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts-parameters"
+            },
+            {
+                "method_name": "show_sliding_general_view_alerts",
+                "module_name": "/vboa/src/vboa/views/general_view_alerts/general_view_alerts.py",
+                "route": "/sliding-general-view-alerts"
+            },
+            {
+                "method_name": "show_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion_control"
+            },
+            {
+                "method_name": "query_ingestion_control_pages",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/ingestion-control-pages"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control_parameters",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_ingestion_control",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/sliding_ingestion_control"
+            },
+            {
+                "method_name": "navigate",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/"
+            },
+            {
+                "method_name": "query_reports_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports"
+            },
+            {
+                "method_name": "query_reports_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-reports-pages"
+            },
+            {
+                "method_name": "query_report",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "query_report_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_jsonify_reports",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports"
+            },
+            {
+                "method_name": "query_jsonify_reports_by_report_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-reports-by-report-group"
+            },
+            {
+                "method_name": "query_jsonify_report_groups",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-groups"
+            },
+            {
+                "method_name": "query_jsonify_report_statuses",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-statuses/<uuid:report_uuid>"
+            },
+            {
+                "method_name": "get_report_status",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-report-status"
+            },
+            {
+                "method_name": "query_alerts_pages",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-alerts-pages"
+            },
+            {
+                "method_name": "get_alert_severities",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/get-alert-severity"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_name",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-name"
+            },
+            {
+                "method_name": "query_jsonify_alerts_by_group",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-alerts-by-group"
+            },
+            {
+                "method_name": "query_jsonify_entity_alerts_by_generator",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-jsonify-report-alerts-by-generator"
+            },
+            {
+                "method_name": "show_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting_control"
+            },
+            {
+                "method_name": "query_reporting_control_pages",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/reporting-control-pages"
+            },
+            {
+                "method_name": "show_sliding_reporting_control_parameters",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control_parameters"
+            },
+            {
+                "method_name": "show_sliding_reporting_control",
+                "module_name": "/vboa/src/vboa/views/reporting_control/reporting_control.py",
+                "route": "/sliding_reporting_control"
+            }
+        ],
+        "observer": [
+            {
+                "method_name": "index",
+                "module_name": "/vboa/src/vboa/panel.py",
+                "route": "/"
+            }
+        ]
+    }
+}

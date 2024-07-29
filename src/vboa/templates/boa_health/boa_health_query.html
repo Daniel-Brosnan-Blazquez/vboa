@@ -13,7 +13,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="health-query-window">          
-            <form role="form" method=post action="/health/health{{ template }}">
+            <form role="form" method=post action="{{ url_for('health.show_health') }}{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">
@@ -33,7 +33,7 @@
                 <div class="row">
                   <div class="col-xs-3">
                     <label>Limit</label>
-                    <input type="text" class="form-control" style="width: 100%" name="limit" id="health-limit" value="100"/>
+                    <input type="text" class="form-control" style="width: 100%" name="limit" id="health-limit" value="20"/>
                   </div>
                 </div>
                 <div>
@@ -43,7 +43,7 @@
             </form>
           </div>
           <div class="tab-pane" id="health-sliding-window">          
-            <form role="form" method=post action="/health/sliding_health{{ template }}">
+            <form role="form" method=post action="{{ url_for('health.show_sliding_health') }}{{ template }}">
               <div>
                 <!-- Default values message -->
                 <div class="row">

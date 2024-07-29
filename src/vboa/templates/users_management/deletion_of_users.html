@@ -1,0 +1,53 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Deletion of selected users</h1>
+</div>
+
+{% if users|length > 0 %}
+<div class="row">
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Table of users to be deleted</h3>
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+        <p>
+          <b>The following table shows the selected users to be deleted after confirmation:</b>
+          <br/>
+          Please read carefully the following notes:
+          <br/>
+          - Note that, after deletion, these users will not be available anymore in the system.
+        </p>
+        <form role="form" id="uboa-nav-users-operations" method=post onSubmit="vboa.submit_request_for_users_management(this.id); return false;">    
+            <table width="100%" class="table table-striped table-bordered table-hover table-search-checkboxes" id="uboa-nav-users-table">
+              {% with users = users, checkbox_selected = "selected" %}
+              {% include "users_management/users_table_content.html" %}
+              {% endwith %}
+            </table>
+            <div class="row" style="margin-bottom: 20px; margin-top: 20px">
+              <div align="center">
+                <button type="submit" onclick="this.form.operation='deletion'" class="btn btn-primary" style="margin-top: 12px" id="uboa-nav-users-deletion-confirmation-button">Confirm deletion of users</button>
+              </div>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Table of sources to be deleted
+    </div>
+    <div id="deletion-ingestion-control-no-data">
+      <br/>
+      <p style="text-indent: 1em">No "sources" selected to delete</p>
+      <br/>
+    </div>
+    <!-- /.panel-body -->
+  </div>
+  <!-- /.panel -->
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row">
+  <h1 class="page-header">Reporting alerts and errors</h1>
+</div>
+<!-- /.row -->
+{% with template = "?template=alerts_and_errors" %}
+{% include "reporting_control/reporting_control_query.html" %}
+{% endwith %}
+{% set reporting_errors = reports|selectattr("generation_error", "equalto", True)|list %}
+{% set alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+
+<!-- Pagination -->
+{% with route = url_for('reporting_control.query_reporting_control_pages'), elements = reports, filters = filters %}
+{% include "vboa/pagination.html" %}
+{% endwith %}
+
+{% with show = {"errors": True, "alerts": True} %}
+{% include "reporting_control/reporting_control_summary_content.html" %}
+{% endwith %}
+
+{% include "reporting_control/reporting_control_alerts_content.html" %}
+
+{% include "reporting_control/reporting_control_errors_content.html" %}
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  {% if sliding_window %}
+  var parameters = {
+  "window_delay": "{{ sliding_window['window_delay'] }}",
+  "window_size": "{{ sliding_window['window_size'] }}",
+  "template": "alerts",
+  }
+  var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('reporting_control.show_sliding_reporting_control_parameters') }}");
+  {% endif %}
+</script>
+{% endblock %}

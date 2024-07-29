@@ -4,12 +4,9 @@ var tasks = [
     {% if task["triggering_time"] >= task["stop_coverage"] %}
     {% set start_triggering_to_coverage = task["stop_coverage"] %}
     {% set stop_triggering_to_coverage = task["triggering_time"] %}    
-    {% elif task["triggering_time"] < task["stop_coverage"] and task["triggering_time"] > task["start_coverage"] %}
-    {% set start_triggering_to_coverage = task["start_coverage"] %}
-    {% set stop_triggering_to_coverage = task["triggering_time"] %}
     {% else %}
     {% set start_triggering_to_coverage = task["triggering_time"] %}
-    {% set stop_triggering_to_coverage = task["start_coverage"] %}
+    {% set stop_triggering_to_coverage = task["stop_coverage"] %}
     {% endif %}
     {
         "id": "{{ task['task_uuid'] }}" + "_" + "{{ task['triggering_time'] }}" + "_1",

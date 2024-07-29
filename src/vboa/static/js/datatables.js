@@ -5,7 +5,8 @@ export function activate_search_on_columns() {
     // Setup - add a text input to each footer cell
     jQuery(".table tfoot th").each( function () {
         var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        var text = "Search " + title
+        $(this).html( '<input type="text" size="' + (text.length - 2) + '" placeholder="Search ' + title + '" />' );
     } );
  
     // DataTable
@@ -66,12 +67,17 @@ export function activate_search_and_checkboxes_on_tables() {
     // Setup - add a text input to each footer cell
     jQuery(".table-search-checkboxes tfoot th").each( function () {
         var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        if (title != ""){
+            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        }
     } );
 
     // DataTable
     var tables = jQuery(".table-search-checkboxes").each( function (){
         var table = $(this).DataTable({
+            // Add scroll on X and Y axis
+            scrollX: true,
+            scrollY: "500px",
             responsive: true,
             aLengthMenu: [
                 [10, 25, 50, 100, 200, -1],
@@ -79,12 +85,10 @@ export function activate_search_and_checkboxes_on_tables() {
             ],
             iDisplayLength: -1,
             select: true,
-            scrollX: true,
             // This is to hide the second header set by the scrollX
             initComplete: function(settings, json) {
                 $('.dataTables_scrollBody thead tr').css({visibility:'collapse'});
             },
-            scrollY: "500px",
             /* dom:
                B: Buttons
                l: lenght changing input control
@@ -111,12 +115,7 @@ export function activate_search_and_checkboxes_on_tables() {
                 orderable: false,
                 className: 'select-checkbox',
                 targets:   0
-            } ],
-            select: {
-                style:    'os',
-                selector: 'td:first-child'
-            },
-            order: [[ 1, 'asc' ]]
+            } ]
         });
         // Apply the search
         table.columns().every( function () {
@@ -127,6 +126,23 @@ export function activate_search_and_checkboxes_on_tables() {
                 }
             } );
         } );
+        $(table.tables().header()).on("click", "th.select-checkbox", function() {
+            if ($(this).hasClass("selected")) {
+                table.rows().deselect();
+                $(this).removeClass("selected");
+            } else {
+                table.rows().select();
+                $(this).addClass("selected");
+            }
+        }).on("select deselect", function() {
+            if (table.rows({
+                selected: true
+            }).count() !== table.rows().count()) {
+                $(this).removeClass("selected");
+            } else {
+                $(this).addClass("selected");
+            }
+        });
         
     })
  

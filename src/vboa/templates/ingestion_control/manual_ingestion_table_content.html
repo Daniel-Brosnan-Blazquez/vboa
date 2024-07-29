@@ -1,0 +1,75 @@
+<thead>
+    <tr>
+      <th class="{{ checkbox_selected }}"></th>
+      <th>Roles</th>
+      <th>Email</th>
+      <th>Username</th>
+      <th>Group</th>
+      <th>Active</th>
+      <th>Previous login date</th>
+      <th>Current login date</th>
+      <th>Previous login IP</th>
+      <th>Current login IP</th>
+      <th>Number of logins</th>
+      <th>User UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr id="{{ user.user_uuid }}" class="{{ checkbox_selected }}">
+      <td></td>
+      <td><i id="expand-user-roles-{{ user.user_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_user_roles('expand-user-roles-{{ user.user_uuid }}', '{{ user.user_uuid }}')" data-toggle="tooltip" title="Click to show the related roles"></i></td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.username }}</td>
+      <td><a href="{{ url_for('users-management.query_user_by_group', group=user.group) }}">{{ user.group }}</a></td>
+      {% if user.active == True %}
+      <td><span class='bold-green'>{{ user.active }}</span></td>
+      {% else %}
+      <td><span class='bold-red'>{{ user.active }}</span></td>
+      {% endif %}
+      {% if user.last_login_at  %}
+      <td>{{ user.last_login_at.isoformat() }}</td>
+      {% else %}
+      <td>Never login</td>
+      {% endif %}
+      {% if user.current_login_at  %}
+      <td>{{ user.current_login_at.isoformat() }}</td>
+      {% else %}
+      <td>Never login</td>
+      {% endif %}
+      {% if user.last_login_ip  %}
+      <td>{{ user.last_login_ip }}</td>
+      {% else %}
+      <td>Never login</td>
+      {% endif %}
+      {% if user.current_login_ip  %}
+      <td>{{ user.current_login_ip }}</td>
+      {% else %}
+      <td>Never login</td>
+      {% endif %}
+      {% if user.login_count  %}
+      <td>{{ user.login_count }}</td>
+      {% else %}
+      <td>Never login</td>
+      {% endif %}
+      <td>{{ user.user_uuid }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+        <th></th>
+        <th>Roles</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Group</th>
+        <th>Active</th>
+        <th>Previous login date</th>
+        <th>Current login date</th>
+        <th>Previous login IP</th>
+        <th>Current login IP</th>
+        <th>Number of logins</th>
+        <th>User UUID</th>
+    </tr>
+  </tfoot>
+  

@@ -1,0 +1,23 @@
+<thead>
+    <tr>
+      <th>Role</th>
+      <th>Description</th>
+      <th>Role UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for role in roles %}
+    <tr>
+      <td><a href="{{ url_for('users-management.query_user_by_role', role=role.name) }}">{{ role.name }}</a></td>
+      <td>{{ role.description }}</td>
+      <td>{{ role.role_uuid }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+        <th>Role</th>
+        <th>Description</th>
+        <th>Role UUID</th>
+    </tr>
+  </tfoot>

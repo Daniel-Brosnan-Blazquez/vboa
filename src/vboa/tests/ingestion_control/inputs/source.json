@@ -1,0 +1,18 @@
+{"operations": [
+    {
+        "mode": "insert",
+        "dim_signature": {
+            "exec": "exec",
+            "name": "dim_signature",
+            "version": "1.0"
+        },
+        "source": {
+            "reception_time": "2018-06-06T13:33:29",
+            "generation_time": "2018-06-06T13:33:29",
+            "name": "source.json",
+            "validity_start": "2018-06-05T02:07:03",
+            "validity_stop": "2018-06-05T02:07:36"
+        }
+    }
+]
+}

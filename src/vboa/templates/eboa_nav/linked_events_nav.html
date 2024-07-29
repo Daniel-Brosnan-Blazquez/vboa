@@ -3,7 +3,7 @@
 {% block div_active_events %}active{% endblock %}
 {% block events_nav_content %}
 <div>
-  <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
+  <a href="{{ url_for('eboa_nav.query_events_and_render') }}"><p class="fa fa-chevron-left"> Back to query events</p></a>
 </div>
 <div class="panel panel-default">
   <div class="panel-heading">
@@ -11,7 +11,7 @@
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="events">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="linked-events-table">
       <thead>
         <tr>
           <th></th>
@@ -20,10 +20,12 @@
           <th>Gauge system</th>
           <th>Start</th>
           <th>Stop</th>
-          <th>Ingestion Time</th>
+          <th>Duration (s)</th>
+          <th>Ingestion time</th>
           <th>Source</th>
-          <th>Explicit Reference</th>
+          <th>Explicit reference</th>
           <th>Linked events</th>
+          <th>Alerts</th>
           <th>Event UUID</th>
         </tr>
       </thead>
@@ -50,17 +52,19 @@
           </td>
           <td>{{ event.gauge.name }}</td>
           <td>{{ event.gauge.system }}</td>
-          <td>{{ event.start }}</td>
-          <td>{{ event.stop }}</td>
-          <td>{{ event.ingestion_time }}</td>
+          <td>{{ event.start.isoformat() }}</td>
+          <td>{{ event.stop.isoformat() }}</td>
+          <td>{{ (event.stop - event.start).total_seconds() }}</td>
+          <td>{{ event.ingestion_time.isoformat() }}</td>
           {% set source_uuid = event.source.source_uuid %}
-          <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
+          <td><a href="{{ url_for('eboa_nav.query_source', source_uuid=source_uuid) }}">{{ event.source.name }}</a></td>
           <td>
             {% if event.explicitRef %}
-            <a href="/eboa_nav/query-er/{{ event.explicitRef.explicit_ref_uuid }}">{{ event.explicitRef.explicit_ref }}</a>
+            <a href="{{ url_for('eboa_nav.query_er', explicit_ref_uuid=event.explicitRef.explicit_ref_uuid) }}">{{ event.explicitRef.explicit_ref }}</a>
             {% endif %}
           </td>
-          <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_event_links_and_render', event_uuid=event.event_uuid) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_entity_alerts_and_render', entity='event', entity_uuid=event.event_uuid) }}"><i class="fa fa-link"></i></a></td>
           <td>{{ event.event_uuid }}</td>
         </tr>
         {% endfor %}
@@ -74,10 +78,12 @@
           <th>Gauge system</th>
           <th>Start</th>
           <th>Stop</th>
-          <th>Ingestion Time</th>
+          <th>Duration (s)</th>
+          <th>Ingestion time</th>
           <th>Source</th>
-          <th>Explicit Reference</th>
+          <th>Explicit reference</th>
           <th>Linked events</th>
+          <th>Alerts</th>
           <th>Event UUID</th>
         </tr>
       </tfoot>

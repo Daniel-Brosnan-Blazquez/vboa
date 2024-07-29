@@ -1,26 +1,23 @@
 {% extends "panel/index.html" %}
 {% block content %}
-<div class="row">
-  <div class="col-lg-12">
-    <h1 class="page-header">
-      <div>
-        <div style="display:inline">
-          EBOA navigation
-        </div>
-        {% set button_load_more_query_pages = "Look for more query pages" %}
-        {% set limit = 40 %}        
-        <div style="margin-left:20px; display:inline">
-          <i class="circle"></i><select data-toggle="tooltip" title="Click to search for {{ limit }} maximum stored queries. If you don't find the one you would like, click on '{{ button_load_more_query_pages }}' button" style="font-size:18px" name="source_operator" id="events-source-operator" onclick="vboa.fill_elements_into_selector_no_input(this, '/rboa_nav/query-jsonify-reports-by-report-group', 'EBOA_NAV_QUERY_PAGE', 'name', {{ limit }}, 0)">
-          </select>
-          <button type="button" class="btn btn-success" onclick="vboa.show_selected_report(this)">Load query page</button>
-        </div>
-        <div style="display:inline">
-          <button type="button" class="btn btn-primary" onclick="vboa.request_info_json('/rboa_nav/', vboa.render_page, {report_group: 'EBOA_NAV_QUERY_PAGE'}, true)">{{ button_load_more_query_pages }}</button>
-        </div>
+<div class="row panel-no-index">
+  <h1 class="page-header">
+    <div>
+      <div style="display:inline">
+        EBOA navigation
       </div>
-    </h1>
-  </div>
-  <!-- /.col-lg-12 -->  
+      {% set button_load_more_query_pages = "Look for more query pages" %}
+      {% set limit = 40 %}        
+      <div style="margin-left:20px; display:inline">
+        <i class="circle"></i><select data-toggle="tooltip" title="Click to search for {{ limit }} maximum stored queries. If you don't find the one you would like, click on '{{ button_load_more_query_pages }}' button" style="font-size:18px" onclick="vboa.fill_elements_into_selector_no_input(this, '{{ url_for('rboa_nav.query_jsonify_reports_by_report_group') }}', 'EBOA_NAV_QUERY_PAGE', 'name', {{ limit }}, 0)">
+        </select>
+        <button type="button" class="btn btn-success" onclick="vboa.show_selected_report(this)">Load query page</button>
+      </div>
+      <div style="display:inline">
+        <button type="button" class="btn btn-primary" onclick="vboa.request_info_json('{{ url_for('rboa_nav.navigate') }}', vboa.render_page, {report_group: 'EBOA_NAV_QUERY_PAGE'}, true)">{{ button_load_more_query_pages }}</button>
+      </div>
+    </div>
+  </h1>
 </div>
 <!-- /.row -->
 <div class="row">
@@ -30,8 +27,8 @@
     <li {% block li_active_sources %} {% endblock %}><a href="#nav-sources">Sources</a></li>
     <li {% block li_active_explicit_references %} {% endblock %}><a href="#nav-explicit-references">Explicit references</a></li>
     <li {% block li_active_gauges %} {% endblock %}><a href="#nav-gauges">Gauges</a></li>
-    <li {% block li_active_annotation_cnfs %} {% endblock %}><a href="#nav-annotation-cnfs">Annotation Cnfs</a></li>
-    <li {% block li_active_dim_signatures %} {% endblock %}><a href="#nav-dim-signatures">DIM Signatures</a></li>
+    <li {% block li_active_annotation_cnfs %} {% endblock %}><a href="#nav-annotation-cnfs">Annotation configurations</a></li>
+    <li {% block li_active_dim_signatures %} {% endblock %}><a href="#nav-dim-signatures">DIM signatures</a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane {% block div_active_events %} {% endblock %}" id="nav-events">

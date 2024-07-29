@@ -1,7 +1,7 @@
 {% extends "panel/index.html" %}
 {% block content %}
 <div class="row">
-  <h1 class="page-header">Ingestion alerts</h1>
+  <h1 class="page-header">Ingestion alerts and errors</h1>
 </div>
 <!-- /.row -->
 {% with template = "?template=alerts_and_errors" %}
@@ -11,7 +11,7 @@
 {% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 
 <!-- Pagination -->
-{% with route = "/ingestion_control/ingestion-control-pages", elements = sources, filters = filters %}
+{% with route = url_for('ingestion_control.query_ingestion_control_pages'), elements = sources, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -30,10 +30,10 @@
   var parameters = {
   "window_delay": "{{ sliding_window['window_delay'] }}",
   "window_size": "{{ sliding_window['window_size'] }}",
-  "template": "alerts",
+  "template": "alerts_and_errors",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/ingestion_control/sliding_ingestion_control_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('ingestion_control.show_sliding_ingestion_control_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}

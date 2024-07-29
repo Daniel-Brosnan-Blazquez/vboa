@@ -1,0 +1,16 @@
+<triggering_rules>
+  <rule>
+    <source_mask>.*</source_mask>
+    <source_type>ANY</source_type>
+    <tool>
+      <command>eboa_ingestion.py -p eboa.processors.eboa_processor -f </command>
+    </tool>
+  </rule>
+  <rule>
+    <source_mask>.*</source_mask>
+    <source_type>ANY</source_type>
+    <tool>
+      <command>eboa_ingestion.py -p eboa.processors.eboa_processor_changing_name -f </command>
+    </tool>
+  </rule>
+</triggering_rules>

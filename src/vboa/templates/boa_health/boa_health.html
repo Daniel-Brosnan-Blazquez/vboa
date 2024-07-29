@@ -8,7 +8,7 @@
 {% include "boa_health/boa_health_query.html" %}
 
 <!-- Pagination -->
-{% with route = "/health/health-pages", elements = health_events, filters = filters %}
+{% with route = url_for('boa_health.query_health_pages'), elements = health_events, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -196,9 +196,9 @@
         </div>
         <table id="number-of-processes-evolution-statistics" align="center" class="table table-striped table-bordered table-hover table-static">
           <tr>
-            <th>Minimum (%)</th>
-            <th>Maximum (%)</th>
-            <th>Mean (%)</th>
+            <th>Minimum</th>
+            <th>Maximum</th>
+            <th>Mean</th>
           </tr>
           {% set number_of_processes_over_time = [] %}
           {% for event in health_events %}
@@ -239,7 +239,7 @@
               <td>{{ value }}</td>
               {% endfor %}
               <td>{{ health_events[0].start.isoformat() }}</td>
-              <td><a href="/eboa_nav/query-event-links/{{ health_events[0].event_uuid }}">{{ health_events[0].event_uuid }}</a></td>
+              <td><a href="{{ url_for('eboa_nav.query_event_links_and_render', event_uuid=health_events[0].event_uuid) }}">{{ health_events[0].event_uuid }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
@@ -289,9 +289,9 @@
         </div>
         <table id="number-of-connections-to-ddbb" align="center" class="table table-striped table-bordered table-hover table-static">
           <tr>
-            <th>Minimum (%)</th>
-            <th>Maximum (%)</th>
-            <th>Mean (%)</th>
+            <th>Minimum</th>
+            <th>Maximum</th>
+            <th>Mean</th>
           </tr>
           {% set number_of_connections_to_ddbb_over_time = health_events|map(attribute="eventDoubles")|flatten|selectattr("name", "equalto", "number_of_parallel_connections_to_ddbb")|map(attribute="value")|list %}
           <tr>
@@ -333,9 +333,9 @@
           <tr>
             <th>Folder</th>
             <th>Path</th>
-            <th>Minimum (%)</th>
-            <th>Maximum (%)</th>
-            <th>Mean (%)</th>
+            <th>Minimum</th>
+            <th>Maximum</th>
+            <th>Mean</th>
           </tr>        
           {% for folder in folders %}
           {% set path = health_events|map(attribute="eventTexts")|flatten|selectattr("name", "equalto", folder + "_path")|map(attribute="value")|unique|first %}
@@ -488,7 +488,7 @@
   "window_size": "{{ sliding_window['window_size'] }}",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/health/sliding_health_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('health.show_sliding_health_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}

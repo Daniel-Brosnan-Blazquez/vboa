@@ -3,14 +3,15 @@
 {% block div_active_events %}active{% endblock %}
 {% block events_nav_content %}
 <div>
-  <a href="/eboa_nav/query-events"><p class="fa fa-chevron-left"> Back to query events</p></a>
+  <a href="{{ url_for('eboa_nav.query_events_and_render') }}"><p class="fa fa-chevron-left"> Back to query events</p></a>
 </div>
 
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-events-pages", elements = events, filters = filters %}
+{% with route = url_for('eboa_nav.query_events_pages'), elements = events, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
+{% if events|length > 0 %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Table of events
@@ -26,10 +27,11 @@
           <th>Start</th>
           <th>Stop</th>
           <th>Duration (s)</th>
-          <th>Ingestion Time</th>
+          <th>Ingestion time</th>
           <th>Source</th>
-          <th>Explicit Reference</th>
+          <th>Explicit reference</th>
           <th>Linked events</th>
+          <th>Alerts</th>
           <th>Event UUID</th>
         </tr>
       </thead>
@@ -39,18 +41,19 @@
           <td><i id="expand-values-event-{{ event.event_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_event_values('expand-values-event-{{ event.event_uuid }}', '{{ event.event_uuid }}')" data-toggle="tooltip" title="Click to show the related values"></i></td>
           <td>{{ event.gauge.name }}</td>
           <td>{{ event.gauge.system }}</td>
-          <td>{{ event.start }}</td>
-          <td>{{ event.stop }}</td>
+          <td>{{ event.start.isoformat() }}</td>
+          <td>{{ event.stop.isoformat() }}</td>
           <td>{{ (event.stop - event.start).total_seconds() }}</td>
-          <td>{{ event.ingestion_time }}</td>
+          <td>{{ event.ingestion_time.isoformat() }}</td>
           {% set source_uuid = event.source.source_uuid %}
-          <td><a href="/eboa_nav/query-source/{{ source_uuid }}">{{ event.source.name }}</a></td>
+          <td><a href="{{ url_for('eboa_nav.query_source', source_uuid=source_uuid) }}">{{ event.source.name }}</a></td>
           <td>
             {% if event.explicitRef %}
-            <a href="/eboa_nav/query-er/{{ event.explicitRef.explicit_ref_uuid }}">{{ event.explicitRef.explicit_ref }}</a>
+            <a href="{{ url_for('eboa_nav.query_er', explicit_ref_uuid=event.explicitRef.explicit_ref_uuid) }}">{{ event.explicitRef.explicit_ref }}</a>
             {% endif %}
           </td>
-          <td><a href="/eboa_nav/query-event-links/{{ event.event_uuid }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_event_links_and_render', event_uuid=event.event_uuid) }}"><i class="fa fa-link"></i></a></td>
+          <td><a href="{{ url_for('eboa_nav.query_entity_alerts_and_render', entity='event', entity_uuid=event.event_uuid) }}"><i class="fa fa-link"></i></a></td>
           <td>{{ event.event_uuid }}</td>
         </tr>
         {% endfor %}
@@ -63,10 +66,11 @@
           <th>Start</th>
           <th>Stop</th>
           <th>Duration (s)</th>
-          <th>Ingestion Time</th>
+          <th>Ingestion time</th>
           <th>Source</th>
-          <th>Explicit Reference</th>
+          <th>Explicit reference</th>
           <th>Linked events</th>
+          <th>Alerts</th>
           <th>Event UUID</th>
         </tr>
       </tfoot>
@@ -103,10 +107,25 @@
 </div>
 <!-- /.panel -->
 {% endif %}
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of ingested events
+  </div>
+  <div id="events-nav-no-data">
+    <br/>
+    <p style="text-indent: 1em">No "events" have been found with the requested filters.</p>
+    <br/>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
 {% endblock %}
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
+      {% if events|length > 0 %}
       {% if show["timeline"] %}
       {% with events=events %}
       {% include "graphs/events_to_json_for_timeline.js" %}
@@ -118,6 +137,7 @@
       {% include "graphs/events_geometries_to_json_for_map.js" %}
       {% endwith %}
       vboa.create_event_map(events_geometries, "events-nav-map");
-      {% endif %}      
+      {% endif %} 
+      {% endif %}     
     </script>
 {% endblock %}

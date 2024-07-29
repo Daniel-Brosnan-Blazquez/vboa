@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method=post action="/eboa_nav/query-sources">
+          <form role="form" method=post action="{{ url_for('eboa_nav.query_sources_and_render') }}">
             <div class="row">
               <div class="col-xs-3">
                 <label>Name</label>
@@ -16,7 +16,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="sources-source-names-in-checkbox">Names (<input type="checkbox" name="source_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'name', 20, 0)" id="sources-source-names-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items with exact matching" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_sources') }}', 'name', 20, 0)" id="sources-source-names-in-text"/><i class="circle"></i>
                 <select name="sources" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-source-names-in-select">
                 </select>
               </div>
@@ -33,7 +33,7 @@
               </div>
               <div class="col-xs-3">
                 <label id="sources-processors-in-checkbox">Processors (<input type="checkbox" name="processor_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-sources', 'processor', 20, 0)" id="sources-processors-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_sources_by_processor') }}', 'processor', 20, 0)" id="sources-processors-in-text"/><i class="circle"></i>
                 <select name="processors" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-processors-in-select">
                 </select>
               </div>
@@ -50,11 +50,12 @@
               </div>
               <div class="col-xs-3">
                 <label id="sources-dim-signatures-in-checkbox">DIM signatures (<input type="checkbox" name="dim_signature_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '/eboa_nav/query-jsonify-dim-signatures', 'dim_signature', 20, 0)" id="sources-dim-signatures-in-text"/><i class="circle"></i>
+                <input class="form-control" placeholder="Fill for searching items... Showing 20 items on keyup" onkeyup="vboa.fill_elements_into_selector(this, '{{ url_for('eboa_nav.query_jsonify_dim_signatures') }}', 'dim_signature', 20, 0)" id="sources-dim-signatures-in-text"/><i class="circle"></i>
                 <select name="dim_signatures" data-placeholder="Select several options..." size="4" hidden multiple="" tabidex="-1" id="sources-dim-signatures-in-select">
                 </select>
               </div>
             </div>
+            <!-- Validity start/stop -->
             <div class="row" id="sources-validity-start-validity-stop-initial">
               {% include "eboa_nav/validity_start_validity_stop.html" %}
               <div>
@@ -64,6 +65,17 @@
               </div>
             </div>
             <div id="more-validity-start-validity-stop-query-sources">
+            </div>
+            <!-- Reported validity start/stop -->
+            <div class="row" id="sources-reported-validity-start-reported-validity-stop-initial">
+              {% include "eboa_nav/reported_validity_start_reported_validity_stop.html" %}
+              <div>
+                <span onclick="vboa.add_reported_validity_start_reported_validity_stop('more-reported-validity-start-reported-validity-stop-query-sources')" id="sources-add-reported-validity-start-reported-validity-stop">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-reported-validity-start-reported-validity-stop-query-sources">
             </div>
             <!-- Validity duration -->
             <div class="row" id="sources-validity-duration-initial">
@@ -76,6 +88,17 @@
             </div>
             <div id="more-source-validity-duration-query-sources">
             </div>
+            <!-- Reception time -->
+            <div class="row" id="sources-reception-time-initial">
+              {% include "eboa_nav/reception_time.html" %}
+              <div>
+                <span onclick="vboa.add_reception_time('more-reception-time-query-sources')" id="sources-add-reception-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-reception-time-query-sources">
+            </div>
             <!-- Ingestion time -->
             <div class="row" id="sources-ingestion-time-initial">
               {% include "eboa_nav/ingestion_time.html" %}
@@ -87,6 +110,18 @@
             </div>
             <div id="more-ingestion-time-query-sources">
             </div>
+            <!-- Processing duration -->
+            <div class="row" id="sources-processing-duration-initial">
+              {% include "eboa_nav/processing_duration.html" %}
+              <div>
+                <span onclick="vboa.add_processing_duration('more-processing-duration-query-sources')" id="sources-add-processing-duration">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-processing-duration-query-sources">
+            </div>
+            <!-- Ingestion duration -->
             <div class="row" id="sources-ingestion-duration-initial">
               {% include "eboa_nav/ingestion_duration.html" %}
               <div>
@@ -97,6 +132,7 @@
             </div>
             <div id="more-ingestion-duration-query-sources">
             </div>
+            <!-- Generation time -->
             <div class="row" id="sources-generation-time-initial">
               {% include "eboa_nav/generation_time.html" %}
               <div>
@@ -107,53 +143,79 @@
             </div>
             <div id="more-generation-time-query-sources">
             </div>
-            <div class="row" id="sources-statuses-initial">
+            <!-- Reported generation time -->
+            <div class="row" id="sources-reported-generation-time-initial">
+              {% include "eboa_nav/reported_generation_time.html" %}
+              <div>
+                <span onclick="vboa.add_reported_generation_time('more-reported-generation-time-query-sources')" id="sources-add-reported-generation-time">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+            </div>
+            <div id="more-reported-generation-time-query-sources">
+            </div>
+            <!-- Ingestion completeness -->
+            <div class="row">
+              <div class="col-xs-3 query-source-ingestion-completeness">
+                <label>Ingestion completeness</label>
+                <select style="width: 100%" name="ingestion_completeness" id="sources-ingestion-completeness">
+                  <option></option>
+                  <option>true</option>
+                  <option>false</option>
+                </select>
+              </div>
+            </div>
+            <!-- Statuses -->
+            <div class="row">
               <div class="col-xs-3 query-source-statuses">
-                <label id="sources-statuses-initial-checkbox">Statuses (<input type="checkbox" name="status_notin_check"><span class="label-text"><b>Not in)</b></span></label>
-                <select name="source_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-statuses-initial-in-text">
+                <label id="sources-statuses-in-checkbox">Statuses (<input type="checkbox" name="statuses_notin_check"><span class="label-text"><b>Not in)</b></span></label>
+                <select name="source_statuses" data-placeholder="Select several options..." class="chosen-select" multiple="" tabidex="-1" id="sources-statuses-in-select">
                 </select>
               </div>
             </div>
             <div>
               <label id="sources-show-validity-timeline">
-                <input type="checkbox" id="show-timeline" name="show_validity_timeline" checked><span class="label-text"><b>Show validity timeline</b></span>
+                <input type="checkbox" name="show_validity_timeline" checked><span class="label-text"><b>Show validity timeline</b></span>
               </label>
             </div>
             <div>
               <label id="sources-show-generation-to-ingestion-timeline">
-                <input type="checkbox" id="show-timeline" name="show_generation_to_ingestion_timeline" checked><span class="label-text"><b>Show generation to ingestion timeline</b></span>
+                <input type="checkbox" name="show_generation_to_ingestion_timeline" checked><span class="label-text"><b>Show generation to ingestion timeline</b></span>
               </label>
             </div>
             <div>
               <label id="sources-show-number-events-xy">
-                <input type="checkbox" id="show-number-events-xy" name="show_number_events_xy" checked><span class="label-text"><b>Show number of events over time per source</b></span>
+                <input type="checkbox" name="show_number_events_xy" checked><span class="label-text"><b>Show number of events over time per source</b></span>
               </label>
             </div>
             <div>
               <label id="sources-show-ingestion-duration-xy">
-                <input type="checkbox" id="show-ingestion-duration-xy" name="show_ingestion_duration_xy" checked><span class="label-text"><b>Show ingestion duration over time per source</b></span>
+                <input type="checkbox" name="show_ingestion_duration_xy" checked><span class="label-text"><b>Show ingestion duration over time per source</b></span>
               </label>
             </div>
             <div>
               <label id="sources-show-generation-time-to-ingestion-time-xy">
-                <input type="checkbox" id="show-generation-time-to-ingestion-time-xy" name="show_generation_time_to_ingestion_time_xy" checked><span class="label-text"><b>Show generation to ingestion times over time per source</b></span>
+                <input type="checkbox" name="show_generation_time_to_ingestion_time_xy" checked><span class="label-text"><b>Show generation to ingestion times over time per source</b></span>
               </label>
             </div>
             <!-- Query restrictions -->
-            <div class="row" id="explicit-refs-query-restrictions">
+            <div class="row" id="sources-query-restrictions">
               <!-- Order by -->
               <div class="col-xs-3">
                   <label>Order by (<input type="checkbox" name="order_descending" checked><span class="label-text"><b>Descending)</b></span></label>
-                  <select style="width: 100%" name="order_by" id="explicit-refs-order-by">
+                  <select style="width: 100%" name="order_by" id="sources-order-by">
                     <option></option>
                     <option>name</option>
                     <option>validity_start</option>
                     <option>validity_stop</option>
+                    <option>reported_validity_start</option>
+                    <option>reported_validity_stop</option>
                     <option>reception_time</option>
-                    <option>generation_time</option>
                     <option>ingestion_time</option>
-                    <option>ingestion_duration</option>
                     <option>processing_duration</option>
+                    <option>ingestion_duration</option>
+                    <option>generation_time</option>
+                    <option>reported_generation_time</option>
                     <option>processor</option>
                     <option>processor_version</option>
                   </select>
@@ -161,11 +223,18 @@
               <!-- Limit -->
               <div class="col-xs-3">
                 <label>Limit</label>
-                <input type="text" class="form-control" style="width: 100%" name="limit" id="explicit-refs-limit" value="100"/>
+                <input type="text" class="form-control" style="width: 100%" name="limit" id="sources-limit" value="100"/>
               </div>
             </div>
+            <!-- Specific alert filters -->
+            <div class="panel-group" style="margin-top: 12px">
+              {% with entity="source", url_prefix="eboa_nav" %}
+              {% include "eboa_nav/query_alerts_content.html" %}
+              {% endwith %}
+            </div>
             <div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="sources-submit-button">Query</button>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="sources-submit-button" name="query_sources">Query sources</button>
+	            <button type="submit" class="btn btn-primary" style="margin-top: 12px" id="source-alerts-submit-button" name="query_source_alerts">Query source alerts</button>
             </div>
           </form>
         </div>

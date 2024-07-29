@@ -7,11 +7,15 @@
 {% with template = "?template=alerts" %}
 {% include "reporting_control/reporting_control_query.html" %}
 {% endwith %}
-{% set alerts = sources|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
+{% set alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
 
 <!-- Pagination -->
-{% with route = "/reporting_control/reporting-control-pages", elements = alerts, filters = filters %}
+{% with route = url_for('reporting_control.query_reporting_control_pages'), elements = alerts, filters = filters %}
 {% include "vboa/pagination.html" %}
+{% endwith %}
+
+{% with show = {"alerts": True} %}
+{% include "reporting_control/reporting_control_summary_content.html" %}
 {% endwith %}
 
 {% include "reporting_control/reporting_control_alerts_content.html" %}
@@ -26,7 +30,7 @@
   "template": "alerts",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/reporting_control/sliding_reporting_control_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('reporting_control.show_sliding_reporting_control_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}

@@ -8,15 +8,17 @@ import * as graph from "./graph.js";
 
 /* Function to create the text for the tooltip of the event information */
 function create_event_tooltip_text(event){
-
+    const event_duration = dates.date_difference_in_m(event["stop"], event["start"])
+    
     return "<table border='1'>" +
         "<tr><td>UUID</td><td>" + event['id'] + "</td></tr>" +
-        "<tr><td>Explicit reference</td><td>" + event['explicit_reference'] + "</td></tr>" +
+        "<tr><td>Explicit reference</td><td><a href='/eboa_nav/query-er/" + event["explicit_ref_uuid"] + "'>" + event['explicit_reference'] + "</a></td></tr>" +
         "<tr><td>Gauge name</td><td>" + event['gauge']['name'] + "</td></tr>" +
         "<tr><td>Gauge system</td><td>" + event['gauge']['system'] + "</td></tr>" +
         "<tr><td>Start</td><td>" + event["start"] + "</td></tr>" +
         "<tr><td>Stop</td><td>" + event["stop"] + "</td></tr>" +
-        "<tr><td>Source</td><td>" + event['source'] + "</td></tr>" +
+        "<tr><td>Duration (m)</td><td>" + event_duration.toFixed(3) + "</td></tr>" +
+        "<tr><td>Source</td><td><a href='/eboa_nav/query-source/" + event["source_uuid"] + "'>" + event['source'] + "</a></td></tr>" +
         "<tr><td>Ingestion time</td><td>" + event['ingestion_time'] + "</td></tr>" +
         "<tr><td>Links</td><td><a href='/eboa_nav/query-event-links/" + event["id"] + "'><i class='fa fa-link'></i></a></td></tr>" +
         "<tr id='expand-tooltip-values-event-" + event["id"] + "'><td>Values</td><td><i class='fa fa-plus-square green' onclick='" + 'vboa.expand_event_values_in_tooltip("expand-tooltip-values-event-' + event["id"] + '", "' + event["id"] + '")' + "' data-toggle='tooltip' title='Click to show the related values'></i></td></tr>" +
@@ -70,7 +72,7 @@ export function create_event_network(linked_events, dom_id){
 
 };
 
-/* Function to create a network graph for the EBOA navigation view */
+/* Function to create a timeline graph for the EBOA navigation view */
 export function create_event_timeline(events, dom_id){
     var groups = [];
     var items = [];
@@ -78,29 +80,39 @@ export function create_event_timeline(events, dom_id){
     var gauge_systems = new Set(events.map(event => event["gauge"]["system"]))
 
     for (const gauge_system of gauge_systems){
-        if (gauge_system == "None"){
-            var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"]))
-        }else{
-            var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"] + "_" + event["gauge"]["system"]))
+        var associated_gauges = new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => event["gauge"]["name"]));
+        var tree_level = 1;
+        if (gauge_system != "None"){
+            var associated_gauge_ids = Array.from(new Set(events.filter(event => event["gauge"]["system"] == gauge_system).map(event => "GAUGE_NAME_" + event["gauge"]["system"] + "_" + event["gauge"]["name"])));
+            groups.push({
+                id: "GAUGE_SYSTEM_" + gauge_system,
+                treeLevel: 1,
+                content: gauge_system,
+                nestedGroups: associated_gauge_ids
+            })
+            tree_level = 2;
         }
         for (const associated_gauge of associated_gauges){
+            var id = "GAUGE_NAME_" + associated_gauge;
+            if (gauge_system != "None"){
+                id = "GAUGE_NAME_" + gauge_system + "_" + associated_gauge
+            }
             groups.push({
-                id: associated_gauge,
-                treeLevel: 1,
+                id: id,
+                treeLevel: tree_level,
                 content: associated_gauge
             })
         }
     }
 
     var unique_event_uuids = new Set(events.map(event => event["id"]));
-
     for (const event_uuid of unique_event_uuids){
         var event = events.filter(event => event["id"] == event_uuid)[0]
-        if (event["gauge"]["system"] == "None"){
-            var group = event["gauge"]["name"]
-        }else{
-            var group = event["gauge"]["name"] + "_" + event["gauge"]["system"]
+        var group = "GAUGE_NAME_" + event["gauge"]["name"]
+        if (event["gauge"]["system"] != "None"){
+            group = "GAUGE_NAME_" + event["gauge"]["system"] + "_" + event["gauge"]["name"]
         }
+
         items.push({
             id: event["id"],
             group: group,
@@ -114,7 +126,7 @@ export function create_event_timeline(events, dom_id){
 
 };
 
-/* Function to create a network graph for the EBOA navigation view */
+/* Function to create a map for the EBOA navigation view */
 export function create_event_map(events_geometries, dom_id){
 
     var polygons = [];
@@ -159,32 +171,81 @@ export function prepare_events_data_for_bar(events, items, groups){
 
 };
 
+/* Function to prepare the timeline groups following the nested logic */
+function prepare_timeline_groups(groups, timeline_groups){
+
+    for (const group of groups){
+        var timeline_group = timeline_groups;
+        var id = ""
+        for (const label of group.split(";")){
+            // Id is the concatenation of the previous and current ids
+            id = id + label;
+            // Check if label already exists in dictionary
+            if (!(label in timeline_group)){
+                timeline_group[label] = {"id": id, "subgroups": {}};
+            }
+            // Timeline group now points to the subgroups
+            timeline_group = timeline_group[label]["subgroups"];
+            id = id + ";";
+        }
+    }
+    
+}
+
+function populate_timeline_groups(timeline_groups, groups, tree_level){
+
+    for (const group in timeline_groups){
+
+        // Prepare nested groups
+        var nested_groups = [];
+        for (const nested_group in timeline_groups[group]["subgroups"]){
+            nested_groups.push(timeline_groups[group]["subgroups"][nested_group]["id"])
+        }
+
+        if (nested_groups.length > 0){
+            // Prepare group with nested groups
+            groups.push({
+                id: timeline_groups[group]["id"],
+                content: group,
+                treeLevel: tree_level,
+                nestedGroups: nested_groups
+            })
+        }
+        else{
+            // Prepare group without nested groups
+            groups.push({
+                id: timeline_groups[group]["id"],
+                content: group,
+                treeLevel: tree_level
+            })
+        }
+
+        // Recursive call to include subgroups
+        populate_timeline_groups(timeline_groups[group]["subgroups"], groups, tree_level + 1)
+    }
+    
+}
+
 /* Function to prepare data from events for a timeline given the events to be displayed */
 export function prepare_events_data_for_timeline(events, items, groups){
 
-    var event_groups = new Set(events.map(event => event["group"]))
+    // Groups should be only defined by group. event["timeline"] is mantained for backwards compatibility. 
+    var event_groups = new Set(events.map(event => event["group"] + ";" + event["timeline"]));
 
-    for (const group of event_groups){
-        var several_associated_timeliness = new Set(events.filter(event => event["group"] == group).map(event => event["timeline"] + "_" + event["group"]))
-        groups.push({
-            id: group,
-            content: group,
-            treeLevel: 1,
-            nestedGroups: Array.from(several_associated_timeliness)
-        })
-        for (const associated_timeliness of several_associated_timeliness){
-            groups.push({
-                id: associated_timeliness,
-                treeLevel: 2,
-                content: associated_timeliness
-            })
-        }
-    }
+    // Obtain the nested timeline groups
+    var timeline_groups = {};
+    var event_groups_array = Array.from(event_groups);
+    prepare_timeline_groups(event_groups_array, timeline_groups);
 
+    // Populate groups for the timeline with nested logic
+    populate_timeline_groups(timeline_groups, groups, 1);
+
+    // Populate items (be aware that event["timeline"] is mantained for backwards compatibility.)
     for (const event of events){
         var item = {
             id: event["id"],
-            group: event["timeline"] + "_" + event["group"],
+            group: event["group"] + ";" + event["timeline"],
+            content: event["content"],
             start: event["start"],
             end: event["stop"],
             tooltip: event["tooltip"]

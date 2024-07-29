@@ -8,7 +8,7 @@ module vboa
 from setuptools import setup, find_packages
 
 setup(name="vboa",
-      version="0.1.1",
+      version="1.0.5",
       description="Visualization tool for Business Operation Analysis",
       url="https://bitbucket.org/dbrosnan/vboa/",
       author="Daniel Brosnan",
@@ -20,14 +20,14 @@ setup(name="vboa",
           "eboa",
           "Flask",
           "Flask-DebugToolbar",
-          "gunicorn"
+          "flask-security-too",
+          "bcrypt",
+          "gunicorn",
+          "bleach",
+          "geopy"
       ],
       extras_require={
           "tests" :[
-              "nose",
-              "before_after",
-              "coverage",
-              "termcolor",
               "selenium"
           ]
       },

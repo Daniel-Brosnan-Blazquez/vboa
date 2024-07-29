@@ -1,0 +1,10 @@
+{% extends "panel/index.html" %}
+{% block content %}
+<div class="row panel-no-index">
+    <h1 class="page-header">Ups... Sorry it seems you don't have permissions to access to this resource</h1>
+</div>
+<div>
+  <img style="display:inline" src="{{ url_for('static', filename='images/boa_favicon.png') }}"/>
+  <i style="display:inline; font-size: 400px" class="fa fa-lock fa-6"></i>
+</div>
+{% endblock %}

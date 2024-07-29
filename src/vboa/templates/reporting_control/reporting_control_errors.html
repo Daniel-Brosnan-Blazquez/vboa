@@ -10,8 +10,12 @@
 {% set reporting_errors = reports|selectattr("generation_error", "equalto", True)|list %}
 
 <!-- Pagination -->
-{% with route = "/reporting_control/reporting-control-pages", elements = reporting_errors, filters = filters %}
+{% with route = url_for('reporting_control.query_reporting_control_pages'), elements = reporting_errors, filters = filters %}
 {% include "vboa/pagination.html" %}
+{% endwith %}
+
+{% with show = {"errors": True} %}
+{% include "reporting_control/reporting_control_summary_content.html" %}
 {% endwith %}
 
 {% include "reporting_control/reporting_control_errors_content.html" %}
@@ -26,7 +30,7 @@
   "template": "errors",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/reporting_control/sliding_reporting_control_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('reporting_control.show_sliding_reporting_control_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}

@@ -1,0 +1,51 @@
+services:
+  db:
+    image: mdillon/postgis
+    container_name: "boa_database_${CONTAINERS_LABEL}"
+    restart: always
+    shm_size: 512M
+    volumes:
+      - ${PATH_TO_BOA_DDBB}:/var/lib/postgresql/data
+    command: -c "max_connections=5000" -c "max_locks_per_transaction=5000"
+    networks:
+      - boa-network
+  boa:
+    image: boa
+    container_name: boa_app_${CONTAINERS_LABEL}
+    restart: always
+    shm_size: 512M
+    stdin_open: true 
+    tty: true
+    ports:
+      - ${VBOA_PORT}:5000
+    environment:
+      - EBOA_DDBB_HOST=boa_database_${CONTAINERS_LABEL}
+      - SBOA_DDBB_HOST=boa_database_${CONTAINERS_LABEL}
+      - UBOA_DDBB_HOST=boa_database_${CONTAINERS_LABEL}
+      - MINARC_DATABASE_HOST=boa_database_${CONTAINERS_LABEL}
+      - ORC_DATABASE_HOST=boa_database_${CONTAINERS_LABEL}
+    networks:
+      - boa-network
+    volumes:
+      - ${PATH_TO_MINARC_ARCHIVE}:/minarc_root 
+      - ${PATH_TO_BOA_INPUTS}:/inputs 
+      - ${PATH_TO_RBOA_ARCHIVE}:/rboa_archive 
+      - ${PATH_TO_LOG_FOLDER}:/log
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - source: boa-certificate
+        target: /resources_path/boa_certificate.pem
+      - source: boa-key
+        target: /resources_path/boa_key.pem
+      - source: web-server-key
+        target: /resources_path/web_server_secret_key.txt
+secrets:
+  boa-certificate:
+    file: ${PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY}/boa_certificate.pem
+  boa-key:
+    file: ${PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY}/boa_key.pem
+  web-server-key:
+    file: ${PATH_TO_BOA_CERTIFICATES_AND_SECRET_KEY}/web_server_secret_key.txt
+networks:
+  boa-network:
+     name: boa_network_${CONTAINERS_LABEL}

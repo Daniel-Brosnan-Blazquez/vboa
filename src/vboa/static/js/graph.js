@@ -1,18 +1,23 @@
 import * as vis_data from "vis-data/dist/umd.js";
+import { DataSet } from "vis-data/peer/esm/vis-data"
 import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
 import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
 import * as chartjs from "chart.js/dist/Chart.js";
-import Map from 'ol/Map.js';
-import View from 'ol/View.js';
+import olMap from 'ol/Map.js';
+import olView from 'ol/View.js';
 import WKT from 'ol/format/WKT.js';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
+import olLayerTile from 'ol/layer/Tile.js';
+import olLayerVector from 'ol/layer/Vector.js';
+import olSourceOSM from 'ol/source/OSM.js';
+import olSourceVector from 'ol/source/Vector.js';
 import {fromLonLat} from 'ol/proj';
 import MousePosition from 'ol/control/MousePosition.js';
 import {createStringXY} from 'ol/coordinate.js';
 import {defaults as defaultControls} from 'ol/control.js';
 import {Fill, Stroke, Style, Text} from 'ol/style.js';
-
+import OLCesium from 'olcs/OLCesium.js';
+import * as toastr from "toastr/toastr.js";
+import * as dates from "./dates.js";
 
 /* Function to display a pie chart given the id of the DOM where to
  * attach it and the items to show */
@@ -38,7 +43,8 @@ export function display_pie(dom_id, data, options){
                     {render: 'percentage',
                      fontSize: 14,
                      fontStyle: "bold",
-                     fontColor: "white"}]
+                     fontColor: "white",
+                     precision: 2}]
             }
         }
     }
@@ -55,6 +61,44 @@ export function display_pie(dom_id, data, options){
             options: options
         });
     }
+
+};
+
+/* Function to display an XY chart given the id of the DOM where to
+ * attach it and the items to show */
+export function display_x_y(dom_id, data, options){
+
+    /* create XY chart */
+    var container = document.getElementById(dom_id);
+
+    if (options == undefined){
+        var options = {
+            responsive: true,
+            maintainAspectRatio: true,
+            legend: {
+                display: false
+            },
+            plugins: {
+                labels: [
+                    {render: 'label',
+                     position: 'outside',
+                     fontSize: 14,
+                     fontStyle: "bold",
+                     fontColor: "black"},
+                    {render: 'percentage',
+                     fontSize: 14,
+                     fontStyle: "bold",
+                     fontColor: "white",
+                     precision: 2}]
+            }
+        }
+    }
+
+    var xy_chart = new chartjs.Chart(container, {
+        type: 'line',
+        data: data,
+        options: options
+    });
 
 };
 
@@ -104,21 +148,92 @@ function show_bar_item_information(params, items, dom_id){
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
-export function display_timeline(dom_id, items, groups){
+export function display_timeline(dom_id, items, groups, options, show_hide = true){
 
-    /* create timeline */
+    var groups_dataset = new DataSet(groups);
+
+    /* Obtain timeline container */
     const container = document.getElementById(dom_id);
-
-    const options = {
-        groupOrder: 'content',
-        margin: {
-            item : {
-                horizontal : -1
-            }
-        },
+    
+    if (options == undefined){
+        options = {
+            groupOrder: 'content',
+            margin: {
+                item : {
+                    horizontal : 0
+                }
+            },
+        };
     };
 
-    const timeline = new vis_timeline_graph2d.Timeline(container, items, groups, options);
+    if (show_hide){
+        options["groupTemplate"] = function(group){
+            var container = document.createElement('div');
+            var label = document.createElement('span');
+            label.innerHTML = group.content + ' ';
+            container.insertAdjacentElement('afterBegin',label);
+            var hide = document.createElement('button');
+            hide.innerHTML = 'hide';
+            hide.style.fontSize = 'small';
+            hide.addEventListener('click',function(){
+                groups_dataset.update({id: group.id, visible: false});
+            });
+            container.insertAdjacentElement('beforeEnd',hide);
+            return container;
+        }
+    }
+    
+    const threshold = 1000
+    if (items.length > threshold){
+        container.style.display = "none";
+        const button_container = document.createElement("div");
+        container.parentNode.appendChild(button_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Number of elements (" + items.length + ") exceeded the threshold (" + threshold + "). Click here to show the timeline graph";
+        button_container.appendChild(button);
+        button.onclick = function (){
+            button.style.display = "none";
+            container.style.display = "inherit";
+            show_timeline(dom_id, items, container, groups_dataset, options, show_hide);
+        };
+    }
+    else{
+        show_timeline(dom_id, items, container, groups_dataset, options, show_hide);
+    }
+};
+function show_timeline(dom_id, items, container, groups_dataset, options, show_hide){
+
+    var timeline_container = container;
+    
+    if (show_hide){
+        
+        /* function to make all groups visible again */
+        function showAllGroups(){
+            groups_dataset.forEach(function(group){
+                groups_dataset.update({id: group.id, visible: true});
+            })
+        };
+        /* Create container for options */
+        const options_container = document.createElement("div");
+        container.appendChild(options_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Restore hidden elements";
+        options_container.appendChild(button);
+        button.onclick = function (){
+            showAllGroups();
+        };
+
+        /* Create container for timline */
+        timeline_container = document.createElement("div");
+        container.appendChild(timeline_container);
+    };
+    
+    var items_dataset = new DataSet(items)
+    const timeline = new vis_timeline_graph2d.Timeline(timeline_container, items_dataset, groups_dataset, options);
 
     timeline.on("click", function (params) {
         show_timeline_item_information(params, items, dom_id)
@@ -164,6 +279,29 @@ export function display_network(dom_id, nodes, edges, options){
             interaction:{hover:true}
         };
     }
+
+    const threshold = 20
+    if (nodes.length > threshold){
+        container.style.display = "none";
+        const button_container = document.createElement("div");
+        container.parentNode.appendChild(button_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Number of elements (" + nodes.length + ") exceeded the threshold (" + threshold + "). Click here to show the network graph";
+        button_container.appendChild(button);
+        button.onclick = function (){
+            button.style.display = "none";
+            container.style.display = "inherit";
+            show_network(dom_id, nodes, container, data, options);
+        };
+    }
+    else{
+        show_network(dom_id, nodes, container, data, options);
+    }
+};
+function show_network(dom_id, nodes, container, data, options){
+
     const network = new vis_network.Network(container, data, options);
 
     network.on("click", function (params) {
@@ -189,7 +327,7 @@ function show_network_node_information(params, nodes, dom_id){
 
 /* Function to display an X-Time graph given the id of the DOM where to
  * attach it and the items to show with the corresponding groups */
-export function display_x_time(dom_id, items, groups, options){
+export function display_x_time(dom_id, items, groups, options, threshold = 1000){
 
     /* create timeline */
     const container = document.getElementById(dom_id);
@@ -200,6 +338,27 @@ export function display_x_time(dom_id, items, groups, options){
         };
     }
     
+    if (items.length > threshold){
+        container.style.display = "none";
+        const button_container = document.createElement("div");
+        container.parentNode.appendChild(button_container);
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.innerHTML = "Number of elements (" + items.length + ") exceeded the threshold (" + threshold + "). Click here to show the timeline graph";
+        button_container.appendChild(button);
+        button.onclick = function (){
+            button.style.display = "none";
+            container.style.display = "inherit";
+            show_x_time(dom_id, items, container, groups, options);
+        };
+    }
+    else{
+        show_x_time(dom_id, items, container, groups, options);
+    }
+};
+function show_x_time(dom_id, items, container, groups, options){
+
     const x_time = new vis_timeline_graph2d.Graph2d(container, items, groups, options);
 
     x_time.on("click", function (params) {
@@ -235,12 +394,15 @@ function show_x_time_item_information(params, items, dom_id){
  * attach it and the polygons to show */
 export function display_map(dom_id, polygons){
 
-    var raster = new TileLayer({
-        source: new OSM()
+    /* Raster layer used to display world map */
+    var raster = new olLayerTile({
+        source: new olSourceOSM()
     });
 
+    /* Format set to WKT (Well Known Text standard) */
     var format = new WKT();
-    
+
+    /* Build features containing polygons */
     var features = []
     for (const polygon of polygons){
         var feature = format.readFeature(polygon["polygon"], {
@@ -288,8 +450,8 @@ export function display_map(dom_id, polygons){
         features.push(feature);
     }
     
-    var vector = new VectorLayer({
-        source: new VectorSource({
+    var vector = new olLayerVector({
+        source: new olSourceVector({
             features: features
         })
     });
@@ -301,8 +463,40 @@ export function display_map(dom_id, polygons){
         projection: 'EPSG:4326',
     });
 
-    if (document.getElementById(dom_id).data){
-        map = document.getElementById(dom_id).data;
+    /* Get the maps container div */
+    var maps_container_div = document.getElementById(dom_id);
+
+    /* Create div for maps options */
+    const maps_options_div = document.createElement("div");
+    maps_options_div.id = dom_id + "-maps-options"
+    maps_container_div.appendChild(maps_options_div);
+    maps_options_div.style.marginBottom = "10px";
+    
+    /* Create div including a button to change from 2D to 3D and viceversa */
+    const change_2d_3d_div = document.createElement("div");
+    change_2d_3d_div.id = dom_id + "-maps-options-change-2d-3d"
+    maps_options_div.appendChild(change_2d_3d_div);
+    const change_2d_3d_button = document.createElement("button");
+    change_2d_3d_button.id = dom_id + "-maps-button-2d-3d"
+    change_2d_3d_div.appendChild(change_2d_3d_button);
+    change_2d_3d_button.classList.add("btn");
+    change_2d_3d_button.classList.add("btn-primary");
+    change_2d_3d_button.innerHTML = "3D";
+    /* Annotate in data the option to display to the other visualization option (2D/3D) */
+    change_2d_3d_button.data = "3D";
+
+    /* Create div for 2D map */
+    const map_div = document.createElement("div");
+    map_div.id = dom_id + "-map"
+    maps_container_div.appendChild(map_div);
+
+    /* Specify height for map_div as newer versions of OpenLayers
+     * (since version 6.0.0) do not set this value */
+    map_div.style.height = "100vh";
+
+    /* Reset map and add new layers if the map was already available */
+    if (map_div.data){
+        map = map_div.data;
         map.getLayers().forEach(function (layer) {
             if (layer.get('name') === 'features') {
                 map.removeLayer(layer);
@@ -311,40 +505,562 @@ export function display_map(dom_id, polygons){
         map.addLayer(vector);
     }
     else{
-        var map = new Map({
+        /* Create 2D map */
+        var map = new olMap({
             controls: defaultControls().extend([mousePositionControl]),
             layers: [raster, vector],
-            target: dom_id,
-            view: new View({
+            target: map_div.id,
+            view: new olView({
                 center: [0, 0],
-                zoom: 2
+                zoom: 2,
+                multiWorld: true
             })
         });
-        document.getElementById(dom_id).data = map;
-    
+        map_div.data = map;
+
+        /* Create 3D map */
+        const ol3d = new OLCesium({map});
+        const scene = ol3d.getCesiumScene();
+
+        /* Disable depth of buffer as it gives errors for old graphic cards
+           Check: https://community.cesium.com/t/rendering-problem-since-cesium-1-45/7211/3 */
+        scene.logarithmicDepthBuffer = false;
+        ol3d.setEnabled(false);
+        
         /**
-         * Add a click handler to the map to render the tooltip.
+         * Add a click handler to the 2D map to render the tooltip.
          */
         map.on('singleclick', function(event) {
-            show_map_item_information(event, map, dom_id)
+            map.updateSize();
+            show_2dmap_item_information(event, map, map_div.id)
         });
+
+        /**
+         * Add a click handler to the 3D map to render the tooltip.
+         */
+        const event_handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+        event_handler.setInputAction(
+            function(event) {
+                show_3dmap_item_information(event, scene, map_div.id)
+            },
+            Cesium.ScreenSpaceEventType['LEFT_CLICK']
+        );
+
+        /* Add sidepanel-change event handler to resize the map */
+        window.addEventListener("sidepanel-change", function() {
+            setTimeout(function() {
+                map.updateSize();
+            }, 1);
+        })
+
+        /**
+         * Add a click handler to the button to change from 2D to 3D and viceversa.
+         */
+        change_2d_3d_button.onclick = function(event) {
+            const button = event.explicitOriginalTarget;
+            ol3d.setEnabled(!ol3d.getEnabled());
+            if (button.data == "2D"){
+                /* Change to 2D visualization */
+                button.data = "3D";
+                button.innerHTML = "3D";
+            }
+            else{
+                /* Change to 3D visualization */
+                button.data = "2D";
+                button.innerHTML = "2D";
+            }
+        };
+
     }
 }
 
-function show_map_item_information(event, map, dom_id){
+function show_2dmap_item_information(event, map, dom_id){
 
     var feature = map.forEachFeatureAtPixel(event.pixel, function(feature) {
         return feature;
     });
 
-    const header_content = "Detailed information for polygon with id: " + feature.getId();
-    const body_content = feature.getProperties()["tooltip"]
-    const x = event.originalEvent.pageX;
-    const y = event.originalEvent.pageY;
+    if (typeof feature !== 'undefined') {
+        const header_content = "Detailed information for polygon with id: " + feature.getId();
+        const body_content = feature.getProperties()["tooltip"]
+        const x = event.originalEvent.pageX;
+        const y = event.originalEvent.pageY;
 
-    const div = create_div(dom_id, feature.getId(), header_content, body_content, x, y)
-    drag_element(div)
+        const div = create_div(dom_id, feature.getId(), header_content, body_content, x, y)
+        drag_element(div)
+    }
+}
 
+function show_3dmap_item_information(event, scene, dom_id){
+
+    var features = scene.drillPick(event.position);
+    if (features.length > 0) {
+        /* Pick first feature */
+        var feature = features[0];
+        var feature_id = feature.primitive.olFeature.id_;
+        var feature_tooltip = feature.primitive.olFeature.values_.tooltip;
+        const header_content = "Detailed information for polygon with id: " + feature_id;
+        const body_content = feature_tooltip;
+
+        /* Obtain coordinates understanding that event.position
+         * returns the position of the mouse inside the parent div */
+        const parent_div = document.getElementById(dom_id);
+        const parent_div_position = parent_div.getBoundingClientRect();
+        const parent_div_x = parent_div_position.x + pageXOffset;
+        const parent_div_y = parent_div_position.y + pageYOffset;
+        
+        const x = event.position.x + parent_div_x;
+        const y = event.position.y + parent_div_y;
+
+        const div = create_div(dom_id, feature_id, header_content, body_content, x, y)
+        drag_element(div)
+    }
+}
+
+/* Function to show/hide all the path of the first entity (ussually
+ * the orbit of a satellite) of the data sources */
+function on_off_all_path(viewer, show_all_path){
+    const path = viewer.dataSources.get(0).entities.values[0].path;
+
+    /* Store original values of the lead and trail timings to modify
+     * it to allow show/hide all specified path */
+    if (!path.originalLeadTime){
+        path.originalLeadTime = path.leadTime;
+        path.originalTrailTime = path.trailTime;
+    }
+    
+    if (show_all_path){
+        path.leadTime = undefined;
+        path.trailTime = undefined;
+    }else{
+        path.leadTime = path.originalLeadTime;
+        path.trailTime = path.originalTrailTime;
+    }
+
+}
+
+/* Function to show/hide the Sun light */
+function on_off_sun_light(viewer, show_sun_light){
+    
+    if (show_sun_light){
+        viewer.scene.globe.enableLighting = true;
+    }else{
+        viewer.scene.globe.enableLighting = false;
+    }
+
+}
+
+/* Function to show/hide the ephemeris */
+function on_off_ephemeris(viewer, show_ephemeris){
+    
+    if (show_ephemeris){
+        viewer.entities.getById("ephemeris").show = true;
+    }else{
+        viewer.entities.getById("ephemeris").show = false;
+    }
+
+}
+
+/* Function to obtain the ephemeris of the related position */
+function get_ephemeris(time, position_array, velocity_vector_property){
+    
+    /* Get position in the inertial reference frame */
+    const position = position_array.getValueInReferenceFrame(time, Cesium.ReferenceFrame.INERTIAL);
+    /* Convert meters to kilometers */
+    const x = position.x / 1000;
+    const y = position.y / 1000;
+    const z = position.z / 1000;
+    
+    /* Get velocity */
+    const velocity = velocity_vector_property.getValue(time);
+    /* Convert meters to kilometers */
+    const vx = velocity.x / 1000;
+    const vy = velocity.y / 1000;
+    const vz = velocity.z / 1000;
+    
+    let ephemeris = "\nX: " + x + " km";
+    ephemeris += "\nY: " + y + " km";
+    ephemeris += "\nZ: " + z + " km";
+    ephemeris += "\nVX: " + vx + " km/s";
+    ephemeris += "\nVY: " + vy + " km/s";
+    ephemeris += "\nVZ: " + vz + " km/s";
+
+    return ephemeris;
+
+}
+
+/* Function to create an entity containing the ephemeris of the first entity (ussually
+ * the orbit of a satellite) of the data sources to allow the display */
+function create_entity_for_ephemeris(viewer){
+
+    const position_array = viewer.dataSources.get(0).entities.values[0].position
+    
+    var velocity_vector_property = new Cesium.VelocityVectorProperty(position_array, false);
+    
+    // Add our vehicle model.
+    const ephemeris_entity = viewer.entities.add({
+        id: "ephemeris",
+        position: position_array,
+        label: {
+            show: true,
+            showBackground: true,
+            font: "14px monospace",
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP,
+            text: new Cesium.CallbackProperty((time) => {
+                const ephemeris = get_ephemeris(time, position_array, velocity_vector_property);
+                return ephemeris;
+            }, false),
+        },
+    });
+    
+}
+
+/* Function to manage the data source included in the viewer */
+function manage_data_source(viewer, show_all_path, show_sun_light, show_ephemeris){
+
+    /* Create the entity for the orbit ephemeris */
+    create_entity_for_ephemeris(viewer);
+
+    /* Manage show all path option */
+    on_off_all_path(viewer, show_all_path);
+
+    /* Manage show Sun light option */
+    on_off_sun_light(viewer, show_sun_light);
+
+    /* Manage show ephemeris option */
+    on_off_ephemeris(viewer, show_ephemeris);
+    
+}
+
+/* Function to display a czml in a 3D world map given the id of the
+ * DOM where to attach it and a czml structure */
+export function display_czml_data_3dmap(dom_id, czml_data, show_all_path = true, show_sun_light = false, show_ephemeris = true){
+    
+    /* Get the 3d map container div */
+    var map_container_div = document.getElementById(dom_id);
+
+    /* Create div for map options */
+    const map_options_div = document.createElement("div");
+    map_options_div.id = dom_id + "-map-options"
+    map_container_div.appendChild(map_options_div);
+    map_options_div.classList.add("row");
+    map_options_div.style.marginBottom = "10px";
+    map_options_div.style.marginTop = "10px";
+    map_options_div.style.marginLeft = "10px";
+    
+    /* Create div including date and button to set the position of the
+     * satellite relative to the specified timestamp */
+    const date_div = document.createElement("div");
+    date_div.id = dom_id + "-map-options-date"
+    map_options_div.appendChild(date_div);
+    date_div.innerHTML = "<div class='col-xs-2'>" +
+        "<div class='input-group date'>" +
+        "<input type='text' class='form-control' name='date' id='" + dom_id + "-map-options-input-date" + "' placeholder='Set date on timeline'/>" +
+        "<span class='input-group-addon'>" +
+        "<span class='glyphicon glyphicon-calendar'></span>" +
+        "</span>" +
+        "</div>" +
+        "</div>";
+    /* Activate calendar */
+    dates.activate_datetimepicker();
+    const set_date_button = document.createElement("button");
+    set_date_button.id = dom_id + "-worldmap-set-date-button"
+    map_options_div.appendChild(set_date_button);
+    set_date_button.classList.add("btn");
+    set_date_button.classList.add("btn-primary");
+    set_date_button.innerHTML = "Set date";
+
+    /* Create div to allow the display of all the path or just the
+       corresponding orbit */
+    var checked = "";
+    if (show_all_path){
+        checked = "checked";
+    }
+    const on_off_all_path_div = document.createElement("div");
+    on_off_all_path_div.id = dom_id + "-map-options-checkbox-on-off-all-path"
+    map_options_div.appendChild(on_off_all_path_div);
+    on_off_all_path_div.innerHTML = '<label id="' + dom_id + "-map-options-checkbox-on-off-all-path-checkbox" + '"><input type="checkbox" ' + checked + '><span class="label-text"><b>Show all track</b></span></label>';
+    on_off_all_path_div.style.display = "inline";
+    on_off_all_path_div.style.marginLeft = "10px";
+
+    /* Create div to allow the display of the Sun light */
+    var checked = "";
+    if (show_sun_light){
+        checked = "checked";
+    }
+    const on_off_sun_light_div = document.createElement("div");
+    on_off_sun_light_div.id = dom_id + "-map-options-checkbox-on-off-sun-light"
+    map_options_div.appendChild(on_off_sun_light_div);
+    on_off_sun_light_div.innerHTML = '<label id="' + dom_id + "-map-options-checkbox-on-off-sun-light-checkbox" + '"><input type="checkbox" ' + checked + '><span class="label-text"><b>Show Sun light</b></span></label>';
+    on_off_sun_light_div.style.display = "inline";
+    on_off_sun_light_div.style.marginLeft = "10px";
+
+    /* Create div to allow the display of the ephemeris */
+    var checked = "";
+    if (show_ephemeris){
+        checked = "checked";
+    }
+    const on_off_ephemeris_div = document.createElement("div");
+    on_off_ephemeris_div.id = dom_id + "-map-options-checkbox-on-off-ephemeris"
+    map_options_div.appendChild(on_off_ephemeris_div);
+    on_off_ephemeris_div.innerHTML = '<label id="' + dom_id + "-map-options-checkbox-on-off-ephemeris-checkbox" + '"><input type="checkbox" ' + checked + '><span class="label-text"><b>Show ephemeris</b></span></label>';
+    on_off_ephemeris_div.style.display = "inline";
+    on_off_ephemeris_div.style.marginLeft = "10px";
+
+    /* Create div for map */
+    const map_div = document.createElement("div");
+    map_div.id = dom_id + "-worldmap"
+    map_container_div.appendChild(map_div);
+    
+    /* Create viewer. The following options are explained here for better understanding:
+       sceneModePicker: true, to have the option to change the scene to 2D map
+    */
+    const viewer = new Cesium.Viewer(map_div, {
+        imageryProvider : new Cesium.OpenStreetMapImageryProvider({
+            url : 'https://a.tile.openstreetmap.org/'
+        }),
+        baseLayerPicker: false,
+        fullscreenButton: false,
+        geocoder: false,
+        homeButton: false,
+        infoBox: false,
+        sceneModePicker: true,
+        navigationHelpButton: false,
+        navigationInstructionsInitiallyVisible: false
+    });
+
+    /* Function to destroy a viewer */
+    viewer.vboa_destroy = function(){
+        
+        /* Remove handlers */
+        for (const event of viewer.scene.vboa_events){
+            viewer.scene.event_handler.removeInputAction(event);
+        }
+        
+        /* Remove entities */
+        viewer.entities.removeAll();
+        
+        /* Destroy viewer */
+        viewer.destroy();
+        
+        return;
+        
+    }
+    
+    const scene = viewer.scene;
+
+    /* Disable depth of buffer as it gives errors for old graphic cards
+       Check: https://community.cesium.com/t/rendering-problem-since-cesium-1-45/7211/3 */
+    scene.logarithmicDepthBuffer = false;
+
+    /* Add czml data to the viewer */
+    var data_source_promise = viewer.dataSources.add(czml_data);
+
+    /* Create an event handler and add it to the scene */
+    const event_handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+    scene.event_handler = event_handler;
+    scene.vboa_events = [];
+
+    /**
+     * Add a mouse over handler to show latitude and longitude when
+     * the mouse is over the 3D world.
+     */
+    const entity = viewer.entities.add({
+        label: {
+            show: false,
+            showBackground: true,
+            font: "14px monospace",
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP,
+            pixelOffset: new Cesium.Cartesian2(-200, 0)
+        },
+    });
+    event_handler.setInputAction(function (event) {
+        const cartesian_and_coordinates = cartesian_to_coordinates(event, viewer);
+        const cartesian = cartesian_and_coordinates["cartesian"];
+        if (cartesian) {
+            const longitudeString = cartesian_and_coordinates["longitudeString"];
+            const latitudeString = cartesian_and_coordinates["latitudeString"];
+            entity.position = cartesian;
+            entity.label.show = true;
+            entity.label.text =
+                `Lon: ${`   ${longitudeString}`.slice(-7)}\u00B0` +
+                `\nLat: ${`   ${latitudeString}`.slice(-7)}\u00B0`;
+        } else {
+            entity.label.show = false;
+        }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+    scene.vboa_events.push(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+    /**
+     * Add a click handler to the 3D map to render the tooltip.
+     */
+    event_handler.setInputAction(
+        function(event) {
+            show_3dmap_path_information(event, scene, map_div.id)
+        },
+        Cesium.ScreenSpaceEventType.LEFT_CLICK
+    );
+    scene.vboa_events.push(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    /* Set the lead and trail timings in case the option to show all
+     * the path was requested */
+    /* Handle callback of dataSource.add to change the values of lead
+     * and trail time */
+    data_source_promise.then(
+        result => manage_data_source(viewer, show_all_path, show_sun_light, show_ephemeris),
+        error => toastr.error("Cesium was not able to add the data source due to: " + error),
+    );
+
+    /**
+     * Add a click handler to the set date button to change date on the timeline.
+     */
+    set_date_button.onclick = function(event) {
+        var date = document.getElementById(dom_id + "-map-options-input-date").value;
+
+        /* Add Z to the date to specify that the date is in UTC */
+        var julian_date = Cesium.JulianDate.fromIso8601(date + "Z");
+
+        /* Check that date is correct */
+        if (julian_date.dayNumber == 0){
+            toastr.error("The introduced date ('" + date + "') has not got a valid format.")
+            return;
+        }
+
+        var date_iso = Cesium.JulianDate.toIso8601(julian_date);
+        var start_period_iso = Cesium.JulianDate.toIso8601(viewer.clock.startTime);
+        var stop_period_iso = Cesium.JulianDate.toIso8601(viewer.clock.stopTime);
+
+        if (date_iso < start_period_iso){
+            toastr.error("The introduced date ('" + date_iso + "') is lower than the start of the period ('" + start_period_iso + "').")
+        }else if (date_iso > stop_period_iso){
+            toastr.error("The introduced date ('" + date_iso + "') is greater than the stop of the period ('" + stop_period_iso + "').")
+        }else{
+            viewer.clock.currentTime = julian_date;
+            toastr.success("The date of the timeline has been set to: " + date_iso)
+        }
+
+        return;
+    }
+
+    /**
+     * Add a click handler to the "Show all track" checkbox to
+     * show/hide all track
+     */
+    const on_off_all_path_checkbox = on_off_all_path_div.children[0].children[0];
+    on_off_all_path_checkbox.onclick = function(event) {
+        if (on_off_all_path_checkbox.checked){
+            on_off_all_path(viewer, true);
+        }else{
+            on_off_all_path(viewer, false);
+        }
+        
+    }
+
+    /**
+     * Add a click handler to the "Show Sun light" checkbox to
+     * show/hide Sun light
+     */
+    const on_off_sun_light_checkbox = on_off_sun_light_div.children[0].children[0];
+    on_off_sun_light_checkbox.onclick = function(event) {
+        if (on_off_sun_light_checkbox.checked){
+            on_off_sun_light(viewer, true);
+        }else{
+            on_off_sun_light(viewer, false);
+        }
+        
+    }
+
+    /**
+     * Add a click handler to the "Show ephemeris" checkbox to
+     * show/hide ephemeris
+     */
+    const on_off_ephemeris_checkbox = on_off_ephemeris_div.children[0].children[0];
+    on_off_ephemeris_checkbox.onclick = function(event) {
+        if (on_off_ephemeris_checkbox.checked){
+            on_off_ephemeris(viewer, true);
+        }else{
+            on_off_ephemeris(viewer, false);
+        }
+        
+    }
+    
+    return viewer;
+}
+
+/* Function to display a czml in a 3D world map given the id of the
+ * DOM where to attach it and a czml file */
+export function display_czml_file_3dmap(dom_id, czml_file, show_all_path = true, show_sun_light = false, show_ephemeris = true){
+
+    const czml_data = Cesium.CzmlDataSource.load(czml_file);
+
+    const viewer = display_czml_data_3dmap(dom_id, czml_data, show_all_path, show_sun_light, show_ephemeris);
+
+    return viewer;
+}
+
+/* Function to obtain coordinates from cartesian */
+function cartesian_to_coordinates(event, viewer){
+
+    const scene = viewer.scene;
+    
+    const cartesian = viewer.camera.pickEllipsoid(
+        event.endPosition,
+        scene.globe.ellipsoid
+    );
+
+    var longitudeString = "";
+    var latitudeString = "";
+    if (cartesian) {
+        const cartographic = Cesium.Cartographic.fromCartesian(
+            cartesian
+        );
+        longitudeString = Cesium.Math.toDegrees(
+            cartographic.longitude
+        ).toFixed(2);
+        latitudeString = Cesium.Math.toDegrees(
+            cartographic.latitude
+        ).toFixed(2);
+
+    }
+
+    const result = {
+        "cartesian": cartesian,
+        "longitudeString": longitudeString,
+        "latitudeString": latitudeString,
+    }
+
+    return result
+
+}
+
+/* Function to show the tooltip corresponding to a path on a cesium
+ * widget (not OL-Cesium) */
+function show_3dmap_path_information(event, scene, dom_id){
+
+    var paths = scene.drillPick(event.position);
+    if (paths.length > 0) {
+        
+        /* Pick first path */
+        var path = paths[0];
+        var path_id = path.id.id;
+        var path_tooltip = path.id.description.getValue();
+        const header_content = "Detailed information for path with id: " + path_id;
+        const body_content = path_tooltip;
+
+        /* Obtain coordinates understanding that event.position
+         * returns the position of the mouse inside the parent div */
+        const parent_div = document.getElementById(dom_id);
+        const parent_div_position = parent_div.getBoundingClientRect();
+        const parent_div_x = parent_div_position.x + pageXOffset;
+        const parent_div_y = parent_div_position.y + pageYOffset;
+        
+        const x = event.position.x + parent_div_x;
+        const y = event.position.y + parent_div_y;
+
+        const div = create_div(dom_id, path_id, header_content, body_content, x, y)
+        drag_element(div)
+    }
 }
 
 function create_div(dom_id, element_id, header_content, body_content, x, y){

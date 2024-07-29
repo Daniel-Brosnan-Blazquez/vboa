@@ -3,10 +3,10 @@
 {% block div_active_reports %}active{% endblock %}
 {% block reports_nav_content %}
 <div>
-  <a href="/rboa_nav/query-reports"><p class="fa fa-chevron-left"> Back to query reports</p></a>
+  <a href="{{ url_for('rboa_nav.query_reports_and_render') }}"><p class="fa fa-chevron-left"> Back to query reports</p></a>
 </div>
 <!-- Pagination -->
-{% with route = "/eboa_nav/query-report-pages", elements = reports, filters = filters %}
+{% with route = url_for('rboa_nav.query_reports_pages'), elements = reports, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
@@ -35,6 +35,7 @@
           <th>Generator</th>
           <th>Version</th>
           <th>UUID</th>
+          <th>Alerts</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -42,17 +43,17 @@
         {% for report in not_generated_reports %}
         <tr>
           <td><i id="expand-report-statuses-{{ report.report_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_report_statuses('expand-report-statuses-{{ report.report_uuid }}', '{{ report.report_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
-          <td><a href="/rboa_nav/query-report/{{ report.report_uuid }}">{{ report.name }}</a></td>
+          <td><a href="{{ url_for('rboa_nav.query_report', report_uuid=report.report_uuid) }}">{{ report.name }}</a></td>
           <td>{{ report.generation_mode }}</td>
-          <td>{{ report.validity_start }}</td>
-          <td>{{ report.validity_stop }}</td>
+          <td>{{ report.validity_start.isoformat() }}</td>
+          <td>{{ report.validity_stop.isoformat() }}</td>
           {% if report.validity_stop and report.validity_start %}
           <td>{{ ((report.validity_stop - report.validity_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}
           <td></td>
           {% endif %}
-          <td>{{ report.generation_start }}</td>
-          <td>{{ report.generation_stop }}</td>
+          <td>{{ report.generation_start.isoformat() }}</td>
+          <td>{{ report.generation_stop.isoformat() }}</td>
           {% if report.generation_stop and report.generation_start %}
           <td>{{ ((report.generation_stop - report.generation_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}
@@ -61,6 +62,7 @@
           <td>{{ report.reportGroup.name }}</td>
           <td>{{ report.generator }}</td>
           <td>{{ report.generator_version }}</td>
+          <td><a href="{{ url_for('rboa_nav.query_report_alerts_and_render', report_uuid=report.report_uuid) }}"><i class="fa fa-link"></i></a></td>
           <td>{{ report.report_uuid }}</td>
           <td>
             {% with report = report %}
@@ -84,6 +86,7 @@
           <th>Report group</th>
           <th>Generator</th>
           <th>Version</th>
+          <th>Alerts</th>
           <th>UUID</th>
           <th>Actions</th>
         </tr>
@@ -94,14 +97,14 @@
 </div>
 <!-- /.panel -->
 {% endif %}
-
+{% if reports|length > 0 %}
 <div class="panel panel-green">
   <div class="panel-heading">
     Table of reports
   </div>
   <!-- /.panel-heading -->
   <div class="panel-body">
-    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="reports-tables">
+    <table width="100%" class="table table-striped table-bordered table-hover table-search" id="reports-table">
       <thead>
         <tr>
           <th></th>          
@@ -117,6 +120,7 @@
           <th>Generator</th>
           <th>Version</th>
           <th>UUID</th>
+          <th>Alerts</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -124,17 +128,17 @@
         {% for report in successfully_generated_reports %}
         <tr>
           <td><i id="expand-report-statuses-{{ report.report_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_report_statuses('expand-report-statuses-{{ report.report_uuid }}', '{{ report.report_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
-          <td><a href="/rboa_nav/query-report/{{ report.report_uuid }}">{{ report.name }}</a></td>
+          <td><a href="{{ url_for('rboa_nav.query_report', report_uuid=report.report_uuid) }}">{{ report.name }}</a></td>
           <td>{{ report.generation_mode }}</td>
-          <td>{{ report.validity_start }}</td>
-          <td>{{ report.validity_stop }}</td>
+          <td>{{ report.validity_start.isoformat() }}</td>
+          <td>{{ report.validity_stop.isoformat() }}</td>
           {% if report.validity_stop and report.validity_start %}
           <td>{{ ((report.validity_stop - report.validity_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}
           <td></td>
           {% endif %}
-          <td>{{ report.generation_start }}</td>
-          <td>{{ report.generation_stop }}</td>
+          <td>{{ report.generation_start.isoformat() }}</td>
+          <td>{{ report.generation_stop.isoformat() }}</td>
           {% if report.generation_stop and report.generation_start %}
           <td>{{ ((report.generation_stop - report.generation_start).total_seconds() / 60)|round(3) }}</td>
           {% else %}
@@ -143,6 +147,7 @@
           <td>{{ report.reportGroup.name }}</td>
           <td>{{ report.generator }}</td>
           <td>{{ report.generator_version }}</td>
+          <td><a href="{{ url_for('rboa_nav.query_report_alerts_and_render', report_uuid=report.report_uuid) }}"><i class="fa fa-link"></i></a></td>
           <td>{{ report.report_uuid }}</td>
           <td>
             {% with report = report %}
@@ -166,6 +171,7 @@
           <th>Report group</th>
           <th>Generator</th>
           <th>Version</th>
+          <th>Alerts</th>
           <th>UUID</th>
           <th>Actions</th>
         </tr>
@@ -203,10 +209,25 @@
 </div>
 <!-- /.panel -->
 {% endif %}
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Table of ingested reports
+  </div>
+  <div id="reports-nav-no-data">
+    <br/>
+    <p style="text-indent: 1em">No "reports" have been found with the requested filters..</p>
+    <br/>
+  </div>
+  <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endif %}
 {% endblock %}
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
+      {% if reports|length > 0 %}
       {% with reports=reports %}
       {% include "graphs/reports_to_json.js" %}
       {% endwith %}
@@ -215,6 +236,7 @@
       {% endif %}
       {% if not show or show["generation_duration_xy"] %}
       vboa.create_report_generation_duration_xy(reports, "reports-nav-generation-duration-xy");
+      {% endif %}
       {% endif %}
     </script>
 {% endblock %}

@@ -10,6 +10,7 @@ import "datatables.net-select/js/dataTables.select.js";
 import "jszip/dist/jszip.min.js";
 import "chosen-js/chosen.jquery.min.js";
 import "metismenu/dist/metisMenu.min.js";
+import * as mathjs from "mathjs/lib/browser/math.js";
 import * as toastr from "toastr/toastr.js";
 import * as olMap from "ol/Map.js";
 import * as olView from "ol/View.js";
@@ -18,13 +19,17 @@ import * as vis_network from "vis-network/peer/umd/vis-network.min.js";
 import * as vis_timeline_graph2d from "vis-timeline/peer/umd/vis-timeline-graph2d.js";
 import * as chartjs from "chart.js/dist/Chart.js";
 import "chartjs-plugin-labels/build/chartjs-plugin-labels.min.js";
+import * as orbit from "./orbit.js";
 import * as graph from "./graph.js";
+import * as ingestionControlFunctions from "./ingestion_control.js";
 import * as sourceFunctions from "./sources.js";
 import * as reportFunctions from "./reports.js";
 import * as gaugeFunctions from "./gauges.js";
 import * as annotationCnfsFunctions from "./annotation_confs.js";
 import * as eventFunctions from "./events.js";
+import * as alertFunctions from "./alerts.js";
 import * as annotationFunctions from "./annotations.js";
+import * as userFunctions from "./users.js";
 import * as eventKeyFunctions from "./event_keys.js";
 import * as dimSignatureFunctions from "./dim_signatures.js";
 import * as erFunctions from "./explicit_references.js";
@@ -33,6 +38,8 @@ import * as dates from "./dates.js";
 import * as datatableFunctions from "./datatables.js";
 import * as selectorFunctions from "./selectors.js";
 import * as screenshotFunctions from "./screenshots.js";
+import * as renderFunctions from "./render.js";
+import * as nouislider from "nouislider/dist/nouislider.min.js";
 
 /* css */
 import "bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css";
@@ -49,30 +56,90 @@ import "chosen-js/chosen.min.css";
 import "ol/ol.css";
 import "metismenu/dist/metisMenu.min.css";
 import "toastr/build/toastr.min.css";
+import "nouislider/dist/nouislider.min.css";
+
+export let datatables = datatableFunctions;
+export let math = mathjs;
+export let slider = nouislider;
+export let messages = toastr;
+export let jquery = jQuery;
+
+/* Make sidebar collapse and page content expand */
+jQuery(document).ready(function(){
+    jQuery("#sidbar-collapse").click(function(){
+        jQuery("#sidbar-collapse").ready(function(){
+        const content_divs = document.getElementsByClassName("shrink-expand-content");
+        
+        for (const div of content_divs){
+            if (! div.classList.contains("expand-content")){
+                div.classList.add("expand-content")
+            }else{
+                div.classList.remove("expand-content")
+            }
+        }
+        })
+        
+        const sidebar_div = document.getElementById("sidebar");
+        if (! sidebar_div.classList.contains("in")){
+            sidebar_div.classList.add("in")
+        }else{
+            sidebar_div.classList.remove("in")
+        }
+
+        /* Raise event to resize the maps */
+        window.dispatchEvent( new Event("sidepanel-change") );
+        
+    });
+});
 
 /* Save the very same page in the div with id boa-html-page */
 jQuery(document).ready(function(){
-    var html_content = document.documentElement.innerHTML
-    var html = '<!doctype html>\n<html lang="en">\n' + html_content + "\n</html>"
-    var compressed_html = btoa(html)
-    document.getElementById("boa-html-page").innerHTML = compressed_html
+    var boa_html_page_node = document.getElementById("boa-html-page");
+    if (boa_html_page_node){
+        var html_content = document.documentElement.innerHTML;
+        var html = '<!doctype html>\n<html lang="en">\n' + html_content + "\n</html>";
+        var compressed_html = btoa(html);
+        boa_html_page_node.innerHTML = compressed_html;
+    }
 });
 
 setInterval(update_clock, 1000);
 
+/* Hide service processes status after 60 seconds */
+jQuery(document).ready(function(){
+    jQuery('#boa-management-menu').click(function(){
+        setTimeout(function () {
+            try{
+                // Remove attribute aria-expanded of the link element
+                var a = document.getElementById("boa-management-menu")
+                document.getElementById("boa-management-menu").removeAttributeNode(a.getAttributeNode("aria-expanded"));
+                // Remove collapse content
+                document.getElementById("boa-management-menu-li").classList.remove("mm-active");
+                document.getElementById("boa-management-menu-ul").classList.remove("mm-show");
+            }catch (error){
+            }
+        }, 60000);
+    });
+});
+
 /* Set clock */
 function update_clock() {
-    var date = new Date();
-    var local_date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-    document.getElementById("time-clock").innerHTML = "<div class='nav navbar-text'>" +
-        "<p style='background:white'>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
-        "</div>"
+    var time_clock_node = document.getElementById("time-clock");
+    if (time_clock_node){
+        var date = new Date();
+        var local_date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        time_clock_node.innerHTML = "<div>" +
+            "<p>UTC time: " + date.toISOString().split('.')[0] + " - Local time: " + local_date.toISOString().split('.')[0] + "</p>" +
+            "</div>"
+    }
 };
 
 /* Activate chosen for the multiple input selection */
-jQuery(".chosen-select").chosen({
-    no_results_text: "Nothing found for the following criteria: ",
-    width: "100%"
+jQuery(document).ready(function(){
+    jQuery(".chosen-select").chosen({
+        no_results_text: "Nothing found for the following criteria: ",
+        width: "100%"
+    });
 });
 
 /* Activate tooltips */
@@ -81,8 +148,8 @@ jQuery(document).ready(function(){
 });
 
 /* Manage side menu */
-jQuery(function() {
-    jQuery('#side-menu').metisMenu();
+jQuery(document).ready(function() {
+    jQuery('#left-side-menu').metisMenu();
 });
 
 /* Toasts configuration */
@@ -91,17 +158,19 @@ toastr.options.timeOut = 10000; // How long the toast will display without user 
 toastr.options.extendedTimeOut = 10000; // How long the toast will display after a user hovers over it (milliseconds)
 
 /* Associate datetimepicker functionality */
-jQuery(function () {
+jQuery(document).ready(function () {
     dates.activate_datetimepicker();
 });
 
-jQuery(".responsive-tabs").responsiveTabs({
-  accordionOn: ['xs', 'sm'] // xs, sm, md, lg
+jQuery(document).ready(function(){
+    jQuery(".responsive-tabs").responsiveTabs({
+        accordionOn: ['xs', 'sm'] // xs, sm, md, lg
+    });
 });
 
-/* 
+/***
 * Datatables
-*/
+***/
 /* Activate search on every column for datatables */
 jQuery(document).ready(function() {
     datatableFunctions.activate_search_on_columns();
@@ -112,7 +181,9 @@ jQuery(document).ready(function() {
 });
 
 /* Fill source statuses */
-jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
+jQuery(document).ready(function() {
+    jQuery(".query-source-statuses").one("focusin", sourceFunctions.fill_statuses);
+});
 
 /* Update view */
 export function update_view(parameters, repeat_cycle, view){
@@ -135,8 +206,28 @@ export function add_validity_start_validity_stop(dom_id){
     dates.add_validity_start_validity_stop(dom_id);
 }
 
+export function add_reported_validity_start_reported_validity_stop(dom_id){
+    dates.add_reported_validity_start_reported_validity_stop(dom_id);
+}
+
+export function add_reception_time(dom_id){
+    dates.add_reception_time(dom_id);
+}
+
 export function add_ingestion_time(dom_id){
     dates.add_ingestion_time(dom_id);
+}
+
+export function add_solved_time(dom_id){
+    dates.add_solved_time(dom_id);
+}
+
+export function add_notification_time(dom_id){
+    dates.add_notification_time(dom_id);
+}
+
+export function add_processing_duration(dom_id){
+    dates.add_processing_duration(dom_id);
 }
 
 export function add_ingestion_duration(dom_id){
@@ -145,6 +236,10 @@ export function add_ingestion_duration(dom_id){
 
 export function add_generation_time(dom_id){
     dates.add_generation_time(dom_id);
+}
+
+export function add_reported_generation_time(dom_id){
+    dates.add_reported_generation_time(dom_id);
 }
 
 export function add_event_duration(dom_id){
@@ -185,12 +280,16 @@ export function expand_annotation_values(dom_id, annotation_uuid){
     annotationFunctions.expand_values(dom_id, annotation_uuid);
 }
 
-/* Function to expand the sources associated to a source */
+export function expand_annotation_values_in_tooltip(dom_id, annotation_uuid){
+    annotationFunctions.expand_values_in_tooltip(dom_id, annotation_uuid);
+}
+
+/* Function to expand the statuses associated to a source */
 export function expand_source_statuses(dom_id, source_uuid){
     sourceFunctions.expand_source_statuses(dom_id, source_uuid);
 }
 
-/* Function to expand the reports associated to a report */
+/* Function to expand the statuses associated to a report */
 export function expand_report_statuses(dom_id, report_uuid){
     reportFunctions.expand_report_statuses(dom_id, report_uuid);
 }
@@ -212,9 +311,21 @@ export function fill_elements_into_selector_no_input(selector, route, search, fi
 
 };
 
-/*
+/***
+* Orbit functions
+***/
+/* Function get the fields contained in a TLE */
+export function get_tle_fields(tle_string){
+
+    const tle_fields = orbit.get_tle_fields(tle_string);
+
+    return tle_fields;
+
+};
+
+/***
 * Graph functions
-*/
+***/
 /* Function to display a pie chart given the id of the DOM where to
  * attach it and the items to show */
 export function display_pie(dom_id, data, options){
@@ -237,10 +348,10 @@ export function display_bar_time(dom_id, items, groups, height){
 
 /* Function to display a timeline given the id of the DOM where to
  * attach it and the items to show with corresponding groups */
-export function display_timeline(dom_id, items, groups){
+export function display_timeline(dom_id, items, groups, options){
 
     jQuery(document).ready(function(){
-        graph.display_timeline(dom_id, items, groups);
+        graph.display_timeline(dom_id, items, groups, options);
     });        
 
 };
@@ -257,10 +368,20 @@ export function display_network(dom_id, nodes, edges){
 
 /* Function to display an X-Time graph given the id of the DOM where to
  * attach it and the items to show with the corresponding groups */
-export function display_x_time(dom_id, items, groups, options){
+export function display_x_time(dom_id, items, groups, options, threshold){
 
     jQuery(document).ready(function(){
-        graph.display_x_time(dom_id, items, groups, options);
+        graph.display_x_time(dom_id, items, groups, options, threshold);
+    });
+
+};
+
+/* Function to display an X-Y graph given the id of the DOM where to
+ * attach it and the items to show with the corresponding groups */
+export function display_x_y(dom_id, items, groups, options, threshold){
+
+    jQuery(document).ready(function(){
+        graph.display_x_y(dom_id, items, groups, options, threshold);
     });
 
 };
@@ -275,9 +396,25 @@ export function display_map(dom_id, polygons){
 
 };
 
-/*
+/* Function to display a czml in a 3D world map given the id of the
+ * DOM where to attach it and a czml structure */
+export function display_czml_data_3dmap(dom_id, czml_data, show_all_path, show_sun_light, show_ephemeris){
+
+    return graph.display_czml_data_3dmap(dom_id, czml_data, show_all_path, show_sun_light, show_ephemeris);
+
+};
+
+/* Function to display a czml in a 3D world map given the id of the
+ * DOM where to attach it and a czml file */
+export function display_czml_file_3dmap(dom_id, czml_file, show_all_path, show_sun_light, show_ephemeris){
+
+    return graph.display_czml_file_3dmap(dom_id, czml_file, show_all_path, show_sun_light, show_ephemeris);
+
+};
+
+/***
 * EVENTS *
-*/
+***/
 
 /* Function to show a bar graph of events */
 export function prepare_events_data_for_bar(events, items, groups){
@@ -332,9 +469,27 @@ export function create_event_map(geometries, dom_id){
 
 };
 
-/*
+/***
+* ALERTS *
+***/
+
+/* Function to show a timeline of alerts */
+export function create_alert_timeline(alerts, dom_id){
+
+    jQuery(document).ready(function(){
+        alertFunctions.create_alert_timeline(alerts, dom_id);
+    });
+
+};
+
+/* Fill alert severities */
+jQuery(document).ready(function(){
+    jQuery(".query-alert-severities").one("focusin", alertFunctions.fill_severities);
+});
+
+/***
 * ANNOTATIONS *
-*/
+***/
 
 /* Function to show a map for annotations */
 export function create_annotation_map(geometries, dom_id){
@@ -345,9 +500,22 @@ export function create_annotation_map(geometries, dom_id){
 
 };
 
-/*
+/***
+* EXPLICIT REFERENCES *
+***/
+
+/* Function to show a network of explicit references */
+export function create_er_network(ers, dom_id){
+
+    jQuery(document).ready(function(){
+        erFunctions.create_er_network(ers, dom_id);
+    });
+
+};
+
+/***
 * GAUGES *
-*/
+***/
 
 /* Function to show a network of gauges */
 export function create_gauge_network(gauges, dom_id){
@@ -358,9 +526,9 @@ export function create_gauge_network(gauges, dom_id){
 
 };
 
-/*
+/***
 * SOURCES *
-*/
+***/
 
 /* Function to show a timeline of validities for the sources */
 export function create_source_validity_timeline(sources, dom_id){
@@ -408,12 +576,18 @@ export function create_source_generation_time_to_ingestion_time_xy(sources, dom_
 
 };
 
-/*
+export function submit_request_for_ingestion_management(form_id){
+    sourceFunctions.submit_request_for_ingestion_management(form_id);
+}
+
+/***
 * REPORTS *
-*/
+***/
 
 /* Fill report statuses */
-jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
+jQuery(document).ready(function(){
+    jQuery(".query-report-statuses").one("focusin", reportFunctions.fill_statuses);
+});
 
 /* Function to show a timeline of validities for the reports */
 export function create_report_validity_timeline(reports, dom_id){
@@ -440,9 +614,38 @@ export function show_selected_report(button){
 
 };
 
-/*
+/***
+* USERS *
+***/
+
+/* Function to expand the roles associated to a user */
+export function expand_user_roles(dom_id, user_uuid){
+    userFunctions.expand_user_roles(dom_id, user_uuid);
+}
+
+export function submit_request_for_users_management(form_id){
+    userFunctions.submit_request_for_users_management(form_id);
+}
+
+export function notify_import(message, error){
+    userFunctions.notify_import(message, error);
+}
+
+export function submit_request_for_import_users_management(form_id){
+    userFunctions.submit_request_for_import_users_management(form_id);
+}
+
+export function submit_request_for_import_users_manually_management(form_id){
+    userFunctions.submit_request_for_import_users_manually_management(form_id);
+}
+
+export function prepare_browse_file(){
+    userFunctions.prepare_browse_file();
+}
+
+/***
 * QUERY *
-*/
+***/
 
 /* Function to provide a way to request information from database from javascript */
 export function request_info(url, callback, parameters){
@@ -471,6 +674,13 @@ export function request_info_json_after_confirmation(url, json, confirmation_mes
 
 };
 
+/* Function to provide a way to request upload files from javascript */
+export function request_upload_files(url, callback, parameters){
+
+    queryFunctions.request_upload_files(url, callback, parameters);
+
+};
+
 /* Function render a received page */
 export function render_page(page){
 
@@ -491,7 +701,7 @@ function handle_return_status(parameters, command_status){
         }
         toastr.success(message)
     }
-    else{
+    else if (command_status["return_code"] != 403){
         var message = parameters["error_message"]
         if (command_status["output"] || command_status["error"]){
             message += "</br>The output of the executed command was:</br>" + command_status["output"] + "</br>The error of the executed command was: " + command_status["error"]
@@ -532,16 +742,18 @@ function switch_on_off_orc(parameters, orc_status) {
 };
 
 /* Function to update the status of the orc */
-setInterval(request_and_update_orc_status, 1000);
+setInterval(request_and_update_orc_status, 3000);
 
 request_and_update_orc_status(true)
 
 function request_and_update_orc_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
-        queryFunctions.request_info("/check-orc-status", update_orc_status, null);
+    var boa_management_menu_node = document.getElementById("boa-management-menu");
+    if (boa_management_menu_node){
+        if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
+            queryFunctions.request_info("/check-orc-status", update_orc_status, null);
+        }
     }
-    
 };
 
 function update_orc_status(parameters, orc_status) {
@@ -587,14 +799,17 @@ function switch_on_off_cron(parameters, cron_status) {
 };
 
 /* Function to update the status of the cron */
-setInterval(request_and_update_cron_status, 1000);
+setInterval(request_and_update_cron_status, 3000);
 
 request_and_update_cron_status(true)
 
 function request_and_update_cron_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
-        queryFunctions.request_info("/check-cron-status", update_cron_status, null);
+    var boa_management_menu_node = document.getElementById("boa-management-menu");
+    if (boa_management_menu_node){
+        if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
+            queryFunctions.request_info("/check-cron-status", update_cron_status, null);
+        }
     }
     
 };
@@ -671,14 +886,17 @@ function switch_on_off_scheduler(parameters, scheduler_status) {
 };
 
 /* Function to update the status of the scheduler */
-setInterval(request_and_update_scheduler_status, 1000);
+setInterval(request_and_update_scheduler_status, 3000);
 
 request_and_update_scheduler_status(true)
 
 function request_and_update_scheduler_status(first = false) {
 
-    if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
-        queryFunctions.request_info("/check-scheduler-status", update_scheduler_status, null);
+    var boa_management_menu_node = document.getElementById("boa-management-menu");
+    if (boa_management_menu_node){
+        if (document.getElementById("boa-management-menu").getAttribute("aria-expanded") == "true" || first == true){
+            queryFunctions.request_info("/check-scheduler-status", update_scheduler_status, null);
+        }
     }
     
 };
@@ -694,3 +912,138 @@ function update_scheduler_status(parameters, scheduler_status) {
     }
     
 };
+
+/* Function to create an index content at the beggining of the page */
+function create_index_of_content(divs, divs_already_covered, div_index_of_content, iterator, level, parent_position){
+    for (const div of divs){
+        if (!divs_already_covered.includes(div)){
+            // Create link in the div with class panel-heading (to go
+            // to the element and to come back to the index of
+            // content)
+            const a_href_element = document.createElement("a");
+            div.appendChild(a_href_element);
+            a_href_element.setAttribute("name", "BOA-ELEMENT-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
+            a_href_element.setAttribute("href", "#BOA-INDEX-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
+            a_href_element.innerHTML = "<i class='fa fa-level-up'></i>";
+            a_href_element.classList.add("panel-index-reference");
+            
+            // Create link for the element in the index of content (to go
+            // to the element and to come back to the index of
+            // content)
+            const div_index_element = document.createElement("div");
+            div_index_element.classList.add("row");
+            div_index_of_content.appendChild(div_index_element);
+            const a_index_element = document.createElement("a");
+            div_index_element.appendChild(a_index_element);
+            a_index_element.setAttribute("name", "BOA-INDEX-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
+            a_index_element.setAttribute("href", "#BOA-ELEMENT-OF-CONTENT-" + iterator + "-" + level + "-" + parent_position);
+            a_index_element.textContent = div.textContent.replace(/\n */g,"").replace(/ *$/g,"").replace(/^ */g,"").replace(/ /g,"_");
+            a_index_element.classList.add("index-element");
+
+            divs_already_covered.push(div)
+
+            // Create the collapse div with the sub-elements
+            const child_divs = div.parentNode.getElementsByClassName("panel-heading");
+            if (child_divs.length > 1){
+                a_index_element.innerHTML = a_index_element.innerHTML + "     " + "<a  data-toggle='collapse' data-parent='#accordion' href='#boa-index-of-content-" + iterator + "-level-" + level + "'><i class='fa fa-angle-double-down'></i></a>";
+                const div_next_level = document.createElement("div");
+                div_next_level.classList.add("row");
+                div_next_level.classList.add("collapse");
+                div_next_level.classList.add("panel-index");
+                div_next_level.id = "boa-index-of-content-" + iterator + "-level-" + level;
+                div_index_element.parentNode.insertBefore(div_next_level, div_index_element.nextSibling);
+                create_index_of_content(child_divs, divs_already_covered, div_next_level, 0, level+1, iterator);
+            };
+            iterator++;
+
+        };
+    };    
+};
+
+jQuery(document).ready(function() {
+    // Build the div where the index of content will be placed
+    const h1_page_header = document.getElementsByClassName("page-header");
+    if (h1_page_header.length > 0){
+        const div_page_header = h1_page_header[0].parentNode;
+        if (! div_page_header.classList.contains("panel-no-index")){
+            const div_index_of_content = document.createElement("div");
+            div_index_of_content.classList.add("row");
+            div_index_of_content.id = "boa-index-of-content";
+            div_page_header.parentNode.insertBefore(div_index_of_content, div_page_header.nextSibling);
+
+            // Obtain panel headings to be traced in index of content
+            const divs = document.getElementsByClassName("panel-heading");
+            
+            jQuery("#boa-index-of-content").append("<div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'><a data-toggle='collapse' data-parent='#accordion' href='#panel-body-index-of-conent'>Index of content <span class='fa fa-angle-double-down'></span></a></h3></div><div class='panel-body panel-collapse panel-index collapse in' id='panel-body-index-of-conent'></div></div>");
+
+            const div_panel_body_index = document.getElementById("panel-body-index-of-conent");
+            
+            var divs_already_covered = [];
+            var iterator = 0;
+            var level = 0;
+
+            create_index_of_content(divs, divs_already_covered, div_panel_body_index, iterator, level, -1);
+        };
+    };
+});
+
+
+/* Event key listeners */
+document.addEventListener("keydown", function(event) {
+    const key = event.key
+    if (key === "Escape") {
+        // Escape key is used to close tooltips
+        // Obtain tooltips
+        const draggable_divs = document.getElementsByClassName("draggable-div")
+
+        // Remove the last one
+        if (draggable_divs.length > 0){
+            const last_draggable_div = draggable_divs[draggable_divs.length - 1]
+            last_draggable_div.parentNode.removeChild(last_draggable_div);
+        }
+    }
+});
+
+
+/***
+ * INGESTION CONTROL
+ ***/
+
+export function submit_request_for_manual_ingestion_management(form_id){
+    ingestionControlFunctions.submit_request_for_manual_ingestion_management(form_id);
+}
+
+export function clean_selected_files_manual_ingestion(form_id){
+    ingestionControlFunctions.clean_selected_files_manual_ingestion(form_id);
+}
+
+export function prepare_browse_files(){
+    ingestionControlFunctions.prepare_browse_files();
+}
+
+/***
+* AUXILIARY FUNCTIONS
+***/
+export function show_loader_countdown(number){
+    setTimeout(function(){
+        var loader_text = document.getElementById("updating-page-count-down");
+        loader_text.className = "loader-text";
+        loader_text.innerHTML = "<p>" + number + "</p>";
+        show_loader_countdown(number-1)
+    }, 1000);
+}
+
+/***
+* SHOW FUNCTIONS
+***/
+export function show_element_based_on_checkbox(checkbox, element_id){
+
+    var element = document.getElementById(element_id);
+    if (checkbox.checked){
+        element.hidden = false;
+    }
+    else{
+        element.hidden = true;
+    }
+    
+}

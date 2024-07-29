@@ -13,36 +13,72 @@
       <div class="col-xs-3">
         <div class="panel panel-primary">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of expected processings</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: steelblue">{{ sources|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: steelblue" id="summary-ingestion-control-expected">{{ sources|length }}</div>
         </div>
       </div>
       {% endif %}
-      {% if "successful" in show and show["successful"] == True %}
+      {% if "successful" in show and show["successful"] == True and successful_processings|length > 0 %}
       <!-- Successful processings -->
       <div class="col-xs-3">
         <div class="panel panel-success">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of successful processings</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: green">{{ successful_processings|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-ingestion-control-successful">{{ successful_processings|length }}</div>
         </div>
       </div>
       {% endif %}
-      {% if "errors" in show and show["errors"] == True %}
       <!-- Processings in error -->
+      {% if "errors" in show and show["errors"] == True %}
+      {% if ingestion_errors|length > 0 %}
       <div class="col-xs-3">
         <div class="panel panel-danger">
-          <div class="panel-heading" align="center" style="font-size: 20px">Number of errors</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: darkred">{{ ingestion_errors|length }}</div>
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of ingestion errors</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred" id="summary-ingestion-control-error">{{ ingestion_errors|length }}</div>
+        </div>
+      </div>
+      {% elif not "expected" in show %}
+      <div class="col-xs-3">
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of ingestion errors</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-ingestion-control-no-errors">0</div>
         </div>
       </div>
       {% endif %}
-      {% if "alerts" in show and show["alerts"] == True %}
+      {% endif %}
+      <!-- Processings incomplete -->
+      {% if "errors" in show and show["errors"] == True %}
+      {% if incomplete_ingestions|length > 0 %}
+      <div class="col-xs-3">
+        <div class="panel panel-danger">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of incomplete ingestions</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred" id="summary-ingestion-control-incomplete">{{ incomplete_ingestions|length }}</div>
+        </div>
+      </div>
+      {% elif not "expected" in show %}
+      <div class="col-xs-3">
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of incomplete ingestions</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-ingestion-control-no-incomplete">0</div>
+        </div>
+      </div>
+      {% endif %}
+      {% endif %}
       <!-- Alerts -->
+      {% if "alerts" in show and show["alerts"] == True %}
+      {% if alerts|length > 0 %}
       <div class="col-xs-3">
         <div class="panel panel-warning">
           <div class="panel-heading" align="center" style="font-size: 20px">Number of alerts</div>
-          <div class="panel-body" align="center" style="font-size: 50px; color: gold">{{ alerts|length }}</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: gold" id="summary-ingestion-control-alert">{{ alerts|length }}</div>
         </div>
       </div>
+      {% elif not "expected" in show %}
+      <div class="col-xs-3">
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-ingestion-control-no-alerts">0</div>
+        </div>
+      </div>
+      {% endif %}
       {% endif %}
     </div>
   </div>

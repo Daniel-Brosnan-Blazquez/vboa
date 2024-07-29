@@ -10,11 +10,12 @@ function create_annotation_tooltip_text(annotation){
 
     return "<table border='1'>" +
         "<tr><td>UUID</td><td>" + annotation['id'] + "</td></tr>" +
-        "<tr><td>Explicit reference</td><td>" + annotation['explicit_reference'] + "</td></tr>" +
+        "<tr><td>Explicit reference</td><td><a href='/eboa_nav/query-er/" + annotation["explicit_ref_uuid"] + "'>" + annotation['explicit_reference'] + "</a></td><tr>" +
         "<tr><td>Annotation name</td><td>" + annotation['annotation_cnf']['name'] + "</td></tr>" +
         "<tr><td>Annotation system</td><td>" + annotation['annotation_cnf']['system'] + "</td></tr>" +
-        "<tr><td>Source</td><td>" + annotation['source'] + "</td></tr>" +
+        "<tr><td>Source</td><td><a href='/eboa_nav/query-source/" + annotation["source_uuid"] + "'>" + annotation['source'] + "</a></td></tr>" +
         "<tr><td>Ingestion time</td><td>" + annotation['ingestion_time'] + "</td></tr>" +
+        "<tr id='expand-tooltip-values-annotation-" + annotation["id"] + "'><td>Values</td><td><i class='fa fa-plus-square green' onclick='" + 'vboa.expand_annotation_values_in_tooltip("expand-tooltip-values-annotation-' + annotation["id"] + '", "' + annotation["id"] + '")' + "' data-toggle='tooltip' title='Click to show the related values'></i></td></tr>" +
         "</table>"
 };
 
@@ -69,7 +70,11 @@ export function expand_values(dom_id, annotation_uuid){
     }
     else {
         // Open this row
-        query.request_info("/eboa_nav/query-jsonify-annotation-values/" + annotation_uuid, show_annotation_values, row);
+        var parameters = {
+            "row": row,
+            "insert_method": insert_in_datatable
+        }
+        query.request_info("/eboa_nav/query-jsonify-annotation-values/" + annotation_uuid, show_annotation_values, parameters);
         tr.addClass('shown');
         tdi.first().removeClass('fa-plus-square');
         tdi.first().removeClass('green');
@@ -78,8 +83,55 @@ export function expand_values(dom_id, annotation_uuid){
     }
 };
 
-function show_annotation_values(row, values){
+/* Function to show the values related to an annotation in a tooltip */
+export function expand_values_in_tooltip(dom_id, annotation_uuid){
 
+    var tr = document.getElementById(dom_id);
+    // Structure is /div/div/table/tbody/tr
+    var container_div = tr.parentNode.parentNode.parentNode.parentNode;
+    var tdi = tr.getElementsByTagName("i")[0];
+
+    var expanded_div = container_div.querySelector("#expanded_values")
+    if (tr.classList.contains("expanded")) {
+        // This tr is already open - close it
+        expanded_div.style.display = 'none';
+        tr.classList.remove('expanded');
+        tdi.classList.remove('fa-minus-square');
+        tdi.classList.remove('red');
+        tdi.classList.add('fa-plus-square');
+        tdi.classList.add('green');
+    }
+    else if (expanded_div == undefined){
+        // Create the expanded tr
+        const expanded_div = document.createElement("div");
+        expanded_div.id = "expanded_values"        
+        container_div.appendChild(expanded_div);
+        var parameters = {
+            "row": expanded_div,
+            "insert_method": insert_in_html_table
+        }
+        query.request_info("/eboa_nav/query-jsonify-annotation-values/" + annotation_uuid, show_annotation_values, parameters);
+        tr.classList.add('expanded');
+        tdi.classList.remove('fa-plus-square');
+        tdi.classList.remove('green');
+        tdi.classList.add('fa-minus-square');
+        tdi.classList.add('red');
+    }
+    else {
+        // Open this tr
+        tr.classList.add('expanded');
+        tdi.classList.remove('fa-plus-square');
+        tdi.classList.remove('green');
+        tdi.classList.add('fa-minus-square');
+        tdi.classList.add('red');
+        expanded_div.style.display = 'block';        
+    }
+};
+
+function show_annotation_values(parameters, values){
+
+    var row = parameters["row"]
+    
     var table = '<table class="table">' +
         '<thead>' +
         '<tr>' +
@@ -107,8 +159,15 @@ function show_annotation_values(row, values){
     table = table + '</tbody>' +
         '</table>';
     
-    row.child(table).show();
+    parameters["insert_method"](row, table);
 
     return
 }
 
+function insert_in_datatable(row, table){
+    row.child(table).show();
+}
+
+function insert_in_html_table(row, table){
+    row.innerHTML = table;
+}

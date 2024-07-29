@@ -7,10 +7,12 @@ var events = [
             "system": "{{ event.gauge.system }}"
         },
         "explicit_reference": "{{ event.explicitRef.explicit_ref }}",
-        "ingestion_time": "{{ event.ingestion_time }}",
+        "explicit_ref_uuid": "{{ event.explicitRef.explicit_ref_uuid }}",
+        "ingestion_time": "{{ event.ingestion_time.isoformat() }}",
         "source": "{{ event.source.name }}",
-        "start": "{{ event.start }}",
-        "stop": "{{ event.stop }}",
+        "source_uuid": "{{ event.source.source_uuid }}",
+        "start": "{{ event.start.isoformat() }}",
+        "stop": "{{ event.stop.isoformat() }}",
     },
     {% endfor %}
 ]

@@ -9,6 +9,7 @@ module vboa
 import os
 import numpy
 import re
+import itertools
 
 # Import flask utilities
 from flask import Flask, current_app, render_template
@@ -16,12 +17,21 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 # Import contents
 from vboa import panel
-from vboa.eboa_nav import eboa_nav
-from vboa.rboa_nav import rboa_nav
-from vboa.boa_health import boa_health
-from vboa.ingestion_control import ingestion_control
-from vboa.reporting_control import reporting_control
-from vboa.boa_scheduler import boa_scheduler
+from vboa import service_management
+from vboa import screenshots
+from vboa.views import users_management
+from vboa.views.eboa_nav import eboa_nav
+from vboa.views.rboa_nav import rboa_nav
+from vboa.views.boa_health import boa_health
+from vboa.views.ingestion_control import ingestion_control
+from vboa.views.reporting_control import reporting_control
+from vboa.views.boa_scheduler import boa_scheduler
+from vboa.views.general_view_alerts import general_view_alerts
+from vboa.views.users_management import users_management
+from vboa.views.user_profile import user_profile
+from vboa.views.earth_observation import earth_observation
+from vboa.metrics import metrics
+from vboa.query import query
 
 # Import ingestion functions
 import eboa.ingestion.functions as ingestion_functions
@@ -29,44 +39,117 @@ import eboa.ingestion.functions as ingestion_functions
 # Import alert severity codes
 from eboa.engine.alerts import alert_severity_codes
 
+# Import method to obtain the resources PATH
+from eboa.engine.functions import get_resources_path
+
+# Import filters
+from vboa.filters import filters_for_events_in_json, filters_for_annotations_in_json, filters_for_values_in_json, filters_for_dates_in_json, filters_for_lists
+
+# This is to be reviewed
+from flask_security import Security, current_user, hash_password, \
+     SQLAlchemySessionUserDatastore, utils
+import flask_security
+from vboa.security import auth_required, roles_accepted
+from uboa.datamodel.base import db_session
+from uboa.datamodel.users import User, Role
+
 def create_app():
     """
     Create and configure an instance of the Flask application.
     """
     app = Flask(__name__, instance_relative_config=True)
-    app.jinja_env.add_extension('jinja2.ext.do')
-    app.config.from_mapping(
-        SECRET_KEY=b'\xca+-\x9b\xcek.\x9fkM \xea\x8d\x1c\x99&'
-    )
+    app.jinja_env.add_extension("jinja2.ext.do")
+
+    # Get secret key
+    web_server_secret_key_path = get_resources_path() + "/web_server_secret_key.txt"
+    if os.path.isfile(web_server_secret_key_path):
+        web_server_secret_key_file = open(web_server_secret_key_path)
+        secret_key = web_server_secret_key_file.readline().replace("\n", "")
+    else:
+        secret_key = os.urandom(24)
+    # end if
+
+    if "VBOA_TEST" in os.environ and os.environ["VBOA_TEST"] == "TRUE":
+        app.config.from_mapping(
+            SECRET_KEY=secret_key,
+            SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
+            SECURITY_CHANGEABLE=True,
+            SECURITY_SEND_PASSWORD_CHANGE_EMAIL=False,
+            SESSION_COOKIE_SECURE=False,
+            REMEMBER_COOKIE_SECURE=False,
+            SESSION_COOKIE_HTTPONLY=True,
+            REMEMBER_COOKIE_HTTPONLY=True
+        )
+    else:
+        app.config.from_mapping(
+            SECRET_KEY=secret_key,
+            SECURITY_PASSWORD_SALT="ALWAYS_THE_SAME",
+            SECURITY_CHANGEABLE=True,
+            SECURITY_SEND_PASSWORD_CHANGE_EMAIL=False,
+            SESSION_COOKIE_SECURE=True,
+            REMEMBER_COOKIE_SECURE=True,
+            SESSION_COOKIE_HTTPONLY=True,
+            REMEMBER_COOKIE_HTTPONLY=True
+        )
 
     app.register_blueprint(panel.bp)
+    app.register_blueprint(service_management.bp)
+    app.register_blueprint(screenshots.bp)
     app.register_blueprint(eboa_nav.bp)
     app.register_blueprint(rboa_nav.bp)
     app.register_blueprint(boa_health.bp)
     app.register_blueprint(ingestion_control.bp)
     app.register_blueprint(reporting_control.bp)
+    app.register_blueprint(earth_observation.bp)
     app.register_blueprint(boa_scheduler.bp)
+    app.register_blueprint(general_view_alerts.bp)
+    app.register_blueprint(users_management.bp)
+    app.register_blueprint(user_profile.bp)
+    app.register_blueprint(metrics.bp)
+    app.register_blueprint(query.bp)
 
+    if "VBOA_DEBUG" in os.environ and os.environ["VBOA_DEBUG"] == "TRUE":
+        app.debug = True
+        toolbar = DebugToolbarExtension(app)
+    else:
+        app.debug = False
+    # end if
+    
     # the toolbar is only enabled in debug mode:
-    app.debug = False
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
-    toolbar = DebugToolbarExtension(app)
+    # Setup Flask-Security
+    app.config["SECURITY_USER_IDENTITY_ATTRIBUTES"] = [
+        {"email": {"mapper": flask_security.uia_email_mapper, "case_insensitive": True}},
+        {"username": {"mapper": flask_security.uia_username_mapper}}
+    ]
+    app.config["SECURITY_TRACKABLE"] = True
+    user_datastore = SQLAlchemySessionUserDatastore(db_session, User, Role)
+    security = Security(app, user_datastore)
 
+    ########
     # Error handeling
+    ########
     @app.errorhandler(404)
     def page_not_found(e):
-        return render_template("panel/error.html"), 404
+        return render_template("panel/error.html", error_code=404), 404
 
     @app.errorhandler(500)
     def internal_server_error(e):
-        return render_template("panel/error.html"), 500
+        return render_template("panel/error.html", error_code=500), 500
 
     @app.errorhandler(403)
     def page_forbidden(e):
-        return render_template("panel/error.html"), 403
-    
+        return render_template("panel/forbidden.html", error_code=403), 403
+
+    @app.errorhandler(405)
+    def page_forbidden(e):
+        return render_template("panel/forbidden.html", error_code=405), 405
+
+    ########
+    # Tests
+    ########
     @app.template_test()
     def has_value(values, name, value):
         filtered_values = [available_value for available_value in values if available_value.name == name and available_value.value == value]
@@ -82,6 +165,29 @@ def create_app():
         matching_text_formatted = "^" + matching_text + "$"
         return re.match(matching_text_formatted, item)
 
+    ########
+    # Filters for events in json format
+    ########
+    filters_for_events_in_json.add_filters(app)
+
+    ########
+    # Filters for annotations in json format
+    ########
+    filters_for_annotations_in_json.add_filters(app)
+
+    ########
+    # Filters for values in json format
+    ########
+    filters_for_values_in_json.add_filters(app)
+
+    ########
+    # Filters for dates in json format
+    ########
+    filters_for_dates_in_json.add_filters(app)
+
+    ########
+    # Filters for events in DDBB format
+    ########
     @app.template_filter()
     def reject_events_with_link_name(list_of_events, link_name):
         """Convert a string to all caps."""
@@ -102,35 +208,6 @@ def create_app():
         result = [event for event in list_of_events if len([value for value in event.eventTexts if value.name == name and value.value == filter]) > 0]
         
         return result
-
-    @app.template_filter()
-    def filter_annotations(list_of_annotations, annotation_name, annotation_system = None):
-        """Convert a string to all caps."""
-        result = [annotation for annotation in list_of_annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None)]
-        
-        return result
-
-    @app.template_filter()
-    def filter_annotations_by_text_value(list_of_annotations, name, filter):
-        """Convert a string to all caps."""
-        result = [annotation for annotation in list_of_annotations if len([value for value in annotation.annotationTexts if value.name == name and value.value == filter]) > 0]
-        
-        return result
-
-    @app.template_filter()
-    def filter_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
-        """Convert a string to all caps."""
-        result = [reference for reference in list_of_references for annotation in reference.annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and len([value for value in annotation.annotationTexts if value.name == value_name and value.value == filter]) > 0]
-        
-        return result
-
-    @app.template_filter()
-    def reject_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
-        """Convert a string to all caps."""
-        result = [reference for reference in list_of_references if len([annotation for annotation in reference.annotations if len([value for value in annotation.annotationTexts if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and value.name == value_name and value.value == filter]) > 0]) == 0]
-
-        return result
-
 
     @app.template_filter()
     def events_group_by_text_value(list_of_events, name):
@@ -199,27 +276,6 @@ def create_app():
         # end for
         return result
 
-    @app.template_filter()    
-    def refs_get_first_annotation(list_of_refs, name = None, system = None):
-        """Convert a string to all caps."""
-        result = []
-        for ref in list_of_refs:
-            if name and system:
-                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name and annotation.annotationCnf.system == system]
-            elif name:
-                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name]
-            elif system:
-                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.system == system]
-            else:
-                annotations = ref.annotations
-            # end if
-            if len(annotations) > 0:
-                result.append(annotations[0])
-            # end if
-        # end for
-        
-        return result
-
     @app.template_filter()
     def filter_events_by_text_values(list_of_events, name, values):
         """Convert a string to all caps."""
@@ -250,19 +306,81 @@ def create_app():
         durations = [event.get_duration() for event in list_of_events]
         return max(durations)
 
+    ########
+    # Filters for annotations in DDBB format
+    ########
     @app.template_filter()
-    def flatten(list_of_lists):
-        return [item for list in list_of_lists for item in list]
+    def filter_annotations(list_of_annotations, annotation_name, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [annotation for annotation in list_of_annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None)]
+        
+        return result
 
+    @app.template_filter()
+    def filter_annotations_by_text_value(list_of_annotations, name, filter):
+        """Convert a string to all caps."""
+        result = [annotation for annotation in list_of_annotations if len([value for value in annotation.annotationTexts if value.name == name and value.value == filter]) > 0]
+        
+        return result
+
+    ########
+    # Filters for annotations in DDBB format
+    ########
+    @app.template_filter()
+    def filter_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [reference for reference in list_of_references for annotation in reference.annotations if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and len([value for value in annotation.annotationTexts if value.name == value_name and value.value == filter]) > 0]
+        
+        return result
+
+    @app.template_filter()
+    def reject_references_by_annotation_text_value(list_of_references, annotation_name, value_name, filter, annotation_system = None):
+        """Convert a string to all caps."""
+        result = [reference for reference in list_of_references if len([annotation for annotation in reference.annotations if len([value for value in annotation.annotationTexts if annotation.annotationCnf.name == annotation_name and ((annotation_system != None and annotation.annotationCnf.system == annotation_system) or annotation_system == None) and value.name == value_name and value.value == filter]) > 0]) == 0]
+
+        return result
+
+    @app.template_filter()    
+    def refs_get_first_annotation(list_of_refs, name = None, system = None):
+        """Convert a string to all caps."""
+        result = []
+        for ref in list_of_refs:
+            if name and system:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name and annotation.annotationCnf.system == system]
+            elif name:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.name == name]
+            elif system:
+                annotations = [annotation for annotation in ref.annotations if annotation.annotationCnf.system == system]
+            else:
+                annotations = ref.annotations
+            # end if
+            if len(annotations) > 0:
+                result.append(annotations[0])
+            # end if
+        # end for
+        
+        return result
+
+    ########
+    # Filters for alerts in DDBB format
+    ########
     @app.template_filter()
     def get_severity_label(severity):
         severity_labels = [severity_label for severity_label in alert_severity_codes if alert_severity_codes[severity_label] == severity]
         return severity_labels[0]
 
-    @app.template_filter()
-    def get_value_key(dict, key):
+    ########
+    # Filters for values in DDBB format
+    ########
 
-        return dict[key]
+    ########
+    # Filters for lists
+    ########
+    filters_for_lists.add_filters(app)
+    
+    @app.template_filter()
+    def flatten(list_of_lists):
+        return [item for list in list_of_lists for item in list]
 
     @app.template_filter()
     def mean(list_of_items):
@@ -277,9 +395,43 @@ def create_app():
         
         return sorted_list
 
-    ###
+    @app.template_filter()
+    def group_by_substring(list_of_items, attribute, substring_start, substring_stop, sort = True):
+        """Group by the substring of an attribute of every item."""
+        sorted_list = list_of_items.copy()
+        if sort:
+            sorted_list.sort(key=lambda x: eval("x." + attribute))
+        # end if
+        iter_groups = itertools.groupby(sorted_list, lambda y: eval("y." + attribute + "[" + substring_start + ":" + substring_stop + "]"))
+
+        groups = []
+        for key, group in iter_groups:
+            group_elements = []
+            for item in group:
+                group_elements.append(item)
+            # end for
+            groups.append((key, group_elements))
+        # end for
+
+        return groups
+
+    @app.template_filter()
+    def convert_to_tuple(list_to_covert):
+        """Convert a list to a tuple"""
+        
+        return tuple(list_to_covert)
+
+    ########
+    # Filters for dicts
+    ########
+    @app.template_filter()
+    def get_value_key(dict, key):
+
+        return dict[key]
+
+    ########
     # Date operations
-    ###
+    ########
     @app.template_filter()
     def convert_eboa_events_to_date_segments(list_of_events):
         """Convert list of events to date segments."""

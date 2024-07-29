@@ -1,0 +1,67 @@
+<triggering_rules>
+  <rule>
+    <source_mask>.*DEC_F_RECV.*</source_mask>
+    <source_type>DEC_F_RECV</source_type>
+    <tool>
+      <command>eboa_ingestion.py -p eboa.ingestions.ingestion_dec.ingestion_dec -f </command>
+    </tool>
+  </rule>
+  <rule skip="true">
+    <source_mask>.*FILE_TO_SKIP_1.*</source_mask>
+    <source_type>FILE_TO_SKIP_1</source_type>
+    <tool>
+      <command>echo "File should have not been processed"</command>
+    </tool>
+  </rule>
+  <rule skip="true">
+    <source_mask>.*FILE_TO_SKIP_2.*</source_mask>
+    <source_type>FILE_TO_SKIP_2</source_type>
+    <tool>
+      <command>echo "File should have not been processed"</command>
+    </tool>
+  </rule>
+  <rule>
+    <source_mask>.*FILE_TO_PROCESS_1.*</source_mask>
+    <source_type>FILE_TO_PROCESS_1</source_type>
+    <tool>
+      <command>echo "File should be processed"</command>
+    </tool>
+  </rule>
+  <rule>
+    <source_mask>.*FILE_TO_PROCESS_2.*</source_mask>
+    <source_type>FILE_TO_PROCESS_2</source_type>
+    <tool>
+      <command>echo "File should be processed"</command>
+    </tool>
+    <dependencies>
+      <source_type>FILE_TO_PROCESS_1</source_type>
+    </dependencies>
+  </rule>
+  <rule>
+    <source_mask>.*FILE_TO_PROCESS_3.*</source_mask>
+    <source_type>FILE_TO_PROCESS_3</source_type>
+    <tool>
+      <command>echo "File should be processed"</command>
+    </tool>
+  </rule>
+  <rule>
+    <source_mask>.*FILE_TO_PROCESS_4.*</source_mask>
+    <source_type>FILE_TO_PROCESS_4</source_type>
+    <tool>
+      <command>echo "File should be processed"</command>
+    </tool>
+    <dependencies>
+      <source_type>FILE_TO_PROCESS_5</source_type>
+    </dependencies>
+  </rule>
+  <rule>
+    <source_mask>.*FILE_TO_PROCESS_5.*</source_mask>
+    <source_type>FILE_TO_PROCESS_5</source_type>
+    <tool>
+      <command>echo "File should be processed"</command>
+    </tool>
+    <dependencies>
+      <source_type>FILE_TO_PROCESS_4</source_type>
+    </dependencies>
+  </rule>
+</triggering_rules>

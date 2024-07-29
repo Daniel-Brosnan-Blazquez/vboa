@@ -1,0 +1,88 @@
+<!-- Summary -->
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#summary-general-view-alerts">General view of alerts summary <span class="fa fa-angle-double-down"></span></a>
+      </h3>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body panel-collapse collapse in" id="summary-general-view-alerts">
+      {% if "sources" in show and show["sources"] == True %}
+      <!-- Sources alerts -->
+      <div class="col-xs-3">
+        {% if source_alerts|length > 0 %}
+         <div class="panel panel-danger">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of sources alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred" id="summary-general-view-alerts-sources">{{ source_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of sources alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-general-view-alerts-no-sources">{{ source_alerts|length }}</div>
+        {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% if "events" in show and show["events"] == True %}
+      <!-- Events alerts -->
+      <div class="col-xs-3">
+        {% if event_alerts|length > 0 %}
+         <div class="panel panel-danger">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of events alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred" id="summary-general-view-alerts-events">{{ event_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of events alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-general-view-alerts-no-events">{{ event_alerts|length }}</div>
+        {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% if "annotations" in show and show["annotations"] == True %}
+      <!-- Annotations alerts -->
+      <div class="col-xs-3">
+        {% if annotation_alerts|length > 0 %}
+         <div class="panel panel-danger">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of annotations alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred" id="summary-general-view-alerts-annotations">{{ annotation_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of annotations alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-general-view-alerts-no-annotations">{{ annotation_alerts|length }}</div>
+        {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% if "reports" in show and show["reports"] == True %}
+      <!-- Reports alerts -->
+      <div class="col-xs-3">
+        {% if report_alerts|length > 0 %}
+         <div class="panel panel-danger">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of reports alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred" id="summary-general-view-alerts-reports">{{ report_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of reports alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-general-view-alerts-no-reports">{{ report_alerts|length }}</div>
+        {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% if "ers" in show and show["ers"] == True %}
+      <!-- Explicit references alerts -->
+      <div class="col-xs-3">
+       {% if er_alerts|length > 0 %}
+         <div class="panel panel-danger">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of explicit references alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: darkred" id="summary-general-view-alerts-ers">{{ er_alerts|length }}</div>
+        {% else %}
+        <div class="panel panel-success">
+          <div class="panel-heading" align="center" style="font-size: 20px">Number of explicit references alerts</div>
+          <div class="panel-body" align="center" style="font-size: 50px; color: green" id="summary-general-view-alerts-no-ers">{{ er_alerts|length }}</div>
+        {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

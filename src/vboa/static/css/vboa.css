@@ -1,3 +1,86 @@
+/* Styles for panels */
+@media (min-width: 768px) {
+    .expand-content {
+        margin: 0 0 0 0 !important;
+    }
+}
+
+h3.panel-title {
+    display: inline-block;
+}
+
+.page-actions {
+  padding: 0 15px;
+  min-height: 15px;
+  background-color: #f8f8f8;
+}
+@media (min-width: 768px) {
+  .page-actions {
+    position: inherit;
+    margin: 0 0 0 250px;
+    padding: 0 30px;
+    border-left: 1px solid #e7e7e7;
+  }
+}
+
+.panel-index {
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 20px;
+}
+
+.panel-no-index {
+}
+
+.panel-index-reference {
+    display: inline-block;
+}
+
+.index-element {
+    text-decoration: underline;
+}
+
+.page-metadata {
+    text-align: right;
+    font-family: "Helvetica Neue";
+    color: #23527c;
+}
+
+/* Styles for checkboxes in header of datatables */
+table.dataTable thead th.select-checkbox {
+  position: relative;
+}
+table.dataTable thead th.select-checkbox:before,
+table.dataTable thead th.select-checkbox:after {
+  display: block;
+  position: absolute;
+  top: 1.2em;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+}
+table.dataTable thead th.select-checkbox:before {
+  content: ' ';
+  margin-top: -6px;
+  margin-left: -6px;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+table.dataTable thead th.select-checkbox.selected:after {
+  content: '\2714';
+  margin-top: -11px;
+  margin-left: -4px;
+  text-align: center;
+  text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+}
+
+/* Style for lables in timelines */
+div.apply-timeliness-overflow .vis-item .vis-item-overflow {
+  overflow: visible;
+}
+
 /* Severity levels */
 .info-severity {
     color: green;
@@ -71,6 +154,94 @@
 .background-orange {
     background: orange;
 }
+.background-light-green {
+    background: lightgreen;
+}
+.background-light-blue {
+    background: lightblue;
+}
+.background-light-yellow {
+    background: gold;
+}
+.background-light-pink {
+    background: lightpink;
+}
+.background-light-brown {
+    background: burlywood;
+}
+.background-light-red {
+    background: lightcoral;
+}
+.background-light-orange {
+    background: coral;
+}
+
+/* Fill and border Colours */
+.fill-border-green {
+    background: green;
+    border-color: green;
+}
+.fill-green-border-darkgreen {
+    background: green;
+    border-color: darkgreen;
+}
+.fill-border-blue {
+    background: blue;
+    border-color: blue;
+}
+.fill-border-yellow {
+    background: yellow;
+    border-color: yellow;
+}
+.fill-border-pink {
+    background: pink;
+    border-color: pink;
+}
+.fill-border-brown {
+    background: brown;
+    border-color: brown;
+}
+.fill-border-red {
+    background: red;
+    border-color: red;
+}
+.fill-darkred-border-red {
+    background: darkred;
+    border-color: red;
+}
+.fill-border-orange {
+    background: orange;
+    border-color: orange;
+}
+.fill-border-light-green {
+    background: lightgreen;
+    border-color: lightgreen;
+}
+.fill-border-light-blue {
+    background: lightblue;
+    border-color: lightblue;
+}
+.fill-border-light-yellow {
+    background: gold;
+    border-color: gold;
+}
+.fill-border-light-pink {
+    background: lightpink;
+    border-color: lightpink;
+}
+.fill-border-light-brown {
+    background: burlywood;
+    border-color: burlywood;
+}
+.fill-border-light-red {
+    background: lightcoral;
+    border-color: lightcoral;
+}
+.fill-border-light-orange {
+    background: coral;
+    border-color: coral;    
+}
+
 
 /* Static table */
 .table-static {
@@ -142,6 +313,10 @@ i.green {
 
 .draggable-div-body td {
     width: 100%;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
 }
 
 /*Check box*/
@@ -256,7 +431,7 @@ input[type="checkbox"]:disabled + .label-text:before{
   animation: spin 2s linear infinite;
 }
 .loader-render {
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   z-index: 10;
@@ -271,4 +446,21 @@ input[type="checkbox"]:disabled + .label-text:before{
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+  position: fixed;
+  left: 50%;
+  top: 45%;
+  z-index: 10;
+  text-align: center;
+  width: 80px;
+  height: 80px;
+}
+
+/* Styles for debugging */
+/* Allow scrolling the debugging information as explained in:
+   https://github.com/ckan/ckan/issues/6995#issuecomment-1464961958 */
+#flDebug, #flDebug * {
+    overflow-y: auto;
 }

@@ -7,15 +7,22 @@
 {% include "reporting_control/reporting_control_query.html" %}
 
 <!-- Pagination -->
-{% with route = "/reporting_control/reporting-control-pages", elements = reports, filters = filters %}
+{% with route = url_for('reporting_control.query_reporting_control_pages'), elements = reports, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
 {% set alerts = reports|rejectattr("alerts", "equalto", [])|map(attribute="alerts")|list|flatten %}
-{% include "reporting_control/reporting_control_alerts_content.html" %}
 {% set reporting_errors = reports|selectattr("generation_error", "equalto", True)|list %}
-{% include "reporting_control/reporting_control_errors_content.html" %}
 {% set reports_to_be_shown = reports|rejectattr("generation_error", "equalto", True)|list %}
+{% set successful_processings = reports|selectattr("generated", "equalto", True)|list %}
+
+{% with show = {"expected": True, "successful": True, "errors": True, "alerts": True} %}
+{% include "reporting_control/reporting_control_summary_content.html" %}
+{% endwith %}
+
+{% include "reporting_control/reporting_control_alerts_content.html" %}
+{% include "reporting_control/reporting_control_errors_content.html" %}
+
 {% if reports_to_be_shown|length > 0 %}
 <div class="row">
   <div class="panel panel-default">
@@ -56,7 +63,7 @@
           {% for report in reports_to_be_shown %}
           <tr>
             <td><i id="expand-report-reporting-success-statuses-{{ report.report_uuid }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_report_statuses('expand-report-reporting-success-statuses-{{ report.report_uuid }}', '{{ report.report_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
-            <td><a href="/rboa_nav/query-report/{{ report.report_uuid }}">{{ report.name }}</a></td>
+            <td><a href="{{ url_for('rboa_nav.query_report', report_uuid=report.report_uuid) }}">{{ report.name }}</a></td>
             <td>{{ report.reportGroup.name }}</td>
             <td>{{ report.generation_mode }}</td>
             {% with progress = report.get_generation_progress(), error = False %}
@@ -211,7 +218,7 @@
   "window_size": "{{ sliding_window['window_size'] }}",
   }
   var repeat_cycle = {{ sliding_window['repeat_cycle'] }}
-  vboa.update_view(parameters, repeat_cycle, "/reporting_control/sliding_reporting_control_parameters");
+  vboa.update_view(parameters, repeat_cycle, "{{ url_for('reporting_control.show_sliding_reporting_control_parameters') }}");
   {% endif %}
 </script>
 {% endblock %}
