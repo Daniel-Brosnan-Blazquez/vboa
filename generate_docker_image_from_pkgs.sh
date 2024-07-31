@@ -184,6 +184,7 @@ docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/eboa*/scripts/* 
 echo "Copying EBOA ingestion chain..."
 docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/eboa*/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py"
 docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/eboa*/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py"
+docker exec -it -u boa $APP_CONTAINER bash -c "cp /boa_packages/eboa*/eboa/ingestion/eboa_scheduler_ingestion.py /scripts/eboa_scheduler_ingestion.py"
 
 # Copy EBOA data models
 echo "Copying EBOA data models..."
