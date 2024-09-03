@@ -27,13 +27,15 @@
 </div>    
 </br>
 
+{% set load_agenda_url = url_for('sboa.load_agenda', t0='') %}
+
 <!-- Buttons -->
 <div class="row" align="center">
   <div style="margin-left:20px; display:inline">
     <button type="button" class="btn btn-success" onclick="vboa.request_info_no_args('{{ url_for('sboa.simulate') }}/' + document.getElementById('t0-input').value, vboa.render_page, true)">Simulate agenda</button>
   </div>
   <div style="display:inline">
-    <button type="button" class="btn btn-primary" onclick="vboa.request_info_no_args('{{ url_for('sboa.simulate') }}/' + document.getElementById('t0-input').value, vboa.handle_sboa_return_status)">Load agenda</button>
+    <button type="button" class="btn btn-primary" onclick="vboa.request_info_no_args('{{ load_agenda_url }}' + document.getElementById('t0-input').value, vboa.handle_sboa_return_status)">Load agenda</button>
   </div>
 </div>
 
