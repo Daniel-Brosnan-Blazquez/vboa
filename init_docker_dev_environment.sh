@@ -511,8 +511,8 @@ echo "Cron activities installed"
 
 # Install orc
 echo "Installing ORC and minArc"
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install minarc*"
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install orc*"
+docker exec -it -u root $APP_CONTAINER bash -c "cd /orc_packages/; gem install minarc*"
+docker exec -it -u root $APP_CONTAINER bash -c "cd /orc_packages/; gem install orc*"
 
 echo "ORC and minArc installed"
 
@@ -520,7 +520,7 @@ echo "ORC and minArc installed"
 while true
 do
     echo "Trying to initialize EBOA, SBOA, minArc and ORC databases..."
-    docker exec -it -u boa $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; boa_init.py -e -s -u -o -y"
+    docker exec -it -u boa $APP_CONTAINER bash -c "boa_init.py -e -s -u -o -y"
     status=$?
     if [ $status -ne 0 ]
     then
@@ -533,5 +533,8 @@ do
     fi
 done
 
+# Change permissions on ORC configuration's folder to allow tests to overwrite ORC configuration if needed
+docker exec -it -u root $APP_CONTAINER bash -c 'chmod -R o+w `orcValidateConfig -C`'
+
 # Execute the ORC server
-docker exec -it -u boa $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; orcBolg -c start"
+docker exec -it -u boa $APP_CONTAINER bash -c "orcBolg -c start"

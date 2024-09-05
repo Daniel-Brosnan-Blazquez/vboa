@@ -1,5 +1,5 @@
-# Base the image on centos7
-FROM centos:centos7
+# Base the image on Rocky Linux (Red hat compatible)
+FROM rockylinux:8
 MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
@@ -11,15 +11,12 @@ RUN useradd -m -o -r -u $UID_HOST_USER boa
 
 RUN yum install -y epel-release
 
-RUN yum install -y python36 \
-    python36-pip \
-    python36-tkinter \
+RUN yum install --allowerasing -y python3 \
+    python3-pip \
+    python3-tkinter \
     gcc \
-    python36-devel \
-    pytest \
+    python3-devel \
     npm \
-    centos-release-scl-rh \
-    centos-release-scl \
     make \
     gcc-c++ \
     sqlite-devel \
@@ -33,12 +30,17 @@ RUN yum install -y python36 \
     postgresql-devel \
     postgresql \
     openssl \
-    docker
+    docker \
+    procps \
+    glibc-langpack-en \
+    redhat-rpm-config
 
-RUN yum install -y rh-ruby27 \
-    rh-ruby27-rubygem-bundler \
-    rh-ruby27-ruby-devel \
-    rh-postgresql10-postgresql-devel
+RUN yum install -y @ruby:3.0 \
+    rubygem-bundler \
+    ruby-devel
+
+# This solves the dependency of minArc/ORC with rexml which previously was coming with ruby
+RUN gem install rexml
 
 RUN yum update -y
 
@@ -90,7 +92,7 @@ ENV ORC_DATABASE_NAME minarc_orc_db
 ENV ORC_DB_ADAPTER postgresql
 ENV ORC_DATABASE_USER minarc_orc
 
-RUN echo "source scl_source enable rh-ruby27; declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env; while true; do echo 'Trying to start the web server...'; gunicorn --certfile /resources_path/boa_certificate.pem --keyfile /resources_path/boa_key.pem --worker-tmp-dir /dev/shm -b 0.0.0.0:5001 -w 12 $FLASK_APP.wsgi:app --log-file /log/web_server -t 3600 --daemon; if [[ $? != 0 ]]; then echo 'Failed to start the web server...'; sleep 1; else echo 'Web server started! :D'; fi; SCRIPT_NAME="" VBOA_TEST=TRUE gunicorn --worker-tmp-dir /dev/shm -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app --log-file /log/internal_web_server -t 3600; if [[ $? != 0 ]]; then echo 'Failed to start the web server...'; sleep 1; else echo 'Internal web server started! :D'; fi; done; sleep infinity" > /scripts/start_gunicorn.sh
+RUN echo "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env; while true; do echo 'Trying to start the web server...'; gunicorn --certfile /resources_path/boa_certificate.pem --keyfile /resources_path/boa_key.pem --worker-tmp-dir /dev/shm -b 0.0.0.0:5001 -w 12 $FLASK_APP.wsgi:app --log-file /log/web_server -t 3600 --daemon; if [[ $? != 0 ]]; then echo 'Failed to start the web server...'; sleep 1; else echo 'Web server started! :D'; fi; SCRIPT_NAME="" VBOA_TEST=TRUE gunicorn --worker-tmp-dir /dev/shm -b 0.0.0.0:5000 -w 12 $FLASK_APP.wsgi:app --log-file /log/internal_web_server -t 3600; if [[ $? != 0 ]]; then echo 'Failed to start the web server...'; sleep 1; else echo 'Internal web server started! :D'; fi; done; sleep infinity" > /scripts/start_gunicorn.sh
 
 RUN chmod u+x /scripts/start_gunicorn.sh
 

@@ -24,11 +24,13 @@ setup(name="vboa",
           "bcrypt",
           "gunicorn",
           "bleach",
-          "geopy"
+          "geopy",
+          "pytz",
+          "argon2_cffi"
       ],
       extras_require={
           "tests" :[
-              "selenium"
+              "selenium==3.14"
           ]
       },
       test_suite='nose.collector')
