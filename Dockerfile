@@ -1,5 +1,5 @@
 # Base the image on Rocky Linux (Red hat compatible)
-FROM rockylinux:8
+FROM rockylinux:9
 MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
@@ -35,7 +35,7 @@ RUN yum install --allowerasing -y python3 \
     glibc-langpack-en \
     redhat-rpm-config
 
-RUN yum install -y @ruby:3.0 \
+RUN yum install -y ruby \
     rubygem-bundler \
     ruby-devel
 
