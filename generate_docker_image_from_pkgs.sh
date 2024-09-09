@@ -243,8 +243,8 @@ for file in $PATH_TO_ORC/*;
 do
     docker cp $file $APP_CONTAINER:/orc_packages
 done
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install minarc*"
-docker exec -it -u root $APP_CONTAINER bash -c "source scl_source enable rh-ruby27; cd /orc_packages/; gem install orc*"
+docker exec -it -u root $APP_CONTAINER bash -c "cd /orc_packages/; gem install minarc*"
+docker exec -it -u root $APP_CONTAINER bash -c "cd /orc_packages/; gem install orc*"
 
 if [ "$EXPORT_DOCKER_IMAGE" == "YES" ];
 then
