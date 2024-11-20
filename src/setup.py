@@ -8,7 +8,7 @@ module vboa
 from setuptools import setup, find_packages
 
 setup(name="vboa",
-      version="1.0.5",
+      version="1.0.6",
       description="Visualization tool for Business Operation Analysis",
       url="https://bitbucket.org/dbrosnan/vboa/",
       author="Daniel Brosnan",
@@ -18,6 +18,7 @@ setup(name="vboa",
       python_requires='>=3',
       install_requires=[
           "eboa",
+          "Werkzeug==3.0.6",
           "Flask",
           "Flask-DebugToolbar",
           "flask-security-too==4.1.6",

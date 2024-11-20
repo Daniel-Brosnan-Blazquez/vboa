@@ -1,0 +1,37 @@
+
+services:
+
+   tboa_db:
+      image: mdillon/postgis
+      container_name: tboa_db_${SERVICE_LABEL}
+      restart: always
+      shm_size: 512M
+      command: -c max_connections=5000 -c max_locks_per_transaction=5000
+      networks:
+         - boa_network
+
+   tboa:
+      image          : boa
+      container_name : tboa_${SERVICE_LABEL}
+      hostname       : tboa
+      environment    :
+         - EBOA_DDBB_HOST=tboa_db
+         - SBOA_DDBB_HOST=tboa_db
+         - UBOA_DDBB_HOST=tboa_db
+         - MINARC_DATABASE_HOST=tboa_db
+         - ORC_DATABASE_HOST=tboa_db
+         - SERVICE_LABEL=${SERVICE_LABEL}
+         - VBOA_TEST=${VBOA_TEST}
+         - FLASK_APP=${FLASK_APP}
+         - SCRIPT_NAME=/adgsboa
+      ports:
+         - ${TBOA_PORT}:5001
+      restart        : always
+      volumes:
+         - ${TBOA_DEVELOPMENT_PATH}:/tboa
+      networks:
+         - boa_network
+
+networks:
+   boa_network:
+      name: boa_network_dev
