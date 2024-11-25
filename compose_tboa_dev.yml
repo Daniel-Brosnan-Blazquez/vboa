@@ -31,6 +31,17 @@ services:
          - ${TBOA_DEVELOPMENT_PATH}:/tboa
       networks:
          - boa_network
+      secrets:
+         - source: orc_package
+           target: /orc_packages/orc.gem
+         - source: minarc_package
+           target: /orc_packages/minarc.gem
+
+secrets:
+   orc_package:
+      file: ${PATH_TO_ORC_PACKAGE}
+   minarc_package:
+      file: ${PATH_TO_MINARC_PACKAGE}
 
 networks:
    boa_network:

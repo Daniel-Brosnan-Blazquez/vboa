@@ -26,7 +26,6 @@ RUN yum install --allowerasing -y python3 \
     unzip \
     less \
     cronie \
-    texlive* \
     libcurl \
     libcurl-devel \
     postgresql-devel \
@@ -81,8 +80,14 @@ RUN mkdir /usr/local/python-packages
 RUN chown -R boa:boa /usr/local/python-packages
 ENV PYTHONPATH=/usr/local/python-packages
 
-# Add path to the scripts installed by pip in the home of the boa user to PATH
-ENV PATH="${PATH}:/usr/local/python-packages/bin"
+# Add path to the binaries installed by pip to PATH
+ENV PATH="/usr/local/python-packages/bin:${PATH}"
+
+# Add path to the binaries installed by ruby in the home of the boa user to PATH
+ENV PATH="/home/boa/bin:${PATH}"
+
+# Add path to the gems installed by ruby in the home of the boa user to GEM_PATH
+ENV GEM_PATH="/home/boa/.local/share/gem/ruby:"
 
 USER boa
 
