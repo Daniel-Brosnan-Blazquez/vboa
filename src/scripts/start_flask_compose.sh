@@ -9,7 +9,7 @@ python -c "import $FLASK_APP" &> /dev/null
 flask_app_installed=`echo $?`
 if [ $flask_app_installed != 0 ];
 then
-    pip3 install --config-setting editable_mode=compat --no-build-isolation --use-pep517 -e "/tboa/src[tests]"
+    pip3 install -e "/tboa/src[tests]"
     echo "Tailored BOA installed"
 else
     echo "Tailored BOA was already installed"
