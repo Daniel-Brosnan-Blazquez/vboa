@@ -55,10 +55,10 @@
               <tbody>
                 {% for source_uuid in source_uuids %}
                 {% set source = data["sources"][source_uuid] %}
-                <tr id="{{ source["source_uuid"] }}">
+                <tr id="{{ source['source_uuid'] }}">
                   <td></td>
-                  <td><i id="expand-source-ingestion-success-statuses-{{ source["source_uuid"] }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source["source_uuid"] }}', '{{ source["source_uuid"] }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
-                  <td><a href="{{ url_for('eboa_nav.download_source', source_name=source['name']) }}"</a></td>
+                  <td><i id="expand-source-ingestion-success-statuses-{{ source['source_uuid'] }}" class="fa fa-plus-square green" aria-hidden="true" onclick="vboa.expand_source_statuses('expand-source-ingestion-success-statuses-{{ source_uuid }}', '{{ source_uuid }}')" data-toggle="tooltip" title="Click to show the related statuses"></i></td>
+                  <td><a href="{{ url_for('eboa_nav.download_source', source_name=source['name']) }}">{{ source["name"] }}</a></td>
                   <td><a href="{{ url_for('eboa_nav.query_events_by_source_uuid', source_uuid=source['source_uuid']) }}"><i class="fa fa-link"></i></a></td>
                   <td><a href="{{ url_for('eboa_nav.query_annotations_by_source_uuid', source_uuid=source['source_uuid']) }}"><i class="fa fa-link"></i></a></td>
                   <td>{{ source["validity_start"] }}</td>
