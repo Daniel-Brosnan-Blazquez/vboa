@@ -5,7 +5,7 @@
 echo "###########################"
 echo "# Installing tailored BOA #"
 echo "###########################"
-python -c "import $FLASK_APP" &> /dev/null
+python3 -c "import $FLASK_APP" &> /dev/null
 flask_app_installed=`echo $?`
 if [ $flask_app_installed != 0 ];
 then
@@ -126,6 +126,9 @@ echo "Copy the environment variables to a file for later use of cron"
 echo "##############################################################"
 declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env
 echo "Environment variables copied into file: /resources_path/container.env"
+
+# Script to start the web server in development mode
+nohup npm --prefix /vboa/src/vboa/static run test &> /log/npm.log &
 
 # Start flask server on port 5000 for testing purposes
 echo
