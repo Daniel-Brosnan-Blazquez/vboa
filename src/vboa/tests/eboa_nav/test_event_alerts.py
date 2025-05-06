@@ -13,7 +13,8 @@ import subprocess
 import datetime
 import re
 import dateutil.parser as parser
-import vboa.tests.functions as functions
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+import functions as functions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException

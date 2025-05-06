@@ -9,9 +9,11 @@ module vboa
 import unittest
 import traceback
 import sys
+import os
 
-# Import the VBOA functions module
-import vboa.tests.functions as functions_vboa
+# Import the VBOA tests functions module
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+import functions as functions
 
 class TestVboaFunctions(unittest.TestCase):
 
@@ -19,7 +21,7 @@ class TestVboaFunctions(unittest.TestCase):
 
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries("not_a_list", [])
+            functions.assert_equal_list_dictionaries("not_a_list", [])
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True
@@ -31,7 +33,7 @@ class TestVboaFunctions(unittest.TestCase):
 
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries([], "not_a_list")
+            functions.assert_equal_list_dictionaries([], "not_a_list")
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True
@@ -41,13 +43,13 @@ class TestVboaFunctions(unittest.TestCase):
 
     def test_assert_equal_list_dictionaries_lists_same_length(self):
 
-        functions_vboa.assert_equal_list_dictionaries([], [])
+        functions.assert_equal_list_dictionaries([], [])
 
     def test_assert_equal_list_dictionaries_lists_different_length(self):
 
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries([], [{"key": "value"}])
+            functions.assert_equal_list_dictionaries([], [{"key": "value"}])
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True
@@ -59,7 +61,7 @@ class TestVboaFunctions(unittest.TestCase):
         
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries([{"key": "value"}], [{"key": "value"}])
+            functions.assert_equal_list_dictionaries([{"key": "value"}], [{"key": "value"}])
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True
@@ -71,7 +73,7 @@ class TestVboaFunctions(unittest.TestCase):
         
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries(["not_a_dict"], [{"id": "value"}])
+            functions.assert_equal_list_dictionaries(["not_a_dict"], [{"id": "value"}])
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True
@@ -83,7 +85,7 @@ class TestVboaFunctions(unittest.TestCase):
         
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries([{"key": "value"}], [{"id": "value"}])
+            functions.assert_equal_list_dictionaries([{"key": "value"}], [{"id": "value"}])
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True
@@ -95,7 +97,7 @@ class TestVboaFunctions(unittest.TestCase):
         
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries([{"id": "value_not_matching"}], [{"id": "value"}])
+            functions.assert_equal_list_dictionaries([{"id": "value_not_matching"}], [{"id": "value"}])
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True
@@ -107,7 +109,7 @@ class TestVboaFunctions(unittest.TestCase):
         
         test_success = False
         try:
-            functions_vboa.assert_equal_list_dictionaries([{"id": "value", "key": "value_not_matching"}], [{"id": "value"}])
+            functions.assert_equal_list_dictionaries([{"id": "value", "key": "value_not_matching"}], [{"id": "value"}])
         except AssertionError:
             traceback.print_exc(file=sys.stdout)
             test_success = True

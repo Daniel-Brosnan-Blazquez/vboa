@@ -14,8 +14,8 @@ import datetime
 import re
 import dateutil.parser as parser
 
-import vboa.tests.functions as functions
-import vboa.tests.functions as functions_vboa
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+import functions as functions
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -212,7 +212,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         ]
 
         returned_alerts = self.driver.execute_script('return alerts;')
-        functions_vboa.assert_equal_list_dictionaries(returned_alerts, alerts)
+        functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check source alerts table
         source_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-sources-details-table")
@@ -515,7 +515,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         ]
 
         returned_alerts = self.driver.execute_script('return alerts;')
-        functions_vboa.assert_equal_list_dictionaries(returned_alerts, alerts)
+        functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check event alerts table
         event_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-events-details-table")
@@ -913,7 +913,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         ]
 
         returned_alerts = self.driver.execute_script('return alerts;')
-        functions_vboa.assert_equal_list_dictionaries(returned_alerts, alerts)
+        functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check annotation alerts table
         annotation_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-annotations-details-table")
@@ -1173,7 +1173,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         ]
 
         returned_alerts = self.driver.execute_script('return alerts;')
-        functions_vboa.assert_equal_list_dictionaries(returned_alerts, alerts)
+        functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check er alerts table
         explicit_ref_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-ers-details-table")
@@ -1459,7 +1459,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         ]
 
         returned_alerts = self.driver.execute_script('return alerts;')
-        functions_vboa.assert_equal_list_dictionaries(returned_alerts, alerts)
+        functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check report alerts table
         report_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-reports-details-table")
@@ -2054,7 +2054,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         ]
 
         returned_alerts = self.driver.execute_script('return alerts;')
-        functions_vboa.assert_equal_list_dictionaries(returned_alerts, alerts)  
+        functions.assert_equal_list_dictionaries(returned_alerts, alerts)  
         
         # Check source alerts table
         source_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-sources-details-table")

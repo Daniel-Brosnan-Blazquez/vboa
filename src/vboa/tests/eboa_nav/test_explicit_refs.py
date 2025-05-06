@@ -11,7 +11,8 @@ import unittest
 import time
 import subprocess
 import datetime
-import vboa.tests.functions as functions
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+import functions as functions
 import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By

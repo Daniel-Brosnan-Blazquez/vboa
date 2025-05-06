@@ -1,3 +1,6 @@
+# Change working dir to home to avoid problems starting Flask servers
+cd
+
 # Script to start the web server in development mode
 nohup npm --prefix /vboa/src/vboa/static run test &> /log/npm.log &
 
