@@ -95,8 +95,7 @@ RUN npm --prefix /vboa/src/vboa/static run build; echo True
 # Install EBOA and VBOA packages
 ENV PYTHONPATH=/usr/local/python-packages
 RUN pip3 install --upgrade pip
-RUN pip3 install --target=/usr/local/python-packages "/eboa/src[tests]"
-RUN pip3 install "/vboa/src[tests]"
+RUN pip3 install --use-pep517 --target=/usr/local/python-packages "/eboa/src[tests]" "/vboa/src[tests]"
 
 # Copy cesium library for 3D world maps as ol-cesium needs this to be external
 RUN cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist
