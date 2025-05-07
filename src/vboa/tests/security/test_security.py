@@ -9,6 +9,7 @@ module vboa
 import unittest
 import json
 import os
+import sys
 import io
 from contextlib import redirect_stdout
 
@@ -16,7 +17,8 @@ from contextlib import redirect_stdout
 import vboa
 
 # Import aux functions
-import vboa.tests.security.functions as security_functions
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import functions as security_functions
 
 class TestSecurity(unittest.TestCase):
    
