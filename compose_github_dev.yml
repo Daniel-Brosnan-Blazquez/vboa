@@ -1,0 +1,34 @@
+
+services:
+
+   eboa_db:
+      image: mdillon/postgis
+      container_name: eboa_db
+      restart: always
+      shm_size: 512M
+      command: -c max_connections=5000 -c max_locks_per_transaction=5000
+      networks:
+         - boa_network
+
+   boa:
+      build          :
+         context: .
+         dockerfile: Dockerfile.github.dev
+         args:
+            - REPOSITORY_URI=${REPOSITORY_URI}
+            - GITHUB_BRANCH=${GITHUB_BRANCH}         
+      container_name : boa
+      hostname       : boa
+      environment    :
+         - EBOA_DDBB_HOST=eboa_db
+         - SBOA_DDBB_HOST=eboa_db
+         - UBOA_DDBB_HOST=eboa_db
+         - FLASK_APP=vboa
+      restart        : always
+      shm_size: 512M
+      networks:
+         - boa_network
+
+networks:
+   boa_network:
+      name: boa_network

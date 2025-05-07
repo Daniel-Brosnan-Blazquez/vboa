@@ -1,0 +1,18 @@
+# Github actions for testing VBOA
+name: "VBOA testing"
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  # Integration Test
+  tests:
+    name: "Integration Test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Set up environment"
+        run: GITHUB_BRANCH=${{ github.ref_name }} REPOSITORY_URI=${{ github.server_url }}/${{ github.repository }} docker compose -f compose_github_dev.yml up -d --wait
+      - name: "Test VBOA"
+        run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; py.test -vv tests"

@@ -1,0 +1,162 @@
+# Base the image on Rocky Linux (Red hat compatible)
+FROM rockylinux:9
+
+ARG REPOSITORY_URI
+ARG GITHUB_BRANCH
+ARG FLASK_APP
+
+USER root
+
+RUN useradd -m -r boa
+
+RUN yum install -y epel-release
+
+RUN yum install --allowerasing -y python3 \
+    python3-pip \
+    python3-tkinter \
+    gcc \
+    python3-devel \
+    npm \
+    chromium \
+    chromedriver \
+    make \
+    gcc-c++ \
+    sqlite-devel \
+    which \
+    p7zip \
+    unzip \
+    less \
+    cronie \
+    libcurl \
+    libcurl-devel \
+    postgresql-devel \
+    postgresql \
+    openssl \
+    docker \
+    procps \
+    glibc-langpack-en \
+    redhat-rpm-config
+
+RUN yum install -y ruby \
+    rubygem-bundler \
+    ruby-devel
+
+# This solves the dependency of minArc/ORC with rexml which previously was coming with ruby
+RUN gem install rexml
+
+RUN yum install -y git
+
+RUN yum update -y
+
+RUN pip3 install wheel
+    
+# Create folders for BOA
+RUN mkdir /log
+RUN mkdir /scripts
+RUN mkdir /resources_path
+RUN mkdir /schemas
+RUN mkdir /datamodel
+RUN mkdir /rboa_archive
+RUN mkdir /metrics
+RUN mkdir /metrics_to_publish
+RUN mkdir /eboa
+RUN mkdir /vboa
+
+# Create folders for ORC
+RUN mkdir /orc
+RUN mkdir /orc_packages
+RUN mkdir /minarc_root
+RUN mkdir /inputs
+
+# Change ownership to the boa user
+RUN chown -R boa /log /scripts /resources_path /schemas /datamodel /rboa_archive /metrics /metrics_to_publish /eboa /vboa /orc_packages /minarc_root /inputs /orc
+
+# Create a shared folder for python packages
+RUN mkdir /usr/local/python-packages
+RUN chown -R boa:boa /usr/local/python-packages
+ENV PYTHONPATH=/usr/local/python-packages
+
+# Add path to the binaries installed by pip to PATH
+ENV PATH="/usr/local/python-packages/bin:${PATH}"
+
+# Add path to the binaries installed by ruby in the home of the boa user to PATH
+ENV PATH="/home/boa/bin:${PATH}"
+
+USER boa
+
+# Checkout EBOA and VBOA repositories
+RUN git clone --branch develop `echo ${REPOSITORY_URI}|sed 's/vboa/eboa/'`
+RUN git clone --branch ${GITHUB_BRANCH} ${REPOSITORY_URI}
+
+# Install web packages
+RUN npm --force --prefix /vboa/src/vboa/static install
+RUN npm --prefix /vboa/src/vboa/static run build; echo True
+
+# Install EBOA and VBOA packages
+ENV PYTHONPATH=/usr/local/python-packages
+RUN pip3 install --upgrade pip
+RUN pip3 install --target=/usr/local/python-packages "/eboa/src[tests]"
+RUN pip3 install "/vboa/src[tests]"
+
+# Copy cesium library for 3D world maps as ol-cesium needs this to be external
+RUN cp -r /vboa/src/vboa/static/node_modules/cesium /vboa/src/vboa/static/dist
+
+# Copy EBOA configurations
+RUN cp /eboa/src/config/* /resources_path
+
+# Copy EBOA scripts
+RUN cp /eboa/src/scripts/* /scripts
+
+# Copy EBOA ingestion chain
+RUN cp /eboa/src/eboa/triggering/eboa_triggering.py /scripts/eboa_triggering.py
+RUN cp /eboa/src/eboa/ingestion/eboa_ingestion.py /scripts/eboa_ingestion.py
+
+# Copy EBOA data models
+RUN cp /eboa/src/datamodel/eboa_data_model.sql /datamodel
+RUN cp /eboa/src/datamodel/sboa_data_model.sql /datamodel
+RUN cp /eboa/src/datamodel/uboa_data_model.sql /datamodel
+
+# Copy EBOA schemas
+RUN cp /eboa/src/schemas/* /schemas
+
+# Copy RBOA reporting chain
+RUN cp /eboa/src/rboa/triggering/rboa_triggering.py /scripts/rboa_triggering.py
+RUN cp /eboa/src/rboa/reporting/rboa_reporting.py /scripts/rboa_reporting.py
+
+# Copy SBOA scheduler chain
+RUN cp /eboa/src/sboa/scheduler/boa_scheduler.py /scripts/boa_scheduler.py
+RUN cp /eboa/src/sboa/scheduler/boa_execute_triggering.py /scripts/boa_execute_triggering.py
+
+# Copy VBOA scripts
+RUN cp /vboa/src/scripts/* /scripts
+
+# Environment Variables for BOA
+ENV EBOA_RESOURCES_PATH /resources_path
+ENV EBOA_LOG_PATH /log
+ENV EBOA_SCHEMAS_PATH /schemas
+ENV LC_ALL en_US.utf-8
+ENV LANG en_US.utf-8
+ENV PATH="${PATH}:/scripts"
+ENV RBOA_ARCHIVE_PATH="/rboa_archive"
+
+# Environment Variables for ORC
+ENV MINARC_ARCHIVE_ROOT /minarc_root
+ENV MINARC_ARCHIVE_ERROR /minarc_root/.errors
+ENV MINARC_DATABASE_NAME minarc_orc_db
+ENV MINARC_DB_ADAPTER postgresql
+ENV MINARC_DATABASE_USER minarc_orc
+ENV ORC_TMP /orc/tmp
+ENV ORC_DATABASE_NAME minarc_orc_db
+ENV ORC_DB_ADAPTER postgresql
+ENV ORC_DATABASE_USER minarc_orc
+
+# Add path to the scripts installed by pip in the home of the boa user to PATH
+ENV PATH="${PATH}:/usr/local/python-packages/bin"
+
+# expose port
+EXPOSE 5001
+
+# Copy the environment variables to a file for later use of cron
+RUN declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /resources_path/container.env
+
+CMD ["/bin/bash", "-c", "/scripts/start_flask_compose.sh"]
