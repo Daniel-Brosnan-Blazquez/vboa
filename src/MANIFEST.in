@@ -4,3 +4,4 @@ graft vboa/static/css
 graft vboa/static/html
 graft vboa/static/images
 graft scripts
+graft boa_package_version

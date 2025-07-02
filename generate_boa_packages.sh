@@ -86,6 +86,14 @@ if [ "$PATH_TO_TAILORED" != "" ] && [ ! -d $PATH_TO_TAILORED ];
 then
     echo "ERROR: The directory $PATH_TO_TAILORED provided does not exist"
     exit -1
+    
+    # Check that option -a has been specified
+    if [ "$APP" == "" ];
+    then
+        echo "ERROR: The option -a has to be provided"
+        echo $USAGE
+        exit -1
+    fi
 fi
 
 # Check that the path to the common base project exists
@@ -107,14 +115,6 @@ fi
 if [ ! -d $PATH_TO_OUTPUT ];
 then
     echo "ERROR: The directory $PATH_TO_OUTPUT provided does not exist"
-    exit -1
-fi
-
-# Check that option -a has been specified
-if [ "$APP" == "" ];
-then
-    echo "ERROR: The option -a has to be provided"
-    echo $USAGE
     exit -1
 fi
 
@@ -204,22 +204,27 @@ else
 fi
 
 # Specify the ID of the HEAD versions used for EBOA, VBOA and the tailored BOA
-echo "Generating the file containing the commit IDs for EBOA, VBOA and tailored BOA"
+echo "Generating the files containing the commit IDs for EBOA, VBOA and tailored BOA"
 HEAD_ID_EBOA=`git -C $PATH_TO_EBOA rev-parse HEAD`
+docker exec -it $PKG_CONTAINER bash -c "mkdir -p /eboa/src/boa_package_version; echo -e 'HEAD_ID_EBOA=$HEAD_ID_EBOA' > /eboa/src/boa_package_version/boa_package_version"
 HEAD_ID_VBOA=`git -C $PATH_TO_VBOA rev-parse HEAD`
+docker exec -it $PKG_CONTAINER bash -c "mkdir -p /vboa/src/boa_package_version; echo -e 'HEAD_ID_VBOA=$HEAD_ID_VBOA' > /vboa/src/boa_package_version/boa_package_version"
 if [ "$PATH_TO_TAILORED" != "" ];
 then
     HEAD_ID_TAILORED=`git -C $PATH_TO_TAILORED rev-parse HEAD`
+    docker exec -it $PKG_CONTAINER bash -c "mkdir -p /$APP/src/boa_package_version; echo -e 'HEAD_ID_TAILORED=$HEAD_ID_TAILORED' > /$APP/src/boa_package_version/boa_package_version"
 fi
 if [ "$PATH_TO_COMMON_BASE" != "" ];
 then
     HEAD_ID_COMMON_BASE=`git -C $PATH_TO_COMMON_BASE rev-parse HEAD`
+    docker exec -it $PKG_CONTAINER bash -c "mkdir -p /$COMMON_BASE_FOLDER/src/boa_package_version; echo -e 'HEAD_ID_COMMON_BASE=$HEAD_ID_COMMON_BASE' > /$COMMON_BASE_FOLDER/src/boa_package_version/boa_package_version"
 fi
-docker exec -it $PKG_CONTAINER bash -c "mkdir -p /eboa/src/boa_package_versions; echo -e 'HEAD_ID_EBOA=$HEAD_ID_EBOA\nHEAD_ID_VBOA=$HEAD_ID_VBOA\nHEAD_ID_TAILORED=$HEAD_ID_TAILORED\nHEAD_ID_COMMON_BASE=$HEAD_ID_COMMON_BASE' > /eboa/src/boa_package_versions/boa_package_versions"
 
 echo "Generating BOA packages"
 # Generate eboa package
 docker exec -it $PKG_CONTAINER bash -c "cd /eboa/src; python3 setup.py sdist -d /output/"
+# Clean boa_package_version
+docker exec -it $PKG_CONTAINER bash -c "rm /eboa/src/boa_package_version/boa_package_version; rmdir /eboa/src/boa_package_version/"
 
 # Generate the javascript and css necessary for VBOA
 docker exec -it $PKG_CONTAINER bash -c "npm --force --prefix /vboa/src/vboa/static install"
@@ -229,19 +234,22 @@ docker exec -it $PKG_CONTAINER bash -c "cp -r /vboa/src/vboa/static/node_modules
 
 # Generate vboa package
 docker exec -it $PKG_CONTAINER bash -c "cd /vboa/src; python3 setup.py sdist -d /output/"
+# Clean boa_package_version
+docker exec -it $PKG_CONTAINER bash -c "rm /vboa/src/boa_package_version/boa_package_version; rmdir /vboa/src/boa_package_version/"
 if [ "$PATH_TO_TAILORED" != "" ];
 then
     # Generate the application package
     docker exec -it $PKG_CONTAINER bash -c "cd /$APP/src; python3 setup.py sdist -d /output/"
+    # Clean boa_package_version
+    docker exec -it $PKG_CONTAINER bash -c "rm /$APP/src/boa_package_version/boa_package_version; rmdir /$APP/src/boa_package_version/"
 fi
 if [ "$PATH_TO_COMMON_BASE" != "" ];
 then
     # Generate the package common to several applications
     docker exec -it $PKG_CONTAINER bash -c "cd /$COMMON_BASE_FOLDER/src; python3 setup.py sdist -d /output/"
+    # Clean boa_package_version
+    docker exec -it $PKG_CONTAINER bash -c "rm /$COMMON_BASE_FOLDER/src/boa_package_version/boa_package_version; rmdir /$COMMON_BASE_FOLDER/src/boa_package_version/"
 fi
-
-# Clean boa_package_versions
-docker exec -it $PKG_CONTAINER bash -c "rm /eboa/src/boa_package_versions/boa_package_versions; rmdir /eboa/src/boa_package_versions/"
 
 echo "BOA packages generated in: "$PATH_TO_OUTPUT
 echo "Removing temporal docker environment"

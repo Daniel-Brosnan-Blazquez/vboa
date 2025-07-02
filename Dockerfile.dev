@@ -21,7 +21,6 @@ RUN yum install --allowerasing -y python3 \
     chromedriver \
     make \
     gcc-c++ \
-    sqlite-devel \
     which \
     p7zip \
     unzip \

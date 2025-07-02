@@ -3,3 +3,4 @@ graft #VIEWS_DIR#/static
 graft boa_config
 graft boa_schemas
 graft boa_scripts
+graft boa_package_version

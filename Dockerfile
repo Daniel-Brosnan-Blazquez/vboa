@@ -19,7 +19,6 @@ RUN yum install --allowerasing -y python3 \
     npm \
     make \
     gcc-c++ \
-    sqlite-devel \
     which \
     p7zip \
     unzip \
