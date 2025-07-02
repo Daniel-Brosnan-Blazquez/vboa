@@ -1,7 +1,7 @@
 """
 Automated tests for the user profile view
 
-Written by DEIMOS Space S.L.
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

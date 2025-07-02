@@ -1,7 +1,7 @@
 """
 Automated tests for the dim_signatures tab
 
-Written by DEIMOS Space S.L. (femd)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

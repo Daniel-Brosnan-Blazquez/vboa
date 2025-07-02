@@ -2,7 +2,7 @@
 """
 Script for generating a hashed password to access vboa
 
-Written by DEIMOS Space S.L.
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

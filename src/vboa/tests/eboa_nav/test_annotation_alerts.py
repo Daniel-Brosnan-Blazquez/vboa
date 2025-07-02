@@ -1,7 +1,7 @@
 """
 Automated tests for the annotation alerts tab
 
-Written by DEIMOS Space S.L. (jubv)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

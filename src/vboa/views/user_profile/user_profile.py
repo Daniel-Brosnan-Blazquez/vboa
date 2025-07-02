@@ -1,7 +1,7 @@
 """
 Profile settings view
 
-Written by DEIMOS Space S.L.
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

@@ -2,7 +2,7 @@
 """
 Script for generating the expected authentication and authorization security layer applied to routes
 
-Written by DEIMOS Space S.L.
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

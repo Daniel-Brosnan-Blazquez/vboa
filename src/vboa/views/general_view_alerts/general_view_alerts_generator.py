@@ -1,7 +1,7 @@
 """
 Generator module for the general view of alerts view
 
-Written by DEIMOS Space S.L. (jubv)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

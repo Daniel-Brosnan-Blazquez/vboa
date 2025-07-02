@@ -1,7 +1,7 @@
 """
 Automated tests for the the authentication and authorization security layer
 
-Written by DEIMOS Space S.L.
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

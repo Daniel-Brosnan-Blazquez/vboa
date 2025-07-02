@@ -1,7 +1,7 @@
 """
 Extra functions used to perform selenium tests
 
-Written by DEIMOS Space S.L. (femd)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

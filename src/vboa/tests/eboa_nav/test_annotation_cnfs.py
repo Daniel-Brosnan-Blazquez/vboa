@@ -1,7 +1,7 @@
 """
 Automated tests for the annotation_cnfs tab
 
-Written by DEIMOS Space S.L. (femd)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

@@ -1,7 +1,7 @@
 """
 Automated tests for the ingestion control module
 
-Written by DEIMOS Space S.L. (jubv)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

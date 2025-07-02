@@ -1,7 +1,7 @@
 """
 General view of alerts section definition
 
-Written by DEIMOS Space S.L. (jubv)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """
