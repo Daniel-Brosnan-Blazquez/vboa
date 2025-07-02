@@ -3,7 +3,7 @@ Concept proof for generating the footprint of a satellite using
 the aperture angle of the instrument and the attitude of the
 satellite (roll, pitch and yaw)
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 

@@ -1,7 +1,7 @@
 """
 Filters for annotations in json format
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

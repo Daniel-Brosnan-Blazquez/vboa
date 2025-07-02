@@ -2,7 +2,7 @@
 #
 # Create BOA instance (tailoring of BOA for a specific project)
 #
-# Written by DEIMOS Space S.L. (dibb)
+# Written by Daniel Brosnan Blázquez
 #
 # module vboa
 #################################################################
@@ -128,6 +128,8 @@ mkdir -p $PATH_TO_TAILORED/doc/fig/
 
 # Source
 mkdir -p $PATH_TO_TAILORED/src
+# Change permissions so that pip3 can install
+chmod 777 $PATH_TO_TAILORED/src
 
 # BOA Configuration
 echo "Creating directory for configuration"

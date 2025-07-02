@@ -2,7 +2,7 @@
 #
 # Init podman environment of the vboa and its tailored app
 #
-# Written by DEIMOS Space S.L. (dibb)
+# Written by Daniel Brosnan Blázquez
 #
 # module vboa
 #################################################################

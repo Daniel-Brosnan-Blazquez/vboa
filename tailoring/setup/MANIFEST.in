@@ -1,2 +1,5 @@
 graft #VIEWS_DIR#/templates
 graft #VIEWS_DIR#/static
+graft boa_config
+graft boa_schemas
+graft boa_scripts

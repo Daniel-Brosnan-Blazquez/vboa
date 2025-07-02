@@ -3,7 +3,7 @@
 # Default init docker development environment script for BOA
 # Modify accordingly to the project
 #
-# Written by DEIMOS Space S.L. (dibb)
+# Written by Daniel Brosnan Blázquez
 #
 # module vboa
 #################################################################

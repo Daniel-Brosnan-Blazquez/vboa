@@ -1,7 +1,7 @@
 """
 Automated tests for the eboa_nav submodule
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

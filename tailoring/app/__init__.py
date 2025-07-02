@@ -1,7 +1,7 @@
 """
 Specific instantiation for the #VIEWS_DIR# visualization tool
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module #VIEWS_DIR#
 """

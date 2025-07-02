@@ -1,7 +1,7 @@
 """
 Generator module for the boa health monitoring view
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

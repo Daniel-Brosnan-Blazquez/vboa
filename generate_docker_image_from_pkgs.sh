@@ -2,7 +2,7 @@
 #
 # Generate BOA image from already available packages
 #
-# Written by DEIMOS Space S.L. (dibb)
+# Written by Daniel Brosnan Blázquez
 #
 # module boa
 #################################################################

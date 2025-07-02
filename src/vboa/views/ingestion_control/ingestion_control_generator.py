@@ -1,7 +1,7 @@
 """
 Generator module for the ingestion control view
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

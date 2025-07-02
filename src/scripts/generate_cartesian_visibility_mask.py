@@ -2,7 +2,7 @@
 Concept proof for converting Azimuth and Elevation values
 contained in the station mask to cartesian coordinates
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 

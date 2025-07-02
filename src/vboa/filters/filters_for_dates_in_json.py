@@ -1,7 +1,7 @@
 """
 Filters for date operations for data in json format
 
-Written by DEIMOS Space S.L. (dibb)
+Written by Daniel Brosnan Blázquez
 
 module vboa
 """

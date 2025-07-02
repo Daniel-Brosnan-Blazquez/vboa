@@ -23,7 +23,7 @@ services:
          - SERVICE_LABEL=${SERVICE_LABEL}
          - VBOA_TEST=${VBOA_TEST}
          - FLASK_APP=${FLASK_APP}
-         - SCRIPT_NAME=/adgsboa
+         - SCRIPT_NAME=/${SCRIPT_NAME}
       ports:
          - ${TBOA_PORT}:5001
       restart        : always
