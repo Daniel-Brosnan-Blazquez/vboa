@@ -8,7 +8,7 @@
 {% include "boa_health/boa_health_query.html" %}
 
 <!-- Pagination -->
-{% with route = url_for('boa_health.query_health_pages'), elements = health_events, filters = filters %}
+{% with route = url_for('health.query_health_pages'), elements = health_events, filters = filters %}
 {% include "vboa/pagination.html" %}
 {% endwith %}
 
