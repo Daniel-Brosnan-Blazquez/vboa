@@ -11,12 +11,10 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -41,12 +39,7 @@ with app.app_context():
 
 class TestUsersTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
     
 
     def setUp(self):
@@ -68,11 +61,11 @@ class TestUsersTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
     
     def test_users_no_data(self):
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/users-management/uboa-nav")
 
@@ -107,7 +100,7 @@ class TestUsersTab(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
         
         self.driver.get("http://localhost:5000/login")
         
@@ -205,7 +198,7 @@ class TestUsersTab(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/users-management/uboa-nav")
@@ -214,7 +207,7 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the email_like input
-        input_element = self.driver.find_element_by_id("users-email-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-email-text")))
         input_element.send_keys("administrator@test.com")
 
         # Click on query button
@@ -235,10 +228,10 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the email_like input
-        input_element = self.driver.find_element_by_id("users-email-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-email-text")))
         input_element.send_keys("administrator@test.com")
 
-        menu = Select(self.driver.find_element_by_id("users-email-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "users-email-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -259,13 +252,13 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the email_like input
-        input_element = self.driver.find_element_by_id("users-emails-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-emails-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("operator@test.com")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-emails-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-emails-in-select"))))
         options.select_by_visible_text("operator@test.com")
 
         # Click on query button
@@ -286,16 +279,16 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the email_like input
-        input_element = self.driver.find_element_by_id("users-emails-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-emails-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("administrator@test.com")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-emails-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-emails-in-select"))))
         options.select_by_visible_text("administrator@test.com")
 
-        notInButton = self.driver.find_element_by_id("users-emails-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "users-emails-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -336,7 +329,7 @@ class TestUsersTab(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/users-management/uboa-nav")
@@ -345,7 +338,7 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the username_like input
-        input_element = self.driver.find_element_by_id("users-username-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-username-text")))
         input_element.send_keys("administrator")
 
         # Click on query button
@@ -366,10 +359,10 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the username_like input
-        input_element = self.driver.find_element_by_id("users-username-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-username-text")))
         input_element.send_keys("administrator")
 
-        menu = Select(self.driver.find_element_by_id("users-username-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "users-username-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -390,13 +383,13 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the username_like input
-        input_element = self.driver.find_element_by_id("users-usernames-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-usernames-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("operator")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-usernames-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-usernames-in-select"))))
         options.select_by_visible_text("operator")
 
         # Click on query button
@@ -417,16 +410,16 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the username_like input
-        input_element = self.driver.find_element_by_id("users-usernames-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-usernames-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("administrator")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-usernames-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-usernames-in-select"))))
         options.select_by_visible_text("administrator")
 
-        notInButton = self.driver.find_element_by_id("users-usernames-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "users-usernames-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -467,7 +460,7 @@ class TestUsersTab(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/users-management/uboa-nav")
@@ -476,7 +469,7 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the group_like input
-        input_element = self.driver.find_element_by_id("users-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-group-text")))
         input_element.send_keys("Deimos")
 
         # Click on query button
@@ -497,10 +490,10 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the group_like input
-        input_element = self.driver.find_element_by_id("users-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-group-text")))
         input_element.send_keys("Deimos")
 
-        menu = Select(self.driver.find_element_by_id("users-group-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "users-group-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -521,13 +514,13 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the group_like input
-        input_element = self.driver.find_element_by_id("users-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("ESA")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-groups-in-select"))))
         options.select_by_visible_text("ESA")
 
         # Click on query button
@@ -548,16 +541,16 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the group_like input
-        input_element = self.driver.find_element_by_id("users-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("Deimos")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-groups-in-select"))))
         options.select_by_visible_text("Deimos")
 
-        notInButton = self.driver.find_element_by_id("users-groups-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "users-groups-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -598,7 +591,7 @@ class TestUsersTab(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/users-management/uboa-nav")
@@ -607,7 +600,7 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the role_like input
-        input_element = self.driver.find_element_by_id("users-role-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-role-text")))
         input_element.send_keys("administrator")
 
         # Click on query button
@@ -628,10 +621,10 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the role_like input
-        input_element = self.driver.find_element_by_id("users-role-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-role-text")))
         input_element.send_keys("administrator")
 
-        menu = Select(self.driver.find_element_by_id("users-role-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "users-role-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -652,13 +645,13 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the role_like input
-        input_element = self.driver.find_element_by_id("users-roles-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-roles-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("operator")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-roles-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-roles-in-select"))))
         options.select_by_visible_text("operator")
 
         # Click on query button
@@ -679,16 +672,16 @@ class TestUsersTab(unittest.TestCase):
         functions.goToTab(self.driver,"Users")
 
         # Fill the role_like input
-        input_element = self.driver.find_element_by_id("users-roles-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "users-roles-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("administrator")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("users-roles-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-roles-in-select"))))
         options.select_by_visible_text("administrator")
 
-        notInButton = self.driver.find_element_by_id("users-roles-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "users-roles-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -724,14 +717,14 @@ class TestUsersTab(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/users-management/uboa-nav")
 
         # Go to tab
         functions.goToTab(self.driver,"Users")
 
-        options = Select(self.driver.find_element_by_id("users-active"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-active"))))
         options.select_by_visible_text("")
 
         # Click on query button
@@ -751,7 +744,7 @@ class TestUsersTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Users")
 
-        options = Select(self.driver.find_element_by_id("users-active"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-active"))))
         options.select_by_visible_text("true")
 
         # Click on query button
@@ -771,7 +764,7 @@ class TestUsersTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Users")
 
-        options = Select(self.driver.find_element_by_id("users-active"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "users-active"))))
         options.select_by_visible_text("false")
 
         # Click on query button

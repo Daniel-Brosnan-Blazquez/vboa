@@ -17,8 +17,8 @@ from contextlib import redirect_stdout
 import vboa
 
 # Import aux functions
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import functions as security_functions
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import security_functions as security_functions
 
 class TestSecurity(unittest.TestCase):
    

@@ -12,12 +12,10 @@ import sys
 import time
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -42,12 +40,7 @@ with app.app_context():
 
 class TestImportUsers(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
     
 
     def setUp(self):
@@ -69,7 +62,7 @@ class TestImportUsers(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
     
     def test_import_from_file(self):
         
@@ -90,7 +83,7 @@ class TestImportUsers(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         # Correct file
         self.driver.get("http://localhost:5000/users-management/import-users")
@@ -98,10 +91,10 @@ class TestImportUsers(unittest.TestCase):
         filename = "users_example.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
     
-        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-browse-file")))
         browse_file.send_keys(file_path)
 
-        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-submit-button")))
         submit_button.click()
         
         # Confirm import
@@ -121,10 +114,10 @@ class TestImportUsers(unittest.TestCase):
         filename = "users_example.xml"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
     
-        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-browse-file")))
         browse_file.send_keys(file_path)
 
-        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-submit-button")))
         submit_button.click()
 
         # Confirm import
@@ -144,10 +137,10 @@ class TestImportUsers(unittest.TestCase):
         filename = "users_wrong_example.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
     
-        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-browse-file")))
         browse_file.send_keys(file_path)
 
-        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-submit-button")))
         submit_button.click()
 
         # Confirm import
@@ -167,10 +160,10 @@ class TestImportUsers(unittest.TestCase):
         filename = "users_wrong_example_1.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/input/" + filename
     
-        browse_file = self.driver.find_element_by_id("import-users-from-file-browse-file")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-browse-file")))
         browse_file.send_keys(file_path)
 
-        submit_button = self.driver.find_element_by_id("import-users-from-file-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-file-submit-button")))
         submit_button.click()
 
         # Confirm import
@@ -203,15 +196,15 @@ class TestImportUsers(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         # Correct entry
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-manually-button")))
         insert_users_manually_button.click()
         
-        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-editor-submit-button")))
         submit_button.click()
         
         # Confirm import
@@ -228,13 +221,13 @@ class TestImportUsers(unittest.TestCase):
         # No entry
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-manually-button")))
         insert_users_manually_button.click()
         
-        text_area = self.driver.find_element_by_id("import-users-textarea")
+        text_area = wait.until(EC.presence_of_element_located((By.ID, "import-users-textarea")))
         text_area.clear()
         
-        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-editor-submit-button")))
         submit_button.click()
 
         # Confirm import
@@ -275,14 +268,14 @@ class TestImportUsers(unittest.TestCase):
         
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-manually-button")))
         insert_users_manually_button.click()
         
-        text_area = self.driver.find_element_by_id("import-users-textarea")
+        text_area = wait.until(EC.presence_of_element_located((By.ID, "import-users-textarea")))
         text_area.clear()
         text_area.send_keys(json.dumps(data_textarea))
         
-        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-editor-submit-button")))
         submit_button.click()
 
         # Confirm import
@@ -323,14 +316,14 @@ class TestImportUsers(unittest.TestCase):
         
         self.driver.get("http://localhost:5000/users-management/import-users")
 
-        insert_users_manually_button = self.driver.find_element_by_id("import-users-manually-button")
+        insert_users_manually_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-manually-button")))
         insert_users_manually_button.click()
         
-        text_area = self.driver.find_element_by_id("import-users-textarea")
+        text_area = wait.until(EC.presence_of_element_located((By.ID, "import-users-textarea")))
         text_area.clear()
         text_area.send_keys(json.dumps(data_textarea))
         
-        submit_button = self.driver.find_element_by_id("import-users-from-editor-submit-button")
+        submit_button = wait.until(EC.presence_of_element_located((By.ID, "import-users-from-editor-submit-button")))
         submit_button.click()
 
         # Confirm import

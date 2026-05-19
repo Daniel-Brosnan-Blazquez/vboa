@@ -96,6 +96,26 @@
             "route": "/load-agenda/<string:t0>"
         },
         {
+            "method_name": "show_navigation",
+            "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+            "route": "/navigation"
+        },
+        {
+            "method_name": "get_czml_orbit",
+            "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+            "route": "/get-czml-orbit"
+        },
+        {
+            "method_name": "get_footprint",
+            "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+            "route": "/get-footprint"
+        },
+        {
+            "method_name": "get_swath_details",
+            "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+            "route": "/get-swath-details"
+        },
+        {
             "method_name": "navigate",
             "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
             "route": "/"
@@ -209,6 +229,11 @@
             "method_name": "prepare_reingestion_of_sources",
             "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
             "route": "/prepare-reingestion-of-sources"
+        },
+        {
+            "method_name": "reingest_sources",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/reingest-sources"
         },
         {
             "method_name": "prepare_deletion_of_sources",
@@ -341,6 +366,16 @@
             "route": "/query-alerts-pages"
         },
         {
+            "method_name": "query_entity_alert_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-<string:entity>-alert/<uuid:alert_uuid>"
+        },
+        {
+            "method_name": "query_entity_alerts_and_render",
+            "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+            "route": "/query-<string:entity>-alerts/<uuid:entity_uuid>"
+        },
+        {
             "method_name": "get_alert_severities",
             "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
             "route": "/get-alert-severity"
@@ -401,6 +436,26 @@
             "route": "/sliding_ingestion_control"
         },
         {
+            "method_name": "show_manual_ingestion",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/manual-ingestion"
+        },
+        {
+            "method_name": "manual_ingestion_files",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/manual-ingestion/ingest-files"
+        },
+        {
+            "method_name": "download_triggering",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/download-triggering"
+        },
+        {
+            "method_name": "download_orc_config",
+            "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+            "route": "/download-orc-config"
+        },
+        {
             "method_name": "navigate",
             "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
             "route": "/"
@@ -424,6 +479,16 @@
             "method_name": "query_report_by_name",
             "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
             "route": "/query-report-by-name/<string:report_name>"
+        },
+        {
+            "method_name": "query_report_alert_and_render",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-report-alert/<uuid:alert_uuid>"
+        },
+        {
+            "method_name": "query_report_alerts_and_render",
+            "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+            "route": "/query-report-alerts/<uuid:report_uuid>"
         },
         {
             "method_name": "query_jsonify_reports",
@@ -586,7 +651,7 @@
             "route": "/import-users"
         },
         {
-            "method_name": "upload_file",
+            "method_name": "import_users_from_file",
             "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
             "route": "/import-users/import-from-file"
         },
@@ -601,7 +666,18 @@
             "route": "/export-users"
         }
     ],
-    "authentication_not_required": [],
+    "authentication_not_required": [
+        {
+            "method_name": "provide_metrics",
+            "module_name": "/vboa/src/vboa/metrics/metrics.py",
+            "route": "/"
+        },
+        {
+            "method_name": "perform_query",
+            "module_name": "/vboa/src/vboa/query/query.py",
+            "route": "/"
+        }
+    ],
     "roles": {
         "administrator": [
             {
@@ -698,6 +774,26 @@
                 "method_name": "load_agenda",
                 "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
                 "route": "/load-agenda/<string:t0>"
+            },
+            {
+                "method_name": "show_navigation",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/navigation"
+            },
+            {
+                "method_name": "get_czml_orbit",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-czml-orbit"
+            },
+            {
+                "method_name": "get_footprint",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-footprint"
+            },
+            {
+                "method_name": "get_swath_details",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-swath-details"
             },
             {
                 "method_name": "navigate",
@@ -813,6 +909,11 @@
                 "method_name": "prepare_reingestion_of_sources",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/prepare-reingestion-of-sources"
+            },
+            {
+                "method_name": "reingest_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/reingest-sources"
             },
             {
                 "method_name": "prepare_deletion_of_sources",
@@ -945,6 +1046,16 @@
                 "route": "/query-alerts-pages"
             },
             {
+                "method_name": "query_entity_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_entity_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alerts/<uuid:entity_uuid>"
+            },
+            {
                 "method_name": "get_alert_severities",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/get-alert-severity"
@@ -1005,6 +1116,26 @@
                 "route": "/sliding_ingestion_control"
             },
             {
+                "method_name": "show_manual_ingestion",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/manual-ingestion"
+            },
+            {
+                "method_name": "manual_ingestion_files",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/manual-ingestion/ingest-files"
+            },
+            {
+                "method_name": "download_triggering",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/download-triggering"
+            },
+            {
+                "method_name": "download_orc_config",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/download-orc-config"
+            },
+            {
                 "method_name": "navigate",
                 "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
                 "route": "/"
@@ -1028,6 +1159,16 @@
                 "method_name": "query_report_by_name",
                 "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
                 "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_report_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_report_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alerts/<uuid:report_uuid>"
             },
             {
                 "method_name": "query_jsonify_reports",
@@ -1185,7 +1326,7 @@
                 "route": "/import-users"
             },
             {
-                "method_name": "upload_file",
+                "method_name": "import_users_from_file",
                 "module_name": "/vboa/src/vboa/views/users_management/users_management.py",
                 "route": "/import-users/import-from-file"
             },
@@ -1295,6 +1436,26 @@
                 "method_name": "load_agenda",
                 "module_name": "/vboa/src/vboa/views/boa_scheduler/boa_scheduler.py",
                 "route": "/load-agenda/<string:t0>"
+            },
+            {
+                "method_name": "show_navigation",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/navigation"
+            },
+            {
+                "method_name": "get_czml_orbit",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-czml-orbit"
+            },
+            {
+                "method_name": "get_footprint",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-footprint"
+            },
+            {
+                "method_name": "get_swath_details",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-swath-details"
             },
             {
                 "method_name": "navigate",
@@ -1410,6 +1571,11 @@
                 "method_name": "prepare_reingestion_of_sources",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/prepare-reingestion-of-sources"
+            },
+            {
+                "method_name": "reingest_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/reingest-sources"
             },
             {
                 "method_name": "prepare_deletion_of_sources",
@@ -1542,6 +1708,16 @@
                 "route": "/query-alerts-pages"
             },
             {
+                "method_name": "query_entity_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_entity_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alerts/<uuid:entity_uuid>"
+            },
+            {
                 "method_name": "get_alert_severities",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/get-alert-severity"
@@ -1602,6 +1778,26 @@
                 "route": "/sliding_ingestion_control"
             },
             {
+                "method_name": "show_manual_ingestion",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/manual-ingestion"
+            },
+            {
+                "method_name": "manual_ingestion_files",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/manual-ingestion/ingest-files"
+            },
+            {
+                "method_name": "download_triggering",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/download-triggering"
+            },
+            {
+                "method_name": "download_orc_config",
+                "module_name": "/vboa/src/vboa/views/ingestion_control/ingestion_control.py",
+                "route": "/download-orc-config"
+            },
+            {
                 "method_name": "navigate",
                 "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
                 "route": "/"
@@ -1625,6 +1821,16 @@
                 "method_name": "query_report_by_name",
                 "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
                 "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_report_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_report_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alerts/<uuid:report_uuid>"
             },
             {
                 "method_name": "query_jsonify_reports",
@@ -1779,6 +1985,26 @@
                 "route": "/simulate/<string:t0>"
             },
             {
+                "method_name": "show_navigation",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/navigation"
+            },
+            {
+                "method_name": "get_czml_orbit",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-czml-orbit"
+            },
+            {
+                "method_name": "get_footprint",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-footprint"
+            },
+            {
+                "method_name": "get_swath_details",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-swath-details"
+            },
+            {
                 "method_name": "navigate",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/"
@@ -1892,6 +2118,11 @@
                 "method_name": "prepare_reingestion_of_sources",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/prepare-reingestion-of-sources"
+            },
+            {
+                "method_name": "reingest_sources",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/reingest-sources"
             },
             {
                 "method_name": "prepare_deletion_of_sources",
@@ -2024,6 +2255,16 @@
                 "route": "/query-alerts-pages"
             },
             {
+                "method_name": "query_entity_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_entity_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alerts/<uuid:entity_uuid>"
+            },
+            {
                 "method_name": "get_alert_severities",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/get-alert-severity"
@@ -2107,6 +2348,16 @@
                 "method_name": "query_report_by_name",
                 "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
                 "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_report_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_report_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alerts/<uuid:report_uuid>"
             },
             {
                 "method_name": "query_jsonify_reports",
@@ -2226,6 +2477,26 @@
                 "route": "/simulate/<string:t0>"
             },
             {
+                "method_name": "show_navigation",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/navigation"
+            },
+            {
+                "method_name": "get_czml_orbit",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-czml-orbit"
+            },
+            {
+                "method_name": "get_footprint",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-footprint"
+            },
+            {
+                "method_name": "get_swath_details",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-swath-details"
+            },
+            {
                 "method_name": "navigate",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/"
@@ -2451,6 +2722,16 @@
                 "route": "/query-alerts-pages"
             },
             {
+                "method_name": "query_entity_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_entity_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alerts/<uuid:entity_uuid>"
+            },
+            {
                 "method_name": "get_alert_severities",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/get-alert-severity"
@@ -2534,6 +2815,16 @@
                 "method_name": "query_report_by_name",
                 "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
                 "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_report_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_report_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alerts/<uuid:report_uuid>"
             },
             {
                 "method_name": "query_jsonify_reports",
@@ -2638,6 +2929,26 @@
                 "route": "/navigate"
             },
             {
+                "method_name": "show_navigation",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/navigation"
+            },
+            {
+                "method_name": "get_czml_orbit",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-czml-orbit"
+            },
+            {
+                "method_name": "get_footprint",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-footprint"
+            },
+            {
+                "method_name": "get_swath_details",
+                "module_name": "/vboa/src/vboa/views/earth_observation/earth_observation.py",
+                "route": "/get-swath-details"
+            },
+            {
                 "method_name": "navigate",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/"
@@ -2863,6 +3174,16 @@
                 "route": "/query-alerts-pages"
             },
             {
+                "method_name": "query_entity_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_entity_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
+                "route": "/query-<string:entity>-alerts/<uuid:entity_uuid>"
+            },
+            {
                 "method_name": "get_alert_severities",
                 "module_name": "/vboa/src/vboa/views/eboa_nav/eboa_nav.py",
                 "route": "/get-alert-severity"
@@ -2946,6 +3267,16 @@
                 "method_name": "query_report_by_name",
                 "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
                 "route": "/query-report-by-name/<string:report_name>"
+            },
+            {
+                "method_name": "query_report_alert_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alert/<uuid:alert_uuid>"
+            },
+            {
+                "method_name": "query_report_alerts_and_render",
+                "module_name": "/vboa/src/vboa/views/rboa_nav/rboa_nav.py",
+                "route": "/query-report-alerts/<uuid:report_uuid>"
             },
             {
                 "method_name": "query_jsonify_reports",

@@ -14,12 +14,10 @@ import datetime
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
 import re
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -36,12 +34,7 @@ from rboa.datamodel.alerts import ReportAlert
 
 class TestReportAlertsTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -63,11 +56,11 @@ class TestReportAlertsTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
 
     def test_report_alerts_no_data(self):
-        
-        wait = WebDriverWait(self.driver,5)
+
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/rboa_nav/")
 
@@ -184,7 +177,7 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/rboa_nav/")
 
@@ -202,7 +195,7 @@ class TestReportAlertsTab(unittest.TestCase):
         assert number_of_elements == 3
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
+        timeline_section = wait.until(EC.presence_of_element_located((By.ID, "timeline-general-view-alerts")))
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -290,7 +283,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check report alerts table
-        report_alerts_table = self.driver.find_element_by_id("alerts-table")
+        report_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "alerts-table")))
 
         # Row 1
         justification = report_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -621,7 +614,7 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,15)
 
         self.driver.get("http://localhost:5000/rboa_nav/")
 
@@ -639,7 +632,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("reports-report-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-name-text")))
         input_element.send_keys("report.html")
 
         # Click on query button
@@ -659,10 +652,10 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("reports-report-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-name-text")))
         input_element.send_keys("report.html")
 
-        menu = Select(self.driver.find_element_by_id("reports-report-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-report-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -682,7 +675,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("reports-report-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("report.html")
@@ -691,7 +684,7 @@ class TestReportAlertsTab(unittest.TestCase):
         input_element.send_keys("report_1.html")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("reports-report-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-report-names-in-select"))))
         options.select_by_visible_text("report.html")
         options.select_by_visible_text("report_1.html")
 
@@ -712,16 +705,16 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("reports-report-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("report_1.html")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("reports-report-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-report-names-in-select"))))
         options.select_by_visible_text("report_1.html")
 
-        notInButton = self.driver.find_element_by_id("reports-report-names-in-checkbox")        
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "reports-report-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -882,7 +875,7 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/rboa_nav/")
 
@@ -900,7 +893,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("reports-generator-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-generator-text")))
         input_element.send_keys("report_generator")
 
         # Click on query button
@@ -920,10 +913,10 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("reports-generator-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-generator-text")))
         input_element.send_keys("report_generator")
 
-        menu = Select(self.driver.find_element_by_id("reports-generator-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-generator-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -943,7 +936,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("reports-generators-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-generators-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("report_generator")
@@ -952,7 +945,7 @@ class TestReportAlertsTab(unittest.TestCase):
         input_element.send_keys("report_generator1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("reports-generators-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-generators-in-select"))))
         options.select_by_visible_text("report_generator")
         options.select_by_visible_text("report_generator1")
 
@@ -973,16 +966,16 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("reports-generators-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-generators-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("report_generator")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("reports-generators-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-generators-in-select"))))
         options.select_by_visible_text("report_generator1")
 
-        notInButton = self.driver.find_element_by_id("reports-generators-in-checkbox")        
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "reports-generators-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -1143,7 +1136,7 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/rboa_nav/")
 
@@ -1161,7 +1154,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("reports-report-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-group-text")))
         input_element.send_keys("report_group")
 
         # Click on query button
@@ -1181,10 +1174,10 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("reports-report-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-group-text")))
         input_element.send_keys("report_group")
 
-        menu = Select(self.driver.find_element_by_id("reports-report-group-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-report-group-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -1204,7 +1197,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("reports-report-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("report_group")
@@ -1213,7 +1206,7 @@ class TestReportAlertsTab(unittest.TestCase):
         input_element.send_keys("report_group1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("reports-report-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-report-groups-in-select"))))
         options.select_by_visible_text("report_group")
         options.select_by_visible_text("report_group1")
 
@@ -1234,16 +1227,16 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("reports-report-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "reports-report-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("report_group")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("reports-report-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "reports-report-groups-in-select"))))
         options.select_by_visible_text("report_group1")
 
-        notInButton = self.driver.find_element_by_id("reports-report-groups-in-checkbox")        
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "reports-report-groups-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -1404,13 +1397,13 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/rboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.fill_validity_period(self.driver, wait, "reports", 1,  start_value = "2018-06-05T02:00:00", start_operator = "==", end_value = "2018-06-05T03:00:00", end_operator = "==")
 
         # Click on query button
@@ -1467,9 +1460,9 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.fill_validity_period(self.driver, wait, "reports", 1, start_value = "2018-06-05T01:00:00", start_operator = ">")
-        functions.click(self.driver.find_element_by_id("reports-add-validity-start-validity-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "reports-add-validity-start-validity-stop"))))
         functions.fill_validity_period(self.driver, wait, "reports", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
@@ -1490,7 +1483,7 @@ class TestReportAlertsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Reports")
 
         functions.fill_validity_period(self.driver, wait, "reports", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        functions.click(self.driver.find_element_by_id("reports-add-validity-start-validity-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "reports-add-validity-start-validity-stop"))))
         functions.fill_validity_period(self.driver, wait, "reports", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
@@ -1586,7 +1579,7 @@ class TestReportAlertsTab(unittest.TestCase):
         reports = self.query_eboa.get_reports()
         validity_duration_in_days = str((reports[0].validity_stop - reports[0].validity_start).total_seconds()/86400)
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/rboa_nav/")
@@ -1630,7 +1623,7 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-    
+
         functions.fill_any_duration(self.driver, wait, "reports", "report-validity", validity_duration_in_days, ">=", 1)
 
         # Click on query button
@@ -1777,7 +1770,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         triggering_time = self.query_eboa.get_reports()[0].triggering_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/rboa_nav/")
@@ -1821,7 +1814,7 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-    
+
         functions.fill_any_time(self.driver, wait, "reports", "triggering", triggering_time, ">=", 1)
 
         # Click on query button
@@ -1967,18 +1960,18 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/rboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("report-alerts-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-name-text")))
         input_element.send_keys("alert_name")
 
         # Click on query button
@@ -1998,14 +1991,14 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("report-alerts-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-name-text")))
         input_element.send_keys("alert_name")
 
-        menu = Select(self.driver.find_element_by_id("report-alerts-name-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-name-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -2023,17 +2016,17 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("report-alerts-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_name")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("report-alerts-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-names-in-select"))))
         options.select_by_visible_text("alert_name")
 
         # Click on query button
@@ -2051,20 +2044,20 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("report-alerts-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_name2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("report-alerts-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-names-in-select"))))
         options.select_by_visible_text("alert_name2")
 
-        notInButton = self.driver.find_element_by_id("report-alerts-names-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -2086,7 +2079,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         filename1 = "report_1.html"
         file_path1 = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
-        
+
         # Insert data
         data = {
                 "operations":[
@@ -2159,18 +2152,18 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/rboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("report-alerts-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-group-text")))
         input_element.send_keys("alert_group")
 
         # Click on query button
@@ -2190,14 +2183,14 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("report-alerts-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-group-text")))
         input_element.send_keys("alert_group")
 
-        menu = Select(self.driver.find_element_by_id("report-alerts-group-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-group-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -2215,17 +2208,17 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("report-alerts-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_group")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("report-alerts-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-groups-in-select"))))
         options.select_by_visible_text("alert_group")
 
         # Click on query button
@@ -2243,20 +2236,20 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("report-alerts-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_group2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("report-alerts-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-groups-in-select"))))
         options.select_by_visible_text("alert_group2")
 
-        notInButton = self.driver.find_element_by_id("report-alerts-groups-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-groups-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -2278,7 +2271,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         filename1 = "report_1.html"
         file_path1 = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
-        
+
         # Insert data
         data = {
                 "operations":[
@@ -2351,18 +2344,18 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/rboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("report-alerts-generator-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generator-text")))
         input_element.send_keys("test")
 
         # Click on query button
@@ -2382,14 +2375,14 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("report-alerts-generator-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generator-text")))
         input_element.send_keys("test")
 
-        menu = Select(self.driver.find_element_by_id("report-alerts-generator-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generator-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -2407,17 +2400,17 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("report-alerts-generators-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generators-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("test")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("report-alerts-generators-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generators-in-select"))))
         options.select_by_visible_text("test")
 
         # Click on query button
@@ -2435,20 +2428,20 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("report-alerts-generators-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generators-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("test2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("report-alerts-generators-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generators-in-select"))))
         options.select_by_visible_text("test2")
 
-        notInButton = self.driver.find_element_by_id("report-alerts-generators-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-generators-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -2511,14 +2504,14 @@ class TestReportAlertsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(ReportAlert).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/rboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "==", 1)
@@ -2538,7 +2531,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, ">", 1)
@@ -2557,7 +2550,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, ">=", 1)
@@ -2578,7 +2571,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "<", 1)
@@ -2597,7 +2590,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "<=", 1)
@@ -2618,7 +2611,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "ingestion", ingestion_time, "!=", 1)
@@ -2636,7 +2629,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         filename = "report.html"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
-        
+
         # Insert data
         data = {
                 "operations":[
@@ -2680,14 +2673,14 @@ class TestReportAlertsTab(unittest.TestCase):
 
         solved_time = "2018-06-05T10:07:37"
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/rboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "==", 1)
@@ -2707,7 +2700,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, ">", 1)
@@ -2726,7 +2719,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, ">=", 1)
@@ -2747,7 +2740,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "<", 1)
@@ -2766,7 +2759,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "<=", 1)
@@ -2787,7 +2780,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "solved", solved_time, "!=", 1)
@@ -2805,7 +2798,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         filename = "report.html"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/../html_inputs/" + filename
-        
+
         # Insert data
         data = {
                 "operations":[
@@ -2849,14 +2842,14 @@ class TestReportAlertsTab(unittest.TestCase):
 
         notification_time = "2018-06-05T08:07:37"
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/rboa_nav/")
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "==", 1)
@@ -2876,7 +2869,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, ">", 1)
@@ -2895,7 +2888,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, ">=", 1)
@@ -2916,7 +2909,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "<", 1)
@@ -2935,7 +2928,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "<=", 1)
@@ -2956,7 +2949,7 @@ class TestReportAlertsTab(unittest.TestCase):
 
         # Go to tab
         functions.goToTab(self.driver,"Reports")
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         functions.fill_any_time(self.driver, wait, "report-alerts", "notification", notification_time, "!=", 1)
@@ -3050,7 +3043,7 @@ class TestReportAlertsTab(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## In ##
         self.driver.get("http://localhost:5000/rboa_nav/")
@@ -3058,12 +3051,12 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "report-alerts-severities-in-select", "critical")
-        
+
         # Click on query button
         functions.click(submit_button)
 
@@ -3079,13 +3072,13 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option
         functions.select_option_dropdown(self.driver, "report-alerts-severities-in-select", "critical")
 
-        notInButton = self.driver.find_element_by_id("report-alerts-severities-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "report-alerts-severities-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -3106,7 +3099,7 @@ class TestReportAlertsTab(unittest.TestCase):
         # Go to tab
         functions.goToTab(self.driver,"Reports")
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'report-alerts-submit-button')))
-        
+
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the select option

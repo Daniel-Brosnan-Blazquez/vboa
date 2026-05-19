@@ -14,12 +14,10 @@ import datetime
 import re
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -42,12 +40,7 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 class TestAnnotationCnfsTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -68,11 +61,11 @@ class TestAnnotationCnfsTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
 
     def test_annotation_cnfs_no_data(self):
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -132,7 +125,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -238,7 +231,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -247,7 +240,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation configurations")
 
         # Fill the annotation_name_like input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-name-text")))
         input_element.send_keys("NAME_2")
 
         # Click on query button
@@ -269,10 +262,10 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_name_like input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-name-text")))
         input_element.send_keys("NAME_2")
 
-        menu = Select(self.driver.find_element_by_id("annotation-cnfs-annotation-name-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-name-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -292,13 +285,13 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("NAME_1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-names-in-select"))))
         options.select_by_visible_text("NAME_1")
 
         # Click on query button
@@ -318,16 +311,16 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("NAME_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-names-in-select"))))
         options.select_by_visible_text("NAME_2")
 
-        notInButton = self.driver.find_element_by_id("annotation-cnfs-annotation-names-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
 
@@ -410,7 +403,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -419,7 +412,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation configurations")
 
         # Fill the annotation_system_like input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-system-text")))
         input_element.send_keys("SYSTEM_2")
 
         # Click on query button
@@ -441,10 +434,10 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_system_like input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-system-text")))
         input_element.send_keys("SYSTEM_2")
 
-        menu = Select(self.driver.find_element_by_id("annotation-cnfs-annotation-system-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-system-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -464,13 +457,13 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_system_in input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-systems-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("SYSTEM_1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotation-cnfs-annotation-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-systems-in-select"))))
         options.select_by_visible_text("SYSTEM_1")
 
         # Click on query button
@@ -490,16 +483,16 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the annotation_system_in input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-annotation-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-systems-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("SYSTEM_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotation-cnfs-annotation-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-systems-in-select"))))
         options.select_by_visible_text("SYSTEM_2")
         
-        notInButton = self.driver.find_element_by_id("annotation-cnfs-annotation-systems-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-annotation-systems-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
 
@@ -595,7 +588,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -604,7 +597,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         functions.goToTab(self.driver,"Annotation configurations")
 
         # Fill the dim_signature_like input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
@@ -626,10 +619,10 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the dim_signature_like input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
-        menu = Select(self.driver.find_element_by_id("annotation-cnfs-dim-signature-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signature-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -649,7 +642,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signatures-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("DIM_SIGNATURE_1")
@@ -658,7 +651,7 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         input_element.send_keys("DIM_SIGNATURE_3")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotation-cnfs-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_1")
         options.select_by_visible_text("DIM_SIGNATURE_3")
 
@@ -680,16 +673,16 @@ class TestAnnotationCnfsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'annotation-cnfs-submit-button')))
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("annotation-cnfs-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signatures-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("DIM_SIGNATURE_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotation-cnfs-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_2")
 
-        notInButton = self.driver.find_element_by_id("annotation-cnfs-dim-signatures-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "annotation-cnfs-dim-signatures-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if

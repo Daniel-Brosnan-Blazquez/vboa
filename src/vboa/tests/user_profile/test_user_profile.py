@@ -11,12 +11,10 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -41,12 +39,7 @@ with app.app_context():
 
 class TestUserProfile(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
     
 
     def setUp(self):
@@ -68,7 +61,7 @@ class TestUserProfile(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
     
     def test_user_profile_info(self):
 
@@ -89,7 +82,7 @@ class TestUserProfile(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
         
         self.driver.get("http://localhost:5000/login")
         
@@ -102,10 +95,10 @@ class TestUserProfile(unittest.TestCase):
         group_expected= "Deimos"
         roles_expected= "administrator"
         
-        assert email_expected == self.driver.find_element_by_id("email").text
-        assert username_expected == self.driver.find_element_by_id("username").text
-        assert group_expected == self.driver.find_element_by_id("group").text
-        assert roles_expected == self.driver.find_element_by_id("roles").text
+        assert email_expected == wait.until(EC.presence_of_element_located((By.ID, "email"))).text
+        assert username_expected == wait.until(EC.presence_of_element_located((By.ID, "username"))).text
+        assert group_expected == wait.until(EC.presence_of_element_located((By.ID, "group"))).text
+        assert roles_expected == wait.until(EC.presence_of_element_located((By.ID, "roles"))).text
 
     def test_change_password(self):
 
@@ -126,7 +119,7 @@ class TestUserProfile(unittest.TestCase):
         self.engine_uboa.data = data
         assert uboa_engine.exit_codes["OK"]["status"] == self.engine_uboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
         
         self.driver.get("http://localhost:5000/login")
         
@@ -134,7 +127,7 @@ class TestUserProfile(unittest.TestCase):
 
         self.driver.get("http://localhost:5000/user-profile/?user=administrator")
 
-        self.driver.find_element_by_id("user-profile-change-password-submit-button").click()
+        wait.until(EC.presence_of_element_located((By.ID, "user-profile-change-password-submit-button"))).click()
 
         wait.until(EC.text_to_be_present_in_element((By.TAG_NAME,"h2"),"Please, add new password"))
 

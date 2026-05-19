@@ -14,12 +14,10 @@ import datetime
 import re
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -41,12 +39,7 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 class TestAnnotationsTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -67,11 +60,11 @@ class TestAnnotationsTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
 
     def test_annotations_no_data(self):
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -131,7 +124,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -216,7 +209,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -225,7 +218,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Click on show map
-        mapButton = self.driver.find_element_by_id("annotations-show-map")
+        mapButton = wait.until(EC.presence_of_element_located((By.ID, "annotations-show-map")))
         if not mapButton.find_element_by_xpath('input').is_selected():
             functions.select_checkbox(mapButton)
         #end if
@@ -234,7 +227,7 @@ class TestAnnotationsTab(unittest.TestCase):
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'annotations-submit-button')))
         functions.click(submitButton)
 
-        map = self.driver.find_element_by_id("annotations-nav-map")
+        map = wait.until(EC.presence_of_element_located((By.ID, "annotations-nav-map")))
 
         condition = map.is_displayed()
 
@@ -330,7 +323,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -340,7 +333,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_like input
-        input_element = self.driver.find_element_by_id("annotations-source-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-source-text")))
         input_element.send_keys("source_1.xml")
 
         # Click on query button
@@ -363,10 +356,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_like input
-        input_element = self.driver.find_element_by_id("annotations-source-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-source-text")))
         input_element.send_keys("source_1.xml")
 
-        menu = Select(self.driver.find_element_by_id("annotations-source-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-source-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -387,13 +380,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("annotations-sources-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-sources-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("source_2.xml")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-sources-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-sources-in-select"))))
         options.select_by_visible_text("source_2.xml")
 
         # Click on query button
@@ -414,16 +407,16 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("annotations-sources-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-sources-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("source_1.xml")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-sources-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-sources-in-select"))))
         options.select_by_visible_text("source_1.xml")
 
-        notInButton = self.driver.find_element_by_id("annotations-sources-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "annotations-sources-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -507,7 +500,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -517,7 +510,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("annotations-er-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-er-text")))
         input_element.send_keys("EXPLICIT_REFERENCE")
 
         # Click on query button
@@ -540,10 +533,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("annotations-er-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-er-text")))
         input_element.send_keys("EXPLICIT_REFERENCE")
 
-        menu = Select(self.driver.find_element_by_id("annotations-er-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-er-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -564,13 +557,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("annotations-ers-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-ers-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("EXPLICIT_REFERENCE_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-ers-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-ers-in-select"))))
         options.select_by_visible_text("EXPLICIT_REFERENCE_2")
         
         # Click on query button
@@ -591,16 +584,16 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("annotations-ers-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-ers-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("EXPLICIT_REFERENCE")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-ers-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-ers-in-select"))))
         options.select_by_visible_text("EXPLICIT_REFERENCE")
 
-        notInButton = self.driver.find_element_by_id("annotations-ers-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "annotations-ers-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -684,7 +677,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -694,7 +687,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_like input
-        input_element = self.driver.find_element_by_id("annotations-annotation-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-name-text")))
         input_element.send_keys("NAME_2")
 
         # Click on query button
@@ -717,10 +710,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_like input
-        input_element = self.driver.find_element_by_id("annotations-annotation-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-name-text")))
         input_element.send_keys("NAME_2")
 
-        menu = Select(self.driver.find_element_by_id("annotations-annotation-name-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-name-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -741,13 +734,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("NAME_1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-annotation-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-names-in-select"))))
         options.select_by_visible_text("NAME_1")
 
         # Click on query button
@@ -768,16 +761,16 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_name_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("NAME_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-annotation-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-names-in-select"))))
         options.select_by_visible_text("NAME_2")
 
-        notInButton = self.driver.find_element_by_id("annotations-annotation-names-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -861,7 +854,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -871,7 +864,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_like input
-        input_element = self.driver.find_element_by_id("annotations-annotation-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-system-text")))
         input_element.send_keys("SYSTEM_2")
 
         # Click on query button
@@ -894,10 +887,10 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_like input
-        input_element = self.driver.find_element_by_id("annotations-annotation-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-system-text")))
         input_element.send_keys("SYSTEM_2")
 
-        menu = Select(self.driver.find_element_by_id("annotations-annotation-system-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-system-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -918,13 +911,13 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # Fill the annotation_system_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-systems-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("SYSTEM_1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-annotation-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-systems-in-select"))))
         options.select_by_visible_text("SYSTEM_1")
 
         # Click on query button
@@ -945,16 +938,16 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         # # Fill the annotation_system_in input
-        input_element = self.driver.find_element_by_id("annotations-annotation-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-systems-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("SYSTEM_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("annotations-annotation-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-systems-in-select"))))
         options.select_by_visible_text("SYSTEM_2")
 
-        notInButton = self.driver.find_element_by_id("annotations-annotation-systems-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "annotations-annotation-systems-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -1050,7 +1043,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1130,7 +1123,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1484,7 +1477,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1834,7 +1827,7 @@ class TestAnnotationsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Annotation).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2035,7 +2028,7 @@ class TestAnnotationsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2044,7 +2037,7 @@ class TestAnnotationsTab(unittest.TestCase):
         functions.click_no_graphs_annotations(self.driver)
 
         functions.fill_value(self.driver, wait, "annotations", "text", "textname_1", "textvalue_1", "==", "==", 1)
-        functions.click(self.driver.find_element_by_id("annotations-add-value"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "annotations-add-value"))))
         functions.fill_value(self.driver, wait, "annotations", "double", "double_name_1", "1.4", "==", "==", 2)
 
         # Click on query butto

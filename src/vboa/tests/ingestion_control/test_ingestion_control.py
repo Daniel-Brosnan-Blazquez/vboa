@@ -15,12 +15,10 @@ import re
 import dateutil.parser as parser
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 import shutil
@@ -48,12 +46,7 @@ import vboa.service_management as service_management
 
 class TestIngestionControl(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -97,11 +90,11 @@ class TestIngestionControl(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
 
     def test_no_sources(self):
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/ingestion_control/ingestion_control")
 
@@ -122,7 +115,7 @@ class TestIngestionControl(unittest.TestCase):
 
     def test_no_alerts(self):
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/ingestion_control/ingestion_control?template=alerts")
 
@@ -143,7 +136,7 @@ class TestIngestionControl(unittest.TestCase):
 
     def test_no_errors(self):
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/ingestion_control/ingestion_control?template=errors")
 
@@ -188,7 +181,7 @@ class TestIngestionControl(unittest.TestCase):
         exit_status = self.engine_eboa.treat_data(data)
         assert len([item for item in exit_status if item["status"] != eboa_engine.exit_codes["OK"]["status"]]) == 0
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/ingestion_control/ingestion_control")
 
@@ -209,7 +202,7 @@ class TestIngestionControl(unittest.TestCase):
         assert summary_successful and summary_successful.text == "1"
 
         # table
-        table = self.driver.find_element_by_id("ingestions-status-ingestion-control-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "ingestions-status-ingestion-control-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -260,27 +253,27 @@ class TestIngestionControl(unittest.TestCase):
         assert sources == self.driver.execute_script('return sources;')
         
         # Check validity timeline
-        validity_timeline = self.driver.find_element_by_id("ingestion-control-validity-timeline")
+        validity_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-validity-timeline")))
 
         assert validity_timeline.is_displayed()
         
         # Check generation to ingestion timeline
-        generation_to_ingestion_timeline = self.driver.find_element_by_id("ingestion-control-generation-to-ingestion-timeline")
+        generation_to_ingestion_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-to-ingestion-timeline")))
 
         assert generation_to_ingestion_timeline.is_displayed()
         
         # Check number of events xy
-        number_of_events_xy = self.driver.find_element_by_id("ingestion-control-number-events-xy")
+        number_of_events_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-number-events-xy")))
 
         assert number_of_events_xy.is_displayed()
         
         # Check ingestion duration xy
-        ingestion_duration_xy = self.driver.find_element_by_id("ingestion-control-ingestion-duration-xy")
+        ingestion_duration_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-ingestion-duration-xy")))
 
         assert ingestion_duration_xy.is_displayed()
         
         # Check generation time to ingestion time xy
-        generation_to_ingestion_xy = self.driver.find_element_by_id("ingestion-control-generation-time-to-ingestion-time-xy")
+        generation_to_ingestion_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-time-to-ingestion-time-xy")))
 
         assert generation_to_ingestion_xy.is_displayed()
 
@@ -311,7 +304,7 @@ class TestIngestionControl(unittest.TestCase):
         # Check data is correctly inserted
         exit_status = self.engine_eboa.treat_data(data)
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/ingestion_control/ingestion_control")
 
@@ -332,7 +325,7 @@ class TestIngestionControl(unittest.TestCase):
         assert summary_errors and summary_errors.text == "1"
 
         # general table
-        table = self.driver.find_element_by_id("ingestions-status-ingestion-control-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "ingestions-status-ingestion-control-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -351,7 +344,7 @@ class TestIngestionControl(unittest.TestCase):
         assert number_of_events.text == "0"
 
         # errors table
-        table = self.driver.find_element_by_id("ingestion-errors-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "ingestion-errors-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -402,27 +395,27 @@ class TestIngestionControl(unittest.TestCase):
         assert sources == self.driver.execute_script('return sources;')
         
         # Check validity timeline
-        validity_timeline = self.driver.find_element_by_id("ingestion-control-validity-timeline")
+        validity_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-validity-timeline")))
 
         assert validity_timeline.is_displayed()
         
         # Check generation to ingestion timeline
-        generation_to_ingestion_timeline = self.driver.find_element_by_id("ingestion-control-generation-to-ingestion-timeline")
+        generation_to_ingestion_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-to-ingestion-timeline")))
 
         assert generation_to_ingestion_timeline.is_displayed()
         
         # Check number of events xy
-        number_of_events_xy = self.driver.find_element_by_id("ingestion-control-number-events-xy")
+        number_of_events_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-number-events-xy")))
 
         assert number_of_events_xy.is_displayed()
         
         # Check ingestion duration xy
-        ingestion_duration_xy = self.driver.find_element_by_id("ingestion-control-ingestion-duration-xy")
+        ingestion_duration_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-ingestion-duration-xy")))
 
         assert ingestion_duration_xy.is_displayed()
         
         # Check generation time to ingestion time xy
-        generation_to_ingestion_xy = self.driver.find_element_by_id("ingestion-control-generation-time-to-ingestion-time-xy")
+        generation_to_ingestion_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-time-to-ingestion-time-xy")))
 
         assert generation_to_ingestion_xy.is_displayed()
 
@@ -449,7 +442,7 @@ class TestIngestionControl(unittest.TestCase):
         # Check data is correctly inserted
         exit_status = self.engine_eboa.treat_data(data)
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/ingestion_control/ingestion_control")
 
@@ -475,7 +468,7 @@ class TestIngestionControl(unittest.TestCase):
         assert summary_incomplete and summary_incomplete.text == "1"
 
         # general table
-        table = self.driver.find_element_by_id("ingestions-status-ingestion-control-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "ingestions-status-ingestion-control-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -498,7 +491,7 @@ class TestIngestionControl(unittest.TestCase):
         assert number_of_events.text == "0"
 
         # incomplete table
-        table = self.driver.find_element_by_id("incomplete-ingestions-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "incomplete-ingestions-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -553,27 +546,27 @@ class TestIngestionControl(unittest.TestCase):
         assert sources == self.driver.execute_script('return sources;')
         
         # Check validity timeline
-        validity_timeline = self.driver.find_element_by_id("ingestion-control-validity-timeline")
+        validity_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-validity-timeline")))
 
         assert validity_timeline.is_displayed()
         
         # Check generation to ingestion timeline
-        generation_to_ingestion_timeline = self.driver.find_element_by_id("ingestion-control-generation-to-ingestion-timeline")
+        generation_to_ingestion_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-to-ingestion-timeline")))
 
         assert generation_to_ingestion_timeline.is_displayed()
         
         # Check number of events xy
-        number_of_events_xy = self.driver.find_element_by_id("ingestion-control-number-events-xy")
+        number_of_events_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-number-events-xy")))
 
         assert number_of_events_xy.is_displayed()
         
         # Check ingestion duration xy
-        ingestion_duration_xy = self.driver.find_element_by_id("ingestion-control-ingestion-duration-xy")
+        ingestion_duration_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-ingestion-duration-xy")))
 
         assert ingestion_duration_xy.is_displayed()
         
         # Check generation time to ingestion time xy
-        generation_to_ingestion_xy = self.driver.find_element_by_id("ingestion-control-generation-time-to-ingestion-time-xy")
+        generation_to_ingestion_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-time-to-ingestion-time-xy")))
 
         assert generation_to_ingestion_xy.is_displayed()
 
@@ -609,7 +602,7 @@ class TestIngestionControl(unittest.TestCase):
         exit_status = self.engine_eboa.treat_data(data)
         assert len([item for item in exit_status if item["status"] != eboa_engine.exit_codes["OK"]["status"]]) == 0
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/ingestion_control/ingestion_control")
 
@@ -635,7 +628,7 @@ class TestIngestionControl(unittest.TestCase):
         assert summary_alert and summary_alert.text == "1"
 
         # table
-        table = self.driver.find_element_by_id("ingestions-status-ingestion-control-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "ingestions-status-ingestion-control-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[3]")
 
@@ -654,7 +647,7 @@ class TestIngestionControl(unittest.TestCase):
         assert number_of_events.text == "0"
 
         # alerts table
-        table = self.driver.find_element_by_id("ingestion-control-alerts-details-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-alerts-details-table")))
 
         severity = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -725,27 +718,27 @@ class TestIngestionControl(unittest.TestCase):
         assert sources == self.driver.execute_script('return sources;')
         
         # Check validity timeline
-        validity_timeline = self.driver.find_element_by_id("ingestion-control-validity-timeline")
+        validity_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-validity-timeline")))
 
         assert validity_timeline.is_displayed()
         
         # Check generation to ingestion timeline
-        generation_to_ingestion_timeline = self.driver.find_element_by_id("ingestion-control-generation-to-ingestion-timeline")
+        generation_to_ingestion_timeline = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-to-ingestion-timeline")))
 
         assert generation_to_ingestion_timeline.is_displayed()
         
         # Check number of events xy
-        number_of_events_xy = self.driver.find_element_by_id("ingestion-control-number-events-xy")
+        number_of_events_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-number-events-xy")))
 
         assert number_of_events_xy.is_displayed()
         
         # Check ingestion duration xy
-        ingestion_duration_xy = self.driver.find_element_by_id("ingestion-control-ingestion-duration-xy")
+        ingestion_duration_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-ingestion-duration-xy")))
 
         assert ingestion_duration_xy.is_displayed()
         
         # Check generation time to ingestion time xy
-        generation_to_ingestion_xy = self.driver.find_element_by_id("ingestion-control-generation-time-to-ingestion-time-xy")
+        generation_to_ingestion_xy = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-generation-time-to-ingestion-time-xy")))
 
         assert generation_to_ingestion_xy.is_displayed()
 
@@ -762,11 +755,11 @@ class TestIngestionControl(unittest.TestCase):
         os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
         shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse file
-        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-browse-files")))
 
         filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
@@ -774,7 +767,7 @@ class TestIngestionControl(unittest.TestCase):
         browse_file.send_keys(file_path)
 
         # Trigger input files table
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -785,7 +778,7 @@ class TestIngestionControl(unittest.TestCase):
         assert size.text == "467 B"
 
         # Trigger ingestion
-        trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
+        trigger_ingestion_button = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-trigger-button")))
         trigger_ingestion_button.click()
 
         time.sleep(1)
@@ -818,6 +811,8 @@ class TestIngestionControl(unittest.TestCase):
     
     def test_manual_ingestion_two_files(self):
 
+        wait = WebDriverWait(self.driver,10)
+
         # Copy test configuration for ORC
         status = service_management.execute_command("orcValidateConfig -C")
 
@@ -833,7 +828,7 @@ class TestIngestionControl(unittest.TestCase):
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse first file
-        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-browse-files")))
 
         filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
@@ -841,7 +836,7 @@ class TestIngestionControl(unittest.TestCase):
         browse_file.send_keys(file_path)
 
         # Trigger input files table
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -852,7 +847,7 @@ class TestIngestionControl(unittest.TestCase):
         assert size.text == "467 B"
 
         # Browse second file
-        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-browse-files")))
 
         filename = "source2.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
@@ -860,7 +855,7 @@ class TestIngestionControl(unittest.TestCase):
         browse_file.send_keys(file_path)
 
         # Trigger input files table
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -871,7 +866,7 @@ class TestIngestionControl(unittest.TestCase):
         assert size.text == "468 B"
 
         # Trigger ingestion
-        trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
+        trigger_ingestion_button = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-trigger-button")))
         trigger_ingestion_button.click()
 
         time.sleep(1)
@@ -913,10 +908,12 @@ class TestIngestionControl(unittest.TestCase):
         
     def test_manual_ingestion_remove_file(self):
 
+        wait = WebDriverWait(self.driver,10)
+
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse file
-        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-browse-files")))
 
         filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
@@ -924,7 +921,7 @@ class TestIngestionControl(unittest.TestCase):
         browse_file.send_keys(file_path)
 
         # Trigger input files table
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -935,10 +932,10 @@ class TestIngestionControl(unittest.TestCase):
         assert size.text == "467 B"
 
         # Clear button
-        clear_button = self.driver.find_element_by_id("manual-ingestion-files-clear-button")
+        clear_button = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-clear-button")))
         clear_button.click()
 
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         empty_table = table.find_element_by_xpath("tbody/tr[last()]/td[1]")
 
@@ -957,11 +954,11 @@ class TestIngestionControl(unittest.TestCase):
         os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
         shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering.xml", "/resources_path/triggering.xml")
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse file
-        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-browse-files")))
 
         filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
@@ -969,7 +966,7 @@ class TestIngestionControl(unittest.TestCase):
         browse_file.send_keys(file_path)
 
         # Trigger input files table
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -980,7 +977,7 @@ class TestIngestionControl(unittest.TestCase):
         assert size.text == "467 B"
 
         # Trigger ingestion
-        trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
+        trigger_ingestion_button = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-trigger-button")))
         trigger_ingestion_button.click()
 
         time.sleep(1)
@@ -1011,13 +1008,13 @@ class TestIngestionControl(unittest.TestCase):
         self.driver.get("http://localhost:5000/eboa_nav/query-sources-by-name/source.json")
 
         # Reingest file
-        source_tr = self.driver.find_element_by_id(str(sources[0].source_uuid))
+        source_tr = wait.until(EC.presence_of_element_located((By.ID, str(sources[0].source_uuid))))
         source_tr.click()
 
-        reingest_button = self.driver.find_element_by_id("sources-reingetion-button")
+        reingest_button = wait.until(EC.presence_of_element_located((By.ID, "sources-reingetion-button")))
         reingest_button.click()
 
-        confirm_reingest_button = self.driver.find_element_by_id("ingestion-control-reingetion-confirmation-button")
+        confirm_reingest_button = wait.until(EC.presence_of_element_located((By.ID, "ingestion-control-reingetion-confirmation-button")))
         confirm_reingest_button.click()
         
         # Confirm reingestion
@@ -1055,11 +1052,11 @@ class TestIngestionControl(unittest.TestCase):
         os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
         shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering_twice.xml", "/resources_path/triggering.xml")
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse file
-        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-browse-files")))
 
         filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
@@ -1067,7 +1064,7 @@ class TestIngestionControl(unittest.TestCase):
         browse_file.send_keys(file_path)
 
         # Trigger input files table
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -1078,7 +1075,7 @@ class TestIngestionControl(unittest.TestCase):
         assert size.text == "467 B"
 
         # Trigger ingestion
-        trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
+        trigger_ingestion_button = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-trigger-button")))
         trigger_ingestion_button.click()
 
         time.sleep(1)
@@ -1139,11 +1136,11 @@ class TestIngestionControl(unittest.TestCase):
         os.rename("/resources_path/triggering.xml", "/resources_path/triggering_bak.xml")
         shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/inputs/triggering_three_times.xml", "/resources_path/triggering.xml")
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
         self.driver.get("http://localhost:5000/ingestion_control/manual-ingestion")
 
         # Browse file
-        browse_file = self.driver.find_element_by_id("manual-ingestion-files-browse-files")
+        browse_file = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-browse-files")))
 
         filename = "source.json"
         file_path = os.path.dirname(os.path.abspath(__file__)) + "/inputs/" + filename
@@ -1151,7 +1148,7 @@ class TestIngestionControl(unittest.TestCase):
         browse_file.send_keys(file_path)
 
         # Trigger input files table
-        table = self.driver.find_element_by_id("manual-ingestion-files-table")
+        table = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-table")))
 
         name = table.find_element_by_xpath("tbody/tr[last()]/td[2]")
 
@@ -1162,7 +1159,7 @@ class TestIngestionControl(unittest.TestCase):
         assert size.text == "467 B"
 
         # Trigger ingestion
-        trigger_ingestion_button = self.driver.find_element_by_id("manual-ingestion-files-trigger-button")
+        trigger_ingestion_button = wait.until(EC.presence_of_element_located((By.ID, "manual-ingestion-files-trigger-button")))
         trigger_ingestion_button.click()
 
         time.sleep(1)

@@ -14,12 +14,10 @@ import datetime
 import re
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -42,12 +40,7 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 class TestGaugesTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -68,11 +61,11 @@ class TestGaugesTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
 
     def test_gauges_no_data(self):
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -124,7 +117,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -191,7 +184,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -200,7 +193,7 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Click on show network
-        networkButton = self.driver.find_element_by_id("gauges-show-network")
+        networkButton = wait.until(EC.presence_of_element_located((By.ID, "gauges-show-network")))
         if not networkButton.find_element_by_xpath('input').is_selected():
             functions.select_checkbox(networkButton)
         #end if
@@ -224,7 +217,7 @@ class TestGaugesTab(unittest.TestCase):
             "gauges_linked": []
         }]
 
-        network = self.driver.find_element_by_id("gauges-nav-network")
+        network = wait.until(EC.presence_of_element_located((By.ID, "gauges-nav-network")))
 
         condition = network.is_displayed()
 
@@ -290,7 +283,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -300,7 +293,7 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("gauges-gauge-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-name-text")))
         input_element.send_keys("GAUGE_NAME_1")
 
         # Click on query button
@@ -323,10 +316,10 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("gauges-gauge-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-name-text")))
         input_element.send_keys("GAUGE_NAME_1")
 
-        menu = Select(self.driver.find_element_by_id("gauges-gauge-name-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-name-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -348,13 +341,13 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("gauges-gauge-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-names-in-text")))
         functions.click(input_element)
         
         input_element.send_keys("G")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("gauges-gauge-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-names-in-select"))))
         options.select_by_visible_text("GAUGE_NAME_1")
         options.select_by_visible_text("GAUGE_NAME_3")
 
@@ -377,16 +370,16 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("gauges-gauge-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-names-in-text")))
         functions.click(input_element)
         
         input_element.send_keys("G")
         input_element.send_keys(Keys.LEFT_SHIFT)
         
-        options = Select(self.driver.find_element_by_id("gauges-gauge-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-names-in-select"))))
         options.select_by_visible_text("GAUGE_NAME_1")
 
-        notInButton = self.driver.find_element_by_id("gauges-gauge-names-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -461,7 +454,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -471,7 +464,7 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_like input
-        input_element = self.driver.find_element_by_id("gauges-gauge-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-system-text")))
         input_element.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
@@ -494,10 +487,10 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_like input
-        input_element = self.driver.find_element_by_id("gauges-gauge-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-system-text")))
         input_element.send_keys("GAUGE_SYSTEM_1")
 
-        menu = Select(self.driver.find_element_by_id("gauges-gauge-system-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-system-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -519,13 +512,13 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("gauges-gauge-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-systems-in-text")))
         functions.click(input_element)
         
         input_element.send_keys("G")
         input_element.send_keys(Keys.LEFT_SHIFT)
         
-        options = Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-systems-in-select"))))
         options.select_by_visible_text("GAUGE_SYSTEM_1")
         options.select_by_visible_text("GAUGE_SYSTEM_3")
 
@@ -548,16 +541,16 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("gauges-gauge-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-systems-in-text")))
         functions.click(input_element)
         
         input_element.send_keys("G")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("gauges-gauge-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-systems-in-select"))))
         options.select_by_visible_text("GAUGE_SYSTEM_1")
         
-        notInButton = self.driver.find_element_by_id("gauges-gauge-systems-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "gauges-gauge-systems-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -632,7 +625,7 @@ class TestGaugesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -642,7 +635,7 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_like input
-        input_element = self.driver.find_element_by_id("gauges-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
@@ -665,10 +658,10 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_like input
-        input_element = self.driver.find_element_by_id("gauges-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
-        menu = Select(self.driver.find_element_by_id("gauges-dim-signature-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signature-operator"))))
         menu.select_by_visible_text("notlike")
         
         # Click on query button
@@ -689,13 +682,13 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("gauges-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signatures-in-text")))
         functions.click(input_element)
  
         input_element.send_keys("D")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_1")
         
         # Click on query button
@@ -716,16 +709,16 @@ class TestGaugesTab(unittest.TestCase):
         functions.click_no_graphs_gauges(self.driver)
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("gauges-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signatures-in-text")))
         functions.click(input_element)
         
         input_element.send_keys("D")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("gauges-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_2")
         
-        notInButton = self.driver.find_element_by_id("gauges-dim-signatures-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "gauges-dim-signatures-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if

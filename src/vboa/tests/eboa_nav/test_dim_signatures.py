@@ -14,12 +14,10 @@ import datetime
 import re
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -42,12 +40,7 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 class TestDimSignaturesTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -68,11 +61,11 @@ class TestDimSignaturesTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
 
     def test_dim_signatures_no_data(self):
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -122,7 +115,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -195,7 +188,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -204,7 +197,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         functions.goToTab(self.driver,"DIM signatures")
 
         # Fill the dim_signature_like input
-        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
@@ -226,10 +219,10 @@ class TestDimSignaturesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_like input
-        input_element = self.driver.find_element_by_id("dim-signatures-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
-        menu = Select(self.driver.find_element_by_id("dim-signatures-dim-signature-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signature-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -249,7 +242,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("dim-signatures-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signatures-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("DIM_SIGNATURE_1")
@@ -258,7 +251,7 @@ class TestDimSignaturesTab(unittest.TestCase):
         input_element.send_keys("DIM_SIGNATURE_3")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("dim-signatures-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_1")
         options.select_by_visible_text("DIM_SIGNATURE_3")
 
@@ -279,16 +272,16 @@ class TestDimSignaturesTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'dim-signatures-submit-button')))
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("dim-signatures-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signatures-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("DIM_SIGNATURE_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("dim-signatures-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_2")
 
-        notInButton = self.driver.find_element_by_id("dim-signatures-dim-signatures-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "dim-signatures-dim-signatures-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if

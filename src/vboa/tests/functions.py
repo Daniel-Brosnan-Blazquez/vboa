@@ -10,12 +10,14 @@ import sys
 import unittest
 import time
 import subprocess
+import atexit
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
@@ -26,8 +28,38 @@ test_case = unittest.TestCase()
 # This is needed for showing all the difference without limit
 test_case.maxDiff = None
 
+_shared_driver = None
+
+def get_shared_driver():
+    global _shared_driver
+
+    if _shared_driver is None:
+        options = ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('window-size=1920,1080')
+        _shared_driver = webdriver.Chrome(options=options)
+        _shared_driver.implicitly_wait(5)
+
+    return _shared_driver
+
+def release_shared_driver():
+    if _shared_driver is not None:
+        _shared_driver.delete_all_cookies()
+        _shared_driver.get("about:blank")
+
+def quit_shared_driver():
+    global _shared_driver
+
+    if _shared_driver is not None:
+        _shared_driver.quit()
+        _shared_driver = None
+
+atexit.register(quit_shared_driver)
+
 def goToTab(driver,tab_name):
-    tab = driver.find_element_by_link_text(tab_name)
+    wait = WebDriverWait(driver, 10)
+    tab = wait.until(EC.element_to_be_clickable((By.LINK_TEXT, tab_name)))
     click(tab)
 
 def fill_value(driver, wait, tab, value_type, value_name, value_value, value_name_operator, value_value_operator, row):
@@ -418,5 +450,3 @@ def login(driver, user, password):
     
     login_button = driver.find_elements_by_xpath("//*[contains(text(), 'Login')]")
     click(login_button[0])
-
-

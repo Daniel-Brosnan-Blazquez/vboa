@@ -15,12 +15,10 @@ import re
 import dateutil.parser as parser
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -42,12 +40,7 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 class TestEventsTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -68,11 +61,11 @@ class TestEventsTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
     
     def test_events_no_data(self):
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -124,7 +117,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -216,7 +209,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -225,7 +218,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Click on show map
-        timelineButton = self.driver.find_element_by_id("events-show-timeline")
+        timelineButton = wait.until(EC.presence_of_element_located((By.ID, "events-show-timeline")))
         if not timelineButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(timelineButton)
         # end if
@@ -234,7 +227,7 @@ class TestEventsTab(unittest.TestCase):
         submitButton = wait.until(EC.visibility_of_element_located((By.ID,'events-submit-button')))
         functions.click(submitButton)
 
-        timeline = self.driver.find_element_by_id('events-nav-timeline')
+        timeline = wait.until(EC.presence_of_element_located((By.ID, 'events-nav-timeline')))
 
         condition = timeline.is_displayed()
 
@@ -258,7 +251,7 @@ class TestEventsTab(unittest.TestCase):
             }]
 
         # Linked events table
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/query-event-links/" + str(event.event_uuid))
 
@@ -375,7 +368,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -385,7 +378,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the source_like input
-        input_element = self.driver.find_element_by_id("events-source-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-source-text")))
         input_element.send_keys("source_2.xml")
 
         # Click on query button
@@ -408,10 +401,10 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the source input
-        input_element = self.driver.find_element_by_id("events-source-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-source-text")))
         input_element.send_keys("source_2.xml")
 
-        menu = Select(self.driver.find_element_by_id("events-source-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "events-source-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -432,13 +425,13 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("events-sources-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-sources-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("source_1.xml")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-sources-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-sources-in-select"))))
         options.select_by_visible_text("source_1.xml")
 
         # Click on query button
@@ -459,16 +452,16 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("events-sources-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-sources-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("source_2.xml")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-sources-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-sources-in-select"))))
         options.select_by_visible_text("source_2.xml")
 
-        notInButton = self.driver.find_element_by_id("events-sources-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "events-sources-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -540,7 +533,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -550,7 +543,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_like input
-        input_element = self.driver.find_element_by_id("events-er-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-er-text")))
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
         # Click on query button
@@ -573,10 +566,10 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit reference input
-        input_element = self.driver.find_element_by_id("events-er-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-er-text")))
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
 
-        menu = Select(self.driver.find_element_by_id("events-er-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "events-er-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -597,13 +590,13 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_reference_in input
-        input_element = self.driver.find_element_by_id("events-ers-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-ers-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-ers-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-ers-in-select"))))
         options.select_by_visible_text("EXPLICIT_REFERENCE_EVENT_1")
 
         # Click on query button
@@ -624,16 +617,16 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the explicit_ref_in input
-        input_element = self.driver.find_element_by_id("events-ers-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-ers-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("EXPLICIT_REFERENCE_EVENT_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-ers-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-ers-in-select"))))
         options.select_by_visible_text("EXPLICIT_REFERENCE_EVENT_2")
 
-        notInButton = self.driver.find_element_by_id("events-ers-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "events-ers-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -708,7 +701,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -718,7 +711,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the key_like input
-        input_element = self.driver.find_element_by_id("events-key-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-key-text")))
         input_element.send_keys("EVENT_KEY")
 
         # Click on query button
@@ -741,10 +734,10 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the key input
-        input_element = self.driver.find_element_by_id("events-key-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-key-text")))
         input_element.send_keys("EVENT_KEY")
 
-        menu = Select(self.driver.find_element_by_id("events-key-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "events-key-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -766,13 +759,13 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the key_in input
-        input_element = self.driver.find_element_by_id("events-keys-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-keys-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("EVENT_KEY_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-keys-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-keys-in-select"))))
         options.select_by_visible_text("EVENT_KEY_2")
 
         # Click on query button
@@ -794,16 +787,16 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the key_in input
-        input_element = self.driver.find_element_by_id("events-keys-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-keys-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("EVENT_KEY")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-keys-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-keys-in-select"))))
         options.select_by_visible_text("EVENT_KEY")
 
-        notInButton = self.driver.find_element_by_id("events-keys-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "events-keys-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -877,7 +870,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -887,7 +880,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_like input
-        input_element = self.driver.find_element_by_id("events-gauge-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-name-text")))
         input_element.send_keys("GAUGE_NAME_1")
 
         # Click on query button
@@ -910,10 +903,10 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge name input
-        input_element = self.driver.find_element_by_id("events-gauge-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-name-text")))
         input_element.send_keys("GAUGE_NAME_1")
 
-        menu = Select(self.driver.find_element_by_id("events-gauge-name-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "events-gauge-name-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -935,13 +928,13 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("events-gauge-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("GAUGE_NAME_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-gauge-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-gauge-names-in-select"))))
         options.select_by_visible_text("GAUGE_NAME_2")
 
         # Click on query button
@@ -963,16 +956,16 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_name_in input
-        input_element = self.driver.find_element_by_id("events-gauge-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("GAUGE_NAME_1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-gauge-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-gauge-names-in-select"))))
         options.select_by_visible_text("GAUGE_NAME_1")
 
-        notInButton = self.driver.find_element_by_id("events-gauge-names-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -1047,7 +1040,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1057,7 +1050,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_like input
-        input_element = self.driver.find_element_by_id("events-gauge-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-system-text")))
         input_element.send_keys("GAUGE_SYSTEM_1")
 
         # Click on query button
@@ -1080,10 +1073,10 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge system input
-        input_element = self.driver.find_element_by_id("events-gauge-system-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-system-text")))
         input_element.send_keys("GAUGE_SYSTEM_1")
 
-        menu = Select(self.driver.find_element_by_id("events-gauge-system-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "events-gauge-system-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -1105,13 +1098,13 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("events-gauge-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-systems-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("GAUGE_SYSTEM_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-gauge-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-gauge-systems-in-select"))))
         options.select_by_visible_text("GAUGE_SYSTEM_2")
 
         # Click on query button
@@ -1133,16 +1126,16 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         # Fill the gauge_system_in input
-        input_element = self.driver.find_element_by_id("events-gauge-systems-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-systems-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("GAUGE_SYSTEM_1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("events-gauge-systems-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "events-gauge-systems-in-select"))))
         options.select_by_visible_text("GAUGE_SYSTEM_1")
 
-        notInButton = self.driver.find_element_by_id("events-gauge-systems-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "events-gauge-systems-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -1191,7 +1184,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1265,7 +1258,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1614,7 +1607,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1966,7 +1959,7 @@ class TestEventsTab(unittest.TestCase):
         events = self.session.query(Event).all()
         event_duration = str((events[0].stop - events[0].start).total_seconds())
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2118,7 +2111,7 @@ class TestEventsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Event).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2312,7 +2305,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2321,7 +2314,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         functions.fill_value(self.driver, wait, "events", "text", "textname_1", "textvalue_1", "==", "==", 1)
-        functions.click(self.driver.find_element_by_id("events-add-value"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "events-add-value"))))
         functions.fill_value(self.driver, wait, "events", "double", "double_name_1", "1.4", "==", "==", 2)
 
         # Click on query button
@@ -2397,7 +2390,7 @@ class TestEventsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ## Full period##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2467,7 +2460,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
-        functions.click(self.driver.find_element_by_id("events-add-start-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "events-add-start-stop"))))
         functions.fill_period(self.driver, wait, "events", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
         # Click on query button
@@ -2489,7 +2482,7 @@ class TestEventsTab(unittest.TestCase):
         functions.click_no_graphs_events(self.driver)
 
         functions.fill_period(self.driver, wait, "events", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        functions.click(self.driver.find_element_by_id("events-add-start-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "events-add-start-stop"))))
         functions.fill_period(self.driver, wait, "events", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button

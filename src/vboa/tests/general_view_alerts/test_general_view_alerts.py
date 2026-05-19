@@ -17,12 +17,10 @@ import dateutil.parser as parser
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
 
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -46,12 +44,7 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 class TestGeneralViewAlerts(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -73,7 +66,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
 
     def test_sources_alerts_query_no_filter(self):
 
@@ -136,7 +129,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -172,7 +165,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert summary_number_alerts and summary_number_alerts.text == "0"
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
+        timeline_section = wait.until(EC.presence_of_element_located((By.ID, "timeline-general-view-alerts")))
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -215,7 +208,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check source alerts table
-        source_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-sources-details-table")
+        source_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-sources-details-table")))
 
         # Row 1
         justification = source_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -394,7 +387,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
             
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -430,7 +423,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert summary_number_alerts and summary_number_alerts.text == "0"
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
+        timeline_section = wait.until(EC.presence_of_element_located((By.ID, "timeline-general-view-alerts")))
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -518,7 +511,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check event alerts table
-        event_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-events-details-table")
+        event_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-events-details-table")))
 
         # Row 1
         justification = event_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -815,7 +808,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -851,7 +844,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert summary_number_alerts and summary_number_alerts.text == "0"
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
+        timeline_section = wait.until(EC.presence_of_element_located((By.ID, "timeline-general-view-alerts")))
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -916,7 +909,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check annotation alerts table
-        annotation_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-annotations-details-table")
+        annotation_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-annotations-details-table")))
 
         # Row 1
         justification = annotation_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -1098,7 +1091,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -1134,7 +1127,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert summary_number_alerts and summary_number_alerts.text == "1"
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
+        timeline_section = wait.until(EC.presence_of_element_located((By.ID, "timeline-general-view-alerts")))
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -1176,7 +1169,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check er alerts table
-        explicit_ref_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-ers-details-table")
+        explicit_ref_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-ers-details-table")))
 
         # Row 1
         justification = explicit_ref_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -1340,7 +1333,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -1376,7 +1369,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert summary_number_alerts and summary_number_alerts.text == "0"
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
+        timeline_section = wait.until(EC.presence_of_element_located((By.ID, "timeline-general-view-alerts")))
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -1462,7 +1455,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check report alerts table
-        report_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-reports-details-table")
+        report_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-reports-details-table")))
 
         # Row 1
         justification = report_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -1873,7 +1866,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -1909,7 +1902,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert summary_number_alerts and summary_number_alerts.text == "1"
 
         # Check whether the timeline is displayed
-        timeline_section = self.driver.find_element_by_id("timeline-general-view-alerts")
+        timeline_section = wait.until(EC.presence_of_element_located((By.ID, "timeline-general-view-alerts")))
 
         condition = timeline_section.is_displayed()
         assert condition is True
@@ -2057,7 +2050,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)  
         
         # Check source alerts table
-        source_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-sources-details-table")
+        source_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-sources-details-table")))
 
         # Row 1
         justification = source_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -2121,7 +2114,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert source_uuid.text == str(sources_alerts[0].source_uuid)
 
         # Check event alerts table
-        event_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-events-details-table")
+        event_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-events-details-table")))
 
         # Row 1
         justification = event_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -2185,7 +2178,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert event_uuid.text == str(events_alerts[0].event_uuid)
         
         # Check annotation alerts table
-        annotation_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-annotations-details-table")
+        annotation_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-annotations-details-table")))
 
         # Row 1
         justification = annotation_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -2249,7 +2242,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert annotation_uuid.text == str(annotations_alerts[0].annotation_uuid)
 
         # Check er alerts table
-        explicit_ref_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-ers-details-table")
+        explicit_ref_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-ers-details-table")))
 
         # Row 1
         justification = explicit_ref_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -2313,7 +2306,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         assert explicit_ref_uuid.text == str(explicit_refs_alerts[0].explicit_ref_uuid)    
 
         # Check report alerts table
-        report_alerts_table = self.driver.find_element_by_id("associated-general-view-alerts-reports-details-table")
+        report_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "associated-general-view-alerts-reports-details-table")))
 
         # Row 1
         justification = report_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -2618,7 +2611,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -2959,7 +2952,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -3300,7 +3293,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -3641,7 +3634,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 
@@ -3982,7 +3975,7 @@ class TestGeneralViewAlerts(unittest.TestCase):
         self.engine_rboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_rboa.treat_data()[0]["status"]
         
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/general-view-alerts/")
 

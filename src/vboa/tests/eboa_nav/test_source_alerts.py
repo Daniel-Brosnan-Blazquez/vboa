@@ -15,12 +15,10 @@ import re
 import dateutil.parser as parser
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 import functions as functions
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains,TouchActions
 from selenium.webdriver.common.keys import Keys
 
@@ -42,12 +40,7 @@ from eboa.datamodel.annotations import Annotation, AnnotationCnf, AnnotationText
 
 class TestSourceAlertsTab(unittest.TestCase):
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920,1080')
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(5)
+    driver = functions.get_shared_driver()
 
     def setUp(self):
         # Create the engine to manage the data
@@ -68,11 +61,11 @@ class TestSourceAlertsTab(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        functions.release_shared_driver()
     
     def test_source_alerts_no_data(self):
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -134,7 +127,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -146,7 +139,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'source-alerts-submit-button')))
         functions.click(submit_button)
 
-        timeline = self.driver.find_element_by_id('timeline-general-view-alerts')
+        timeline = wait.until(EC.presence_of_element_located((By.ID, 'timeline-general-view-alerts')))
         condition = timeline.is_displayed()
 
         assert condition
@@ -187,7 +180,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.assert_equal_list_dictionaries(returned_alerts, alerts)
 
         # Check source alerts table
-        source_alerts_table = self.driver.find_element_by_id("alerts-table")
+        source_alerts_table = wait.until(EC.presence_of_element_located((By.ID, "alerts-table")))
 
         # Row 1
         justification = source_alerts_table.find_element_by_xpath("tbody/tr[1]/td[1]")
@@ -361,7 +354,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -372,7 +365,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source input
-        input_element = self.driver.find_element_by_id("sources-source-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-source-name-text")))
         input_element.send_keys("source_2.json")
 
         # Click on query button
@@ -394,10 +387,10 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source input
-        input_element = self.driver.find_element_by_id("sources-source-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-source-name-text")))
         input_element.send_keys("source_2.json")
 
-        menu = Select(self.driver.find_element_by_id("sources-source-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-source-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -418,7 +411,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("sources-source-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-source-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("source_2.json")
@@ -427,7 +420,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         input_element.send_keys("source_3.json")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("sources-source-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-source-names-in-select"))))
         options.select_by_visible_text("source_2.json")
         options.select_by_visible_text("source_3.json")
 
@@ -449,16 +442,16 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the source_in input
-        input_element = self.driver.find_element_by_id("sources-source-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-source-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("source_3.json")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("sources-source-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-source-names-in-select"))))
         options.select_by_visible_text("source_3.json")
 
-        notInButton = self.driver.find_element_by_id("sources-source-names-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "sources-source-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -584,7 +577,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -595,7 +588,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor input
-        input_element = self.driver.find_element_by_id("sources-processor-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-processor-text")))
         input_element.send_keys("exec_2")
 
         # Click on query button
@@ -617,10 +610,10 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor input
-        input_element = self.driver.find_element_by_id("sources-processor-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-processor-text")))
         input_element.send_keys("exec_2")
 
-        menu = Select(self.driver.find_element_by_id("sources-processor-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-processor-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -641,13 +634,13 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
-        input_element = self.driver.find_element_by_id("sources-processors-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-processors-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("exec")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("sources-processors-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-processors-in-select"))))
         options.select_by_visible_text("exec")
 
         # Click on query button
@@ -668,16 +661,16 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the processor_in input
-        input_element = self.driver.find_element_by_id("sources-processors-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-processors-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("exec_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("sources-processors-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-processors-in-select"))))
         options.select_by_visible_text("exec_2")
 
-        notInButton = self.driver.find_element_by_id("sources-processors-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "sources-processors-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -803,7 +796,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -814,7 +807,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature input
-        input_element = self.driver.find_element_by_id("sources-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
         # Click on query button
@@ -836,10 +829,10 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature input
-        input_element = self.driver.find_element_by_id("sources-dim-signature-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signature-text")))
         input_element.send_keys("DIM_SIGNATURE_2")
 
-        menu = Select(self.driver.find_element_by_id("sources-dim-signature-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signature-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -860,7 +853,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("sources-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signatures-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("DIM_SIGNATURE_1")
@@ -869,7 +862,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         input_element.send_keys("DIM_SIGNATURE_2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("sources-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_1")
         options.select_by_visible_text("DIM_SIGNATURE_2")
 
@@ -891,16 +884,16 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         # Fill the dim_signature_in input
-        input_element = self.driver.find_element_by_id("sources-dim-signatures-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signatures-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("DIM_SIGNATURE_3")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("sources-dim-signatures-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signatures-in-select"))))
         options.select_by_visible_text("DIM_SIGNATURE_3")
 
-        notInButton = self.driver.find_element_by_id("sources-dim-signatures-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "sources-dim-signatures-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         #end if
@@ -1026,7 +1019,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1097,7 +1090,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
-        functions.click(self.driver.find_element_by_id("sources-add-validity-start-validity-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "sources-add-validity-start-validity-stop"))))
 
         functions.fill_validity_period(self.driver, wait, "sources", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
@@ -1120,7 +1113,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_validity_period(self.driver, wait, "sources", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        functions.click(self.driver.find_element_by_id("sources-add-validity-start-validity-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "sources-add-validity-start-validity-stop"))))
         functions.fill_validity_period(self.driver, wait, "sources", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
@@ -1180,7 +1173,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(Source).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1211,7 +1204,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_ingestion_time(self.driver, wait,"sources", ingestion_time, "==", 1)
-        functions.click(self.driver.find_element_by_id("sources-add-ingestion-time"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "sources-add-ingestion-time"))))
         functions.fill_ingestion_time(self.driver, wait,"sources", "9999-01-01T00:00:00", "<", 2)
 
         # Click on query button
@@ -1363,7 +1356,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -1525,7 +1518,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         ingestion_duration = str(self.session.query(Source).all()[0].ingestion_duration.total_seconds())
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1753,7 +1746,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1824,7 +1817,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 1, start_value = "2018-06-05T01:30:00", start_operator = ">")
-        functions.click(self.driver.find_element_by_id("sources-add-reported-validity-start-reported-validity-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "sources-add-reported-validity-start-reported-validity-stop"))))
 
         functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 2, start_value = "2018-06-05T03:00:00", start_operator = "<")
 
@@ -1847,7 +1840,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 1, start_value = "2018-06-05T03:00:00", start_operator = "<=", end_value = "2018-06-05T02:30:00", end_operator = ">")
-        functions.click(self.driver.find_element_by_id("sources-add-reported-validity-start-reported-validity-stop"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "sources-add-reported-validity-start-reported-validity-stop"))))
         functions.fill_any_period(self.driver, wait, "sources", "reported-validity-start-reported-validity-stop", 2, start_value = "2018-06-05T04:00:00", start_operator = "!=", end_value = "2018-06-05T03:00:00", end_operator = ">=")
 
         # Click on query button
@@ -1907,7 +1900,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         reception_time = self.session.query(Source).all()[0].reception_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -1938,7 +1931,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.click_no_graphs_sources(self.driver)
 
         functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", reception_time, "==", 1)
-        functions.click(self.driver.find_element_by_id("sources-add-reception-time"))
+        functions.click(wait.until(EC.presence_of_element_located((By.ID, "sources-add-reception-time"))))
         functions.fill_text_operator_with_more_option(self.driver, wait,"sources", "reception-time", "9999-01-01T00:00:00", "<", 2)
 
         # Click on query button
@@ -2093,7 +2086,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data(processing_duration = datetime.timedelta(seconds=float(processing_duration)))[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2254,7 +2247,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2419,7 +2412,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         self.driver.get("http://localhost:5000/eboa_nav/")
 
@@ -2428,7 +2421,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'source-alerts-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        option = Select(self.driver.find_element_by_id("sources-ingestion-completeness"))
+        option = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-ingestion-completeness"))))
         option.select_by_visible_text("")
 
         # Click on query button
@@ -2449,7 +2442,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'source-alerts-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        option = Select(self.driver.find_element_by_id("sources-ingestion-completeness"))
+        option = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-ingestion-completeness"))))
         option.select_by_visible_text("true")
 
         # Click on query button
@@ -2468,7 +2461,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         submit_button = wait.until(EC.visibility_of_element_located((By.ID,'source-alerts-submit-button')))
         functions.click_no_graphs_sources(self.driver)
 
-        option = Select(self.driver.find_element_by_id("sources-ingestion-completeness"))
+        option = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-ingestion-completeness"))))
         option.select_by_visible_text("false")
 
         # Click on query button
@@ -2504,7 +2497,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
     #     assert eboa_engine.exit_codes["SOURCE_ALREADY_INGESTED"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-    #     wait = WebDriverWait(self.driver,5);
+    #     wait = WebDriverWait(self.driver,10);
 
     #     ## OK Status ##
     #     self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2515,7 +2508,7 @@ class TestSourceAlertsTab(unittest.TestCase):
     #     functions.click_no_graphs_sources(self.driver)
 
     #     # Fill the status_in input
-    #     input_element = self.driver.find_element_by_id("sources-statuses-initial-in-text")
+    #     input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-statuses-initial-in-text")))
     #     functions.click(input_element)
     #     input_element.send_keys("OK")
     #     input_element.send_keys(Keys.RETURN)
@@ -2539,16 +2532,16 @@ class TestSourceAlertsTab(unittest.TestCase):
     #     functions.click_no_graphs_sources(self.driver)
 
     #     # Fill the status_in input
-    #     input_element = self.driver.find_element_by_id("sources-statuses-initial-in-text")
+    #     input_element = wait.until(EC.presence_of_element_located((By.ID, "sources-statuses-initial-in-text")))
     #     functions.click(input_element)
 
     #     input_element.send_keys("OK")
     #     input_element.send_keys(Keys.LEFT_SHIFT)
 
-    #     options = Select(self.driver.find_element_by_id("sources-statuses-initial-in-select"))
+    #     options = Select(wait.until(EC.presence_of_element_located((By.ID, "sources-statuses-initial-in-select"))))
     #     options.select_by_visible_text("OK")
 
-    #     notInButton = self.driver.find_element_by_id("sources-statuses-initial-checkbox")
+    #     notInButton = wait.until(EC.presence_of_element_located((By.ID, "sources-statuses-initial-checkbox")))
     #     if not notInButton.find_element_by_xpath("input").is_selected():
     #         functions.select_checkbox(notInButton)
     #     #end if
@@ -2641,7 +2634,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2652,7 +2645,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("source-alerts-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-name-text")))
         input_element.send_keys("alert_name1")
 
         # Click on query button
@@ -2676,10 +2669,10 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("source-alerts-name-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-name-text")))
         input_element.send_keys("alert_name1")
 
-        menu = Select(self.driver.find_element_by_id("source-alerts-name-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-name-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -2701,13 +2694,13 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("source-alerts-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_name1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("source-alerts-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-names-in-select"))))
         options.select_by_visible_text("alert_name1")
 
         # Click on query button
@@ -2729,16 +2722,16 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the name input
-        input_element = self.driver.find_element_by_id("source-alerts-names-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-names-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_name2")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("source-alerts-names-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-names-in-select"))))
         options.select_by_visible_text("alert_name2")
 
-        notInButton = self.driver.find_element_by_id("source-alerts-names-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-names-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -2831,7 +2824,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -2842,7 +2835,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("source-alerts-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-group-text")))
         input_element.send_keys("alert_group")
 
         # Click on query button
@@ -2866,10 +2859,10 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("source-alerts-group-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-group-text")))
         input_element.send_keys("alert_group")
 
-        menu = Select(self.driver.find_element_by_id("source-alerts-group-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-group-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -2891,13 +2884,13 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("source-alerts-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_group")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("source-alerts-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-groups-in-select"))))
         options.select_by_visible_text("alert_group")
 
         # Click on query button
@@ -2919,16 +2912,16 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the group input
-        input_element = self.driver.find_element_by_id("source-alerts-groups-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-groups-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("alert_group")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("source-alerts-groups-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-groups-in-select"))))
         options.select_by_visible_text("alert_group")
 
-        notInButton = self.driver.find_element_by_id("source-alerts-groups-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-groups-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -3021,7 +3014,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## Like ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -3032,7 +3025,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("source-alerts-generator-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generator-text")))
         input_element.send_keys("test")
 
         # Click on query button
@@ -3056,10 +3049,10 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("source-alerts-generator-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generator-text")))
         input_element.send_keys("test")
 
-        menu = Select(self.driver.find_element_by_id("source-alerts-generator-operator"))
+        menu = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generator-operator"))))
         menu.select_by_visible_text("notlike")
 
         # Click on query button
@@ -3081,13 +3074,13 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("source-alerts-generators-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generators-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("test")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("source-alerts-generators-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generators-in-select"))))
         options.select_by_visible_text("test")
 
         # Click on query button
@@ -3109,16 +3102,16 @@ class TestSourceAlertsTab(unittest.TestCase):
         functions.display_specific_alert_filters(self.driver)
 
         # Fill the generator input
-        input_element = self.driver.find_element_by_id("source-alerts-generators-in-text")
+        input_element = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generators-in-text")))
         functions.click(input_element)
 
         input_element.send_keys("test1")
         input_element.send_keys(Keys.LEFT_SHIFT)
 
-        options = Select(self.driver.find_element_by_id("source-alerts-generators-in-select"))
+        options = Select(wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generators-in-select"))))
         options.select_by_visible_text("test1")
 
-        notInButton = self.driver.find_element_by_id("source-alerts-generators-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-generators-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
@@ -3180,7 +3173,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         ingestion_time = self.session.query(SourceAlert).all()[0].ingestion_time.isoformat()
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -3348,7 +3341,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         solved_time = "2018-06-05T10:07:37"
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -3516,7 +3509,7 @@ class TestSourceAlertsTab(unittest.TestCase):
 
         notification_time = "2018-06-05T08:07:37"
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## == ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -3715,7 +3708,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         self.engine_eboa.data = data
         assert eboa_engine.exit_codes["OK"]["status"] == self.engine_eboa.treat_data()[0]["status"]
 
-        wait = WebDriverWait(self.driver,5)
+        wait = WebDriverWait(self.driver,10)
 
         ## In ##
         self.driver.get("http://localhost:5000/eboa_nav/")
@@ -3750,7 +3743,7 @@ class TestSourceAlertsTab(unittest.TestCase):
         # Fill the select option
         functions.select_option_dropdown(self.driver, "source-alerts-severities-in-select", "critical")
 
-        notInButton = self.driver.find_element_by_id("source-alerts-severities-in-checkbox")
+        notInButton = wait.until(EC.presence_of_element_located((By.ID, "source-alerts-severities-in-checkbox")))
         if not notInButton.find_element_by_xpath("input").is_selected():
             functions.select_checkbox(notInButton)
         # end if
