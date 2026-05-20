@@ -11,10 +11,12 @@ import unittest
 import time
 import subprocess
 import atexit
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait, Select
+import selenium.webdriver.support.ui as selenium_ui
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -30,6 +32,37 @@ test_case.maxDiff = None
 
 _shared_driver = None
 
+# def save_timeout_screenshot(driver):
+#     screenshot_dir = os.path.dirname(os.path.abspath(__file__))
+#
+#     timestamp = datetime.utcnow().strftime("%Y%m%dT%H%M%S%f")
+#     screenshot_path = os.path.join(
+#         screenshot_dir,
+#         "selenium-timeout-{}.png".format(timestamp)
+#     )
+#
+#     driver.save_screenshot(screenshot_path)
+#     return screenshot_path
+#
+# class ScreenshotWebDriverWait(selenium_ui.WebDriverWait):
+#
+#     def until(self, method, message=''):
+#         try:
+#             return super().until(method, message)
+#         except TimeoutException:
+#             save_timeout_screenshot(self._driver)
+#             raise
+#
+#     def until_not(self, method, message=''):
+#         try:
+#             return super().until_not(method, message)
+#         except TimeoutException:
+#             save_timeout_screenshot(self._driver)
+#             raise
+#
+# selenium_ui.WebDriverWait = ScreenshotWebDriverWait
+# WebDriverWait = ScreenshotWebDriverWait
+
 def get_shared_driver():
     global _shared_driver
 
@@ -40,6 +73,13 @@ def get_shared_driver():
         options.add_argument('window-size=1920,1080')
         _shared_driver = webdriver.Chrome(options=options)
         _shared_driver.implicitly_wait(5)
+        
+        # Delay get 1 second to avoid lags on loading the page
+        original_get = _shared_driver.get
+        def get_with_delay(url):
+            original_get(url)
+            time.sleep(1)
+        _shared_driver.get = get_with_delay
 
     return _shared_driver
 
@@ -64,7 +104,7 @@ def goToTab(driver,tab_name):
 
 def fill_value(driver, wait, tab, value_type, value_name, value_value, value_name_operator, value_value_operator, row):
 
-    if row is 1:
+    if row == 1:
         value_query_div = driver.find_element_by_id(tab + "-value-query-initial")
     else:
         done = False
@@ -103,7 +143,7 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, value_nam
 
 def fill_text_operator_with_more_option(driver, wait, tab, field_name, value_value, value_operator, row):
 
-    if row is 1:
+    if row == 1:
         any_time_or_duration = driver.find_element_by_id(tab + "-" + field_name + "-initial")
     else:
         any_time_or_duration = driver.find_element_by_id("more-" + field_name + "-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -118,7 +158,7 @@ def fill_text_operator_with_more_option(driver, wait, tab, field_name, value_val
 
 def fill_ingestion_time(driver, wait, tab, value_value, value_operator, row):
 
-    if row is 1:
+    if row == 1:
         ingestion_time_div = driver.find_element_by_id(tab + "-ingestion-time-initial")
     else:
         ingestion_time_div = driver.find_element_by_id("more-ingestion-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -133,7 +173,7 @@ def fill_ingestion_time(driver, wait, tab, value_value, value_operator, row):
 
 def fill_generation_time(driver, wait, tab, value_value, value_operator, row):
 
-    if row is 1:
+    if row == 1:
         generation_time_div = driver.find_element_by_id(tab + "-generation-time-initial")
     else:
         generation_time_div = driver.find_element_by_id("more-generation-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -148,7 +188,7 @@ def fill_generation_time(driver, wait, tab, value_value, value_operator, row):
 
 def fill_any_time(driver, wait, tab, field_name, value_value, value_operator, row):
 
-    if row is 1:
+    if row == 1:
         any_time_div = driver.find_element_by_id(tab + "-" + field_name + "-time-initial")
     else:
         any_time_div = driver.find_element_by_id("more-" + field_name + "-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -163,7 +203,7 @@ def fill_any_time(driver, wait, tab, field_name, value_value, value_operator, ro
 
 def fill_ingestion_duration(driver, wait, tab, value_value, value_operator, row):
 
-    if row is 1:
+    if row == 1:
         ingestion_duration_div = driver.find_element_by_id(tab + "-ingestion-duration-initial")
     else:
         ingestion_duration_div = driver.find_element_by_id("more-ingestion-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -178,7 +218,7 @@ def fill_ingestion_duration(driver, wait, tab, value_value, value_operator, row)
 
 def fill_any_duration(driver, wait, tab, field_name, value_value, value_operator, row):
 
-    if row is 1:
+    if row == 1:
         any_duration_div = driver.find_element_by_id(tab + "-" + field_name + "-duration-initial")
     else:
         any_duration_div = driver.find_element_by_id("more-" + field_name + "-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -193,7 +233,7 @@ def fill_any_duration(driver, wait, tab, field_name, value_value, value_operator
 
 def fill_period(driver, wait, tab, row, start_value = None, start_operator = None, end_value = None, end_operator = None):
 
-    if row is 1:
+    if row == 1:
         period_div = driver.find_element_by_id(tab + "-start-stop-initial")
     else:
         period_div = driver.find_element_by_id("more-start-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -217,7 +257,7 @@ def fill_period(driver, wait, tab, row, start_value = None, start_operator = Non
 
 def fill_validity_period(driver, wait, tab, row, start_value = None, start_operator = None, end_value = None, end_operator = None):
 
-    if row is 1:
+    if row == 1:
         period_div = driver.find_element_by_id(tab + "-validity-start-validity-stop-initial")
     else:
         period_div = driver.find_element_by_id("more-validity-start-validity-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -242,7 +282,7 @@ def fill_validity_period(driver, wait, tab, row, start_value = None, start_opera
 
 def fill_any_period(driver, wait, tab, field_name, row, start_value = None, start_operator = None, end_value = None, end_operator = None):
 
-    if row is 1:
+    if row == 1:
         any_period_div = driver.find_element_by_id(tab + "-" + field_name + "-initial")
     else:
         any_period_div = driver.find_element_by_id("more-" + field_name + "-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
@@ -450,3 +490,6 @@ def login(driver, user, password):
     
     login_button = driver.find_elements_by_xpath("//*[contains(text(), 'Login')]")
     click(login_button[0])
+    
+    # Add 1 second delay to avoid lags on login and loading the page after login
+    time.sleep(1)
