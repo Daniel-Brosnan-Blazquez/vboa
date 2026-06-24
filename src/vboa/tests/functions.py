@@ -68,7 +68,7 @@ def get_shared_driver():
 
     if _shared_driver is None:
         options = ChromeOptions()
-        options.add_argument('--headless')
+        options.add_argument('--headless=new')
         options.add_argument('--no-sandbox')
         options.add_argument('window-size=1920,1080')
         _shared_driver = webdriver.Chrome(options=options)

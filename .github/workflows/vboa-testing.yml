@@ -17,4 +17,4 @@ jobs:
       - name: "Test VBOA"
         # run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; py.test -vv tests"
         # run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; py.test -vv tests --ignore=tests/ingestion_control"
-        run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; for test_module in \$(find tests -name 'test*.py' | grep -v ingestion_control); do py.test -vv \$test_module; done"
+        run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; for test in \$(py.test --collect-only -q --disable-warnings --no-summary tests |grep "tests\/"| grep -v ingestion_control|sed 's/vboa\/tests/tests/'); do py.test -vv \$test; done"
