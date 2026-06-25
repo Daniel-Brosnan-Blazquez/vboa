@@ -32,36 +32,44 @@ test_case.maxDiff = None
 
 _shared_driver = None
 
+# Uncomment this block in case timeout screenshots are needed for debugging
 # def save_timeout_screenshot(driver):
 #     screenshot_dir = os.path.dirname(os.path.abspath(__file__))
-#
+
 #     timestamp = datetime.utcnow().strftime("%Y%m%dT%H%M%S%f")
 #     screenshot_path = os.path.join(
 #         screenshot_dir,
 #         "selenium-timeout-{}.png".format(timestamp)
 #     )
-#
+
 #     driver.save_screenshot(screenshot_path)
 #     return screenshot_path
-#
+
 # class ScreenshotWebDriverWait(selenium_ui.WebDriverWait):
-#
+
 #     def until(self, method, message=''):
 #         try:
 #             return super().until(method, message)
 #         except TimeoutException:
 #             save_timeout_screenshot(self._driver)
 #             raise
-#
+
 #     def until_not(self, method, message=''):
 #         try:
 #             return super().until_not(method, message)
 #         except TimeoutException:
 #             save_timeout_screenshot(self._driver)
 #             raise
-#
+
 # selenium_ui.WebDriverWait = ScreenshotWebDriverWait
 # WebDriverWait = ScreenshotWebDriverWait
+
+def wait_for_xpath(search_context, xpath, timeout=10):
+    driver = getattr(search_context, "_parent", search_context)
+    return WebDriverWait(driver, timeout).until(
+        lambda _: search_context.find_element(By.XPATH, xpath)
+    )
+
 
 def get_shared_driver():
     global _shared_driver
@@ -111,7 +119,7 @@ def fill_value(driver, wait, tab, value_type, value_name, value_value, value_nam
         retries = 0
         while not done:
             try:
-                value_query_div = driver.find_element_by_id("more-value-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+                value_query_div = wait_for_xpath(driver.find_element_by_id("more-value-query-" + tab), "div[" + str(row-1) + "]")
                 done = True
             except NoSuchElementException as e:
                 time.sleep(0.1)
@@ -146,7 +154,7 @@ def fill_text_operator_with_more_option(driver, wait, tab, field_name, value_val
     if row == 1:
         any_time_or_duration = driver.find_element_by_id(tab + "-" + field_name + "-initial")
     else:
-        any_time_or_duration = driver.find_element_by_id("more-" + field_name + "-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        any_time_or_duration = wait_for_xpath(driver.find_element_by_id("more-" + field_name + "-query-" + tab), "div[" + str(row-1) + "]")
 
     operator = Select(any_time_or_duration.find_element_by_id(field_name + "-operator"))
     operator.select_by_visible_text(value_operator)
@@ -161,7 +169,7 @@ def fill_ingestion_time(driver, wait, tab, value_value, value_operator, row):
     if row == 1:
         ingestion_time_div = driver.find_element_by_id(tab + "-ingestion-time-initial")
     else:
-        ingestion_time_div = driver.find_element_by_id("more-ingestion-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        ingestion_time_div = wait_for_xpath(driver.find_element_by_id("more-ingestion-time-query-" + tab), "div[" + str(row-1) + "]")
 
     operator = Select(ingestion_time_div.find_element_by_id("ingestion-time-operator"))
     operator.select_by_visible_text(value_operator)
@@ -176,7 +184,7 @@ def fill_generation_time(driver, wait, tab, value_value, value_operator, row):
     if row == 1:
         generation_time_div = driver.find_element_by_id(tab + "-generation-time-initial")
     else:
-        generation_time_div = driver.find_element_by_id("more-generation-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        generation_time_div = wait_for_xpath(driver.find_element_by_id("more-generation-time-query-" + tab), "div[" + str(row-1) + "]")
 
     operator = Select(generation_time_div.find_element_by_id("generation-duration-operator"))
     operator.select_by_visible_text(value_operator)
@@ -191,7 +199,7 @@ def fill_any_time(driver, wait, tab, field_name, value_value, value_operator, ro
     if row == 1:
         any_time_div = driver.find_element_by_id(tab + "-" + field_name + "-time-initial")
     else:
-        any_time_div = driver.find_element_by_id("more-" + field_name + "-time-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        any_time_div = wait_for_xpath(driver.find_element_by_id("more-" + field_name + "-time-query-" + tab), "div[" + str(row-1) + "]")
 
     operator = Select(any_time_div.find_element_by_id(field_name + "-time-operator"))
     operator.select_by_visible_text(value_operator)
@@ -206,7 +214,7 @@ def fill_ingestion_duration(driver, wait, tab, value_value, value_operator, row)
     if row == 1:
         ingestion_duration_div = driver.find_element_by_id(tab + "-ingestion-duration-initial")
     else:
-        ingestion_duration_div = driver.find_element_by_id("more-ingestion-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        ingestion_duration_div = wait_for_xpath(driver.find_element_by_id("more-ingestion-duration-query-" + tab), "div[" + str(row-1) + "]")
 
     operator = Select(ingestion_duration_div.find_element_by_id("ingestion-duration-operator"))
     operator.select_by_visible_text(value_operator)
@@ -221,7 +229,7 @@ def fill_any_duration(driver, wait, tab, field_name, value_value, value_operator
     if row == 1:
         any_duration_div = driver.find_element_by_id(tab + "-" + field_name + "-duration-initial")
     else:
-        any_duration_div = driver.find_element_by_id("more-" + field_name + "-duration-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        any_duration_div = wait_for_xpath(driver.find_element_by_id("more-" + field_name + "-duration-query-" + tab), "div[" + str(row-1) + "]")
 
     operator = Select(any_duration_div.find_element_by_id(field_name + "-duration-operator"))
     operator.select_by_visible_text(value_operator)
@@ -236,7 +244,7 @@ def fill_period(driver, wait, tab, row, start_value = None, start_operator = Non
     if row == 1:
         period_div = driver.find_element_by_id(tab + "-start-stop-initial")
     else:
-        period_div = driver.find_element_by_id("more-start-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        period_div = wait_for_xpath(driver.find_element_by_id("more-start-stop-query-" + tab), "div[" + str(row-1) + "]")
     if start_value is not None:
         start = period_div.find_element_by_id("start-input")
         click(start)
@@ -260,7 +268,7 @@ def fill_validity_period(driver, wait, tab, row, start_value = None, start_opera
     if row == 1:
         period_div = driver.find_element_by_id(tab + "-validity-start-validity-stop-initial")
     else:
-        period_div = driver.find_element_by_id("more-validity-start-validity-stop-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        period_div = wait_for_xpath(driver.find_element_by_id("more-validity-start-validity-stop-query-" + tab), "div[" + str(row-1) + "]")
 
     if start_value is not None:
         start = period_div.find_element_by_id("start-input")
@@ -285,7 +293,7 @@ def fill_any_period(driver, wait, tab, field_name, row, start_value = None, star
     if row == 1:
         any_period_div = driver.find_element_by_id(tab + "-" + field_name + "-initial")
     else:
-        any_period_div = driver.find_element_by_id("more-" + field_name + "-query-" + tab).find_element_by_xpath("div[" + str(row-1) + "]")
+        any_period_div = wait_for_xpath(driver.find_element_by_id("more-" + field_name + "-query-" + tab), "div[" + str(row-1) + "]")
     if start_value is not None:
         start = any_period_div.find_element_by_id("start-input")
         click(start)
@@ -308,7 +316,7 @@ def click_no_graphs_events(driver):
 
     #Disable show timeline
     timeline_button = driver.find_element_by_id("events-show-timeline")
-    if timeline_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(timeline_button, 'input').is_selected():
         click(timeline_button)
     #end if
 
@@ -316,7 +324,7 @@ def click_no_graphs_annotations(driver):
 
     #Disable show map
     map_button = driver.find_element_by_id("annotations-show-map")
-    if map_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(map_button, 'input').is_selected():
         click(map_button)
     #end if
 
@@ -325,31 +333,31 @@ def click_no_graphs_sources(driver):
     #Click on show map
     validity_timeline_button = driver.find_element_by_id("sources-show-validity-timeline")
     #driver.execute_script("arguments[0].scrollIntoView();", validity_timeline_button)
-    if validity_timeline_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(validity_timeline_button, 'input').is_selected():
         click(validity_timeline_button)
     #end if
 
     #Click on show map
     gen2ing_timeline_button = driver.find_element_by_id("sources-show-generation-to-ingestion-timeline")
-    if gen2ing_timeline_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(gen2ing_timeline_button, 'input').is_selected():
         click(gen2ing_timeline_button)
     #end if
 
     #Click on show map
     number_events_per_source_button = driver.find_element_by_id("sources-show-number-events-xy")
-    if number_events_per_source_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(number_events_per_source_button, 'input').is_selected():
         click(number_events_per_source_button)
     #end if
 
     #Click on show map
     ingestion_duration_button = driver.find_element_by_id("sources-show-ingestion-duration-xy")
-    if ingestion_duration_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(ingestion_duration_button, 'input').is_selected():
         click(ingestion_duration_button)
     #end if
 
     #Click on show map
     gen2ing_times_button = driver.find_element_by_id("sources-show-generation-time-to-ingestion-time-xy")
-    if gen2ing_times_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(gen2ing_times_button, 'input').is_selected():
         click(gen2ing_times_button)
     #end if
 
@@ -357,7 +365,7 @@ def click_no_graphs_gauges(driver):
 
     #Disable show map
     network_button = driver.find_element_by_id("gauges-show-network")
-    if network_button.find_element_by_xpath('input').is_selected():
+    if wait_for_xpath(network_button, 'input').is_selected():
         click(network_button)
     #end if
 
@@ -369,6 +377,7 @@ def click(element):
         try:
             element.click()
             done = True
+            time.sleep(1)
         except ElementClickInterceptedException as e:
             if retries < 5:
                 retries += 1
@@ -380,7 +389,7 @@ def click(element):
     # end while
 
 def select_checkbox(element):
-    input = element.find_element_by_xpath("input")
+    input = wait_for_xpath(element, "input")
     state = input.is_selected()
     retries = 0
     while state is False:
@@ -472,20 +481,20 @@ def display_specific_alert_filters(driver):
 def select_option_dropdown(driver, select_id, option):
 
     chosen_id = (select_id + '_chosen').replace('-', '_')
-    select_element = driver.find_element_by_xpath("//*[@id='" + chosen_id + "']")
+    select_element = wait_for_xpath(driver, "//*[@id='" + chosen_id + "']")
     click(select_element)
 
-    option_element = driver.find_element_by_xpath("//*[@id='" + chosen_id + "']/div/ul/li[contains(.,'" + option + "')]")
+    option_element = wait_for_xpath(driver, "//*[@id='" + chosen_id + "']/div/ul/li[contains(.,'" + option + "')]")
     click(option_element)
 
 def login(driver, user, password):
     
     # Fill the email or username 
-    input_element = driver.find_element_by_xpath("//*[@id='boa-body']/section/div/div[2]/div/div/form/div[2]/input")
+    input_element = wait_for_xpath(driver, "//*[@id='boa-body']/section/div/div[2]/div/div/form/div[2]/input")
     input_element.send_keys(user)
 
     # Fill the password
-    input_element = driver.find_element_by_xpath("//*[@id='boa-body']/section/div/div[2]/div/div/form/div[3]/input")
+    input_element = wait_for_xpath(driver, "//*[@id='boa-body']/section/div/div[2]/div/div/form/div[3]/input")
     input_element.send_keys(password)
     
     login_button = driver.find_elements_by_xpath("//*[contains(text(), 'Login')]")

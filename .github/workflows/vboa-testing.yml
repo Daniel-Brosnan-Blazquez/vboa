@@ -16,5 +16,5 @@ jobs:
         run: GITHUB_BRANCH=${{ github.ref_name }} REPOSITORY_URI=${{ github.server_url }}/${{ github.repository }} docker compose -f compose_github_dev.yml up -d --wait
       - name: "Test VBOA"
         # run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; py.test -vv tests"
-        # run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; py.test -vv tests --ignore=tests/ingestion_control"
-        run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; for test in \$(py.test --collect-only -q --disable-warnings --no-summary tests |grep "tests\/"| grep -v ingestion_control|sed 's/vboa\/tests/tests/'); do py.test -vv \$test; done"
+        run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; py.test -vv tests --ignore=tests/ingestion_control"
+        # run: docker exec boa bash -c "/scripts/initialize_eboa_ddbb.sh; cd /vboa/src/vboa; for test in \$(py.test --collect-only -q --disable-warnings --no-summary tests |grep "tests\/"| grep -v ingestion_control|sed 's/vboa\/tests/tests/'); do py.test -vv \$test; done"
