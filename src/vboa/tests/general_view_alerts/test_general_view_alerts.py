@@ -2648,8 +2648,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), 'Next >>')]"))
         
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
 
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -2683,8 +2683,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Use presence_of_element_located to avoid StaleElement Exception
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), '<< Show all >>')]"))
 
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
         
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -2989,8 +2989,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), 'Next >>')]"))
         
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
 
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -3024,8 +3024,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Use presence_of_element_located to avoid StaleElement Exception
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), '<< Show all >>')]"))
 
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
         
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -3330,8 +3330,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), 'Next >>')]"))
         
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
 
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -3365,8 +3365,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Use presence_of_element_located to avoid StaleElement Exception
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), '<< Show all >>')]"))
 
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
         
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -3671,8 +3671,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), 'Next >>')]"))
         
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
 
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -3706,8 +3706,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Use presence_of_element_located to avoid StaleElement Exception
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), '<< Show all >>')]"))
 
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
         
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -4012,8 +4012,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
 
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), 'Next >>')]"))
         
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
 
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))
@@ -4047,8 +4047,8 @@ class TestGeneralViewAlerts(unittest.TestCase):
         # Use presence_of_element_located to avoid StaleElement Exception
         functions.click(self.driver.find_element_by_xpath("//*[contains(text(), '<< Show all >>')]"))
 
-        # Use staleness_of to avoid StaleElement Exception
-        wait.until(EC.staleness_of(summary_section))
+        # # Use staleness_of to avoid StaleElement Exception
+        # wait.until(EC.staleness_of(summary_section))
         
         # Check number of widgets in summary
         summary_section = wait.until(EC.visibility_of_element_located((By.ID,"summary-general-view-alerts")))

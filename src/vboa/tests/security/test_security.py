@@ -33,7 +33,7 @@ class TestSecurity(unittest.TestCase):
         path_files = security_functions.obtain_python_files_with_route_decorator(module_path)
         
         # Expected dict and the actual dict of my app
-        dict_app_security_actual = security_functions.set_dict_app_security(path_files)
+        dict_app_security_actual = security_functions.set_dict_app_security(path_files, module_path)
         
         path_json_file = os.path.dirname(os.path.abspath(__file__)) + "/inputs/app_security.json"
         dict_app_security_expected = json.load(open(path_json_file))

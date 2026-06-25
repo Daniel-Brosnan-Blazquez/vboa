@@ -10,12 +10,14 @@ import ast
 import subprocess
 from subprocess import PIPE
 
-def set_dict_app_security(path_files):
+def set_dict_app_security(path_files, module_path = ""):
     """
     Method to obtain a dict with information needed to test the security of the app
     
     :param path_files: str with the path files
     :type path_files: str
+    :param module_path: str with the path to the module
+    :type module_path: str
     """
 
     dict_app_security = {
@@ -27,6 +29,11 @@ def set_dict_app_security(path_files):
     # Iterate through files
     for path_file in iter(path_files.splitlines()):
         source = open(path_file).read()
+        if module_path != "":
+            module_name = path_file.replace(module_path, "")
+        else:
+            module_name = path_file
+        # end if
         
         for node in ast.walk(ast.parse(source)):
             # Check whether the node is a function
@@ -88,7 +95,7 @@ def set_dict_app_security(path_files):
                             else:
                                 dict_app_security["authentication_not_required"].append({
                                     "method_name": node.name,
-                                    "module_name": path_file,
+                                    "module_name": module_name,
                                     "route": route
                                 })
                             # end if
@@ -98,7 +105,7 @@ def set_dict_app_security(path_files):
                         else:
                             dict_app_security["authentication_required"].append({
                                 "method_name": node.name,
-                                "module_name": path_file,
+                                "module_name": module_name,
                                 "route": route
                             })                            
                         # end if
@@ -111,7 +118,7 @@ def set_dict_app_security(path_files):
                                 # end if
                                 dict_app_security["roles"][role].append({
                                     "method_name": node.name,
-                                    "module_name": path_file,
+                                    "module_name": module_name,
                                     "route": route
                                 })
                             # end for
