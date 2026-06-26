@@ -1,6 +1,5 @@
 # Base the image on Rocky Linux (Red hat compatible)
 FROM rockylinux:9
-MAINTAINER Daniel Brosnan Blázquez <daniel.brosnan@deimos-space.com>
 
 ARG FLASK_APP
 ARG UID_HOST_USER
@@ -9,34 +8,34 @@ USER root
 
 RUN useradd -m -o -r -u $UID_HOST_USER boa
 
-RUN yum install -y epel-release
+RUN yum install -y epel-release-9-10.el9
 
-RUN yum install --allowerasing -y python3 \
-    python3-pip \
-    python3-tkinter \
+RUN yum install --allowerasing -y python3-3.9.25-3.el9_7.1 \
+    python3-pip-21.3.1-1.el9 \
+    python3-tkinter-3.9.25-3.el9_7.1 \
     gcc \
-    python3-devel \
+    python3-devel-3.9.25-3.el9_7.1 \
     npm \
-    make \
+    make-1:4.3-8.el9 \
     gcc-c++ \
-    which \
-    p7zip \
-    unzip \
-    less \
-    cronie \
-    libcurl \
-    libcurl-devel \
-    postgresql-devel \
-    postgresql \
+    which-2.21-30.el9_6 \
+    p7zip-16.02-31.el9 \
+    unzip-6.0-59.el9 \
+    less-590-6.el9 \
+    cronie-1.5.7-15.el9 \
+    libcurl-7.76.1-35.el9_7.3 \
+    libcurl-devel-7.76.1-35.el9_7.3 \
+    postgresql-devel-13.23-1.el9_7 \
+    postgresql-13.23-2.el9_7 \
     openssl \
     docker \
     procps \
-    glibc-langpack-en \
-    redhat-rpm-config
+    glibc-langpack-en-2.34-231.el9_7.10 \
+    redhat-rpm-config-210-1.el9
 
-RUN yum install -y ruby \
-    rubygem-bundler \
-    ruby-devel
+RUN yum install -y ruby-3.0.7-165.el9_5 \
+    rubygem-bundler-2.2.33-165.el9_5 \
+    ruby-devel-3.0.7-165.el9_5
 
 # This solves the dependency of minArc/ORC with rexml which previously was coming with ruby
 RUN gem install rexml
