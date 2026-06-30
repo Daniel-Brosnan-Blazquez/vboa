@@ -260,6 +260,33 @@ p {
     font-size:16px;
 }
 
+.documentation-page pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e7e7e7;
+    border-radius: 4px;
+    padding: 15px;
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+.documentation-page code {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+}
+
+.documentation-page ul,
+.documentation-page ol {
+    padding-left: 20px;
+}
+
+.documentation-page h1,
+.documentation-page h2,
+.documentation-page h3 {
+    color: #23527c;
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
 .row2 {
   margin-right: 0px;
   margin-left: 0px;

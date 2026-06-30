@@ -1,0 +1,463 @@
+{% extends "panel/index.html" %}
+
+{% block content %}
+<div class="row">
+  <h1 class="page-header">EBOA documentation</h1>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-overview">Introduction <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-overview">
+    <p>
+      EBOA is the backend data storage and management engine for Business Operation Analysis.
+      It stores, validates, links, updates and queries time-tagged business operation data while
+      keeping complete traceability to the source that produced each record.
+    </p>
+    <p>
+      The engine is designed for systems where incoming information changes over time, arrives from
+      several sources, and needs to be reconciled without defining a rigid data model for every new
+      use case. It is normally used together with VBOA, which provides the visualization and
+      operational web interface.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-purpose-and-scope">Purpose and scope <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-purpose-and-scope">
+    <p>
+      EBOA targets enterprise and analytical systems that need to store time-series or time-tagged
+      operational information with flexible relationships and high traceability.
+    </p>
+    <ul>
+      <li>Complete traceability of all data, including information created inside the infrastructure.</li>
+      <li>Schema-less insertion, so new kinds of data can be ingested without prior database modelling.</li>
+      <li>Support for modern value types, including text, boolean, double, timestamp, geometry and object values.</li>
+      <li>Flexible links between events, annotations and explicit references.</li>
+      <li>Geo-query capabilities for spatial analysis.</li>
+      <li>Parallel insertion using RDBMS parallelism while preserving transactional consistency.</li>
+      <li>Fast structured access to data so users can query it dynamically according to operational needs.</li>
+      <li>Continuous development and continuous integration practices.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-data-model">Data model and values <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-data-model">
+    <p>
+      EBOA uses a relational model for core entities while allowing events and annotations to carry
+      dynamic hierarchical values. This lets processors store complex semi-structured information
+      without changing the database schema for every new value layout.
+    </p>
+    <p>The EBOA data model is built around six high-level entities:</p>
+    <ul>
+      <li><strong>Events</strong>: time-bounded measurements or observations associated with a gauge.</li>
+      <li><strong>Annotations</strong>: descriptive properties associated with explicit references.</li>
+      <li><strong>Explicit references</strong>: identifiers for business entities such as objects, systems or locations.</li>
+      <li><strong>Sources</strong>: received blocks of information and the metadata needed to trace and process them.</li>
+      <li><strong>Alerts</strong>: notifications related to anomalies or conditions detected in the stored entities.</li>
+      <li><strong>Reports</strong>: containers for analysis results.</li>
+    </ul>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/eboadb.png') }}"
+        alt="EBOA database model diagram">
+    </figure>
+    <p>Supported value types are:</p>
+    <ul>
+      <li><strong>Text</strong>: string values.</li>
+      <li><strong>Boolean</strong>: true or false values.</li>
+      <li><strong>Double</strong>: floating-point numeric values.</li>
+      <li><strong>Timestamp</strong>: date and time values.</li>
+      <li><strong>Geometry</strong>: geographic or spatial data.</li>
+      <li><strong>Object</strong>: nested containers for hierarchical value trees.</li>
+    </ul>
+    <p>
+      Values are arranged as a tree. Each node has a level position, parent level and parent
+      position. Parent nodes must be objects and final nodes must be non-object values. This gives
+      each value a unique position in the hierarchy while preserving relational integrity.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/values_structure.jpg') }}"
+        alt="EBOA hierarchical values structure">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-data-ingestion">Data ingestion and orchestration <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-data-ingestion">
+    <p>
+      EBOA ingestion starts by registering the operation context, the DIM signature and the source.
+      It then inserts the required metadata, including gauges, annotation configurations, explicit
+      references, links and alert configuration data.
+    </p>
+    <p>
+      Events and annotations are bulk-inserted. Depending on the insertion strategy, records can be
+      immediately visible or inserted as hidden candidates until the deprecation pass resolves
+      conflicts. At the end of the process EBOA updates counters, writes the ingestion status and
+      commits the transaction.
+    </p>
+    <p>
+      File-based triggering can be driven by rules in <code>triggering.xml</code>. Rules match files
+      through patterns or XPath expressions and execute configured commands in isolated processes.
+      The orchestration layer supports concurrent ingestion with source-level locking,
+      thread-safe database sessions, configurable parallel ingestion limits and detailed ingestion
+      status tracking.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_ingestion_strategy.png') }}"
+        alt="BOA ingestion strategy diagram">
+    </figure>
+    <br/>
+    <p>
+      EBOA keeps ingestion robust by wrapping operations in transactions, rolling back failed
+      ingestions, recording status in the database, and using generation time, source priority,
+      event keys and validity periods to resolve write conflicts.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/ingestion_flow.png') }}"
+        alt="EBOA ingestion flow diagram">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-insertion-strategies">Insertion strategies <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-insertion-strategies">
+    <p>
+      Insertion methods can be applied at operation, event and annotation levels. They define how
+      new data becomes visible and how previous data is removed, split, hidden or superseded.
+    </p>
+
+    <h3>Operation-level methods</h3>
+    <ul>
+      <li><strong>insert</strong>: basic insertion; event-level insertion methods are applied.</li>
+      <li><strong>insert_and_erase</strong>: applies INSERT_and_ERASE logic to all events linked to gauges in the DIM signature.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/insert_and_erase.png') }}"
+            alt="insert_and_erase operation-level method">
+        </figure>
+      </li>
+      <li><strong>insert_and_erase_with_priority</strong>: applies insert-and-erase logic using source priority.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/insert_and_erase_with_priority.png') }}"
+            alt="insert_and_erase_with_priority operation-level method">
+        </figure>
+      </li>
+      <li><strong>insert_and_erase_with_equal_or_lower_priority</strong>: applies insert-and-erase logic with equal-or-lower priority handling.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/insert_and_erase_with_equal_or_lower_priority.png') }}"
+            alt="insert_and_erase_with_equal_or_lower_priority operation-level method">
+        </figure>
+      </li>
+    </ul>
+
+    <h3>Event-level methods</h3>
+    <ul>
+      <li><strong>SIMPLE_UPDATE</strong>: all events are inserted and made visible.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/SIMPLE_UPDATE.png') }}"
+            alt="SIMPLE_UPDATE event insertion method">
+        </figure>
+      </li>
+      <li><strong>INSERT_and_ERASE</strong>: events are inserted as hidden candidates; EBOA keeps the relevant events inside the source validity period and removes or splits superseded ones.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/INSERT_and_ERASE.png') }}"
+            alt="INSERT_and_ERASE event insertion method">
+        </figure>
+      </li>
+      <li><strong>INSERT_and_ERASE_with_PRIORITY</strong>: same principle as INSERT_and_ERASE, using source priority to determine relevance.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/INSERT_and_ERASE_with_PRIORITY.png') }}"
+            alt="INSERT_and_ERASE_with_PRIORITY event insertion method">
+        </figure>
+      </li>
+      <li><strong>INSERT_and_ERASE_with_EQUAL_or_LOWER_PRIORITY</strong>: insert-and-erase using equal-or-lower priority comparison.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/INSERT_and_ERASE_with_EQUAL_or_LOWER_PRIORITY.png') }}"
+            alt="INSERT_and_ERASE_with_EQUAL_or_LOWER_PRIORITY event insertion method">
+        </figure>
+      </li>
+      <li><strong>INSERT_and_ERASE_per_EVENT</strong>: uses each event period as the validity scope.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/INSERT_and_ERASE_per_EVENT.png') }}"
+            alt="INSERT_and_ERASE_per_EVENT event insertion method">
+        </figure>
+      </li>
+      <li><strong>INSERT_and_ERASE_per_EVENT_with_PRIORITY</strong>: per-event validity with priority-based selection.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/INSERT_and_ERASE_per_EVENT_with_PRIORITY.png') }}"
+            alt="INSERT_and_ERASE_per_EVENT_with_PRIORITY event insertion method">
+        </figure>
+      </li>
+      <li><strong>INSERT_and_ERASE_INTERSECTED_EVENTS_with_PRIORITY</strong>: removes lower-priority data only where higher-priority events actually intersect it.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/INSERT_and_ERASE_INTERSECTED_EVENTS_with_PRIORITY.png') }}"
+            alt="INSERT_and_ERASE_INTERSECTED_EVENTS_with_PRIORITY event insertion method">
+        </figure>
+      </li>
+      <li><strong>EVENT_KEYS</strong>: keeps the events with the same event key and DIM signature that have the greatest generation time.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/EVENT_KEYS.png') }}"
+            alt="EVENT_KEYS event insertion method">
+        </figure>
+      </li>
+      <li><strong>EVENT_KEYS_with_PRIORITY</strong>: event-key reconciliation using source priority.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/EVENT_KEYS_with_PRIORITY.png') }}"
+            alt="EVENT_KEYS_with_PRIORITY event insertion method">
+        </figure>
+      </li>
+      <li><strong>SET_COUNTER</strong>: sets the value of a counter gauge.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/SET_COUNTER.png') }}"
+            alt="SET_COUNTER event insertion method">
+        </figure>
+      </li>
+      <li><strong>UPDATE_COUNTER</strong>: updates the value of an existing counter gauge.
+        <figure>
+          <img
+            class="img-responsive"
+            src="{{ url_for('static', filename='images/UPDATE_COUNTER.png') }}"
+            alt="UPDATE_COUNTER event insertion method">
+        </figure>
+      </li>
+    </ul>
+
+    <h4>Key Behavioral Differences</h4>
+    <ul>
+      <li><strong>Visibility model</strong>: <strong>SIMPLE_UPDATE</strong> makes data immediately visible, while <strong>INSERT_and_ERASE</strong> variants keep events as hidden candidates until the deprecation pass completes.</li>
+      <li><strong>Validity period scope</strong>: source-level variants apply the source validity period uniformly, while per-event variants determine validity individually for each event.</li>
+      <li><strong>Conflict resolution strategy</strong>: generation-time methods prioritize earlier-generated data, priority-based methods use source priority rankings, and <strong>EVENT_KEYS</strong> methods use event-key deduplication.</li>
+      <li><strong>Counter operations</strong>: <strong>SET_COUNTER</strong> and <strong>UPDATE_COUNTER</strong> are specialized methods for counter-type gauges, distinguishing between initial setting and incremental updates.</li>
+      <li><strong>Intersection handling</strong>: <strong>INSERT_and_ERASE_INTERSECTED_EVENTS_with_PRIORITY</strong> removes lower-priority data only where higher-priority events actually intersect it, rather than over a broader period.</li>
+    </ul>
+
+    <h4>Use Case: Multi-Source Timeline Completeness</h4>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/timeline_completeness_strategy.png') }}"
+        alt="Timeline completeness strategy diagram">
+    </figure>
+    <p>A practical example is determining completeness between planned mission timelines from different sources.</p>
+    <p><strong>Scenario</strong>: two independent sources provide scheduling data:</p>
+    <ul>
+      <li><strong>Timeline A (lower priority)</strong>: expected satellite download activities.</li>
+      <li><strong>Timeline B (higher priority)</strong>: expected antenna reception activities.</li>
+    </ul>
+    <p>The goal is to identify which periods have complete coverage from both timelines.</p>
+    <p><strong>Insertion strategy</strong>:</p>
+    <ul>
+      <li>Insert Timeline A using <strong>INSERT_and_ERASE_INTERSECTED_EVENTS_with_PRIORITY</strong>.</li>
+      <li>Insert Timeline B using <strong>INSERT_and_ERASE_per_EVENT_with_PRIORITY</strong> with higher priority.</li>
+    </ul>
+    <p><strong>Behavior</strong>: when Timeline B is inserted first, events are stored as-is. When Timeline A is then inserted, EBOA reviews each time period where Timeline A has events. At intersections where Timeline B also has events, Timeline A events are removed; at gaps where Timeline B has no events, Timeline A events are kept. The result is a union of both timelines that reflects completeness.</p>
+    <p><strong>Key difference from <code>INSERT_and_ERASE_per_EVENT_with_PRIORITY</code></strong>: the per-event priority method removes Timeline A events whenever Timeline B has higher priority, even when Timeline B does not actually have conflicting events during those periods. <strong>INSERT_and_ERASE_INTERSECTED_EVENTS_with_PRIORITY</strong> only removes lower-priority data where the higher-priority source truly overlaps it.</p>
+
+    <h3>Annotation-level methods</h3>
+    <ul>
+      <li><strong>SIMPLE_UPDATE</strong>: all annotations are inserted.</li>
+      <li><strong>INSERT_and_ERASE</strong>: keeps the annotation with the most relevant generation time for the annotation configuration and explicit reference.</li>
+      <li><strong>INSERT_and_ERASE_with_PRIORITY</strong>: resolves annotation conflicts using source priority.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-interface">EBOA interface <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-interface">
+    <p>
+      EBOA offers interfaces for three general operations with data: insert, update and query.
+      Input data can be provided as XML, JSON or a Python dictionary, and is verified against the
+      corresponding schema before processing.
+    </p>
+
+    <h3>Python insert interface</h3>
+    <p>The entry point for inserting data using the Python interface is the following method:</p>
+    <pre><code>def treat_data(self, data=None, source=None, validate=True):
+    """
+    Method to treat the data stored in self.data
+    :param data: structure of data to treat
+    :param source: name of the source of the data
+    :param validate: flag to indicate if the schema check has to be performed
+    """</code></pre>
+
+    <p>Example:</p>
+    <pre><code>from eboa.engine.engine import Engine
+
+engine = Engine()
+
+data = {"operations": [{
+    "mode": "insert",
+    "dim_signature": {"name": "dim_signature", "exec": "exec", "version": "1.0"},
+    "source": {
+        "name": "source.xml",
+        "generation_time": "2018-07-05T02:07:03",
+        "validity_start": "2018-06-05T02:07:03",
+        "validity_stop": "2018-06-05T08:07:36"
+    },
+    "events": [{
+        "explicit_reference": "EXPLICIT_REFERENCE_EVENT",
+        "gauge": {"name": "GAUGE_NAME", "system": "GAUGE_SYSTEM", "insertion_type": "SIMPLE_UPDATE"},
+        "start": "2018-06-05T02:07:03",
+        "stop": "2018-06-05T08:07:36"
+    }],
+    "annotations": [{
+        "explicit_reference": "EXPLICIT_REFERENCE_ANNOTATION",
+        "annotation_cnf": {"name": "NAME", "system": "SYSTEM"}
+    }]
+}]}
+
+returned_value = engine.treat_data(data)</code></pre>
+
+    <p>This example inserts or updates the DIM signature, source, event, gauge, explicit reference, annotation and annotation configuration records needed by the operation.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-eboa-vboa-stack">Full Stack Application: EBOA + VBOA <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-eboa-vboa-stack">
+    <p>
+      While EBOA serves as a powerful backend data management engine, it is designed to work seamlessly with
+      <strong>VBOA</strong> (Visualization for Business Operation Analysis), a modern frontend component that completes the full-stack application architecture.
+    </p>
+    <p>
+      The EBOA + VBOA stack provides an enterprise-grade solution for business operation analysis:
+    </p>
+    <ul>
+      <li><strong>EBOA (Backend)</strong>: data storage, management and query engine built on PostgreSQL with Python API.</li>
+      <li><strong>VBOA (Frontend)</strong>: interactive web application for visualization, analysis and real-time monitoring.</li>
+    </ul>
+    <p>
+      Together, these components form a complete, production-ready platform for complex business operation management without requiring extensive custom development.
+    </p>
+    <p>
+      One of the key advantages of the EBOA + VBOA stack is its easily customizable architecture:
+    </p>
+    <ul>
+      <li><strong>Modular design</strong>: both components are designed with modularity in mind, allowing you to extend and customize functionality.</li>
+      <li><strong>Configuration-driven</strong>: most features are driven by configuration files rather than code changes.</li>
+      <li><strong>Data model adaptation</strong>: define your own entities and relationships through EBOA's flexible schema.</li>
+      <li><strong>UI customization</strong>: VBOA's interface can be tailored to your specific business needs.</li>
+      <li><strong>Integration points</strong>: well-defined APIs and integration points for connecting custom processors and analyzers.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-eboa-prometheus">Prometheus integration <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-eboa-prometheus">
+    <p>
+      EBOA can expose operational metrics for Prometheus. This supports real-time monitoring,
+      performance tracking, system health checks, historical analysis, Grafana dashboards and alert
+      rules based on BOA component metrics.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/metrics_generation_for_prometheus.png') }}"
+        alt="Metrics generation for Prometheus">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

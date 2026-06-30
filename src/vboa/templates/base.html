@@ -198,6 +198,17 @@
               {% endif %}
               {% endif %}
               {% block side_panel_plugins %}{% endblock %}
+              <li>
+                <a href="#"><i class="fa fa-book fa-fw"></i> Documentation<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="{{ url_for('documentation.documentation_eboa') }}"><i class="fa fa-file-text-o fa-fw"></i> EBOA design</a>
+                  </li>
+                  <li>
+                    <a href="{{ url_for('documentation.documentation_eboa_faq') }}"><i class="fa fa-question fa-fw"></i> EBOA FAQ</a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
           <!-- /.sidebar-collapse -->

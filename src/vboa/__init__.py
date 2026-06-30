@@ -17,6 +17,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 # Import contents
 from vboa import panel
+from vboa import documentation
 from vboa import service_management
 from vboa import screenshots
 from vboa.views import users_management
@@ -93,6 +94,7 @@ def create_app():
         )
 
     app.register_blueprint(panel.bp)
+    app.register_blueprint(documentation.bp)
     app.register_blueprint(service_management.bp)
     app.register_blueprint(screenshots.bp)
     app.register_blueprint(eboa_nav.bp)
