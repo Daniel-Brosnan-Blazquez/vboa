@@ -1,0 +1,514 @@
+{% extends "panel/index.html" %}
+
+{% block content %}
+<div class="row">
+  <h1 class="page-header">VBOA documentation</h1>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-overview">Introduction <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-overview">
+    <p>
+      VBOA (Visualization for Business Operation Analysis) is the web-based front-end for the BOA
+      (Business Operation Analysis) suite. It provides operators and analysts with interactive tools
+      to query, visualize, monitor and manage operational data stored by EBOA and related BOA
+      components.
+    </p>
+    <p>
+      VBOA is designed as a modular Flask application with a role-aware navigation interface. Each
+      functional area — event navigation, reporting, scheduling, ingestion control, health monitoring
+      and user administration — is exposed as a dedicated view that integrates with the
+      corresponding BOA backend service.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-purpose-and-scope">Purpose and scope <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-purpose-and-scope">
+    <p>
+      VBOA targets operational environments where business data must be explored in near real time,
+      correlated across sources and shared through reports and dashboards.
+    </p>
+    <ul>
+      <li>Interactive querying and navigation of EBOA events, annotations, sources, gauges and explicit references.</li>
+      <li>Geospatial visualization of event geometries and Earth observation data using OpenLayers and Cesium.js.</li>
+      <li>Report generation, browsing and execution through RBOA integration.</li>
+      <li>Task scheduling visualization and simulation through SBOA integration.</li>
+      <li>System health, ingestion and reporting control dashboards with sliding time windows.</li>
+      <li>Centralized alert browsing with severity filtering across all BOA entities.</li>
+      <li>Role-based access control for administrators, operators and analysts.</li>
+      <li>REST API and Prometheus metrics endpoints for external integrations and observability.</li>
+      <li>Page screenshot capture stored as RBOA reports for documentation and sharing.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-architecture">Architecture overview <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-architecture">
+    <p>
+      VBOA follows a classic three-tier architecture: a Python Flask back-end, a Jinja2/Bootstrap
+      front-end and direct database access to the BOA subsystem databases.
+    </p>
+
+    <h3>Back-end stack</h3>
+    <ul>
+      <li><strong>Web framework</strong>: Flask with modular blueprints for each functional area.</li>
+      <li><strong>Security</strong>: Flask-Security-Too with email and username authentication, password hashing and session management.</li>
+      <li><strong>User management</strong>: UBOA datamodel for users, roles and audit tracking.</li>
+      <li><strong>Data access</strong>: direct integration with EBOA, RBOA, SBOA and UBOA engines and query APIs.</li>
+      <li><strong>WSGI server</strong>: Gunicorn with SSL support for production deployments.</li>
+    </ul>
+
+    <h3>Front-end stack</h3>
+    <ul>
+      <li><strong>Templates</strong>: Jinja2 with Bootstrap (SB Admin 2 theme).</li>
+      <li><strong>JavaScript</strong>: ES2015+ bundled with Webpack and Babel; jQuery for DOM and AJAX.</li>
+      <li><strong>Visualization</strong>: Cesium.js (3D geospatial), OpenLayers (2D mapping), Chart.js (charts), vis.js (timelines and networks), DataTables (tables).</li>
+      <li><strong>Build</strong>: npm and Webpack produce <code>dist/bundle.js</code> and <code>dist/styles.css</code>.</li>
+    </ul>
+
+    <h3>BOA integration</h3>
+    <ul>
+      <li><strong>EBOA</strong>: event, annotation, source and alert querying; manual data treatment; re-ingestion and deletion.</li>
+      <li><strong>RBOA</strong>: report storage, retrieval, execution and screenshot reports.</li>
+      <li><strong>SBOA</strong>: scheduled task navigation and simulation.</li>
+      <li><strong>UBOA</strong>: user accounts, roles, import and export.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-navigation">Navigation and modules <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-navigation">
+    <p>
+      The VBOA side panel groups functionality by operational area. Access to each section depends
+      on the authenticated user's role.
+    </p>
+    <ul>
+      <li><strong>Users management</strong> (administrator): browse, import and export UBOA users and roles.</li>
+      <li><strong>BOA management</strong> (administrator, service_administrator, operator): switch the orchestrator, cron and scheduler on or off.</li>
+      <li><strong>BOA Health</strong> (administrator, service_administrator, operator): complete health dashboard and alert-focused view.</li>
+      <li><strong>BOA Scheduler</strong> (all roles except observer): simulate and navigate scheduled tasks.</li>
+      <li><strong>Ingestion control</strong> (all roles except observer): manual ingestion, complete view, ingestion errors and alerts.</li>
+      <li><strong>EBOA navigation</strong> (all roles except observer): query and browse EBOA entities.</li>
+      <li><strong>General view of alerts</strong> (all roles except observer): cross-entity alert overview with sliding time window.</li>
+      <li><strong>Reporting navigation</strong> (all roles except observer): browse and open RBOA reports.</li>
+      <li><strong>Reporting control</strong> (all roles except observer): execute reports, monitor status, errors and alerts.</li>
+      <li><strong>Earth observation</strong> (when enabled): 3D orbit tracking and swath visualization.</li>
+      <li><strong>Documentation</strong>: EBOA and VBOA design documentation and FAQ pages.</li>
+    </ul>
+    <p>
+      Every page includes a <strong>Save screenshot of this page as a report</strong> action that
+      stores the current view as an RBOA report for later retrieval.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-eboa-navigation">EBOA navigation <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-eboa-navigation">
+    <p>
+      The EBOA navigation module is the primary interface for exploring stored operational data.
+      It supports querying events, annotations, sources, gauges, explicit references, DIM signatures
+      and event records (ERs), with pagination, JSON export and map visualization for geometries.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/eboa_navigation.png') }}"
+        alt="EBOA navigation panel">
+    </figure>
+    <p>Key capabilities include:</p>
+    <ul>
+      <li>Advanced filtering by temporal range, geometry, gauge, DIM signature, explicit reference and event values.</li>
+      <li>Event alert browsing with severity and generator filters.</li>
+      <li>Source management: download, re-ingest and delete sources.</li>
+      <li>WKT geometry export for map display on OpenLayers.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-geospatial">Geospatial visualization <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-geospatial">
+    <p>
+      VBOA provides two different geospatial views using OpenLayers maps and Cesium.js.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_geospatial_navigation_cesium.png') }}"
+        alt="Geospatial visualization with Cesium">
+    </figure>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_geospatial_navigation_openlayers.png') }}"
+        alt="Geospatial visualization with OpenLayers">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-reporting">Reporting and analytics <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-reporting">
+    <p>
+      The reporting modules integrate with RBOA to browse, execute and monitor analytical reports.
+      Reports can contain charts, tables, widgets and saved page screenshots.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_analytics.png') }}"
+        alt="BOA analytics">
+    </figure>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_analytics_widgets.png') }}"
+        alt="BOA analytics widgets">
+    </figure>
+    <p>Reporting control provides:</p>
+    <ul>
+      <li>On-demand report execution.</li>
+      <li>Sliding-window monitoring of report generation status.</li>
+      <li>Dedicated views for reporting errors and alerts.</li>
+      <li>Report re-generation and removal operations.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-health">System health monitoring <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-health">
+    <p>
+      The BOA Health dashboard aggregates status indicators from across the BOA infrastructure.
+      Operators can inspect component availability, review health alerts and adjust the sliding
+      time window to focus on recent activity.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_health.png') }}"
+        alt="BOA health dashboard">
+    </figure>
+    <p>
+      Service management endpoints allow authorized users to check and switch the orchestrator,
+      cron daemon and SBOA scheduler on or off directly from the navigation panel.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-scheduler">Task scheduling <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-scheduler">
+    <p>
+      The BOA Scheduler module connects to SBOA to visualize and simulate scheduled operational
+      tasks. The simulate view loads an agenda from a given reference time and shows the expected
+      execution sequence. The navigate view provides tabular browsing of scheduled tasks.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_scheduler.png') }}"
+        alt="BOA scheduler">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-alerts">Alert management <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-alerts">
+    <p>
+      VBOA surfaces alerts at multiple levels. The general view of alerts provides a unified
+      cross-entity overview with severity filtering and a configurable sliding time window.
+      Entity-specific alert views are available within EBOA navigation, ingestion control, reporting
+      control and BOA health.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_alerts_table.png') }}"
+        alt="BOA alerts table">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-ingestion">Data ingestion control <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-ingestion">
+    <p>
+      Ingestion control lets operators monitor the data ingestion pipeline, trigger manual
+      ingestion of files, review ingestion errors and inspect ingestion-related alerts. Configuration
+      files such as <code>triggering.xml</code> and the orchestrator configuration can be downloaded
+      for inspection.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_ingestion_control.png') }}"
+        alt="BOA ingestion control">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-security">User management and security <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-security">
+    <p>
+      VBOA uses Flask-Security-Too backed by the UBOA user database. Authentication supports
+      email-based and username-based login with optional remember-me persistence.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/boa_user_management.png') }}"
+        alt="BOA user management">
+    </figure>
+    <p>Supported roles and typical access:</p>
+    <ul>
+      <li><strong>administrator</strong>: full access including user management and BOA service control.</li>
+      <li><strong>service_administrator</strong>: service management, health, ingestion and operational views.</li>
+      <li><strong>operator</strong>: operational tasks including ingestion, scheduling and health monitoring.</li>
+      <li><strong>analyst</strong>: data analysis, reporting and event navigation.</li>
+      <li><strong>operator_observer</strong>: read-only access to operational and analysis views.</li>
+      <li><strong>observer</strong>: read-only access to the dashboard and documentation.</li>
+    </ul>
+    <p>Security configuration highlights:</p>
+    <ul>
+      <li>HTTP-only session cookies; secure cookies enforced in production.</li>
+      <li>Password change enabled without automatic change emails.</li>
+      <li>Custom <code>@auth_required()</code> and <code>@roles_accepted()</code> decorators with test-mode bypass.</li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-api">REST API and integrations <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-api">
+    <p>
+      VBOA exposes programmatic interfaces for external systems and monitoring tools.
+    </p>
+
+    <h3>Query API</h3>
+    <p>
+      The <code>GET /query/</code> endpoint accepts a JSON payload with an <code>events</code> key
+      containing EBOA query filters. It returns matching events with event records and annotations
+      in a standardized JSON response.
+    </p>
+    <pre><code>curl -X GET https://&lt;host&gt;/query/ \
+  -H "Content-Type: application/json" \
+  -d '{"events": {"gauge_name": "GAUGE_NAME", "limit": 10}}'</code></pre>
+
+    <h3>Metrics endpoint</h3>
+    <p>
+      The <code>GET /metrics/</code> endpoint publishes Prometheus-compatible metrics read from the
+      BOA metrics files. This supports Grafana dashboards and alert rules.
+    </p>
+
+    <h3>Screenshot API</h3>
+    <p>
+      The <code>POST /save-screenshot</code> endpoint stores the HTML content of the current page
+      as an RBOA report. It is used by the save-screenshot button available on every page.
+    </p>
+
+    <h3>Service management</h3>
+    <p>
+      Endpoints under the service management blueprint allow checking and toggling the orchestrator,
+      cron and scheduler processes. These are invoked from the BOA management section of the
+      navigation panel.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-eboa-vboa-stack">Full Stack Application: EBOA + VBOA <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-eboa-vboa-stack">
+    <p>
+      VBOA is the visualization and operational interface layer of the BOA stack. It is designed
+      to work seamlessly with EBOA, which provides the back-end data storage and management engine.
+    </p>
+    <p>
+      The combined EBOA + VBOA stack delivers:
+    </p>
+    <ul>
+      <li><strong>EBOA (Backend)</strong>: data storage, validation, ingestion orchestration and query engine built on PostgreSQL.</li>
+      <li><strong>VBOA (Frontend)</strong>: interactive web application for visualization, analysis, monitoring and administration.</li>
+    </ul>
+    <p>
+      Most deployment-specific behaviour is driven by configuration rather than code changes.
+      EBOA defines the data model and ingestion rules; VBOA exposes the resulting data through
+      configurable views, filters and reports.
+    </p>
+    <p>
+      For detailed information about the EBOA data model, ingestion strategies and Python API,
+      refer to the <a href="{{ url_for('documentation.documentation_eboa') }}">EBOA design documentation</a>.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-configuration">Configuration and environment <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-configuration">
+    <p>
+      VBOA behaviour can be adjusted through environment variables and resource files.
+    </p>
+    <ul>
+      <li><strong>VBOA_TEST</strong> (<code>TRUE</code>/<code>FALSE</code>): disables authentication and authorization for automated testing.</li>
+      <li><strong>VBOA_DEBUG</strong> (<code>TRUE</code>/<code>FALSE</code>): enables Flask debug mode and the debug toolbar.</li>
+      <li><strong>Secret key</strong>: loaded from <code>{resources_path}/web_server_secret_key.txt</code> or auto-generated on first start.</li>
+    </ul>
+    <p>
+      Production deployments typically use Gunicorn behind a reverse proxy with HTTPS. Docker and
+      Podman compose files are provided for containerized deployment on Rocky Linux 9.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-prometheus">Prometheus integration <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-prometheus">
+    <p>
+      VBOA publishes BOA metrics through a Prometheus-compatible endpoint at <code>/metrics/</code>.
+      Metrics are collected from the BOA infrastructure and exposed as plain text for scraping by
+      Prometheus, enabling Grafana dashboards and alert rules based on operational indicators.
+    </p>
+    <figure>
+      <img
+        class="img-responsive"
+        src="{{ url_for('static', filename='images/metrics_generation_for_prometheus.png') }}"
+        alt="Metrics generation for Prometheus">
+    </figure>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

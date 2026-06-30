@@ -34,3 +34,23 @@ def documentation_eboa_faq():
     """
 
     return render_template("documentation/eboa_faq.html")
+
+@bp.route("/documentation-vboa")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer", "observer")
+def documentation_vboa():
+    """
+    Show VBOA documentation page.
+    """
+
+    return render_template("documentation/vboa.html")
+
+@bp.route("/documentation-vboa-faq")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer", "observer")
+def documentation_vboa_faq():
+    """
+    Show VBOA FAQ documentation page.
+    """
+
+    return render_template("documentation/vboa_faq.html")

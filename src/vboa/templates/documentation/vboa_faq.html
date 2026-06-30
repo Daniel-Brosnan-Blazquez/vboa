@@ -1,0 +1,150 @@
+{% extends "panel/index.html" %}
+
+{% block content %}
+<div class="row">
+  <h1 class="page-header">VBOA FAQ</h1>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-faq-roles">What roles are available and what can each role access?
+            <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-faq-roles">
+    <p>
+      VBOA uses role-based access control through Flask-Security-Too and the UBOA user database.
+      Each view is protected by the <code>@roles_accepted()</code> decorator with a specific set
+      of allowed roles.
+    </p>
+    <ul>
+      <li><strong>administrator</strong>: full access, including user management (create, import, export, delete users) and BOA service control (orchestrator, cron, scheduler).</li>
+      <li><strong>service_administrator</strong>: BOA service control, health monitoring, ingestion control and all operational views except user management.</li>
+      <li><strong>operator</strong>: operational tasks such as ingestion control, scheduling, health monitoring and service control.</li>
+      <li><strong>analyst</strong>: data analysis views including EBOA navigation, reporting, alerts and screenshot saving.</li>
+      <li><strong>operator_observer</strong>: read-only access to operational and analysis views (no write operations).</li>
+      <li><strong>observer</strong>: read-only access limited to the dashboard and documentation pages.</li>
+    </ul>
+    <p>
+      The observer role is the most restricted: it cannot access EBOA navigation, reporting,
+      scheduling, ingestion control or alert management views.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-faq-test-mode">How does the VBOA_TEST environment variable work?
+            <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-faq-test-mode">
+    <p>
+      When the environment variable <code>VBOA_TEST</code> is set to <code>TRUE</code>, VBOA
+      disables authentication and authorization checks. The custom <code>@auth_required()</code> and
+      <code>@roles_accepted()</code> decorators become no-ops, allowing automated tests to access
+      protected endpoints without logging in.
+    </p>
+    <p>
+      In test mode, session cookies are also configured without the secure flag so that tests can
+      run over plain HTTP. This mode must never be enabled in production deployments.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-faq-screenshots">How do I save a page screenshot as a report?
+            <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-faq-screenshots">
+    <p>
+      Every VBOA page includes a <strong>Save screenshot of this page as a report</strong> button
+      in the page actions bar. Clicking it captures the current HTML content of the page and sends
+      it to the <code>POST /save-screenshot</code> endpoint.
+    </p>
+    <p>
+      The back-end stores the captured content as an RBOA report with manual generation mode.
+      Saved screenshots can later be browsed and opened from the Reporting navigation section.
+    </p>
+    <p>
+      Roles allowed to save screenshots: administrator, service_administrator, operator, analyst
+      and operator_observer.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-faq-query-api">How do I query events programmatically through VBOA?
+            <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-faq-query-api">
+    <p>
+      VBOA exposes a REST query endpoint at <code>GET /query/</code>. The request must include a
+      <code>Content-Type: application/json</code> header and a JSON body with an <code>events</code>
+      key containing the EBOA query filters.
+    </p>
+    <pre><code>curl -X GET https://&lt;host&gt;/query/ \
+  -H "Content-Type: application/json" \
+  -d '{"events": {"gauge_name": "GAUGE_NAME", "limit": 10}}'</code></pre>
+    <p>
+      The response follows a standardized format with a <code>response</code> object (status and
+      message) and a <code>data</code> object containing the matched events with event records and
+      annotations. Invalid filters return HTTP 400 with an error description.
+    </p>
+    <p>
+      Note that this endpoint does not require authentication, making it suitable for service-to-service
+      integration when network access is restricted by other means.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-vboa-faq-sliding-windows">What are sliding time windows in control dashboards?
+            <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-faq-sliding-windows">
+    <p>
+      Several VBOA control dashboards — BOA Health, Ingestion control, Reporting control and
+      General view of alerts — support sliding time windows. Instead of querying a fixed date range,
+      the sliding window continuously moves forward to show the most recent activity within a
+      configurable duration.
+    </p>
+    <p>
+      This is useful for operational monitoring where the operator needs a live view of recent
+      ingestions, report generations, health events or alerts without manually updating the time
+      filters on each refresh.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
