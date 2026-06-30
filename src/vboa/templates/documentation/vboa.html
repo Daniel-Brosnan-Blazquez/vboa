@@ -471,10 +471,53 @@
       </div>
       <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-vboa-configuration">
     <p>
-      VBOA behaviour can be adjusted through environment variables and resource files.
+      VBOA behaviour can be adjusted through environment variables and resource files. The
+      development compose file <code>compose_tboa_dev.yml</code> defines the variables used to
+      configure the tailored BOA container, its database connections and the host-side paths and
+      ports required to run the stack with Docker Compose.
+    </p>
+
+    <h3>Container environment variables</h3>
+    <p>
+      These variables are passed to the <code>tboa</code> service container and consumed by the BOA
+      components at runtime:
     </p>
     <ul>
-      <li><strong>VBOA_TEST</strong> (<code>TRUE</code>/<code>FALSE</code>): disables authentication and authorization for automated testing.</li>
+      <li><strong>EBOA_DDBB_HOST</strong>: hostname of the PostgreSQL/PostGIS database used by the EBOA engine. In <code>compose_tboa_dev.yml</code> this is set to <code>tboa_db</code>, the database service on the Docker network.</li>
+      <li><strong>SBOA_DDBB_HOST</strong>: hostname of the PostgreSQL database used by the SBOA scheduler. Points to the same database service in the development compose stack.</li>
+      <li><strong>UBOA_DDBB_HOST</strong>: hostname of the PostgreSQL database used by UBOA for user management and authentication.</li>
+      <li><strong>MINARC_DATABASE_HOST</strong>: hostname of the PostgreSQL database used by the minArc ingestion component.</li>
+      <li><strong>ORC_DATABASE_HOST</strong>: hostname of the PostgreSQL database used by the ORC orchestrator.</li>
+      <li><strong>SERVICE_LABEL</strong>: label that identifies this BOA instance. Used to build unique container names (<code>tboa_${SERVICE_LABEL}</code>, <code>tboa_db_${SERVICE_LABEL}</code>) when running several development stacks in parallel.</li>
+      <li><strong>VBOA_TEST</strong> (<code>TRUE</code>/<code>FALSE</code>): when set to <code>TRUE</code>, disables authentication and authorization checks in VBOA for automated testing and development.</li>
+      <li><strong>FLASK_APP</strong>: Python module name of the Flask application to load (for example <code>vboa</code> for the standard VBOA package or the tailored application module name). Used by Flask and Gunicorn to locate the WSGI entry point.</li>
+      <li><strong>SCRIPT_NAME</strong>: URL path prefix under which the application is served (for example <code>/tboa</code> when <code>SCRIPT_NAME=tboa</code> is set in the compose file as <code>SCRIPT_NAME=/${SCRIPT_NAME}</code>). Required when VBOA is deployed behind a reverse proxy that mounts the application under a sub-path.</li>
+    </ul>
+
+    <h3>Compose file variables</h3>
+    <p>
+      These variables are resolved by Docker Compose from the shell environment or a <code>.env</code>
+      file when starting the stack. They configure port mappings, volume mounts and secrets rather
+      than being read directly by the application:
+    </p>
+    <ul>
+      <li><strong>TBOA_PORT</strong>: host port mapped to container port <code>5001</code>, where the HTTPS Flask/Gunicorn server listens. Example mapping: <code>${TBOA_PORT}:5001</code>.</li>
+      <li><strong>TBOA_DEVELOPMENT_PATH</strong>: absolute path on the host to the tailored BOA project directory. Mounted as <code>/tboa</code> inside the container so that source code, configurations, schemas and scripts are available without rebuilding the image.</li>
+      <li><strong>PATH_TO_ORC_PACKAGE</strong>: path on the host to the ORC Ruby gem package file (<code>orc.gem</code>). Mounted as a Docker secret at <code>/orc_packages/orc.gem</code> and installed at container startup.</li>
+      <li><strong>PATH_TO_MINARC_PACKAGE</strong>: path on the host to the minArc Ruby gem package file (<code>minarc.gem</code>). Mounted as a Docker secret at <code>/orc_packages/minarc.gem</code> and installed at container startup.</li>
+    </ul>
+    <p>
+      The compose variables <strong>SERVICE_LABEL</strong>, <strong>VBOA_TEST</strong>,
+      <strong>FLASK_APP</strong> and <strong>SCRIPT_NAME</strong> appear in both sections: they are
+      defined on the host side and forwarded into the container environment.
+    </p>
+
+    <h3>Additional VBOA variables</h3>
+    <p>
+      The following variables are not defined in <code>compose_tboa_dev.yml</code> but can be set
+      inside the container or in other deployment configurations:
+    </p>
+    <ul>
       <li><strong>VBOA_DEBUG</strong> (<code>TRUE</code>/<code>FALSE</code>): enables Flask debug mode and the debug toolbar.</li>
       <li><strong>Secret key</strong>: loaded from <code>{resources_path}/web_server_secret_key.txt</code> or auto-generated on first start.</li>
     </ul>
