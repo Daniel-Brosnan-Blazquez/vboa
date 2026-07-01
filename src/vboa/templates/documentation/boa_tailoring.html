@@ -1,0 +1,511 @@
+{% extends "panel/index.html" %}
+
+{% block content %}
+<div class="row">
+  <h1 class="page-header">BOA tailoring</h1>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-boa-tailoring-overview">Introduction <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-boa-tailoring-overview">
+    <p>
+      BOA can be tailored by installing a project package on top of the generic EBOA and VBOA
+      packages. The project package normally contains ingestion modules, additional views and BOA configuration files.
+    </p>
+    <p>
+      The following public repositories are examples of tailored BOA implementations:
+    </p>
+    <ul>
+      <li>
+      <a href="https://github.com/Daniel-Brosnan-Blazquez/s1boa">s1boa</a>: Sentinel-1 tailored BOA with ingestion modules and views for monitoring and analyzing the Earth observation mission.
+      </li>
+      <li>
+      <a href="https://github.com/Daniel-Brosnan-Blazquez/s2boa">s2boa</a>: Sentinel-2 tailored BOA with ingestion modules and views for monitoring and analyzing the Earth observation mission.
+      </li>
+      <li>
+      <a href="https://github.com/Daniel-Brosnan-Blazquez/bankboa">bankboa</a>: Bank-specific tailored BOA with ingestion modules and views for analyzing financial data.
+      </li>
+    </ul>
+    <p>
+      They show how mission-specific and business-specific packages can reuse the same BOA data
+      model while adding their own data model, configuration, dashboards and navigation entries.
+    </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-boa-tailoring-layout">Project layout <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-boa-tailoring-layout">
+    <p>
+      A tailored project normally keeps the ingestion package and the visualization package in the
+      same source distribution. The ingestion package owns parsers and business rules. The views
+      package owns Flask blueprints, templates, static files and the application wrapper.
+    </p>
+    <pre><code>src/
+  setup.py
+  MANIFEST.in
+  boa_config/
+    triggering.xml
+    scheduler.xml
+    reporting_generators.xml
+    engine.json
+    users.json
+  myboa/
+    __init__.py
+    ingestions/
+      ingestion_my_source/
+        __init__.py
+        ingestion_my_source.py
+  myvboa/
+    __init__.py
+    wsgi.py
+    templates/
+      panel/
+        index.html
+      views/
+        my_view/
+          my_view.html
+    views/
+      my_view/
+        __init__.py
+        my_view.py</code></pre>
+    <p>
+      The setup file exposes both packages with <code>find_packages()</code> and declares the generic
+      dependencies, at least <code>eboa</code> and <code>vboa</code>, plus project-specific libraries such
+      as <code>pandas</code>, <code>xlrd</code>, <code>astropy</code> or mission helpers.
+    </p>
+    <h3>Relevant configurations</h3>
+    <p>
+      Files inside boa_config are all optional. This folder is used to customize the behavior of the tailored BOA.
+    </p>
+    <h4>- File <code>engine.json</code></h4>
+    <p>
+      This file allows you to define various settings for the BOA engine. The following is a list of highlights of some relevant configurations:
+    </p>
+    <ul>
+      <li><strong>Log level</strong>: <code>"LOG/LEVEL"</code> setting is used to specify the log level of the BOA application.
+    <pre><code>{
+  "LOG": {
+        "LEVEL": "INFO",
+        "MAX_BYTES": 50000000,
+        "MAX_BACKUP": 30
+    }
+}</code></pre></li>
+      <li><strong>Number of ingestion retries</strong>: <code>"INGESTION_RETRIES"</code> setting is used to specify a 
+      maximum number of ingestion retries in case of failure.
+    <pre><code>{
+  "INGESTION_RETRIES": 2
+}</code></pre></li>
+      <li><strong>Replicate event values module</strong>: <code>"REPLICATE_EVENT_VALUES_MODULE"</code> setting is used to specify a 
+      custom module for handling event value replication logic when the associated event gets updated by an insertion strategy.
+    <pre><code>{
+  "REPLICATE_EVENT_VALUES_MODULE": "myboa.ingestions.replicate_event_values"
+}</code></pre>
+    <p>
+      The referenced module should be packaged with the project, as done in the <a href="https://github.com/Daniel-Brosnan-Blazquez/s2boa/blob/master/src/s2boa/replicate_event_values.py">s2boa</a> examples,
+      so the EBOA engine can import it at runtime and apply the project-specific value replication
+      policy.
+    </p></li>
+    </ul>
+    <h4>- File <code>triggering.xml</code></h4>
+    <p>
+      This file allows to define triggering rules for file-based ingestion. Each rule
+      matches a file name, assigns a source type and invokes the ingestion module with
+      <code>eboa_ingestion.py -p package.module -f</code>.
+    </p>
+    <pre><code>&lt;triggering_rules&gt;
+&lt;rule&gt;
+&lt;source_mask&gt;MY_SOURCE_........T......_.*.xml&lt;/source_mask&gt;
+&lt;source_type&gt;MY_SOURCE&lt;/source_type&gt;
+&lt;tool&gt;
+  &lt;command&gt;eboa_ingestion.py -p myboa.ingestions.ingestion_my_source.ingestion_my_source -f &lt;/command&gt;
+&lt;/tool&gt;
+&lt;/rule&gt;
+&lt;/triggering_rules&gt;</code></pre>
+    <p>
+      When an ingestion needs previously ingested context, add dependencies to the rule.
+    </p>
+    <pre><code>&lt;dependencies&gt;
+&lt;source_type&gt;MY_PLANNING_SOURCE&lt;/source_type&gt;
+&lt;source_type&gt;MY_ORBIT_SOURCE&lt;/source_type&gt;
+&lt;/dependencies&gt;</code></pre>
+    <h4>- File <code>scheduler.xml</code></h4>
+    <p>
+      This file allows to define BOA scheduler rules. Each rule defines when it has to be triggered,
+      the reporting window it covers and the tasks to execute. The tasks normally call
+      <code>rboa_triggering.py</code> to generate reports registered in
+      <code>reporting_generators.xml</code>.
+    </p>
+    <pre><code>&lt;rules&gt;
+&lt;rule name="DAILY"&gt;
+  &lt;periodicity&gt;1&lt;/periodicity&gt;
+  &lt;window_delay&gt;0.083333333&lt;/window_delay&gt;
+  &lt;window_size&gt;1&lt;/window_size&gt;
+  &lt;date&gt;
+    &lt;time&gt;08:00:00&lt;/time&gt;
+  &lt;/date&gt;
+  &lt;tasks&gt;
+    &lt;task name="BOA_HEALTH"&gt;
+      &lt;command&gt;rboa_triggering.py -g "BOA health generator" -m AUTOMATIC&lt;/command&gt;
+    &lt;/task&gt;
+  &lt;/tasks&gt;
+&lt;/rule&gt;
+&lt;/rules&gt;</code></pre>
+    <p>
+      The values <code>periodicity</code>, <code>window_delay</code> and <code>window_size</code> are expressed
+      in days. A rule can also include a <code>weekday</code> inside <code>date</code> for weekly schedules,
+      as shown in the <code>s2boa</code> example.
+    </p>
+    <h4>- File <code>reporting_generators.xml</code></h4>
+    <p>
+      This file allows to register RBOA reporting generators. VBOA uses this configuration to list
+      executable reports in the reporting navigation, and the scheduler can trigger the same
+      generators by name through <code>rboa_triggering.py</code>.
+    </p>
+    <pre><code>&lt;reporting_generators&gt;
+&lt;generator name="My report generator" description="Generator for a tailored BOA report"&gt;
+  &lt;command&gt;rboa_reporting.py -p myvboa.views.my_view_generator&lt;/command&gt;
+  &lt;name_format&gt;MY__REP__MY_VIEW_%C_%B_%E.html&lt;/name_format&gt;
+  &lt;parameters&gt;
+    &lt;parameter name="type"&gt;COMPLETE&lt;/parameter&gt;
+  &lt;/parameters&gt;
+&lt;/generator&gt;
+&lt;/reporting_generators&gt;</code></pre>
+    <p>
+      The <code>command</code> points to the Python generator module. The <code>name_format</code> defines the
+      generated report file name. Optional parameters are passed to the generator so the same module
+      can expose different report variants, for example complete views and alerts-only views.
+    </p>
+    <h4>- File <code>users.json</code></h4>
+    <p>
+      This file allows to import UBOA users and roles into the BOA instance. It follows the same
+      operation-based structure used by the users management import and export actions.
+    </p>
+    <pre><code>{
+  "operations": [{
+    "mode": "insert",
+    "roles": [{
+      "name": "example_role",
+      "description": "Role used by the tailored BOA"
+    }],
+    "users": [{
+      "email": "example@example.com",
+      "username": "example",
+      "password": "example_hash_password",
+      "roles": ["example_role"]
+    }]
+  }]
+}</code></pre>
+    <p>
+      Roles must be defined before they are assigned to users. Password values must be prepared in
+      the format expected by the UBOA import process, as in the files exported from the users
+      management page.
+    </p>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-boa-tailoring-ingestions">Creating ingestions <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-boa-tailoring-ingestions">
+    <p>
+      An ingestion module is a Python module called by <code>eboa_ingestion.py</code>. Its main entry
+      point is <code>process_file(file_path, engine, query, reception_time)</code>. The function parses the
+      received file and returns a dictionary with one or more BOA operations.
+    </p>
+    <pre><code>def process_file(file_path, engine, query, reception_time):
+    source = {
+        "name": file_name,
+        "reception_time": reception_time,
+        "generation_time": generation_time,
+        "reported_validity_start": reported_validity_start,
+        "reported_validity_stop": reported_validity_stop,
+        "validity_start": validity_start,
+        "validity_stop": validity_stop,
+        "priority": 30
+    }
+
+    event = {
+        "gauge": {
+            "insertion_type": "INSERT_and_ERASE",
+            "name": "MY_EVENT",
+            "system": "MY_SYSTEM"
+        },
+        "start": validity_start,
+        "stop": validity_stop,
+        "values": [
+            {"name": "status", "type": "text", "value": "OK"},
+            {"name": "amount", "type": "double", "value": 12.5}
+        ]
+    }
+
+    return {
+        "operations": [{
+            "mode": "insert_and_erase",
+            "dim_signature": {
+                "name": "MY_SOURCE",
+                "exec": os.path.basename(__file__),
+                "version": version
+            },
+            "source": source,
+            "events": [event]
+        }]
+    }</code></pre>
+    <p>
+      The operation defines how EBOA inserts data, the DIM signature used to identify the ingested
+      data family, the traceable source metadata and the events, annotations or explicit references
+      produced by the parser.
+    </p><p>
+      For more information on data flow, see the <a href="{{ url_for('documentation.documentation_eboa') }}#documentation-eboa-data-ingestion">EBOA data ingestion and orchestration documentation</a>.
+    </p>
+    <p>
+      For more information on insertion methods, see the <a href="{{ url_for('documentation.documentation_eboa') }}#documentation-eboa-insertion-strategies">EBOA insertion strategies documentation</a>.
+    </p>
+    <p>
+      The following are examples of ingestion modules:
+    </p>
+    <ul>
+      <li>
+      <a href="https://github.com/Daniel-Brosnan-Blazquez/s1boa/tree/develop/src/s1boa/ingestions">Ingestion modules for the Sentinel-1 tailored BOA</a>
+      </li>
+      <li>
+      <a href="https://github.com/Daniel-Brosnan-Blazquez/s2boa/tree/master/src/s2boa/ingestions">Ingestion modules for the Sentinel-2 tailored BOA</a>
+      </li>
+      <li>
+      <a href="https://github.com/Daniel-Brosnan-Blazquez/bankboa/tree/master/src/bankboa/ingestions">Ingestion modules for the Bank-specific tailored BOA</a>
+      </li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-boa-tailoring-views">Creating views <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-boa-tailoring-views">
+    <p>
+      A project view is a Flask blueprint registered by the project-specific BOA application. The
+      blueprint queries EBOA, exports entities to a JSON-friendly dictionary and renders a template.
+      The template is the second half of the view: it receives the dictionaries and entities
+      prepared by the blueprint and defines the dashboard including a query form, tables, timelines, maps, summaries and
+      all relevant information shown to the user.
+    </p>
+    <pre><code>from flask import Blueprint, current_app, render_template, request
+from vboa.security import auth_required, roles_accepted
+from vboa import functions as vboa_functions
+from eboa.engine.query import Query
+from eboa.engine import export as eboa_export
+
+bp = Blueprint("my_view", __name__, url_prefix="/views")
+query = Query()
+version = "1.0"
+
+@bp.route("/my-view", methods=["GET", "POST"])
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer", "observer")
+def show_my_view():
+    current_app.logger.debug("My tailored view")
+    filters = request.form.to_dict(flat=False).copy() if request.method == "POST" else {}
+    start_filter, stop_filter = vboa_functions.get_start_stop_filters(filters, 30, 30)
+
+    data = {"metadata": {
+        "version": version,
+        "reporting_start": stop_filter["date"],
+        "reporting_stop": start_filter["date"]
+    }}
+
+    events = query.get_events(
+        gauge_names={"filter": "MY_EVENT", "op": "=="},
+        stop_filters=[{"date": data["metadata"]["reporting_start"], "op": "&gt;"}],
+        start_filters=[{"date": data["metadata"]["reporting_stop"], "op": "&lt;"}],
+        order_by={"field": "start", "descending": False})
+
+    eboa_export.export_events(data, events, group="my_events", include_ers=False, include_annotations=True, include_alerts=True)
+    return render_template("views/my_view/my_view.html", data=data)</code></pre>
+    
+    <p>
+      Templates are usually located under the project VBOA package, usually in
+      <code>templates/views/&lt;view_name&gt;/</code>. The main template normally extends
+      <code>panel/index.html</code>, fills the <code>content</code> block and, when JavaScript is needed,
+      fills the <code>scripts</code> block. Larger views can be split into reusable partial templates
+      with <code>{% raw %}{% include %}{% endraw %}</code>.
+    </p>
+    <pre><code>{% raw %}{% extends "panel/index.html" %}
+
+{% block content %}
+&lt;div class="row"&gt;
+  &lt;h1 class="page-header"&gt;My view&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;div class="row"&gt;
+  &lt;div class="panel panel-default"&gt;
+    &lt;div class="panel-heading"&gt;
+      &lt;h3 class="panel-title"&gt;
+        &lt;a data-toggle="collapse" data-parent="#accordion" href="#query-interface"&gt;
+          Query interface &lt;span class="fa fa-angle-double-down"&gt;&lt;/span&gt;
+        &lt;/a&gt;
+      &lt;/h3&gt;
+    &lt;/div&gt;
+    &lt;div class="panel-body panel-collapse collapse" id="query-interface"&gt;
+      &lt;form role="form" method="post" action="/views/my-view"&gt;
+        {% include "eboa_nav/start_stop_without_operators.html" %}
+        &lt;button type="submit" class="btn btn-primary"&gt;Query&lt;/button&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+{% include "views/common/header.html" %}
+
+{% for event in data["my_events"] %}
+&lt;p&gt;{{ event.start.isoformat() }} - {{ event.stop.isoformat() }}&lt;/p&gt;
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% include "views/my_view/my_view_scripts.html" %}
+{% endblock %}{% endraw %}</code></pre>
+
+    <p>
+      Common template patterns in tailored views are:
+    </p>
+    <ul>
+      <li><strong>Main page</strong>: defines the title, query or sliding-window forms, and the top-level layout.</li>
+      <li><strong>Content parts</strong>: keep large tables, warning panels, summaries or map sections in smaller files.</li>
+      <li><strong>Common parts</strong>: reuse shared controls, for example mission selectors, start/stop filters, orbit filters, headers and pagination.</li>
+      <li><strong>Script parts</strong>: load page-specific JavaScript for charts, timelines, maps or AJAX refreshes through the <code>scripts</code> block.</li>
+    </ul>
+    <p>
+      The following are examples of project views and templates:
+    </p>
+    <ul>
+      <li>
+      Project <a href="https://github.com/Daniel-Brosnan-Blazquez/s1boa/tree/develop/src/s1vboa/views">views</a>
+      and <a href="https://github.com/Daniel-Brosnan-Blazquez/s1boa/tree/develop/src/s1vboa/templates/views">templates</a> for the Sentinel-1 tailored BOA
+      </li>
+      <li>
+      Project <a href="https://github.com/Daniel-Brosnan-Blazquez/s2boa/tree/master/src/s2vboa/views">views</a>
+      and <a href="https://github.com/Daniel-Brosnan-Blazquez/s2boa/tree/master/src/s2vboa/templates/views">templates</a> for the Sentinel-2 tailored BOA
+      </li>
+      <li>
+      Project <a href="https://github.com/Daniel-Brosnan-Blazquez/bankboa/tree/master/src/bankvboa/views">views</a>
+      and <a href="https://github.com/Daniel-Brosnan-Blazquez/bankboa/tree/master/src/bankvboa/templates/views">templates</a> for the Bank-specific tailored BOA
+      </li>
+    </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-boa-tailoring-application">Application wrapper and navigation <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-boa-tailoring-application">
+    <p>
+      The project VBOA package wraps the generic VBOA application. It registers project blueprints
+      and prepends its templates folder with <code>jinja2.ChoiceLoader</code>. This lets the project
+      override <code>panel/index.html</code> while keeping all generic VBOA templates available.
+    </p>
+    <pre><code>import os
+import jinja2
+import vboa
+from myvboa.views.my_view import my_view
+
+def create_app():
+    app = vboa.create_app()
+    app.register_blueprint(my_view.bp)
+
+    templates_folder = os.path.dirname(__file__) + "/templates"
+    app.jinja_loader = jinja2.ChoiceLoader([
+        jinja2.FileSystemLoader(templates_folder),
+        app.jinja_loader
+    ])
+
+    return app</code></pre>
+    <p>
+      Add menu entries by overriding the <code>side_panel_plugins</code> block in the project
+      <code>templates/panel/index.html</code>.
+    </p>
+    <pre><code>{% raw %}{% extends "base.html" %}
+{% block project_version %}MYVBOA 1.0.0{% endblock %}
+{% block side_panel_plugins %}
+&lt;li&gt;
+  &lt;a href="#"&gt;&lt;i class="fa fa-file-text-o fa-fw"&gt;&lt;/i&gt; My project&lt;span class="fa arrow"&gt;&lt;/span&gt;&lt;/a&gt;
+  &lt;ul class="nav nav-second-level"&gt;
+    &lt;li&gt;
+      &lt;a href="/views/my-view"&gt;&lt;i class="fa fa-calendar"&gt;&lt;/i&gt; My view&lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/li&gt;
+{% endblock %}{% endraw %}</code></pre>
+    <p>
+      Finally, expose the tailored application with a WSGI entry point:
+    </p>
+    <pre><code>from myvboa import create_app
+
+app = create_app()</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#documentation-boa-tailoring-checklist">Implementation checklist <span class="fa fa-angle-double-down"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse in documentation-page" id="documentation-boa-tailoring-checklist">
+    <ol>
+      <li>Create the project packages, for example <code>myboa</code> and <code>myvboa</code>.</li>
+      <li>Add ingestion modules under <code>myboa/ingestions/</code> and implement <code>process_file</code>.</li>
+      <li>Return BOA operations containing source metadata, DIM signatures and generated entities.</li>
+      <li>Add <code>boa_config/triggering.xml</code> rules for every source family and dependency chain.</li>
+      <li>Create Flask blueprints under <code>myvboa/views/</code> for project dashboards or analysis pages.</li>
+      <li>Register the blueprints in <code>myvboa.create_app()</code> and prepend the project templates folder.</li>
+      <li>Override <code>templates/panel/index.html</code> to add navigation through <code>side_panel_plugins</code>.</li>
+      <li>Declare dependencies and package data in <code>setup.py</code> and <code>MANIFEST.in</code>.</li>
+      <li>Install the package in the BOA environment and ingest representative files through the triggering rules or manual ingestion page.</li>
+      <li>Verify the generated events in EBOA navigation, then validate the tailored views with realistic reporting windows.</li>
+    </ol>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

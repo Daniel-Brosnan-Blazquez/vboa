@@ -54,3 +54,13 @@ def documentation_vboa_faq():
     """
 
     return render_template("documentation/vboa_faq.html")
+
+@bp.route("/documentation-boa-tailoring")
+@auth_required()
+@roles_accepted("administrator", "service_administrator", "operator", "analyst", "operator_observer", "observer")
+def documentation_boa_tailoring():
+    """
+    Show BOA tailoring documentation page.
+    """
+
+    return render_template("documentation/boa_tailoring.html")
